@@ -44,10 +44,12 @@ const PAC_GROUP_ORDER: PacGroup[] = ["super", "hybrid", "connected", "other"];
 function CommitteeRow({
   committee,
   maxTotal,
+  sector = "all",
   indented = false,
 }: {
   committee: CommitteeConstantWithContributions;
   maxTotal: number;
+  sector?: Sector;
   indented?: boolean;
 }) {
   const spent = committee.independent_expenditures || 0;
@@ -57,11 +59,9 @@ function CommitteeRow({
     maxTotal > 0 ? (Math.max(0, totalRaised - spent) / maxTotal) * 100 : 0;
   const roundedSpent = Math.floor(spent / 10000) * 10000;
   const roundedRaised = Math.floor(totalRaised / 10000) * 10000;
-  const highlighted =
-    committee.sector === "crypto" || committee.sector === "ai";
   return (
     <div
-      className={`${styles.committeeRow}${indented ? ` ${styles.committeeRowIndented}` : ""}${highlighted ? ` ${styles.committeeRowHighlighted}` : ""}`}
+      className={`${styles.committeeRow}${indented ? ` ${styles.committeeRowIndented}` : ""}`}
     >
       <div
         className={`${styles.committeeName}${indented ? ` ${styles.committeeNameIndented}` : ""}`}
@@ -70,7 +70,7 @@ function CommitteeRow({
         <span className={styles.committeeNameText}>
           <Link href={`/2026/committees/${committee.id}`}>{committee.name}</Link>
         </span>
-        {!indented && committee.sector && (
+        {!indented && sector === "all" && committee.sector && (
           <span className={sharedStyles.sectorBadge}>{committee.sector}</span>
         )}
       </div>
@@ -113,10 +113,12 @@ function CommitteeGroup({
   title,
   committees,
   maxTotal,
+  sector = "all",
 }: {
   title: string;
   committees: CommitteeConstantWithContributions[];
   maxTotal: number;
+  sector?: Sector;
 }) {
   if (committees.length === 0) {
     return null;
@@ -211,6 +213,7 @@ function CommitteeGroup({
                   key={committee.id}
                   committee={committee}
                   maxTotal={maxTotal}
+                  sector={sector}
                   indented
                 />
               ))}
@@ -222,6 +225,7 @@ function CommitteeGroup({
             key={slot.committee.id}
             committee={slot.committee}
             maxTotal={maxTotal}
+            sector={sector}
           />
         );
       })}
@@ -307,6 +311,7 @@ export default async function CommitteeList({
           title={PAC_GROUP_LABELS[group]}
           committees={grouped[group]}
           maxTotal={maxTotal}
+          sector={sector}
         />
       ))}
     </>

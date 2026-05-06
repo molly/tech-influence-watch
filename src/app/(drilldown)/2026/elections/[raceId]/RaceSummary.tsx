@@ -50,40 +50,61 @@ export default function RaceSummary({
   const candidateSummaries = candidates.map(
     (c) => electionData.candidates[c.name] || {},
   );
-  const hasRelatedSpending = candidateSummaries.some(
-    (c) =>
-      "expenditure_races" in c &&
-      c.expenditure_races &&
-      c.expenditure_races.includes(race.type),
-  );
+  const hasRelatedSpending = relatedExpenditures.length > 0;
   const hasSpendingInOtherRaces = candidateSummaries.filter(
     (c) => c.support_total > 0 || c.oppose_total > 0,
   );
   const isRaceUpcoming = isUpcomingRace(race, true) as boolean;
 
-  // Collect presumptive nominees by scanning upcoming primary races for
-  // candidates already marked won:true (uncontested primary, deadline passed).
+  // Collect presumptive nominees: candidates already marked won:true in an upcoming race
+  // (uncontested — filing deadline has passed with only one candidate).
   const presumptiveCandidateNames = new Set<string>();
   const presumptiveParties = new Set<string>();
-  if (isRaceUpcoming && race.type === RaceType.General && upcomingRaces.length > 1) {
-    upcomingRaces.slice(1).forEach((primaryRace) => {
-      primaryRace.candidates.forEach((c) => {
+  if (isRaceUpcoming) {
+    if (race.type === RaceType.General && upcomingRaces.length > 1) {
+      // For the general, scan upcoming non-runoff primary races. Runoff races don't
+      // confirm the nomination until they actually happen, even if uncontested.
+      upcomingRaces.slice(1).forEach((primaryRace) => {
+        if (
+          primaryRace.type === RaceType.PrimaryRunoff ||
+          primaryRace.type === RaceType.GeneralRunoff
+        ) {
+          return;
+        }
+        primaryRace.candidates.forEach((c) => {
+          if (c.won === true) {
+            presumptiveCandidateNames.add(c.name);
+            const party = c.party ?? electionData.candidates[c.name]?.party;
+            if (party) {
+              presumptiveParties.add(party);
+            }
+          }
+        });
+      });
+    } else {
+      // For any other upcoming race, candidates with won:true are uncontested in
+      // this specific race and should be shown as presumptive here.
+      race.candidates.forEach((c) => {
         if (c.won === true) {
           presumptiveCandidateNames.add(c.name);
-          const party = c.party ?? electionData.candidates[c.name]?.party;
-          if (party) {
-            presumptiveParties.add(party);
-          }
         }
       });
-    });
+    }
   }
 
   let intermediateRaces;
   if (upcomingRaces.length > 1) {
     if (race.type === "general") {
+      const generalCandidateParties = new Set<string>(
+        race.candidates
+          .map((c) => c.party ?? electionData.candidates[c.name]?.party)
+          .filter((p): p is string => !!p),
+      );
       intermediateRaces = upcomingRaces.slice(1).filter(
-        (r) => !r.party || !presumptiveParties.has(r.party),
+        (r) =>
+          !r.party ||
+          (!presumptiveParties.has(r.party) &&
+            !generalCandidateParties.has(r.party)),
       );
     }
   }
