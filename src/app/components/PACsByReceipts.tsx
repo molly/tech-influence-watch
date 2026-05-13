@@ -20,7 +20,11 @@ function TableContentsSkeleton({ type }: { type: string }) {
         </td>
         {type === "all" && (
           <td>
-            <Skeleton width="6rem" onCard={true} className={sharedStyles.floatRight} />
+            <Skeleton
+              width="6rem"
+              onCard={true}
+              className={sharedStyles.floatRight}
+            />
           </td>
         )}
       </tr>
@@ -43,7 +47,7 @@ export default function PACsByReceipts({
   return (
     <div className={styles.superPacCard}>
       <div className={styles.tableCardContent}>
-        <h2 className={styles.superPacHeader}>
+        <h2 className={sharedStyles.sectionTitle}>
           Top super PACs by total receipts
         </h2>
         <p className="secondary smaller">
@@ -63,7 +67,7 @@ export default function PACsByReceipts({
       <table className={styles.superPacTable}>
         <thead>
           <tr className={styles.superPacTableHeader}>
-            <th>#</th>
+            <th className={styles.rowIndex}>#</th>
             <th className="text-cell">Name</th>
             <th className={`text-cell ${styles.tableCellCollapse1}`}>
               Description

@@ -70,17 +70,15 @@ export default async function CommitteeDetailsSection({
   };
 
   return (
-    <>
-      <section>
-        <h1>{committee.name}</h1>
-        <span className="secondary small">{renderDetails()}</span>
-        {committee.description && (
-          <div
-            className={styles.description}
-            dangerouslySetInnerHTML={{ __html: committee.description }}
-          ></div>
-        )}
-      </section>
-    </>
+    <section>
+      <h1>{committee.name}</h1>
+      <span className="secondary small">{renderDetails()}</span>
+      {committee.description && (
+        <div
+          className={styles.description}
+          dangerouslySetInnerHTML={{ __html: committee.description }}
+        ></div>
+      )}
+    </section>
   );
 }

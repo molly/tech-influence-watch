@@ -1,5 +1,6 @@
 import { fetchCompanyTotalSpending } from "@/app/actions/fetch";
 import styles from "@/app/page.module.css";
+import sharedStyles from "@/app/shared.module.css";
 import { CompanyTotals } from "@/app/types/Companies";
 import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
@@ -8,7 +9,11 @@ import { Suspense } from "react";
 import ErrorText from "../ErrorText";
 import HorizontalPartyBars from "./HorizontalPartyBars";
 
-async function AllCompanySpendingByPartyContent({ sector }: { sector: Sector }) {
+async function AllCompanySpendingByPartyContent({
+  sector,
+}: {
+  sector: Sector;
+}) {
   const data = await fetchCompanyTotalSpending(sector);
   if (isError(data)) {
     return <ErrorText subject="company spending by party" />;
@@ -36,10 +41,15 @@ export default function AllCompanySpendingByParty({
   });
   return (
     <section className={styles.companySpendingCard}>
-      <h2 id="company-spending-by-party-label">Contributions by party</h2>
+      <h2
+        id="company-spending-by-party-label"
+        className={sharedStyles.sectionTitle}
+      >
+        Contributions by party
+      </h2>
       <div className={styles.subtitle}>
-        Direct contributions from {sectorText} companies and associated
-        individuals to candidates and PACs
+        Contributions from {sectorText} companies and associated individuals to
+        candidates and PACs
       </div>
       <Suspense fallback={null}>
         <AllCompanySpendingByPartyContent sector={sector} />

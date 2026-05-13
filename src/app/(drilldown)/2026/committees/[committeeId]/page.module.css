@@ -2,7 +2,8 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  gap: inherit;
+  max-width: var(--max-width);
+  gap: 1rem;
   padding: 0 1rem;
 }
 
@@ -25,14 +26,8 @@
 .moneyCardRow {
   display: grid;
   gap: inherit;
-  grid-template-columns: repeat(2, minmax(10rem, 25rem));
-  margin: 0 auto;
+  grid-template-columns: repeat(4, minmax(10rem, 25rem));
 }
-
-.moneyCardDetails {
-  margin-top: 1rem;
-}
-
 .rightColumn {
   display: flex;
   flex-direction: column;
@@ -51,7 +46,7 @@
 }
 
 .donorSection {
-  composes: card from "@/app/shared.module.css";
+  composes: section from "@/app/shared.module.css";
   width: 66%;
   padding: 1rem 0;
 }
@@ -77,10 +72,7 @@
   display: flex;
   flex-direction: column;
   padding: 1rem;
-
-  &:nth-child(even) {
-    background: var(--table-background-secondary);
-  }
+  border-top: 1px solid var(--card-border);
 }
 
 .donorSummary {

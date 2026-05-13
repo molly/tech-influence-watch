@@ -6,7 +6,7 @@
 
 .main {
   gap: 1rem;
-  padding: 0.5rem 1rem;
+  padding: 0 1rem 0.5rem 1rem;
   max-width: var(--max-width);
   width: 100%;
   margin: 0 auto;
@@ -35,14 +35,20 @@
 }
 
 .card {
-  background: var(--card-background);
-  border: 1px solid var(--card-border);
   padding: 1rem;
+  &:not(:last-child) {
+    border-right: 1px solid var(--card-border);
+  }
 }
 
 .section {
-  border-top: 2px solid var(--color-black);
   padding: 1rem 0;
+}
+
+.sectionTitle {
+  font-family: var(--font-display);
+  border-bottom: 1px solid var(--divider-color);
+  padding-bottom: 0.5rem;
 }
 
 .errorCardContent {
@@ -62,8 +68,6 @@
   flex: 0 0 auto;
   flex-direction: column;
   color: var(--secondary-text);
-  min-width: 15rem;
-  max-width: 25rem;
 }
 
 .smallCardSkeleton {
@@ -106,9 +110,10 @@
   font-size: 0.6rem;
   text-transform: uppercase;
   padding: 0.1rem 0.25rem;
-  border-radius: 0.25rem;
+  border-radius: 2px;
   margin-left: 0.5rem;
   vertical-align: middle;
+  text-decoration: none;
 }
 
 .plainList {

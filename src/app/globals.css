@@ -60,10 +60,12 @@
   --card-background: #fefefe;
   --card-background-rgb: 254, 254, 254;
   --card-border: var(--color-neutral-300);
+  --divider-color: var(--color-black);
   --map-background: var(--color-white);
   --logo-background: var(--card-background);
   --placeholder-color: var(--color-neutral-300);
   --table-color: var(--color-neutral-200);
+  --table-header-color: var(--color-neutral-700);
   --table-highlight-color: var(--color-blue-100);
   --table-background-secondary: var(--color-neutral-100);
   --sidebar-border: var(--color-neutral-400);

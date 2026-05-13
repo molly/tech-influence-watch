@@ -2,10 +2,12 @@ import { fetchMapData } from "@/app/actions/fetch";
 import { generateDomain } from "@/app/components/chloroplethConstants";
 import ChloroplethMap from "@/app/components/ChloroplethMap";
 import ErrorText from "@/app/components/ErrorText";
+import tableStyles from "@/app/components/tables.module.css";
 import { STATES_BY_ABBR } from "@/app/data/states";
+import sharedStyles from "@/app/shared.module.css";
 import { MapData } from "@/app/types/MapData";
-import { isError } from "@/app/utils/errors";
 import { type Sector } from "@/app/types/Sector";
+import { isError } from "@/app/utils/errors";
 import { humanizeSector, sectorHref } from "@/app/utils/sector";
 import Link from "next/link";
 import InformationalTooltip from "../InformationalTooltip";
@@ -40,7 +42,7 @@ export default async function AllCompanySpendingMap({
   const mapData = data as MapData;
   return (
     <>
-      <h2 id="company-spending-by-state">
+      <h2 id="company-spending-by-state" className={sharedStyles.sectionTitle}>
         Approximate
         <InformationalTooltip>
           <p>
@@ -60,7 +62,13 @@ export default async function AllCompanySpendingMap({
         stateValues={toStateValues(mapData)}
         labelId="company-spending-by-state"
       />
-      {showLink && <Link href={sectorHref("/2026/states", sector)}>&raquo; Spending by state</Link>}
+      {showLink && (
+        <div className={tableStyles.viewMoreLinks}>
+          <Link href={sectorHref("/2026/states", sector)}>
+            &raquo; Spending by state
+          </Link>
+        </div>
+      )}
     </>
   );
 }

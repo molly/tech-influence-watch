@@ -38,16 +38,23 @@ export default function AllExpendituresByParty({ sector }: { sector: Sector }) {
   });
   return (
     <section className={styles.section}>
-      <h2 id="expenditures-by-party-label">PAC expenditures by party</h2>
+      <h2 id="expenditures-by-party-label" className={styles.sectionTitle}>
+        PAC expenditures by party
+      </h2>
       <div className={pageStyles.subtitle}>
         Independent expenditures by {sectorText}focused PACs in support of or
         opposition to candidates
       </div>
       <Suspense fallback={<ExpendituresSkeleton />}>
-        <AllExpendituresByPartyContent labelId="expenditures-by-party-label" sector={sector} />
+        <AllExpendituresByPartyContent
+          labelId="expenditures-by-party-label"
+          sector={sector}
+        />
       </Suspense>
       <div className={styles.linkRow}>
-        <Link href={sectorHref("/2026/spending", sector)}>&raquo; More details</Link>
+        <Link href={sectorHref("/2026/spending", sector)}>
+          &raquo; More details
+        </Link>
       </div>
     </section>
   );

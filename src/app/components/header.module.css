@@ -100,7 +100,7 @@
 .navItem > a {
   font-size: 1rem;
   font-weight: 500;
-  color: var(--color-neutral-300);
+  color: var(--color-white);
   text-decoration: none;
   padding: 1rem 0.5rem;
   display: block;
@@ -155,8 +155,7 @@
 
 .sectorWrapper {
   background-color: var(--color-white);
-  color: var(--color-neutral-500);
-  border-bottom: 1px solid var(--color-neutral-200);
+  color: var(--text-secondary);
   font-size: 0.8rem;
   display: flex;
   align-items: center;

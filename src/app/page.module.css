@@ -1,15 +1,16 @@
 .totalsRow {
   display: grid;
-  gap: inherit;
   grid-template-columns: 1fr;
-  margin: 1rem auto 2rem auto;
+  margin: 0 auto 1rem auto;
+  border-top: 1px solid var(--divider-color);
+  border-bottom: 1px solid var(--card-border);
 }
 
 .columns {
   display: grid;
   grid-template-columns: 1fr;
   align-items: start;
-  gap: 1rem;
+  gap: 4rem;
   grid-template-areas:
     "influencedCard"
     "companySpending"
@@ -68,7 +69,6 @@
 .subtitle {
   color: var(--secondary-text);
   font-size: 0.9em;
-  margin-top: -0.5em;
   margin-bottom: 1em;
 }
 
@@ -78,15 +78,28 @@
   }
 }
 
+@media (max-width: 575px) {
+  .totalsRow > :not(:last-child) {
+    border-right: 0;
+    border-bottom: 1px solid var(--card-border);
+  }
+}
+
 @media (min-width: 576px) {
   .totalsRow {
-    grid-template-columns: repeat(2, minmax(10rem, 25rem));
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+  .totalsRow > :nth-child(-n + 2) {
+    border-bottom: 1px solid var(--card-border);
   }
 }
 
 @media (min-width: 768px) {
   .totalsRow {
-    grid-template-columns: repeat(3, minmax(10rem, 25rem));
+    grid-template-columns: repeat(3, 1fr);
   }
   .columns {
     grid-template-columns: 1fr 1fr;

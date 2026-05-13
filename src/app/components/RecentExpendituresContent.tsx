@@ -151,19 +151,21 @@ export default function RecentExpendituresContent({
                 </span>
               )}
             </div>
-            {committees && expenditure.committee_id && (
-              <Link href={`/2026/committees/${expenditure.committee_id}`}>
-                {committees[expenditure.committee_id].name}
-              </Link>
-            )}
-            {sector === "all" &&
-              committees &&
-              expenditure.committee_id &&
-              committees[expenditure.committee_id]?.sector && (
-                <span className={sharedStyles.sectorBadge}>
-                  {committees[expenditure.committee_id].sector}
-                </span>
+            <div className={styles.expenditureCommittee}>
+              {committees && expenditure.committee_id && (
+                <Link href={`/2026/committees/${expenditure.committee_id}`}>
+                  {committees[expenditure.committee_id].name}
+                </Link>
               )}
+              {sector === "all" &&
+                committees &&
+                expenditure.committee_id &&
+                committees[expenditure.committee_id]?.sector && (
+                  <span className={sharedStyles.sectorBadge}>
+                    {committees[expenditure.committee_id].sector}
+                  </span>
+                )}
+            </div>
             {expenditure.category_code && (
               <div>{getCategory(expenditure.category_code)}</div>
             )}

@@ -10,7 +10,6 @@ import sharedStyles from "@/app/shared.module.css";
 import { CommitteeDetails } from "@/app/types/Committee";
 import { Contributions } from "@/app/types/Contributions";
 import { is4xx, isError } from "@/app/utils/errors";
-import styles from "./page.module.css";
 
 export default async function CommitteeRaised({
   committeeId,
@@ -43,15 +42,14 @@ export default async function CommitteeRaised({
   return (
     <MoneyCard
       amount={formatCurrency(total || 0, true)}
-      topText={<span>{`${committee.name} has`}</span>}
+      topText={"Total raised"}
       bottomText={
         <div>
-          in total funds.
           {donors.total_transferred > 0 ||
           (committee.last_cash_on_hand_end_period &&
             committee.last_cash_on_hand_end_period > 0) ||
           (committee.claimedCommitted && committee.claimedCommitted > 0) ? (
-            <div className={styles.moneyCardDetails}>
+            <>
               <div>
                 {`${formatCurrency(donors.total_contributed, true)} came from direct contributions.`}
               </div>
@@ -62,7 +60,7 @@ export default async function CommitteeRaised({
               )}
               {(committee.last_cash_on_hand_end_period || 0) > 0 && (
                 <div>
-                  {`${formatCurrency(committee.last_cash_on_hand_end_period, true)} was cash on hand.`}
+                  {`${formatCurrency(committee.last_cash_on_hand_end_period, true)} was cash on hand from last cycle.`}
                 </div>
               )}
               {(committee.claimedCommitted || 0) > 0 && (
@@ -70,7 +68,7 @@ export default async function CommitteeRaised({
                   {`They claim to have ${formatCurrency(committee.claimedCommitted, true)} in committed funds, though these have not yet been reflected in FEC filings.`}
                 </div>
               )}
-            </div>
+            </>
           ) : undefined}
         </div>
       }

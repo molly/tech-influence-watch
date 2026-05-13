@@ -1,4 +1,4 @@
-import { humanizeRoundedCurrency } from "@/app/utils/humanize";
+import { humanizeApproximateRounded } from "@/app/utils/humanize";
 import { getFullPartyName } from "@/app/utils/party";
 import { formatCurrency } from "@/app/utils/utils";
 import styles from "./HorizontalBars.module.css";
@@ -58,7 +58,7 @@ export default function HorizontalPartyBars({
             <div className={styles.labelRow}>
               <span className={styles.label}>{label}</span>
               <span className={styles.value}>
-                {humanizeRoundedCurrency(partySummary[party], true)}
+                {`$${humanizeApproximateRounded(partySummary[party])}`}
               </span>
             </div>
             <div

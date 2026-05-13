@@ -8,9 +8,12 @@ export function titlecase(str: string): string {
   return cased.charAt(0).toUpperCase() + cased.substring(1);
 }
 
-export function sentenceCase(str: string): string {
+export function sentenceCase(str: string, lowercaseRest = true): string {
   // Titlecase just the first letter of the first word
-  return str.charAt(0).toUpperCase() + str.substring(1).toLowerCase();
+  return (
+    str.charAt(0).toUpperCase() +
+    (lowercaseRest ? str.substring(1).toLowerCase() : str.substring(1))
+  );
 }
 
 export function titlecaseCompany(str: string): string {

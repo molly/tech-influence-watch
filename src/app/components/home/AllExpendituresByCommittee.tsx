@@ -3,6 +3,7 @@ import {
   fetchConstant,
 } from "@/app/actions/fetch";
 import styles from "@/app/page.module.css";
+import sharedStyles from "@/app/shared.module.css";
 import { CommitteeConstant } from "@/app/types/Committee";
 import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
@@ -43,7 +44,12 @@ export default function AllExpendituresByCommittee({
 }) {
   return (
     <section className={styles.expendituresByCommitteeCard}>
-      <h2 id="expenditures-by-committee-label">PAC expenditures</h2>
+      <h2
+        id="expenditures-by-committee-label"
+        className={sharedStyles.sectionTitle}
+      >
+        PAC expenditures
+      </h2>
       <Suspense fallback={<ExpendituresSkeleton />}>
         <AllExpendituresByCommitteeContent
           labelId="expenditures-by-committee-label"

@@ -16,7 +16,7 @@
 .legendSwatch {
   display: inline-block;
   width: 14px;
-  height: 14px;
+  height: 10px;
   flex-shrink: 0;
 }
 
@@ -50,15 +50,13 @@
 .value {
   font-size: 0.85rem;
   font-variant-numeric: tabular-nums;
-  color: var(--secondary-text);
   white-space: nowrap;
 }
 
 .track {
   width: 100%;
-  height: 14px;
-  background: transparent;
-  border-radius: 2px;
+  height: 10px;
+  ackground: transparent;
   overflow: hidden;
   display: flex;
 }
@@ -67,7 +65,6 @@
 .fill {
   height: 100%;
   background: var(--accent);
-  border-radius: 2px;
   transition: width 0.3s ease;
 }
 
@@ -112,8 +109,7 @@
 
 .inlineTrack {
   flex: 1;
-  height: 14px;
-  border-radius: 2px;
+  height: 10px;
   overflow: hidden;
 }
 

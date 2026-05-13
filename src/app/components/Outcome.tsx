@@ -1,6 +1,7 @@
 import { CandidateSummary, Race } from "@/app/types/Elections";
 import { ExpenditureCandidateSummary } from "@/app/types/Expenditures";
 import { getSubraceName, getUpcomingRaceForCandidate } from "@/app/utils/races";
+import { sentenceCase } from "@/app/utils/titlecase";
 import { formatDateFromString, isUpcomingDate } from "@/app/utils/utils";
 
 export default function Outcome({
@@ -33,10 +34,34 @@ export default function Outcome({
     const nextRace = getUpcomingRaceForCandidate(races, candidate);
     if (nextRace) {
       if (isUpcomingDate(nextRace.date, { inclusive: true })) {
-        return `${inSentence ? " has an u" : "U"}pcoming ${getSubraceName(nextRace)} on ${formatDateFromString(nextRace.date)}`;
+        if (inSentence) {
+          return (
+            <>
+              {` has a ${getSubraceName(nextRace)} on `}
+              <span className="no-wrap">
+                {formatDateFromString(nextRace.date)}
+              </span>
+            </>
+          );
+        }
+        return (
+          <>
+            {`${sentenceCase(getSubraceName(nextRace), false)} on `}
+            <span className="no-wrap">
+              {formatDateFromString(nextRace.date)}
+            </span>
+          </>
+        );
       } else {
         // Edge case where election date may have passed, but results have not yet become available.
-        return `${inSentence ? " is a" : "A"}waiting results from the ${getSubraceName(nextRace)} on ${formatDateFromString(nextRace.date)}`;
+        return (
+          <>
+            {`${inSentence ? " is a" : "A"}waiting results from the ${getSubraceName(nextRace)} on `}
+            <span className="no-wrap">
+              ${formatDateFromString(nextRace.date)}
+            </span>
+          </>
+        );
       }
     } else {
       return `${inSentence ? " w" : "W"}on the general election`;

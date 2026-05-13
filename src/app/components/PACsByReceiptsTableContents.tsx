@@ -74,7 +74,7 @@ export default async function PACsByReceiptsTableContents({
             key={committee.committee_id}
             className={`${styles.superPacRow}${highlighted ? ` ${styles.superPacCryptoRow}` : ""}`}
           >
-            <td>{ind + 1}</td>
+            <td className={styles.rowIndex}>{ind + 1}</td>
             <td className="text-cell">{committeeIdentifier}</td>
             <td className={`text-cell ${styles.tableCellCollapse1}`}>
               {committee.description}

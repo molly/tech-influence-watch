@@ -235,6 +235,7 @@ function CandidateRow({
           <Link className="unstyled" href={raceHref}>
             <Candidate
               candidateSummary={candidate}
+              candidateNameClassName="bold"
               candidateImageClassName={pageStyles.hideImageXs}
             />
           </Link>
@@ -338,9 +339,10 @@ export default function InfluencedRacesContents({
     string,
     Beneficiary
   > | null>();
-  const [committeeConstants, setCommitteeConstants] = useState<
-    Record<string, CommitteeConstant> | null
-  >(null);
+  const [committeeConstants, setCommitteeConstants] = useState<Record<
+    string,
+    CommitteeConstant
+  > | null>(null);
 
   useEffect(() => {
     setCommitteeConstants(null);
@@ -447,7 +449,7 @@ export default function InfluencedRacesContents({
     <table className={styles.influencedTable}>
       <thead className={styles.inheritBorderRadius}>
         <tr className={styles.influencedTableHeader}>
-          <th className="text-cell">Candidate</th>
+          <th className={`${styles.candidateCell} text-cell`}>Candidate</th>
           <th className="center-cell">State</th>
           <th className={`${styles.tableCellCollapse2} center-cell small-cell`}>
             Office

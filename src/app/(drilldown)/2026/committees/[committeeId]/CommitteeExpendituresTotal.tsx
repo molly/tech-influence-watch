@@ -30,10 +30,6 @@ export default async function CommitteeExpendituresTotal({
   const totals = totalData as CommitteeTotalExpenditures;
   const expenditures = totals.expenditures || 0;
   const disbursements = totals.disbursements || 0;
-  let bottomText = "of it so far.";
-  if (disbursements > 0) {
-    bottomText += ` They have also transferred ${formatCurrency(disbursements, true)} to other crypto-focused committees.`;
-  }
 
   let tooltip;
   if (!isError(donorData)) {
@@ -55,8 +51,7 @@ export default async function CommitteeExpendituresTotal({
   return (
     <MoneyCard
       amount={formatCurrency(expenditures, true)}
-      topText="They have spent"
-      bottomText={bottomText}
+      topText="Total spending"
       tooltip={tooltip}
     />
   );

@@ -6,6 +6,7 @@ import Link from "next/link";
 import styles from "./page.module.css";
 
 import { fetchCommitteeDetails } from "@/app/actions/fetch";
+import MoneyCard from "@/app/components/MoneyCard";
 import { isError } from "@/app/utils/errors";
 
 export default async function CommitteeDisbursements({
@@ -42,6 +43,9 @@ export default async function CommitteeDisbursements({
       committee.disbursements_by_committee[a].total
     );
   });
+  const totalDisbursements = Object.values(
+    committee.disbursements_by_committee,
+  ).reduce((sum, disbursement) => sum + disbursement.total, 0);
 
   function renderCommitteeName(committeeId: string) {
     if (committeeConstants[committeeId]) {
@@ -57,10 +61,11 @@ export default async function CommitteeDisbursements({
     }
   }
 
-  return (
-    <section className={styles.disbursementsCard}>
-      <h2>Transfers to other committees</h2>
-      <ul className={styles.committeeDisbursementsList}>
+  const bottomText =
+    sortedRecipientCommitteeIds.length === 1 ? (
+      <span>to {renderCommitteeName(sortedRecipientCommitteeIds[0])}</span>
+    ) : (
+      <>
         {sortedRecipientCommitteeIds.map((recipientCommitteeId) => (
           <li
             key={recipientCommitteeId}
@@ -76,7 +81,14 @@ export default async function CommitteeDisbursements({
             </span>
           </li>
         ))}
-      </ul>
-    </section>
+      </>
+    );
+
+  return (
+    <MoneyCard
+      amount={formatCurrency(totalDisbursements, true)}
+      topText="Total transferred to other committees"
+      bottomText={bottomText}
+    />
   );
 }

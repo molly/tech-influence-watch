@@ -1,6 +1,7 @@
 "use client";
 
 import styles from "@/app/components/tables.module.css";
+import sharedStyles from "@/app/shared.module.css";
 import { type Sector } from "@/app/types/Sector";
 import { humanizeSector, sectorHref } from "@/app/utils/sector";
 import Link from "next/link";
@@ -22,12 +23,23 @@ export default function InfluencedRaces({
   });
   return (
     <div className={styles.influencedCard}>
-      <h2>{`${fullPage ? "R" : "Top r"}aces influenced by ${sectorText} super PAC money`}</h2>
-      <InfluencedRacesContents small={useCompact} fullPage={fullPage} sector={sector} />
+      <h2
+        className={sharedStyles.sectionTitle}
+      >{`${fullPage ? "R" : "Top r"}aces influenced by ${sectorText} super PAC money`}</h2>
+      <InfluencedRacesContents
+        small={useCompact}
+        fullPage={fullPage}
+        sector={sector}
+      />
       {!fullPage && (
-        <Link href={sectorHref("/2026/elections", sector)} className={styles.viewMoreLink}>
-          &raquo; All races with {sectorText} spending
-        </Link>
+        <div className={styles.viewMoreLinks}>
+          <Link
+            href={sectorHref("/2026/elections", sector)}
+            className={styles.viewMoreLink}
+          >
+            &raquo; All races with {sectorText} spending
+          </Link>
+        </div>
       )}
     </div>
   );

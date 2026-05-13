@@ -54,6 +54,9 @@ export default async function CommitteePage({
         <Suspense fallback={<MoneyCardSkeleton />}>
           <CommitteeExpendituresTotal committeeId={committeeId} />
         </Suspense>
+        <Suspense fallback={<MoneyCardSkeleton />}>
+          <CommitteeDisbursements committeeId={committeeId} />
+        </Suspense>
       </section>
       <div className={styles.committeeWrapper}>
         <section className={styles.donorSection}>
@@ -73,16 +76,13 @@ export default async function CommitteePage({
         <div className={styles.rightColumn}>
           <div className={sharedStyles.constrainedWrapper}>
             <section
-              className={`${sharedStyles.card} ${sharedStyles.constrainWidth}`}
+              className={`${sharedStyles.section} ${sharedStyles.constrainWidth}`}
             >
               <h2 id="expenditures-label">Expenditures</h2>
               <Suspense fallback={<SpendingByPartySkeleton />}>
                 <CommitteeExpendituresByParty committeeId={committeeId} />
               </Suspense>
             </section>
-            <Suspense fallback={null}>
-              <CommitteeDisbursements committeeId={committeeId} />
-            </Suspense>
           </div>
           <CommitteeRecentExpenditures committeeId={committeeId} />
         </div>
