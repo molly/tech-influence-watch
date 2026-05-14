@@ -4,9 +4,9 @@ import Skeleton from "./skeletons/Skeleton";
 export function MoneyCardSkeleton({ className }: { className?: string }) {
   return (
     <div className={`${sharedStyles.smallCard} ${className || ""}`}>
-      <Skeleton width="100%" onCard={true} />
       <Skeleton width="80%" onCard={true} />
       <Skeleton width="60%" height="3rem" onCard={true} />
+      <Skeleton width="90%" onCard={true} />
       <Skeleton width="80%" onCard={true} />
     </div>
   );

@@ -386,3 +386,31 @@
     display: flex;
   }
 }
+
+@media (prefers-color-scheme: dark) {
+  .logoAndNav {
+    border-bottom: 1px solid var(--color-neutral-800);
+  }
+
+  .sectorWrapper {
+    background-color: var(--color-black);
+  }
+
+  .sector {
+    background-color: var(--color-black);
+    border: 1px solid var(--color-neutral-600);
+    color: var(--color-neutral-200);
+  }
+
+  .sector:not(.sectorActive):hover {
+    background-color: var(--color-neutral-100);
+    border-color: var(--color-neutral-300);
+    color: var(--color-neutral-700);
+  }
+
+  .sectorActive {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: var(--color-black);
+  }
+}

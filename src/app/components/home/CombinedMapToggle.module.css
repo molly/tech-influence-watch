@@ -11,7 +11,7 @@
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
   padding: 0.25rem 1rem;
-  color: var(--color-black);
+  color: var(--main-text);
   font-size: 0.75rem;
   text-transform: uppercase;
   cursor: pointer;
@@ -29,4 +29,23 @@
 
 .activeButton:hover {
   color: var(--color-neutral-800);
+}
+
+@media (prefers-color-scheme: dark) {
+  .button {
+    color: var(--color-neutral-300);
+  }
+
+  .button:hover {
+    color: var(--color-neutral-100);
+  }
+
+  .activeButton {
+    border-bottom-color: var(--accent);
+    color: var(--main-text);
+  }
+
+  .activeButton:hover {
+    color: var(--color-neutral-100);
+  }
 }

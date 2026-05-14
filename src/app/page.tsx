@@ -56,7 +56,10 @@ export default async function Home({
                 }
                 superPacMap={
                   <Suspense fallback={<USMapSkeleton />}>
-                    <SuperPacSpendingMapWrapper sector={sector} showLink={true} />
+                    <SuperPacSpendingMapWrapper
+                      sector={sector}
+                      showLink={true}
+                    />
                   </Suspense>
                 }
               />

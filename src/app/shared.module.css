@@ -17,6 +17,7 @@
 }
 
 .accent-text {
+  color: var(--main-text);
   font-family: var(--font-display);
   font-weight: 400;
 }
@@ -71,7 +72,7 @@
 }
 
 .moneyCardHeader {
-  color: var(--main-text);
+  color: var(--secondary-text);
   text-transform: uppercase;
 }
 
@@ -95,7 +96,6 @@
   padding: 0.25rem 0 0.5rem 0;
   font-size: 2rem;
   font-weight: bold;
-  color: var(--color-black);
 }
 
 .sectorBadge {
@@ -165,5 +165,12 @@
   .highlight {
     font-size: clamp(2rem, 5vw, 3rem);
     white-space: nowrap;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .sectorBadge {
+    background-color: var(--color-lime-900);
+    color: var(--color-lime-300);
   }
 }

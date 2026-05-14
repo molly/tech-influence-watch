@@ -61,10 +61,14 @@ export default async function PACsByReceiptsTableContents({
         if (committee.is_tracked) {
           const sector = committee.sector || "tech";
           committeeIdentifier = (
-            <Link href={`/2026/committees/${committee.committee_id}`}>
-              <span className={styles.trackedCommittee}>{committeeName}</span>{" "}
+            <>
+              <Link href={`/2026/committees/${committee.committee_id}`}>
+                <span className={styles.trackedCommittee}>
+                  {committeeName}
+                </span>{" "}
+              </Link>
               <span className={sharedStyles.sectorBadge}>{sector}</span>
-            </Link>
+            </>
           );
         }
         const highlighted =

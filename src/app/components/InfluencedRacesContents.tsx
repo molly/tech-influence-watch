@@ -63,15 +63,28 @@ const renderPlaintextSpending = (candidate: ExpenditureCandidateSummary) => {
   return [support, oppose].filter(Boolean).join(" and ");
 };
 
-function InfluencedRacesContentsSkeleton({ fullPage }: { fullPage: boolean }) {
+function InfluencedRacesContentsSkeleton({
+  fullPage,
+  small,
+}: {
+  fullPage: boolean;
+  small?: boolean;
+}) {
   return range(fullPage ? 20 : 5).map((i) => (
     <div key={`influenced-race-skeleton-${i}`} className={styles.influencedRow}>
       <CandidateSkeleton onCard={true} />
-      <Skeleton
-        onCard={true}
-        width="15rem"
-        className={sharedStyles.noMarginBottomHalfLeft}
-      />
+      {!small && (
+        <>
+          {[2.5, 6, 5, 5, 5, 5, 13].map((width, ind) => (
+            <Skeleton
+              key={`skeleton-${ind}`}
+              onCard={true}
+              width={`${width}rem`}
+              className={sharedStyles.noMarginBottomHalfLeft}
+            />
+          ))}
+        </>
+      )}
     </div>
   ));
 }
@@ -235,7 +248,6 @@ function CandidateRow({
           <Link className="unstyled" href={raceHref}>
             <Candidate
               candidateSummary={candidate}
-              candidateNameClassName="bold"
               candidateImageClassName={pageStyles.hideImageXs}
             />
           </Link>
@@ -373,7 +385,9 @@ export default function InfluencedRacesContents({
   }, [fullPage, sector]);
 
   if (!raceDetailsData || (sector !== "all" && !committeeConstants)) {
-    return <InfluencedRacesContentsSkeleton fullPage={fullPage} />;
+    return (
+      <InfluencedRacesContentsSkeleton fullPage={fullPage} small={small} />
+    );
   }
 
   if (isError(expenditures) || isError(raceDetailsData)) {
@@ -449,7 +463,7 @@ export default function InfluencedRacesContents({
     <table className={styles.influencedTable}>
       <thead className={styles.inheritBorderRadius}>
         <tr className={styles.influencedTableHeader}>
-          <th className={`${styles.candidateCell} text-cell`}>Candidate</th>
+          <th className="text-cell">Candidate</th>
           <th className="center-cell">State</th>
           <th className={`${styles.tableCellCollapse2} center-cell small-cell`}>
             Office

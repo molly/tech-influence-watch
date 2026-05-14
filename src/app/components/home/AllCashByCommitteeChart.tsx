@@ -8,14 +8,16 @@ import styles from "./HorizontalBars.module.css";
 const BASE_LEGEND_ITEMS = [
   { label: "Cash from previous cycle", colorClass: styles.colorCash },
   { label: "Contributions", colorClass: styles.colorContributed },
-  { label: "Transfers from other committees", colorClass: styles.colorTransferred },
+  {
+    label: "Transfers from other committees",
+    colorClass: styles.colorTransferred,
+  },
 ];
 
 const CLAIMED_LEGEND_ITEM = {
   label: "Claimed commitments",
   colorClass: styles.colorClaimed,
 };
-
 
 export default function AllCashByCommitteeChart({
   committees,
@@ -68,17 +70,19 @@ export default function AllCashByCommitteeChart({
           return (
             <li key={committee.id} className={styles.barRow}>
               <div className={styles.labelRow}>
-                <a
-                  href={`/2026/committees/${committee.id}`}
-                  className={styles.label}
-                >
-                  {committee.name}
+                <span>
+                  <a
+                    href={`/2026/committees/${committee.id}`}
+                    className={styles.label}
+                  >
+                    {committee.name}
+                  </a>
                   {sector === "all" && committee.sector && (
                     <span className={sharedStyles.sectorBadge}>
                       {committee.sector}
                     </span>
                   )}
-                </a>
+                </span>
                 <span className={styles.value}>{formatCompact(barTotal)}</span>
               </div>
               <div

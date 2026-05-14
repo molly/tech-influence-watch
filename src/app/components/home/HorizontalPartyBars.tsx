@@ -1,6 +1,8 @@
 import { humanizeApproximateRounded } from "@/app/utils/humanize";
 import { getFullPartyName } from "@/app/utils/party";
+import { range } from "@/app/utils/range";
 import { formatCurrency } from "@/app/utils/utils";
+import Skeleton from "../skeletons/Skeleton";
 import styles from "./HorizontalBars.module.css";
 
 const PARTY_ORDER: Record<string, number> = {
@@ -30,6 +32,22 @@ const getPartyLabel = (party: string): string => {
   const name = getFullPartyName(party[0]);
   return name.charAt(0).toUpperCase() + name.slice(1);
 };
+
+export function HorizontalPartyBarsSkeleton({ numBars }: { numBars: number }) {
+  return (
+    <ul className={styles.bars}>
+      {range(numBars).map((i) => (
+        <li key={`skeleton-bar-${i}`} className={styles.barRow}>
+          <div className={styles.labelRow}>
+            <Skeleton randWidth={[3, 8]} />
+            <Skeleton randWidth={[1, 3]} />
+          </div>
+          <div className={styles.track} />
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 export default function HorizontalPartyBars({
   partySummary,

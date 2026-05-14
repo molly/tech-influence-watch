@@ -1,5 +1,8 @@
 .mapWrapper {
   position: relative;
+  background-color: var(--color-neutral-50);
+  border: 1px solid var(--card-border);
+  padding: 0.5rem;
 }
 
 .svg {
@@ -81,47 +84,45 @@
 }
 
 @media (prefers-color-scheme: dark) {
+  .mapWrapper {
+    background-color: var(--color-black);
+  }
+
+  .svg,
+  .legend {
+    stroke: var(--color-neutral-600);
+  }
+
   .svgSkeleton {
     stroke: var(--secondary-text);
   }
 
-  /* TODO: Update for green */
-  .stateFill1,
-  .stateFill2,
-  .stateFill3,
-  .stateFill4,
-  .stateFill5,
-  .stateFill6,
-  .stateFill7 {
-    fill: var(--color-blue-400);
-  }
-
   .stateFill1 {
-    fill-opacity: 0.2;
+    fill: var(--color-lime-950);
   }
 
   .stateFill2 {
-    fill-opacity: 0.3;
+    fill: #2a4400;
   }
 
   .stateFill3 {
-    fill-opacity: 0.4;
+    fill: #3f6800;
   }
 
   .stateFill4 {
-    fill-opacity: 0.5;
+    fill: var(--color-lime-600);
   }
 
   .stateFill5 {
-    fill-opacity: 0.6;
+    fill: var(--color-lime-500);
   }
 
   .stateFill6 {
-    fill-opacity: 0.8;
+    fill: #97cc1f;
   }
 
   .stateFill7 {
-    fill-opacity: 1;
+    fill: var(--color-lime-300);
   }
 
   .stateLink {

@@ -8,8 +8,8 @@ import { humanizeSector, sectorHref } from "@/app/utils/sector";
 import Link from "next/link";
 import { Suspense } from "react";
 import ErrorText from "../ErrorText";
-import ExpendituresSkeleton from "../skeletons/ExpendituresSkeleton";
 import SpendingByPartyWithOpposition from "../SpendingByPartyWithOpposition";
+import { HorizontalPartyBarsSkeleton } from "./HorizontalPartyBars";
 
 async function AllExpendituresByPartyContent({
   labelId,
@@ -45,7 +45,7 @@ export default function AllExpendituresByParty({ sector }: { sector: Sector }) {
         Independent expenditures by {sectorText}focused PACs in support of or
         opposition to candidates
       </div>
-      <Suspense fallback={<ExpendituresSkeleton />}>
+      <Suspense fallback={<HorizontalPartyBarsSkeleton numBars={4} />}>
         <AllExpendituresByPartyContent
           labelId="expenditures-by-party-label"
           sector={sector}

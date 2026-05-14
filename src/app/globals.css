@@ -40,10 +40,14 @@
 
   --color-lime-50: #f2f9e0;
   --color-lime-100: #d6ed8f;
+  --color-lime-200: #d8f999;
   --color-lime-300: #b8db3d;
+  --color-lime-400: #9ae600;
   --color-lime-500: #7ab800;
   --color-lime-600: #5a8a00;
+  --color-lime-700: #497d00;
   --color-lime-800: #3a5c00;
+  --color-lime-900: #35530e;
   --color-lime-950: #1e2f00;
 
   --accent: var(--color-lime-500);
@@ -55,8 +59,7 @@
   --party-green: #6a9e7f;
   --party-independent: #ddddbb;
   --party-unknown: var(--color-neutral-300);
-  --background-start: var(--color-neutral-50);
-  --background-end: var(--color-neutral-300);
+  --background: var(--color-white);
   --card-background: #fefefe;
   --card-background-rgb: 254, 254, 254;
   --card-border: var(--color-neutral-300);
@@ -118,32 +121,33 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background-start: var(--color-neutral-900);
-    --background-end: var(--color-neutral-950);
+    --background: var(--color-neutral-900);
     --card-background: var(--color-neutral-800);
     --card-background-rgb: 30, 41, 59;
     --card-border: var(--color-neutral-700);
     --map-background: var(--card-background);
     --logo-background: var(--color-neutral-400);
-    --placeholder-color: var(--color-neutral-300);
+    --placeholder-color: var(--color-neutral-700);
     --table-color: var(--color-neutral-700);
+    --table-header-color: var(--color-neutral-400);
     --table-highlight-color: var(--color-blue-900);
     --table-background-secondary: var(--color-neutral-900);
     --chart-skeleton: var(--color-neutral-700);
+    --divider-color: var(--color-neutral-200);
 
     --main-text: var(--color-neutral-200);
     --text-stroke: var(--color-neutral-200);
     --secondary-text: var(--color-neutral-400);
-    --link-text: #a0bcf8;
-    --link-text-hover: #c1cff0;
+    --link-text: var(--color-lime-300);
+    --link-text-hover: var(--color-lime-100);
 
-    --skeleton-start: var(--color-neutral-800);
-    --skeleton-end: #212e42;
-    --skeleton-on-card-start: var(--color-neutral-700);
-    --skeleton-on-card-end: #37465b;
+    --skeleton-start: var(--color-neutral-700);
+    --skeleton-end: var(--color-neutral-800);
+    --skeleton-on-card-start: var(--skeleton-start);
+    --skeleton-on-card-end: var(--skeleton-end);
 
-    --party-republican: #a61117;
-    --party-democrat: #0000e6;
+    --party-republican: #a13a3a;
+    --party-democrat: #386094;
   }
 }
 
@@ -169,7 +173,7 @@ body {
 
 body {
   color: var(--main-text);
-  background: var(--color-white);
+  background: var(--background);
   line-height: 1.3;
   padding: 0;
   margin: 0;

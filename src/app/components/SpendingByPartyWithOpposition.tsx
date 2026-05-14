@@ -69,22 +69,20 @@ export default function SpendingByPartyWithOpposition({
             const pct = max > 0 ? (value / max) * 100 : 0;
 
             return (
-              <div key={key} className={styles.inlineRow}>
-                <span className={styles.inlineLabel}>{label}</span>
-                {value > 0 ? (
-                  <div
-                    className={styles.inlineTrack}
-                    role="img"
-                    aria-label={`${label}: ${formatCurrency(value, true)}`}
-                  >
+              <div key={key} className={styles.barRow}>
+                <div className={styles.labelRow}>
+                  <span className={styles.label}>{label}</span>
+                  <span className={styles.value}>{formatCompact(value)}</span>
+                </div>
+                <div
+                  className={styles.track}
+                  role="img"
+                  aria-label={`${label}: ${formatCurrency(value, true)}`}
+                >
+                  {value > 0 && (
                     <div className={styles.fill} style={{ width: `${pct}%` }} />
-                  </div>
-                ) : (
-                  <span className={styles.inlineTrack} aria-hidden={true} />
-                )}
-                <span className={styles.inlineValue}>
-                  {formatCompact(value)}
-                </span>
+                  )}
+                </div>
               </div>
             );
           })}

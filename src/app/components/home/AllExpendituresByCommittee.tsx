@@ -9,8 +9,8 @@ import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
 import { Suspense } from "react";
 import ErrorText from "../ErrorText";
-import ExpendituresSkeleton from "../skeletons/ExpendituresSkeleton";
 import AllExpendituresByCommitteeChart from "./AllExpendituresByCommitteeChart";
+import { HorizontalPartyBarsSkeleton } from "./HorizontalPartyBars";
 
 async function AllExpendituresByCommitteeContent({
   labelId,
@@ -50,7 +50,7 @@ export default function AllExpendituresByCommittee({
       >
         PAC expenditures
       </h2>
-      <Suspense fallback={<ExpendituresSkeleton />}>
+      <Suspense fallback={<HorizontalPartyBarsSkeleton numBars={4} />}>
         <AllExpendituresByCommitteeContent
           labelId="expenditures-by-committee-label"
           sector={sector}

@@ -15,7 +15,7 @@
 
 .legendSwatch {
   display: inline-block;
-  width: 14px;
+  width: 10px;
   height: 10px;
   flex-shrink: 0;
 }
@@ -43,6 +43,7 @@
 }
 
 .label {
+  color: var(--main-text);
   font-size: 0.9rem;
   text-decoration: none;
 }
@@ -58,6 +59,7 @@
   height: 10px;
   overflow: hidden;
   display: flex;
+  background-color: var(--color-neutral-50);
 }
 
 /* Single-color fill (HorizontalPartyBars) */
@@ -94,33 +96,6 @@
   color: var(--secondary-text);
 }
 
-.inlineRow {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.inlineLabel {
-  composes: label;
-  width: 7rem;
-  flex-shrink: 0;
-}
-
-.inlineTrack {
-  flex: 1;
-  height: 10px;
-  overflow: hidden;
-}
-
-.inlineValue {
-  font-size: 0.85rem;
-  font-variant-numeric: tabular-nums;
-  color: var(--secondary-text);
-  white-space: nowrap;
-  width: 4.5rem;
-  text-align: right;
-}
-
 /* Segment / swatch colors */
 .colorCash {
   background: var(--color-lime-800);
@@ -136,4 +111,10 @@
 
 .colorClaimed {
   background: var(--color-neutral-300);
+}
+
+@media (prefers-color-scheme: dark) {
+  .track {
+    background-color: var(--color-neutral-800);
+  }
 }

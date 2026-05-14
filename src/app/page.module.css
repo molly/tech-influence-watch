@@ -88,7 +88,7 @@
 }
 
 @media (min-width: 576px) and (max-width: 767px) {
-  .totalsRow > :nth-child(-n + 2) {
+  .totalsRow > :not(:last-child) {
     border-bottom: 1px solid var(--card-border);
   }
 }

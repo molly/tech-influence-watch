@@ -126,3 +126,14 @@
     display: none;
   }
 }
+
+@media (prefers-color-scheme: dark) {
+  .superPacCryptoRow {
+    background-color: inherit;
+    border-left: 2px solid var(--accent);
+  }
+
+  .superPacCryptoRow .rowIndex {
+    color: var(--link-text);
+  }
+}
