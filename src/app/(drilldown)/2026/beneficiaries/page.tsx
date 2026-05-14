@@ -21,7 +21,6 @@ import { titlecaseCommittee, titlecaseLastFirst } from "@/app/utils/titlecase";
 import { formatCurrency } from "@/app/utils/utils";
 import type { Metadata } from "next";
 import Link from "next/link";
-import styles from "./page.module.css";
 
 export async function generateMetadata({
   searchParams,
@@ -129,7 +128,7 @@ export default async function BeneficiariesList({
 
   return (
     <div className="single-column-page">
-      <section className={styles.card}>
+      <section>
         <h2 className={tableStyles.tableCardContent}>Beneficiaries</h2>
         <p className="secondary">
           {`Candidates and committees that have received

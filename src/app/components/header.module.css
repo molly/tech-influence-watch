@@ -190,8 +190,199 @@
   color: var(--color-white);
 }
 
-@media (prefers-color-scheme: dark) {
-  .logoText {
-    -webkit-text-stroke-color: var(--color-neutral-200);
+/* ── Hamburger button ──────────────────────────────────────────────── */
+
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 1rem;
+  margin-right: 0.5rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.hamburgerIcon {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--color-white);
+  position: relative;
+  transition:
+    background 0.2s,
+    transform 0.2s;
+}
+
+.hamburgerIcon::before,
+.hamburgerIcon::after {
+  content: "";
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--color-white);
+  position: absolute;
+  transition:
+    transform 0.2s,
+    top 0.2s;
+}
+
+.hamburgerIcon::before {
+  top: -7px;
+}
+
+.hamburgerIcon::after {
+  top: 7px;
+}
+
+/* ── Mobile menu sheet ─────────────────────────────────────────────── */
+
+.mobileMenu {
+  position: fixed;
+  inset: 0;
+  background: var(--color-black);
+  z-index: 1000;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.mobileMenuHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--color-neutral-800);
+  flex-shrink: 0;
+}
+
+.mobileMenuBrand {
+  composes: accent-text from "@/app/shared.module.css";
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--color-white);
+  text-decoration: none;
+}
+
+.mobileMenuBrand:hover {
+  text-decoration: none;
+  color: var(--color-neutral-200);
+}
+
+.mobileMenuWatch {
+  color: var(--accent);
+}
+
+.mobileMenuClose {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeIcon {
+  display: block;
+  width: 20px;
+  height: 20px;
+  position: relative;
+}
+
+.closeIcon::before,
+.closeIcon::after {
+  content: "";
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--color-white);
+  position: absolute;
+  top: 50%;
+}
+
+.closeIcon::before {
+  transform: rotate(45deg);
+}
+
+.closeIcon::after {
+  transform: rotate(-45deg);
+}
+
+.mobileSection {
+  border-bottom: 0.5px solid var(--color-neutral-900);
+}
+
+.mobileSectionButton {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  min-height: 52px;
+  background: none;
+  border: none;
+  padding: 0 1.5rem;
+  color: var(--color-white);
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  transition: color 0.15s;
+}
+
+.mobileSectionButton:hover {
+  color: var(--color-neutral-200);
+}
+
+.chevron {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid var(--color-neutral-400);
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.mobileSectionLinks {
+  background: var(--color-neutral-950);
+}
+
+.mobileSectionLink {
+  display: block;
+  padding: 0.75rem 1.5rem 0.75rem 2.5rem;
+  color: var(--color-neutral-300);
+  text-decoration: none;
+  font-size: 0.95rem;
+  border-bottom: 0.5px solid var(--color-neutral-900);
+  transition:
+    color 0.15s,
+    background 0.15s;
+}
+
+.mobileSectionLink:last-child {
+  border-bottom: none;
+}
+
+.mobileSectionLink:hover {
+  color: var(--color-white);
+  background: var(--color-neutral-800);
+}
+
+/* ── Responsive breakpoints ────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .nav {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
   }
 }

@@ -21,7 +21,7 @@
 .influencedTable {
   width: 100%;
   flex-grow: 1;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   margin-bottom: 1rem;
 }
 
@@ -102,6 +102,7 @@
   width: 2.5ch;
   text-align: right;
   color: var(--secondary-text);
+}
 
 .goalIconWrapper {
   display: inline-flex;

@@ -1,4 +1,7 @@
-import { fetchAllRecentContributions, fetchConstant } from "@/app/actions/fetch";
+import {
+  fetchAllRecentContributions,
+  fetchConstant,
+} from "@/app/actions/fetch";
 import styles from "@/app/page.module.css";
 import sharedStyles from "@/app/shared.module.css";
 import { CommitteeConstant } from "@/app/types/Committee";
@@ -39,7 +42,9 @@ async function AllRecentContributionsContent({
 
   const trackedCommitteeIds = new Set(Object.keys(committeesData ?? {}));
   const allContributions = data as RecentContribution[];
-  const contributions = fullPage ? allContributions : allContributions.slice(0, 5);
+  const contributions = fullPage
+    ? allContributions
+    : allContributions.slice(0, 5);
   return (
     <RecentContributionsContent
       contributions={contributions}

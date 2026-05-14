@@ -10,15 +10,16 @@
   display: grid;
   grid-template-columns: 1fr;
   align-items: start;
-  gap: 4rem;
+  column-gap: 4rem;
   grid-template-areas:
     "influencedCard"
-    "companySpending"
     "combinedMap"
+    "companySpending"
+    "byParty"
     "allCash"
     "byCommittee"
     "expenditures"
-    "byParty"
+    "recentContributions"
     "superPacCard";
 }
 
@@ -48,7 +49,6 @@
 }
 
 .recentExpenditures {
-  composes: cardWithTable from "@/app/shared.module.css";
   grid-area: expenditures;
   position: relative;
   display: flex;
@@ -56,7 +56,7 @@
 }
 
 .recentContributions {
-  composes: cardWithTable from "@/app/shared.module.css";
+  grid-area: recentContributions;
   position: relative;
   display: flex;
   flex-direction: column;

@@ -56,7 +56,6 @@
 .track {
   width: 100%;
   height: 10px;
-  ackground: transparent;
   overflow: hidden;
   display: flex;
 }
