@@ -86,11 +86,6 @@
   text-decoration: line-through;
 }
 
-.notes {
-  color: var(--secondary-text);
-  font-style: italic;
-}
-
 /* Spending */
 .spendingCard {
   composes: card from "@/app/shared.module.css";
@@ -126,11 +121,6 @@
 
 .cryptoSpendingLabel {
   fill: transparent;
-}
-
-.outsideLabel {
-  justify-content: flex-start;
-  text-align: left;
 }
 
 .mainLayoutLine {
@@ -205,10 +195,6 @@
 
 .hugLeft {
   justify-content: flex-start;
-}
-
-.labelOnBackground {
-  color: var(--main-text);
 }
 
 /* Committees, other support */

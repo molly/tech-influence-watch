@@ -25,18 +25,6 @@
   stroke: var(--color-neutral-300);
 }
 
-.mapLoadingError {
-  composes: section from "@/app/shared.module.css";
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  margin: auto;
-  max-width: 15rem;
-  max-height: 5rem;
-}
-
 .stateFillError {
   fill: transparent;
 }

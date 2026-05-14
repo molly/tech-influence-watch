@@ -35,24 +35,6 @@
   color: var(--color-neutral-200);
 }
 
-.expendituresBarLabelOffBar {
-  composes: expendituresBarLabel;
-  display: flex;
-  height: 100%;
-  align-items: flex-end;
-  color: var(--main-text);
-}
-
-.expendituresBarLabelSpan {
-  min-width: 0;
-}
-
-.supportOpposeLabel {
-  font-size: 0.9rem;
-  font-weight: bold;
-  text-align: center;
-}
-
 .skeletonBar {
   fill: var(--chart-skeleton);
 }
@@ -60,10 +42,6 @@
 .partyLabel {
   text-align: center;
   font-weight: bold;
-}
-
-.footerLink {
-  justify-self: flex-end;
 }
 
 @media (min-width: 768px) and (max-width: 1000px) {

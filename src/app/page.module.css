@@ -62,10 +62,6 @@
   flex-direction: column;
 }
 
-.recentExpendituresWrapper {
-  height: 100%;
-}
-
 .subtitle {
   color: var(--secondary-text);
   font-size: 0.9em;

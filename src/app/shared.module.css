@@ -70,12 +70,6 @@
   color: var(--secondary-text);
 }
 
-.smallCardSkeleton {
-  composes: smallCard;
-  display: flex;
-  justify-content: center;
-}
-
 .moneyCardHeader {
   color: var(--main-text);
   text-transform: uppercase;
@@ -126,22 +120,12 @@
   padding: 0.5rem 0;
 }
 
-.hasFade {
-  mask-size: 100% 100%;
-  mask-position:
-    0 0,
-    100% 0;
-  mask-repeat: no-repeat, no-repeat;
-}
-
-.goalAccomplished,
-.checkmark {
+.goalAccomplished {
   fill: var(--color-green-700);
   max-width: 1rem;
 }
 
-.goalFailed,
-.xMark {
+.goalFailed {
   fill: var(--color-red-600);
   max-width: 1rem;
 }
@@ -166,10 +150,6 @@
 
 .noMargin {
   margin: 0;
-}
-
-.noMarginBottom {
-  margin-bottom: 0;
 }
 
 .noMarginBottomHalfLeft {

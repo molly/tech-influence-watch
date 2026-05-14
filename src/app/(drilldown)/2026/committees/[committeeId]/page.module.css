@@ -34,17 +34,6 @@
   gap: inherit;
 }
 
-.receiptsSection {
-  composes: fullWidth from "@/app/shared.module.css";
-  text-align: center;
-}
-
-.receipts {
-  composes: accent-text from "@/app/shared.module.css";
-  font-size: 3rem;
-  margin-bottom: 0;
-}
-
 .donorSection {
   composes: section from "@/app/shared.module.css";
   width: 66%;
@@ -144,20 +133,6 @@
 .donorDateRange {
   font-size: 1rem;
   margin-left: 1rem;
-}
-
-.topLevelContribution {
-  color: var(--main-text);
-}
-
-.disbursementsCard {
-  composes: card from "@/app/shared.module.css";
-  composes: constrainWidth from "@/app/shared.module.css";
-}
-
-.committeeDisbursementsList {
-  list-style: none;
-  padding: 0;
 }
 
 .committeeDisbursementsListItem {

@@ -55,10 +55,6 @@
   background-color: var(--color-lime-50);
 }
 
-.superPacTableCellMinWidth {
-  min-width: 7rem;
-}
-
 .viewMoreLinks {
   display: flex;
   flex-wrap: wrap;

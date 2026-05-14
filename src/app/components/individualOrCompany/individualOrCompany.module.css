@@ -15,12 +15,6 @@
   font-size: 1.2rem;
 }
 
-.contributionBlock {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-end;
-}
-
 .contributionsContainer {
   display: flex;
   flex-direction: column;
@@ -51,10 +45,6 @@
   font-size: 1rem;
   align-self: center;
   white-space-collapse: preserve;
-}
-
-.topLevelContribution {
-  color: var(--main-text);
 }
 
 .committeeDetails {
