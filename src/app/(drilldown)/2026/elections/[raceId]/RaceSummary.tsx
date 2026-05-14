@@ -1,4 +1,4 @@
-import { ElectionGroup, Race, RaceType } from "@/app/types/Elections";
+import { ElectionGroup, Party, Race, RaceType } from "@/app/types/Elections";
 import { PopulatedRaceExpenditureGroup } from "@/app/types/Expenditures";
 import { getSubraceName, isUpcomingRace } from "@/app/utils/races";
 import { titlecase } from "@/app/utils/titlecase";
@@ -95,10 +95,10 @@ export default function RaceSummary({
   let intermediateRaces;
   if (upcomingRaces.length > 1) {
     if (race.type === "general") {
-      const generalCandidateParties = new Set<string>(
+      const generalCandidateParties = new Set<Party>(
         race.candidates
           .map((c) => c.party ?? electionData.candidates[c.name]?.party)
-          .filter((p): p is string => !!p),
+          .filter((p): p is Party => !!p),
       );
       intermediateRaces = upcomingRaces.slice(1).filter(
         (r) =>

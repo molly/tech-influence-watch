@@ -11,52 +11,38 @@
   grid-template-columns: 1fr;
   align-items: start;
   column-gap: 4rem;
-  grid-template-areas:
-    "influencedCard"
-    "combinedMap"
-    "companySpending"
-    "byParty"
-    "allCash"
-    "byCommittee"
-    "expenditures"
-    "recentContributions"
-    "superPacCard";
 }
 
 .mainColumn,
 .sideColumn {
-  display: contents;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .combinedMap {
   composes: section from "@/app/shared.module.css";
-  grid-area: combinedMap;
 }
 
 .companySpendingCard {
   composes: section from "@/app/shared.module.css";
-  grid-area: companySpending;
 }
 
 .allCashCard {
   composes: section from "@/app/shared.module.css";
-  grid-area: allCash;
 }
 
 .expendituresByCommitteeCard {
   composes: section from "@/app/shared.module.css";
-  grid-area: byCommittee;
 }
 
 .recentExpenditures {
-  grid-area: expenditures;
   position: relative;
   display: flex;
   flex-direction: column;
 }
 
 .recentContributions {
-  grid-area: recentContributions;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -100,13 +86,6 @@
   .columns {
     grid-template-columns: 1fr 1fr;
     grid-template-areas: "mainColumn sideColumn";
-  }
-
-  .mainColumn,
-  .sideColumn {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
   }
 
   .mainColumn {

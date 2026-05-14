@@ -130,6 +130,7 @@ export type RecipientCandidateDetails = {
   state: string;
   race_link?: string;
   election_years?: number[];
+  isRunningThisCycle: boolean;
 };
 
 export type RecentContribution = IndividualOrCompanyContribution & {

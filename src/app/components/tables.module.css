@@ -9,13 +9,6 @@
   width: 100%;
 }
 
-.influencedCard {
-  grid-area: influencedCard;
-}
-
-.superPacCard {
-  grid-area: superPacCard;
-}
 
 .superPacTable,
 .influencedTable {
