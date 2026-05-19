@@ -209,7 +209,6 @@ p {
   flex-direction: column;
   width: 100%;
   max-width: var(--single-column-max-width);
-  padding: 0 1rem;
 }
 
 .full-width {

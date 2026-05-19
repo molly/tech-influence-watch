@@ -65,7 +65,11 @@ const getPartyLabel = (party: string): string => {
   return name.charAt(0).toUpperCase() + name.slice(1);
 };
 
-export function HorizontalPartyBarsSkeleton({ numBars }: { numBars: number }) {
+export function HorizontalPartyBarsSkeleton({
+  numBars = 1,
+}: {
+  numBars?: number;
+}) {
   return (
     <ul className={styles.bars}>
       {range(numBars).map((i) => (

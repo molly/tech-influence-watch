@@ -60,6 +60,12 @@
   color: var(--color-lime-800);
 }
 
+.amountCashPlaceholder {
+  display: none;
+  color: var(--secondary-text);
+  font-size: 0.875rem;
+}
+
 .amountDivider {
   color: var(--secondary-text);
   opacity: 0.4;
@@ -74,19 +80,34 @@
   .barTrack {
     background: var(--color-neutral-600);
   }
+
+  .bar {
+    background: var(--color-lime-600);
+  }
+
+  .amountCash {
+    color: var(--color-lime-600);
+  }
+
+  .barRaised {
+    background: var(--color-lime-500);
+  }
+  .amountRaised {
+    color: var(--color-lime-500);
+  }
 }
 
-@media (max-width: 500px) {
-  .amountCash {
-    display: block;
+@media (max-width: 900px) {
+  .amountCell {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .amountCashPlaceholder {
+    display: inline;
   }
 
   .amountDivider {
     display: none;
-  }
-
-  .amountRaised {
-    display: block;
-    font-size: 0.75rem;
   }
 }
