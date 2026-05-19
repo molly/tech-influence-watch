@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { fetchCompanyTotalSpending, fetchConstant } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import MoneyCard from "@/app/components/MoneyCard";
@@ -10,7 +12,7 @@ import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
 import { humanizeRoundedCurrency } from "@/app/utils/humanize";
 import { getCompanyIdsForSector } from "@/app/utils/sector";
-import Link from "next/link";
+
 import listStyles from "../listStyles.module.css";
 import styles from "./page.module.css";
 

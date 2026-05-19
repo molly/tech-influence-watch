@@ -1,17 +1,19 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { Suspense } from "react";
+
 import { MoneyCardSkeleton } from "@/app/components/MoneyCard";
 import { STATES_BY_FULL } from "@/app/data/states";
 import sharedStyles from "@/app/shared.module.css";
 import { customMetadata } from "@/app/utils/metadata";
 import { titlecase } from "@/app/utils/titlecase";
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { Suspense } from "react";
+
 import ByCommittee, { CommitteeCardContentsSkeleton } from "./ByCommittee";
 import ByRace, { RaceCardContentsSkeleton } from "./ByRace";
 import CompanySpending from "./CompanySpending";
+import styles from "./page.module.css";
 import PriorCycleContributions from "./PriorCycleContributions";
 import TotalSpending from "./TotalSpending";
-import styles from "./page.module.css";
 
 function stateNameFromUrl(urlName: string) {
   const stateName = decodeURIComponent(urlName).split("-").join(" ");

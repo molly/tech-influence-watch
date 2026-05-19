@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { fetchConstant, fetchElection } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import { CommitteeConstant } from "@/app/types/Committee";
@@ -5,7 +7,7 @@ import { ElectionGroup, RaceType } from "@/app/types/Elections";
 import { is4xx, isError } from "@/app/utils/errors";
 import { getSubraceName } from "@/app/utils/races";
 import { formatCurrency } from "@/app/utils/utils";
-import Link from "next/link";
+
 import styles from "./page.module.css";
 
 const RACE_ORDER = [

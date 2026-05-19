@@ -12,6 +12,7 @@ import {
   titlecaseOccupation,
 } from "@/app/utils/titlecase";
 import { formatCurrency, formatDateFromString } from "@/app/utils/utils";
+
 import Claimed from "./Claimed";
 import CommitteeDetails from "./CommitteeDetails";
 import styles from "./individualOrCompany.module.css";

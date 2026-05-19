@@ -1,5 +1,3 @@
-import { formatCurrency } from "../../../../utils/utils";
-
 import {
   fetchCommitteeDetails,
   fetchCommitteeDonors,
@@ -10,6 +8,8 @@ import sharedStyles from "@/app/shared.module.css";
 import { CommitteeDetails } from "@/app/types/Committee";
 import { Contributions } from "@/app/types/Contributions";
 import { is4xx, isError } from "@/app/utils/errors";
+
+import { formatCurrency } from "../../../../utils/utils";
 
 export default async function CommitteeRaised({
   committeeId,

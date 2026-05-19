@@ -1,10 +1,12 @@
+import type { Metadata } from "next";
+import { Suspense } from "react";
+
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import sharedStyles from "@/app/shared.module.css";
 import { customMetadata } from "@/app/utils/metadata";
-import { parseSector } from "@/app/utils/sector";
 import { range } from "@/app/utils/range";
-import type { Metadata } from "next";
-import { Suspense } from "react";
+import { parseSector } from "@/app/utils/sector";
+
 import CompanyList from "./CompanyList";
 
 export const metadata: Metadata = customMetadata({

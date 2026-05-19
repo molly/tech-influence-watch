@@ -1,10 +1,12 @@
+import { Suspense } from "react";
+
 import { fetchCommitteesWithContributions } from "@/app/actions/fetch";
 import styles from "@/app/page.module.css";
 import sharedStyles from "@/app/shared.module.css";
 import { CommitteeConstantWithContributions } from "@/app/types/Committee";
 import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
-import { Suspense } from "react";
+
 import ErrorText from "../ErrorText";
 import AllCashByCommitteeChart from "./AllCashByCommitteeChart";
 import { HorizontalPartyBarsSkeleton } from "./HorizontalPartyBars";

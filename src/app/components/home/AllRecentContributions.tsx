@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 import {
   fetchAllRecentContributions,
   fetchConstant,
@@ -8,7 +10,7 @@ import { CommitteeConstant } from "@/app/types/Committee";
 import { RecentContribution } from "@/app/types/Contributions";
 import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
-import { Suspense } from "react";
+
 import ErrorText from "../ErrorText";
 import RecentContributions from "../RecentContributions";
 import RecentContributionsContent, {

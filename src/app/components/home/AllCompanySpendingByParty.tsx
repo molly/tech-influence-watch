@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 import { fetchCompanyTotalSpending } from "@/app/actions/fetch";
 import styles from "@/app/page.module.css";
 import sharedStyles from "@/app/shared.module.css";
@@ -5,7 +7,7 @@ import { CompanyTotals } from "@/app/types/Companies";
 import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
 import { humanizeSector } from "@/app/utils/sector";
-import { Suspense } from "react";
+
 import ErrorText from "../ErrorText";
 import HorizontalPartyBars, {
   HorizontalPartyBarsSkeleton,

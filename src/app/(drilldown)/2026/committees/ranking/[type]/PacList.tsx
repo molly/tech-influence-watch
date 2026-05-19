@@ -1,10 +1,11 @@
+import Link from "next/link";
+
 import {
   fetchPACsByReceipts,
   fetchSuperPACsByReceipts,
 } from "@/app/actions/fetch";
 import PACsByReceiptsTableContents from "@/app/components/PACsByReceiptsTableContents";
 import styles from "@/app/components/tables.module.css";
-import Link from "next/link";
 
 export default async function PacList({ type }: { type: string }) {
   let data;

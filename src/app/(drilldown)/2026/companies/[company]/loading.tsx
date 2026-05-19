@@ -1,8 +1,9 @@
-import { SpendingByPartySkeleton } from "@/app/components/individualOrCompany/SpendingByParty";
 import contributionStyles from "@/app/components/individualOrCompany/individualOrCompany.module.css";
+import { SpendingByPartySkeleton } from "@/app/components/individualOrCompany/SpendingByParty";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import sharedStyles from "@/app/shared.module.css";
 import { range } from "@/app/utils/range";
+
 import styles from "./page.module.css";
 
 export default function LoadingPage() {

@@ -1,10 +1,12 @@
 "use client";
 
-import { db } from "@/app/lib/db";
-import { Party, RaceType } from "@/app/types/Elections";
-import { STATES_BY_ABBR } from "@/app/data/states";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import React, { useState } from "react";
+
+import { STATES_BY_ABBR } from "@/app/data/states";
+import { db } from "@/app/lib/db";
+import { Party, RaceType } from "@/app/types/Elections";
+
 import styles from "../../admin.module.css";
 
 interface CandidateFormData {
@@ -270,7 +272,7 @@ export default function RaceDetailsEditor() {
         // Add new manual race
         raceGroup.manualRaces.push(race);
       }
-      raceGroup.manualRacesUpdated = Date.now();
+      raceGroup.manualRacesUpdated = Date.now(); // eslint-disable-line react-hooks/purity
 
       await setDoc(docRef, { [raceId]: raceGroup }, { merge: true });
 

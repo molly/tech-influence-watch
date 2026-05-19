@@ -1,4 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
+import { Metadata } from "next";
+import Link from "next/link";
+import { Suspense } from "react";
+
 import {
   fetchCompany,
   fetchNonCandidateCommittees,
@@ -16,9 +20,7 @@ import { customMetadata } from "@/app/utils/metadata";
 import { formatCompanyName } from "@/app/utils/names";
 import { titlecase } from "@/app/utils/titlecase";
 import { formatCurrency } from "@/app/utils/utils";
-import { Metadata } from "next";
-import Link from "next/link";
-import { Suspense } from "react";
+
 import CompanySpendingMap from "./CompanySpendingMap";
 import styles from "./page.module.css";
 

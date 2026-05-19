@@ -1,9 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 
+import Link from "next/link";
+
 import { ImageAd as ImageAdType } from "@/app/types/Ads";
 import { CommitteeConstant } from "@/app/types/Committee";
 import { formatDateFromString } from "@/app/utils/utils";
-import Link from "next/link";
+
 import styles from "./page.module.css";
 
 export default function ImageAd({

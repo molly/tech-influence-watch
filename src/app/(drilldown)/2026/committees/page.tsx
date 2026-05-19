@@ -1,6 +1,10 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { Suspense } from "react";
+
 import {
-  fetchCommitteeTotalReceipts,
   fetchCommitteesWithContributions,
+  fetchCommitteeTotalReceipts,
 } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import { HorizontalPartyBarsSkeleton } from "@/app/components/home/HorizontalPartyBars";
@@ -19,9 +23,7 @@ import {
 import { customMetadata } from "@/app/utils/metadata";
 import { range } from "@/app/utils/range";
 import { humanizeSector, parseSector } from "@/app/utils/sector";
-import type { Metadata } from "next";
-import Link from "next/link";
-import { Suspense } from "react";
+
 import listStyles from "../listStyles.module.css";
 import CommitteeHeader from "./CommitteeHeader";
 import styles from "./CommitteeList.module.css";

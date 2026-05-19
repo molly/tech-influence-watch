@@ -1,3 +1,7 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { Suspense } from "react";
+
 import { fetchAllExpenditureTotalsByParty } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import SpendingByPartyWithOpposition, {
@@ -9,9 +13,7 @@ import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
 import { customMetadata } from "@/app/utils/metadata";
 import { parseSector } from "@/app/utils/sector";
-import type { Metadata } from "next";
-import Link from "next/link";
-import { Suspense } from "react";
+
 import OppositionSpending, {
   OppositionSpendingSkeleton,
 } from "./OppositionSpending";

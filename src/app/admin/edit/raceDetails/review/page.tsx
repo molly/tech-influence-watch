@@ -1,10 +1,12 @@
 "use client";
 
+import { collection, doc, getDoc, getDocs, updateDoc } from "firebase/firestore";
+import { useEffect, useState } from "react";
+
 import { STATES_BY_ABBR } from "@/app/data/states";
 import { db } from "@/app/lib/db";
 import { ElectionsByState, Race } from "@/app/types/Elections";
-import { collection, doc, getDoc, getDocs, updateDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
+
 import styles from "../../../admin.module.css";
 
 interface RaceConflict {

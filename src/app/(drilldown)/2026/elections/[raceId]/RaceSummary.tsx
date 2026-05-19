@@ -3,9 +3,10 @@ import { PopulatedRaceExpenditureGroup } from "@/app/types/Expenditures";
 import { getSubraceName, isUpcomingRace } from "@/app/utils/races";
 import { titlecase } from "@/app/utils/titlecase";
 import { formatDateFromString, isUpcomingDate } from "@/app/utils/utils";
+
 import CandidateExpendituresTable from "./CandidateExpendituresTable";
-import RaceCandidates from "./RaceCandidates";
 import styles from "./page.module.css";
+import RaceCandidates from "./RaceCandidates";
 
 function RaceDate({ race }: { race: Race }) {
   if (!("date" in race) || race.date === null) {

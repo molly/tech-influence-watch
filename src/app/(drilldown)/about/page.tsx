@@ -1,7 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
-import { customMetadata } from "@/app/utils/metadata";
 import { Metadata } from "next";
 import Link from "next/link";
+
+import { customMetadata } from "@/app/utils/metadata";
+
 import AboutNav from "./AboutNav";
 import styles from "./page.module.css";
 

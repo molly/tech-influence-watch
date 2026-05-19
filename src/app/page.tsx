@@ -1,10 +1,6 @@
 import { Suspense } from "react";
+
 import Header from "./components/Header";
-import InfluencedRaces from "./components/InfluencedRaces";
-import { MoneyCardSkeleton } from "./components/MoneyCard";
-import SuperPACsByReceipts from "./components/PACsByReceipts";
-import SuperPACsByReceiptsTableContents from "./components/SuperPACsByReceiptsTableContents";
-import TotalsRow from "./components/TotalsRow";
 import AllCashByCommittee from "./components/home/AllCashByCommittee";
 import AllCompanySpendingByParty from "./components/home/AllCompanySpendingByParty";
 import AllCompanySpendingMap from "./components/home/AllCompanySpendingMap";
@@ -17,7 +13,12 @@ import SuperPacSpendingMapWrapper from "./components/home/SuperPacSpendingMapWra
 import TotalCompanySpending from "./components/home/TotalCompanySpending";
 import TotalExpenditures from "./components/home/TotalExpenditures";
 import TotalRaised from "./components/home/TotalRaised";
+import InfluencedRaces from "./components/InfluencedRaces";
+import { MoneyCardSkeleton } from "./components/MoneyCard";
+import SuperPACsByReceipts from "./components/PACsByReceipts";
 import USMapSkeleton from "./components/skeletons/USMapSkeleton";
+import SuperPACsByReceiptsTableContents from "./components/SuperPACsByReceiptsTableContents";
+import TotalsRow from "./components/TotalsRow";
 import styles from "./page.module.css";
 import sharedStyles from "./shared.module.css";
 import { parseSector } from "./utils/sector";

@@ -1,5 +1,14 @@
 "use client";
 
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  updateDoc,
+} from "firebase/firestore";
+import { useEffect, useState } from "react";
+
 import { uncachedFetchCommittees } from "@/app/actions/fetch";
 import ReviewStatusBadge from "@/app/components/ReviewStatusBadge";
 import { db } from "@/app/lib/db";
@@ -12,14 +21,7 @@ import {
   SingleContribution,
 } from "@/app/types/Contributions";
 import { isError } from "@/app/utils/errors";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  updateDoc,
-} from "firebase/firestore";
-import { useEffect, useState } from "react";
+
 import styles from "../../../admin.module.css";
 
 // Helper to check if contribution is a rollup
@@ -171,7 +173,7 @@ export default function ContributionReviewPage() {
   // Load contributions when committee is selected
   useEffect(() => {
     if (!selectedCommitteeId) {
-      setContributions(null);
+      setContributions(null); // eslint-disable-line react-hooks/set-state-in-effect
       return;
     }
 

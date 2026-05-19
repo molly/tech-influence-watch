@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import {
   RecentContribution,
   RecipientCandidateDetails,
@@ -5,7 +7,7 @@ import {
 import { getRaceName } from "@/app/utils/races";
 import { titlecaseCommittee, titlecaseLastFirst } from "@/app/utils/titlecase";
 import { formatCurrency, formatDateFromString } from "@/app/utils/utils";
-import Link from "next/link";
+
 import { STATES_BY_ABBR } from "../data/states";
 import { range } from "../utils/range";
 import MaybeLink from "./MaybeLink";

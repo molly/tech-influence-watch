@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { fetchBeneficiaries, fetchConstant, fetchElection } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import {
@@ -14,7 +16,7 @@ import {
   titlecaseOccupation,
 } from "@/app/utils/titlecase";
 import { formatCurrency } from "@/app/utils/utils";
-import Link from "next/link";
+
 import styles from "./page.module.css";
 
 function Contribution({

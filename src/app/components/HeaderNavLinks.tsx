@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+
 import { parseSector, sectorHref } from "../utils/sector";
 import styles from "./header.module.css";
 

@@ -5,6 +5,7 @@ import { type Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
 import { humanizeRoundedCurrency } from "@/app/utils/humanize";
 import { humanizeSector } from "@/app/utils/sector";
+
 import ErrorText from "../ErrorText";
 import MoneyCard from "../MoneyCard";
 

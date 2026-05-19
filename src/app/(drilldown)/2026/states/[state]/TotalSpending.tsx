@@ -5,6 +5,7 @@ import sharedStyles from "@/app/shared.module.css";
 import { PopulatedStateExpenditures } from "@/app/types/Expenditures";
 import { is4xx, isError } from "@/app/utils/errors";
 import { formatCurrency } from "@/app/utils/utils";
+
 import styles from "./page.module.css";
 
 export default async function TotalSpending({

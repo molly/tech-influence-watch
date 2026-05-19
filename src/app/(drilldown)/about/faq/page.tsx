@@ -1,8 +1,10 @@
-import { customMetadata } from "@/app/utils/metadata";
 import { Metadata } from "next";
 import Link from "next/link";
-import styles from "../page.module.css";
+
+import { customMetadata } from "@/app/utils/metadata";
+
 import AboutNav from "../AboutNav";
+import styles from "../page.module.css";
 
 export const metadata: Metadata = customMetadata({
   title: "FAQ",

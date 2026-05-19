@@ -1,4 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
+import { Metadata } from "next";
+import Link from "next/link";
+
 import { fetchConstant, fetchIndividual } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import SpendingByParty from "@/app/components/individualOrCompany/SpendingByParty";
@@ -11,8 +14,7 @@ import { isError } from "@/app/utils/errors";
 import { humanizeList } from "@/app/utils/humanize";
 import { customMetadata } from "@/app/utils/metadata";
 import { titlecase, titlecaseCompany } from "@/app/utils/titlecase";
-import { Metadata } from "next";
-import Link from "next/link";
+
 import Contributions from "./Contributions";
 import styles from "./page.module.css";
 

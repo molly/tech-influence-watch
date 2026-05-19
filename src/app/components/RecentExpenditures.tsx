@@ -1,5 +1,7 @@
-import sharedStyles from "@/app/shared.module.css";
 import Link from "next/link";
+
+import sharedStyles from "@/app/shared.module.css";
+
 import { Sector } from "../types/Sector";
 import { sectorHref } from "../utils/sector";
 import tableStyles from "./tables.module.css";

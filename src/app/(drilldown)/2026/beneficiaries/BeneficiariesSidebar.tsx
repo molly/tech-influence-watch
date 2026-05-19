@@ -1,8 +1,10 @@
-import MaybeLink from "@/app/components/MaybeLink";
+import { Suspense } from "react";
+
 import {
   HorizontalBars,
   HorizontalPartyBarsSkeleton,
 } from "@/app/components/home/HorizontalPartyBars";
+import MaybeLink from "@/app/components/MaybeLink";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import { Beneficiary } from "@/app/types/Beneficiaries";
 import { Sector } from "@/app/types/Sector";
@@ -11,15 +13,15 @@ import { getPartyAbbreviation } from "@/app/utils/party";
 import { range } from "@/app/utils/range";
 import { humanizeSector } from "@/app/utils/sector";
 import { titlecaseLastFirst } from "@/app/utils/titlecase";
-import { Suspense } from "react";
+
 import styles from "./beneficiaries.module.css";
 import {
   DisplayType,
-  OfficeBreakdownEntry,
   getCompactRace,
   getOfficeBreakdown,
   getTopCandidates,
   getTypeBreakdown,
+  OfficeBreakdownEntry,
 } from "./beneficiaries.utils";
 
 const OFFICE_LABELS: Record<string, string> = {
@@ -168,7 +170,7 @@ export default function BeneficiariesSidebar({
       <section className={styles.sidebarSection}>
         <SidebarSectionHeader title="By office sought" />
         <p className={styles.sidebarSubtitle}>
-          Crypto and AI industry contributions to candidates' campaigns, grouped
+          Crypto and AI industry contributions to candidates&apos; campaigns, grouped
           by the federal office sought.
         </p>
         <Suspense fallback={<HorizontalPartyBarsSkeleton numBars={3} />}>

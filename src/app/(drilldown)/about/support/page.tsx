@@ -1,5 +1,7 @@
-import { customMetadata } from "@/app/utils/metadata";
 import { Metadata } from "next";
+
+import { customMetadata } from "@/app/utils/metadata";
+
 import AboutNav from "../AboutNav";
 import styles from "../page.module.css";
 
@@ -24,7 +26,7 @@ export default function SupportPage() {
           newsletter are two parts of the same work: the newsletter&rsquo;s
           investigations into tech industry influence inform what gets tracked
           here, and <i>Tech Influence Watch</i> data powers and extends my
-          reporting. If you&rsquo;ve found this data useful, there's a good
+          reporting. If you&rsquo;ve found this data useful, there&apos;s a good
           chance the newsletter is worth your time too.
         </p>
         <p>
@@ -34,7 +36,7 @@ export default function SupportPage() {
         </p>
         <p>
           Keeping it free, accurate, and independent costs time and money. I
-          don't use paywalls, run ads, or accept industry funding. If you find
+          don&apos;t use paywalls, run ads, or accept industry funding. If you find
           this work valuable, the best way to support it is to subscribe to{" "}
           <i>Citation Needed</i>.
         </p>

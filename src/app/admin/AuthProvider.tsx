@@ -1,14 +1,15 @@
 "use client";
 
-import { auth } from "@/app/lib/db";
 import {
-  User,
-  signOut as fbSignOut,
   onAuthStateChanged,
   signInWithEmailAndPassword,
+  signOut as fbSignOut,
+  User,
 } from "firebase/auth";
 import { redirect } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
+
+import { auth } from "@/app/lib/db";
 
 const AuthContext = createContext({});
 

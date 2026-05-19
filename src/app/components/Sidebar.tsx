@@ -2,8 +2,9 @@
 
 import { motion, Variants } from "framer-motion";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+
 import { parseSector, sectorHref } from "../utils/sector";
 import styles from "./sidebar.module.css";
 

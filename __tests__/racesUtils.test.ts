@@ -1,5 +1,6 @@
-import { sortRaces } from "@/app/utils/races";
 import "@testing-library/jest-dom";
+
+import { sortRaces } from "@/app/utils/races";
 
 describe("racesUtils", () => {
   test("sortRaces comparator", () => {

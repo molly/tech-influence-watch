@@ -1,11 +1,13 @@
 "use client";
 
+import { doc, setDoc } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
+
 import { uncachedFetchCommittees } from "@/app/actions/fetch";
 import { db } from "@/app/lib/db";
 import { CommitteeConstant } from "@/app/types/Committee";
 import { isError } from "@/app/utils/errors";
-import { doc, setDoc } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+
 import styles from "../../admin.module.css";
 
 type CommitteeStateKey = keyof CommitteeConstant;

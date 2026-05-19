@@ -1,13 +1,5 @@
 "use client";
 
-import ReviewStatusBadge from "@/app/components/ReviewStatusBadge";
-import { db } from "@/app/lib/db";
-import { CompanyConstant } from "@/app/types/Companies";
-import {
-  IndividualOrCompanyContribution,
-  IndividualOrCompanyContributionGroup,
-  ManualReview,
-} from "@/app/types/Contributions";
 import {
   collection,
   doc,
@@ -16,6 +8,16 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
+
+import ReviewStatusBadge from "@/app/components/ReviewStatusBadge";
+import { db } from "@/app/lib/db";
+import { CompanyConstant } from "@/app/types/Companies";
+import {
+  IndividualOrCompanyContribution,
+  IndividualOrCompanyContributionGroup,
+  ManualReview,
+} from "@/app/types/Contributions";
+
 import styles from "../../../../admin/admin.module.css";
 
 type CompanyData = {
@@ -168,7 +170,7 @@ export default function CompanyContributionReviewPage() {
   // Load company data when a company is selected
   useEffect(() => {
     if (!selectedCompanyId) {
-      setCompanyData(null);
+      setCompanyData(null); // eslint-disable-line react-hooks/set-state-in-effect
       return;
     }
 

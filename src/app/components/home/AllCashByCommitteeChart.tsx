@@ -3,6 +3,7 @@ import { CommitteeConstantWithContributions } from "@/app/types/Committee";
 import { Sector } from "@/app/types/Sector";
 import { formatCompact } from "@/app/utils/humanize";
 import { formatCurrency } from "@/app/utils/utils";
+
 import styles from "./HorizontalBars.module.css";
 
 const BASE_LEGEND_ITEMS = [

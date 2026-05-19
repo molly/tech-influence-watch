@@ -8,6 +8,7 @@ import {
 } from "@/app/types/Elections";
 import { humanizeList } from "@/app/utils/humanize";
 import { getSubraceName } from "@/app/utils/races";
+
 import styles from "./page.module.css";
 
 function NoSpendingCell({

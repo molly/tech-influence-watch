@@ -1,7 +1,9 @@
+import type { Metadata } from "next";
+
 import InfluencedRaces from "@/app/components/InfluencedRaces";
 import { customMetadata } from "@/app/utils/metadata";
 import { parseSector } from "@/app/utils/sector";
-import type { Metadata } from "next";
+
 import OtherSupportedRaces from "./OtherSupportedRaces";
 import styles from "./page.module.css";
 

@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { fetchStateExpenditures } from "@/app/actions/fetch";
 import {
   PopulatedStateExpenditures,
@@ -6,7 +8,7 @@ import {
 import { isError } from "@/app/utils/errors";
 import { titlecaseCommittee, titlecaseLastFirst } from "@/app/utils/titlecase";
 import { formatCurrency } from "@/app/utils/utils";
-import Link from "next/link";
+
 import styles from "./page.module.css";
 
 function groupByCompany(details: PriorCycleDetail[]) {

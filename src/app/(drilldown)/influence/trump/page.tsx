@@ -1,3 +1,6 @@
+import { Metadata } from "next";
+import Link from "next/link";
+
 import {
   fetchBeneficiaries,
   fetchTrumpCommittees,
@@ -7,15 +10,14 @@ import tableStyles from "@/app/components/tables.module.css";
 import COMMITTEES from "@/app/data/committees";
 import { TRUMP_CANDIDATE_ID } from "@/app/data/trump";
 import {
-  type CompanyContributionGroup,
   type Beneficiary,
+  type CompanyContributionGroup,
 } from "@/app/types/Beneficiaries";
 import { isError } from "@/app/utils/errors";
 import { customMetadata } from "@/app/utils/metadata";
 import { titlecaseCommittee } from "@/app/utils/titlecase";
 import { formatCurrency } from "@/app/utils/utils";
-import { Metadata } from "next";
-import Link from "next/link";
+
 import styles from "./page.module.css";
 
 export const metadata: Metadata = customMetadata({

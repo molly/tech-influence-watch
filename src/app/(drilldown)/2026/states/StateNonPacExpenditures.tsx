@@ -1,16 +1,18 @@
+import Link from "next/link";
+import { Fragment } from "react";
+
 import { fetchAllRaceIds, fetchMapData } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import Skeleton from "@/app/components/skeletons/Skeleton";
-import sharedStyles from "@/app/shared.module.css";
 import { STATES_BY_ABBR } from "@/app/data/states";
+import sharedStyles from "@/app/shared.module.css";
 import { MapData } from "@/app/types/MapData";
 import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
 import { getRaceName } from "@/app/utils/races";
 import { range } from "@/app/utils/range";
 import { formatCurrency } from "@/app/utils/utils";
-import Link from "next/link";
-import { Fragment } from "react";
+
 import styles from "./page.module.css";
 
 export function StateExpendituresSkeleton() {

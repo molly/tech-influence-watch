@@ -1,8 +1,9 @@
+import sharedStyles from "@/app/shared.module.css";
 import { CandidateSummary, Party, RaceCandidate } from "@/app/types/Elections";
 import { getFirstLastName } from "@/app/utils/names";
+
 import { ExpenditureCandidateSummary } from "../types/Expenditures";
 import styles from "./candidate.module.css";
-import sharedStyles from "@/app/shared.module.css";
 import Skeleton from "./skeletons/Skeleton";
 
 function getPartyClass(party?: string | null) {

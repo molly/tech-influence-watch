@@ -4,6 +4,7 @@ import { Beneficiary, CandidateBeneficiary } from "@/app/types/Beneficiaries";
 import { getPartyAbbreviation } from "@/app/utils/party";
 import { getRaceName } from "@/app/utils/races";
 import { titlecaseCommittee, titlecaseLastFirst } from "@/app/utils/titlecase";
+
 import styles from "./beneficiaries.module.css";
 
 export type DisplayType = "candidate" | "pac" | "party";

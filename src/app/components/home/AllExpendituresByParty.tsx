@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { Suspense } from "react";
+
 import { fetchAllExpenditureTotalsByParty } from "@/app/actions/fetch";
 import pageStyles from "@/app/page.module.css";
 import styles from "@/app/shared.module.css";
@@ -5,8 +8,7 @@ import { ExpendituresByPartySnapshot } from "@/app/types/Expenditures";
 import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
 import { humanizeSector, sectorHref } from "@/app/utils/sector";
-import Link from "next/link";
-import { Suspense } from "react";
+
 import ErrorText from "../ErrorText";
 import SpendingByPartyWithOpposition from "../SpendingByPartyWithOpposition";
 import { HorizontalPartyBarsSkeleton } from "./HorizontalPartyBars";

@@ -1,9 +1,9 @@
 "use client";
 
 import {
-  FloatingPortal,
   autoUpdate,
   flip,
+  FloatingPortal,
   offset,
   shift,
   useDismiss,
@@ -14,6 +14,7 @@ import {
   useRole,
 } from "@floating-ui/react";
 import { ReactNode, useState } from "react";
+
 import styles from "./informationalTooltip.module.css";
 
 export default function InformationalTooltip({
@@ -51,7 +52,7 @@ export default function InformationalTooltip({
   return (
     <>
       <button
-        ref={refs.setReference}
+        ref={refs.setReference} // eslint-disable-line react-hooks/refs
         className={styles.tooltipButton}
         {...getReferenceProps()}
       >
@@ -60,7 +61,7 @@ export default function InformationalTooltip({
           {isOpen && (
             <div
               className={styles.tooltip}
-              ref={refs.setFloating}
+              ref={refs.setFloating} // eslint-disable-line react-hooks/refs
               style={floatingStyles}
               {...getFloatingProps()}
             >

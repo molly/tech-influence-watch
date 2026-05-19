@@ -1,7 +1,9 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
+
 import { type Sector } from "@/app/types/Sector";
+
 import styles from "./header.module.css";
 
 const SECTORS: { label: string; value: Sector }[] = [

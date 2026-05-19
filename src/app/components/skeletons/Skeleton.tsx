@@ -1,4 +1,5 @@
 import { getRandomInt } from "@/app/utils/range";
+
 import styles from "./skeleton.module.css";
 
 export default function Skeleton({

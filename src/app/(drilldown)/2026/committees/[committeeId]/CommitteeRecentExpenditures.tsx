@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 import {
   fetchCommitteeDetails,
   fetchRecentCommitteeExpenditures,
@@ -11,7 +13,6 @@ import sharedStyles from "@/app/shared.module.css";
 import { CommitteeDetails } from "@/app/types/Committee";
 import { Expenditure } from "@/app/types/Expenditures";
 import { is4xx, isError } from "@/app/utils/errors";
-import { Suspense } from "react";
 
 export async function CommitteeRecentExpendituresContent({
   committeeId,

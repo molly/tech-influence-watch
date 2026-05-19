@@ -1,16 +1,18 @@
+import type { Metadata } from "next";
+import { Suspense } from "react";
+
 import AllCompanySpendingMap from "@/app/components/home/AllCompanySpendingMap";
 import SuperPacSpendingMapWrapper from "@/app/components/home/SuperPacSpendingMapWrapper";
 import USMapSkeleton from "@/app/components/skeletons/USMapSkeleton";
 import { Sector } from "@/app/types/Sector";
 import { customMetadata } from "@/app/utils/metadata";
 import { parseSector } from "@/app/utils/sector";
-import type { Metadata } from "next";
-import { Suspense } from "react";
+
+import styles from "./page.module.css";
 import StateExpenditures, {
   StateExpendituresSkeleton,
 } from "./StateExpenditures";
 import StateNonPacExpenditures from "./StateNonPacExpenditures";
-import styles from "./page.module.css";
 
 export const metadata: Metadata = customMetadata({
   title: "Spending by State",

@@ -1,12 +1,14 @@
+import * as d3 from "d3";
+import { FeatureCollection, GeoJsonProperties, Geometry } from "geojson";
+import * as topojson from "topojson-client";
+import { Objects, Topology } from "topojson-specification";
+
 import {
   generateDomain,
   getFillClassNames,
 } from "@/app/components/chloroplethConstants";
 import styles from "@/app/components/chloroplethMap.module.css";
-import * as d3 from "d3";
-import { FeatureCollection, GeoJsonProperties, Geometry } from "geojson";
-import * as topojson from "topojson-client";
-import { Objects, Topology } from "topojson-specification";
+
 import Legend from "../Legend";
 
 export default function USMapSkeleton() {

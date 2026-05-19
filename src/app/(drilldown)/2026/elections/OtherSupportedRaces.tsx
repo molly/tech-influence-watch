@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import {
   fetchAllStateElections,
   fetchBeneficiaries,
@@ -15,7 +17,6 @@ import { isError } from "@/app/utils/errors";
 import { getRaceName } from "@/app/utils/races";
 import { titlecaseLastFirst } from "@/app/utils/titlecase";
 import { formatCurrency } from "@/app/utils/utils";
-import Link from "next/link";
 
 function getRaceId(candidateDetails: RecipientCandidateDetails): string {
   if (candidateDetails.office === "P") {

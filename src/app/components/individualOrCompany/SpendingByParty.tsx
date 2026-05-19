@@ -1,9 +1,11 @@
 "use client";
 
-import { useComponentSize } from "@/app/hooks/useComponentSize";
-import { getFullPartyName } from "@/app/utils/party";
 import * as d3 from "d3";
 import { useMemo } from "react";
+
+import { useComponentSize } from "@/app/hooks/useComponentSize";
+import { getFullPartyName } from "@/app/utils/party";
+
 import styles from "./individualOrCompany.module.css";
 
 const MARGIN_BOTTOM = 40;

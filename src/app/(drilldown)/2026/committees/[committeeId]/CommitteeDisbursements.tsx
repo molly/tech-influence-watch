@@ -1,13 +1,14 @@
-import { fetchConstant } from "@/app/actions/fetch";
-import { CommitteeConstant, CommitteeDetails } from "@/app/types/Committee";
-import { titlecaseCommittee } from "@/app/utils/titlecase";
-import { formatCurrency } from "@/app/utils/utils";
 import Link from "next/link";
-import styles from "./page.module.css";
 
+import { fetchConstant } from "@/app/actions/fetch";
 import { fetchCommitteeDetails } from "@/app/actions/fetch";
 import MoneyCard from "@/app/components/MoneyCard";
+import { CommitteeConstant, CommitteeDetails } from "@/app/types/Committee";
 import { isError } from "@/app/utils/errors";
+import { titlecaseCommittee } from "@/app/utils/titlecase";
+import { formatCurrency } from "@/app/utils/utils";
+
+import styles from "./page.module.css";
 
 export default async function CommitteeDisbursements({
   committeeId,

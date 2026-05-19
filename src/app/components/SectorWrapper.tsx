@@ -2,8 +2,9 @@
 
 import { usePathname } from "next/navigation";
 import { Suspense } from "react";
-import SectorButtons from "./SectorButtons";
+
 import styles from "./header.module.css";
+import SectorButtons from "./SectorButtons";
 
 const SECTOR_PATHS = [
   "/",

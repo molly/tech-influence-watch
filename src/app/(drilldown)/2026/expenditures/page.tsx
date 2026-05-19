@@ -1,7 +1,8 @@
+import type { Metadata } from "next";
+
 import AllRecentExpenditures from "@/app/components/home/AllRecentExpenditures";
 import { customMetadata } from "@/app/utils/metadata";
 import { parseSector } from "@/app/utils/sector";
-import type { Metadata } from "next";
 
 export const metadata: Metadata = customMetadata({
   title: "Recent Expenditures",

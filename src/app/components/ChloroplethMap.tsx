@@ -1,12 +1,14 @@
 "use client";
 
-import { formatCurrency } from "@/app/utils/utils";
 import * as d3 from "d3";
 import { FeatureCollection, GeoJsonProperties, Geometry } from "geojson";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import * as topojson from "topojson-client";
 import { Objects, Topology } from "topojson-specification";
+
+import { formatCurrency } from "@/app/utils/utils";
+
 import { getFillClassNames } from "./chloroplethConstants";
 import styles from "./chloroplethMap.module.css";
 import Legend from "./Legend";

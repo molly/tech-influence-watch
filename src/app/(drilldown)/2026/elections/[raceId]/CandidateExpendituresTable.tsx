@@ -4,6 +4,7 @@ import {
   RaceCandidate,
 } from "@/app/types/Elections";
 import { Expenditure } from "@/app/types/Expenditures";
+
 import CandidateResult from "./CandidateResult";
 import styles from "./page.module.css";
 

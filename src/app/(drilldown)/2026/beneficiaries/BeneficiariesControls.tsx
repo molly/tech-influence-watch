@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+
 import styles from "./beneficiaries.module.css";
 
 const SORT_OPTIONS = [

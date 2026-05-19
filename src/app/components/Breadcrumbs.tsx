@@ -1,5 +1,6 @@
-import styles from "@/app/shared.module.css";
 import Link from "next/link";
+
+import styles from "@/app/shared.module.css";
 
 type Crumb =
   | string

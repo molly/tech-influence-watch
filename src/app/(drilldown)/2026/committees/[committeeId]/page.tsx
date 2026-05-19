@@ -1,12 +1,13 @@
 import { Metadata } from "next";
+import Link from "next/link";
+import { Suspense } from "react";
 
 import { MoneyCardSkeleton } from "@/app/components/MoneyCard";
 import { SpendingByPartySkeleton } from "@/app/components/SpendingByPartyWithOpposition";
 import COMMITTEES from "@/app/data/committees";
 import sharedStyles from "@/app/shared.module.css";
 import { customMetadata } from "@/app/utils/metadata";
-import Link from "next/link";
-import { Suspense } from "react";
+
 import CommitteeDetailsSection, {
   CommitteeDetailsSkeleton,
 } from "./CommitteeDetailsSection";
@@ -15,8 +16,8 @@ import CommitteeExpendituresByParty from "./CommitteeExpendituresByParty";
 import CommitteeExpendituresTotal from "./CommitteeExpendituresTotal";
 import CommitteeRaised from "./CommitteeRaised";
 import CommitteeRecentExpenditures from "./CommitteeRecentExpenditures";
-import TopDonors, { TopDonorsSkeleton } from "./TopDonors";
 import styles from "./page.module.css";
+import TopDonors, { TopDonorsSkeleton } from "./TopDonors";
 
 export async function generateMetadata({
   params,

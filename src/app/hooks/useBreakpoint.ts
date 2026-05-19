@@ -8,7 +8,7 @@ export function useBreakpoint(
   useEffect(() => {
     if (window) {
       const query = window.matchMedia(`(max-width: ${breakpointWidth}px)`);
-      setMatches(query.matches);
+      setMatches(query.matches); // eslint-disable-line react-hooks/set-state-in-effect
     }
   }, [breakpointWidth]);
   return matches;

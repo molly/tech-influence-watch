@@ -3,6 +3,7 @@ import ErrorText from "@/app/components/ErrorText";
 import individualStyles from "@/app/components/individualOrCompany/individualOrCompany.module.css";
 import { IndividualContributions } from "@/app/types/Individuals";
 import { is4xx, isError } from "@/app/utils/errors";
+
 import ContributionsCardContent from "./ContributionsCardContent";
 import styles from "./page.module.css";
 

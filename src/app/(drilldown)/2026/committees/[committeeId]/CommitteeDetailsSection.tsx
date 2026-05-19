@@ -1,12 +1,14 @@
 import React from "react";
 
-import { formatDateFromString } from "../../../../utils/utils";
-
 import { fetchCommitteeDetails } from "@/app/actions/fetch";
+import Breadcrumbs from "@/app/components/Breadcrumbs";
 import ErrorText from "@/app/components/ErrorText";
 import Skeleton from "@/app/components/skeletons/Skeleton";
+import sharedStyles from "@/app/shared.module.css";
 import { CommitteeDetails } from "@/app/types/Committee";
 import { is4xx, isError } from "@/app/utils/errors";
+
+import { formatDateFromString } from "../../../../utils/utils";
 import styles from "./page.module.css";
 
 export function CommitteeDetailsSkeleton() {
@@ -70,7 +72,9 @@ export default async function CommitteeDetailsSection({
   };
 
   return (
-    <section>
+    <div className={sharedStyles.fullWidthHeader}>
+      <section className={sharedStyles.header}>
+        <Breadcrumbs crumbs={["Spending", "Beneficiaries"]} />
       <h1>{committee.name}</h1>
       <span className="secondary small">{renderDetails()}</span>
       {committee.description && (
@@ -80,5 +84,6 @@ export default async function CommitteeDetailsSection({
         ></div>
       )}
     </section>
+    </div>
   );
 }

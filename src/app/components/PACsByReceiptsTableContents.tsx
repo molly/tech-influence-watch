@@ -1,8 +1,10 @@
+import Link from "next/link";
+
 import sharedStyles from "@/app/shared.module.css";
 import { AllCommitteesSummary } from "@/app/types/Committee";
 import { ErrorType, isError } from "@/app/utils/errors";
 import { titlecaseCommittee } from "@/app/utils/titlecase";
-import Link from "next/link";
+
 import ErrorText from "./ErrorText";
 import styles from "./tables.module.css";
 

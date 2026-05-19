@@ -1,7 +1,9 @@
+import { Metadata } from "next";
+
 import PACsByReceipts from "@/app/components/PACsByReceipts";
 import { customMetadata } from "@/app/utils/metadata";
 import { titlecase } from "@/app/utils/titlecase";
-import { Metadata } from "next";
+
 import PacList from "./PacList";
 
 export async function generateMetadata({

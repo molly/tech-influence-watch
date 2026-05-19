@@ -1,8 +1,7 @@
-import { CommitteeDetails } from "@/app/types/Committee";
-
 import { fetchCommitteeDetails } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import SpendingByPartyWithOpposition from "@/app/components/SpendingByPartyWithOpposition";
+import { CommitteeDetails } from "@/app/types/Committee";
 import { is4xx, isError } from "@/app/utils/errors";
 
 export default async function CommitteeExpendituresByParty({

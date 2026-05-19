@@ -1,9 +1,11 @@
-import { STATES_BY_ABBR } from "@/app/data/states";
-import { customMetadata } from "@/app/utils/metadata";
-import { getRaceName } from "@/app/utils/races";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
+
+import { STATES_BY_ABBR } from "@/app/data/states";
+import { customMetadata } from "@/app/utils/metadata";
+import { getRaceName } from "@/app/utils/races";
+
 import Ads from "./Ads";
 import CommitteeSpending from "./CommitteeSpending";
 import Elections, { ElectionsSkeleton } from "./Elections";

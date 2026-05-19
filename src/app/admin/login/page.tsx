@@ -1,10 +1,11 @@
 "use client";
 
-import { useAuth } from "@/app/admin/AuthProvider";
-import sharedStyles from "@/app/shared.module.css";
 import { redirect } from "next/navigation";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
+
+import { useAuth } from "@/app/admin/AuthProvider";
+import sharedStyles from "@/app/shared.module.css";
 
 export default function Login() {
   const { authenticate, user } = useAuth();

@@ -1,6 +1,7 @@
 import { humanizeApproximateRounded } from "@/app/utils/humanize";
 import { getFullPartyName } from "@/app/utils/party";
 import { range } from "@/app/utils/range";
+
 import Skeleton from "../skeletons/Skeleton";
 import styles from "./HorizontalBars.module.css";
 

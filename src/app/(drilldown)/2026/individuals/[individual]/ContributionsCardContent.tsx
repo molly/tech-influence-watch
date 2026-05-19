@@ -1,5 +1,8 @@
 "use client";
 
+import Link from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
+
 import Contribution from "@/app/components/individualOrCompany/Contribution";
 import ContributionsGroup from "@/app/components/individualOrCompany/ContributionsGroup";
 import {
@@ -7,8 +10,7 @@ import {
   RecipientDetails,
 } from "@/app/types/Contributions";
 import { IndividualContributions } from "@/app/types/Individuals";
-import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+
 import styles from "./page.module.css";
 
 function ByDate({

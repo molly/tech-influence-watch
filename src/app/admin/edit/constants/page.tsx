@@ -1,9 +1,11 @@
 "use client";
 
-import { db } from "@/app/lib/db";
-import { RecipientDetails } from "@/app/types/Contributions";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useEffect, useMemo, useState } from "react";
+
+import { db } from "@/app/lib/db";
+import { RecipientDetails } from "@/app/types/Contributions";
+
 import styles from "../../admin.module.css";
 
 type AffiliationType = "party" | "candidate_ids" | "sponsor_candidate_ids";

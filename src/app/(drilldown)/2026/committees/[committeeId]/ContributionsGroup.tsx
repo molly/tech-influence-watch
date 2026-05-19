@@ -1,10 +1,12 @@
+import { useMemo } from "react";
+
 import Claimed from "@/app/components/individualOrCompany/Claimed";
 import MaybeLink from "@/app/components/MaybeLink";
 import { ContributionsGroup as ContributionsGroupType } from "@/app/types/Contributions";
-import { IndividualDonorType, getDonorDetails } from "@/app/utils/donorDetails";
+import { getDonorDetails,IndividualDonorType } from "@/app/utils/donorDetails";
 import { titlecaseCompany } from "@/app/utils/titlecase";
 import { formatCurrency } from "@/app/utils/utils";
-import { useMemo } from "react";
+
 import Contribution from "./Contribution";
 import styles from "./page.module.css";
 

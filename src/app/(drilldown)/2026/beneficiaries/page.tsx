@@ -1,3 +1,7 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { Suspense } from "react";
+
 import {
   fetchBeneficiaries,
   fetchBeneficiariesOrder,
@@ -21,9 +25,7 @@ import { range } from "@/app/utils/range";
 import { humanizeSector, parseSector } from "@/app/utils/sector";
 import { titlecaseCommittee, titlecaseLastFirst } from "@/app/utils/titlecase";
 import { formatCurrency } from "@/app/utils/utils";
-import type { Metadata } from "next";
-import Link from "next/link";
-import { Suspense } from "react";
+
 import styles from "./beneficiaries.module.css";
 import {
   applySort,

@@ -1,6 +1,7 @@
 import Candidate from "@/app/components/Candidate";
 import { CandidateSummary, RaceCandidate } from "@/app/types/Elections";
 import { formatCurrency } from "@/app/utils/utils";
+
 import styles from "./page.module.css";
 
 export default function CandidateResult({

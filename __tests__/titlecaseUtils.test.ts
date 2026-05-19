@@ -1,3 +1,5 @@
+import "@testing-library/jest-dom";
+
 import {
   titlecase,
   titlecaseCompany,
@@ -6,7 +8,6 @@ import {
   titlecaseOccupation,
   titlecaseSuffix,
 } from "@/app/utils/titlecase";
-import "@testing-library/jest-dom";
 
 describe("titlecaseUtils", () => {
   test("titlecase", () => {

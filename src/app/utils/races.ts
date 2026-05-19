@@ -1,5 +1,6 @@
 import { CandidateSummary, Race, RaceType } from "@/app/types/Elections";
 import { getFullPartyName } from "@/app/utils/party";
+
 import { SINGLE_MEMBER_STATES } from "../data/states";
 import { ExpenditureCandidateSummary } from "../types/Expenditures";
 import { isUpcomingDate } from "./utils";

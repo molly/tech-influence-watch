@@ -6,6 +6,7 @@ import {
 import { IndividualConstant } from "@/app/types/Individuals";
 import { titlecaseCommittee } from "@/app/utils/titlecase";
 import { formatCurrency } from "@/app/utils/utils";
+
 import Claimed from "./Claimed";
 import CommitteeDetails from "./CommitteeDetails";
 import Contribution from "./Contribution";

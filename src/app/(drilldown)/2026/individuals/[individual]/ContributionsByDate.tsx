@@ -1,9 +1,10 @@
-/* eslint-disable @next/next/no-img-element */
+ 
 import Contribution from "@/app/components/individualOrCompany/Contribution";
 import {
   IndividualOrCompanyContribution,
   RecipientDetails,
 } from "@/app/types/Contributions";
+
 import styles from "./page.module.css";
 
 export default function ContributionsByDate({

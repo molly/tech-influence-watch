@@ -8,6 +8,7 @@ import {
 } from "@/app/types/Contributions";
 import { is4xx, isError } from "@/app/utils/errors";
 import { range } from "@/app/utils/range";
+
 import Contribution from "./Contribution";
 import ContributionsGroup from "./ContributionsGroup";
 import styles from "./page.module.css";

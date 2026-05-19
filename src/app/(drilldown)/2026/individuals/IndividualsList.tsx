@@ -1,11 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
+import Link from "next/link";
+
 import { fetchConstant, fetchIndividualTotalSpending } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import { IndividualConstant, IndividualTotals } from "@/app/types/Individuals";
 import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
 import { humanizeRoundedCurrency } from "@/app/utils/humanize";
-import Link from "next/link";
+
 import listStyles from "../listStyles.module.css";
 import styles from "./IndividualsList.module.css";
 

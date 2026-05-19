@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { fetchMapData } from "@/app/actions/fetch";
 import { generateDomain } from "@/app/components/chloroplethConstants";
 import ChloroplethMap from "@/app/components/ChloroplethMap";
@@ -9,7 +11,7 @@ import { MapData } from "@/app/types/MapData";
 import { type Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
 import { humanizeSector, sectorHref } from "@/app/utils/sector";
-import Link from "next/link";
+
 import InformationalTooltip from "../InformationalTooltip";
 
 function toStateValues(mapData: MapData): Record<string, number> {

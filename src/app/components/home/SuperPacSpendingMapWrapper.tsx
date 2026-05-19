@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { fetchMapData } from "@/app/actions/fetch";
 import tableStyles from "@/app/components/tables.module.css";
 import { STATES_BY_ABBR } from "@/app/data/states";
@@ -6,10 +8,10 @@ import { MapData } from "@/app/types/MapData";
 import { type Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
 import { humanizeSector, sectorHref } from "@/app/utils/sector";
-import Link from "next/link";
+
+import { generateDomain } from "../chloroplethConstants";
 import ChloroplethMap from "../ChloroplethMap";
 import ErrorText from "../ErrorText";
-import { generateDomain } from "../chloroplethConstants";
 
 function toStateValues(mapData: MapData): Record<string, number> {
   const values: Record<string, number> = {};

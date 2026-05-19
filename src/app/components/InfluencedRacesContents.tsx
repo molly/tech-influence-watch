@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { useEffect, useState } from "react";
+
 import {
   fetchAllStateElections,
   fetchBeneficiaries,
@@ -16,8 +19,7 @@ import { ErrorType, isError } from "@/app/utils/errors";
 import { getRaceName, getUpcomingRaceForCandidate } from "@/app/utils/races";
 import { range } from "@/app/utils/range";
 import { formatCurrency } from "@/app/utils/utils";
-import Link from "next/link";
-import { useEffect, useState } from "react";
+
 import { STATES_BY_ABBR } from "../data/states";
 import { Beneficiary } from "../types/Beneficiaries";
 import { CommitteeConstant } from "../types/Committee";
@@ -357,7 +359,7 @@ export default function InfluencedRacesContents({
   > | null>(null);
 
   useEffect(() => {
-    setCommitteeConstants(null);
+    setCommitteeConstants(null); // eslint-disable-line react-hooks/set-state-in-effect
     (async function () {
       const fetchLimit = sector === "all" && !fullPage ? 5 : undefined;
       const [expenditureData, raceData, beneficiariesData, committeeData] =

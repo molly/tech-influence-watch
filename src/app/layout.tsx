@@ -1,7 +1,9 @@
+import "./globals.css";
+
 import type { Metadata } from "next";
 import { Barlow_Semi_Condensed, Big_Shoulders, Roboto } from "next/font/google";
+
 import Footer from "./components/Footer";
-import "./globals.css";
 import { BASE_METADATA } from "./utils/metadata";
 
 export const revalidate = 3600;

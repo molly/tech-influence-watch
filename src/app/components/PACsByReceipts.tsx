@@ -1,10 +1,12 @@
+import Link from "next/link";
+import { Suspense } from "react";
+
 import styles from "@/app/components/tables.module.css";
 import sharedStyles from "@/app/shared.module.css";
 import { type Sector } from "@/app/types/Sector";
 import { range } from "@/app/utils/range";
 import { humanizeSector } from "@/app/utils/sector";
-import Link from "next/link";
-import { Suspense } from "react";
+
 import Skeleton from "./skeletons/Skeleton";
 
 function TableContentsSkeleton({ type }: { type: string }) {

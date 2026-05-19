@@ -1,3 +1,7 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import React from "react";
+
 import {
   fetchBeneficiaries,
   fetchConstant,
@@ -11,14 +15,11 @@ import {
   type Beneficiary,
   type CompanyContributionGroup,
 } from "@/app/types/Beneficiaries";
-
 import { QPQ } from "@/app/types/Qpq";
 import { isError } from "@/app/utils/errors";
 import { humanizeRoundedCurrency } from "@/app/utils/humanize";
 import { customMetadata } from "@/app/utils/metadata";
-import type { Metadata } from "next";
-import Link from "next/link";
-import React from "react";
+
 import styles from "./page.module.css";
 
 export const metadata: Metadata = customMetadata({

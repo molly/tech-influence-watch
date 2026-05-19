@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { fetchConstant, fetchStateExpenditures } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import Skeleton from "@/app/components/skeletons/Skeleton";
@@ -5,7 +7,7 @@ import { CommitteeConstant } from "@/app/types/Committee";
 import { PopulatedStateExpenditures } from "@/app/types/Expenditures";
 import { is4xx, isError } from "@/app/utils/errors";
 import { formatCurrency } from "@/app/utils/utils";
-import Link from "next/link";
+
 import styles from "./page.module.css";
 
 export function CommitteeCardContentsSkeleton() {

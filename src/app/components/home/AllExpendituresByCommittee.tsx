@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 import {
   fetchAllCommitteeExpenditures,
   fetchConstant,
@@ -7,7 +9,7 @@ import sharedStyles from "@/app/shared.module.css";
 import { CommitteeConstant } from "@/app/types/Committee";
 import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
-import { Suspense } from "react";
+
 import ErrorText from "../ErrorText";
 import AllExpendituresByCommitteeChart from "./AllExpendituresByCommitteeChart";
 import { HorizontalPartyBarsSkeleton } from "./HorizontalPartyBars";

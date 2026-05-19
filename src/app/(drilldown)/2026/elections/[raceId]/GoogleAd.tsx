@@ -1,9 +1,11 @@
+import Link from "next/link";
+
 import InformationalTooltip from "@/app/components/InformationalTooltip";
 import { GoogleAd as GoogleAdType } from "@/app/types/Ads";
 import { CommitteeConstant } from "@/app/types/Committee";
 import { humanizeApproximateRounded } from "@/app/utils/humanize";
 import { formatCurrency, formatDateFromString } from "@/app/utils/utils";
-import Link from "next/link";
+
 import styles from "./page.module.css";
 
 function formatImpressions(impressions: string) {

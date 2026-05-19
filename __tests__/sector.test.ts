@@ -1,5 +1,6 @@
-import { humanizeSector, parseSector } from "@/app/utils/sector";
 import "@testing-library/jest-dom";
+
+import { humanizeSector, parseSector } from "@/app/utils/sector";
 
 describe("humanizeSector", () => {
   describe("default (no options)", () => {

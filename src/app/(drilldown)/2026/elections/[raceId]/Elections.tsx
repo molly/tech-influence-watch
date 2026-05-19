@@ -11,8 +11,9 @@ import { PopulatedStateExpenditures } from "@/app/types/Expenditures";
 import { is4xx, isError } from "@/app/utils/errors";
 import { isUpcomingRace } from "@/app/utils/races";
 import { range } from "@/app/utils/range";
-import RaceSummary from "./RaceSummary";
+
 import styles from "./page.module.css";
+import RaceSummary from "./RaceSummary";
 
 export function ElectionsSkeleton() {
   return (

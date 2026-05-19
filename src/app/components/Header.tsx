@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { Suspense } from "react";
+
+import styles from "./header.module.css";
 import HeaderNavLinks from "./HeaderNavLinks";
 import Logo from "./Logo";
 import SectorWrapper from "./SectorWrapper";
-import styles from "./header.module.css";
 
 export default function Header() {
   return (

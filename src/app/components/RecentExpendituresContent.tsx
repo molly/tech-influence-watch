@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import sharedStyles from "@/app/shared.module.css";
 import { CommitteeConstant } from "@/app/types/Committee";
 import { Expenditure } from "@/app/types/Expenditures";
@@ -10,7 +12,7 @@ import {
   titlecaseSuffix,
 } from "@/app/utils/titlecase";
 import { formatCurrency, formatDateFromString } from "@/app/utils/utils";
-import Link from "next/link";
+
 import { STATES_BY_ABBR } from "../data/states";
 import { RaceType } from "../types/Elections";
 import { getRaceName, getSubraceName } from "../utils/races";

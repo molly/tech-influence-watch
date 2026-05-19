@@ -3,6 +3,7 @@ import ErrorText from "@/app/components/ErrorText";
 import { Ad } from "@/app/types/Ads";
 import { CommitteeConstant } from "@/app/types/Committee";
 import { isError } from "@/app/utils/errors";
+
 import GoogleAd from "./GoogleAd";
 import ImageAd from "./ImageAd";
 import styles from "./page.module.css";

@@ -1,9 +1,11 @@
+import Link from "next/link";
+
 import { fetchCandidatesWithOpposeSpending } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import Skeleton from "@/app/components/skeletons/Skeleton";
-import sharedStyles from "@/app/shared.module.css";
 import tableStyles from "@/app/components/tables.module.css";
 import { STATES_BY_ABBR } from "@/app/data/states";
+import sharedStyles from "@/app/shared.module.css";
 import { OppositionConstant } from "@/app/types/Elections";
 import { ExpenditureCandidateSummary } from "@/app/types/Expenditures";
 import { isError } from "@/app/utils/errors";
@@ -11,7 +13,7 @@ import { getFullPartyName } from "@/app/utils/party";
 import { getRaceName } from "@/app/utils/races";
 import { range } from "@/app/utils/range";
 import { formatCurrency } from "@/app/utils/utils";
-import Link from "next/link";
+
 import styles from "./page.module.css";
 
 function Beneficiary({

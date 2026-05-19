@@ -1,13 +1,15 @@
 "use client";
 
+import * as d3 from "d3";
+import { motion } from "framer-motion";
+import { useMemo, useState } from "react";
+
 import Candidate, { CandidateImage } from "@/app/components/Candidate";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import { useBreakpoint } from "@/app/hooks/useBreakpoint";
 import { Beneficiary } from "@/app/types/Beneficiaries";
 import { CandidateSummary, ElectionGroup } from "@/app/types/Elections";
-import * as d3 from "d3";
-import { motion } from "framer-motion";
-import { useMemo, useState } from "react";
+
 import styles from "./page.module.css";
 
 const CHART_WIDTH = 300;

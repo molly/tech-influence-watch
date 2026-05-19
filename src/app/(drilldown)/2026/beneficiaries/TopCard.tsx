@@ -3,6 +3,7 @@ import Skeleton from "@/app/components/skeletons/Skeleton";
 import sharedStyles from "@/app/shared.module.css";
 import { Beneficiary } from "@/app/types/Beneficiaries";
 import { humanizeApproximateRounded } from "@/app/utils/humanize";
+
 import styles from "./beneficiaries.module.css";
 import {
   getDescription,

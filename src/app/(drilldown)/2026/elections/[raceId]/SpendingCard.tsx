@@ -6,6 +6,7 @@ import ErrorText from "@/app/components/ErrorText";
 import { Beneficiary } from "@/app/types/Beneficiaries";
 import { ElectionsByState } from "@/app/types/Elections";
 import { is4xx, isError } from "@/app/utils/errors";
+
 import Spending from "./Spending";
 
 export default async function SpendingCard({ raceId }: { raceId: string }) {

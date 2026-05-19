@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import {
   fetchBeneficiaries,
   fetchConstant,
@@ -28,7 +30,7 @@ import {
 } from "@/app/utils/races";
 import { range } from "@/app/utils/range";
 import { formatCurrency } from "@/app/utils/utils";
-import Link from "next/link";
+
 import styles from "./page.module.css";
 
 const renderAmount = (amount: number, supportOppose: string) => {

@@ -1,14 +1,16 @@
+import React from "react";
+
 import { fetchConstant } from "@/app/actions/fetch";
 import Claimed from "@/app/components/individualOrCompany/Claimed";
 import MaybeLink from "@/app/components/MaybeLink";
 import { Contribution as ContributionType } from "@/app/types/Contributions";
 import { titlecaseCompany } from "@/app/utils/titlecase";
 import { formatCurrency, formatDateFromString } from "@/app/utils/utils";
-import React from "react";
+
 import {
   DonorType,
-  IndividualDonorType,
   getDonorDetails,
+  IndividualDonorType,
 } from "../../../../utils/donorDetails";
 import styles from "./page.module.css";
 

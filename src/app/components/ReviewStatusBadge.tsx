@@ -1,5 +1,7 @@
-import { ManualReview } from "@/app/types/Contributions";
 import React from "react";
+
+import { ManualReview } from "@/app/types/Contributions";
+
 import styles from "./ReviewStatusBadge.module.css";
 
 interface ReviewStatusBadgeProps {
