@@ -1,9 +1,41 @@
 import { humanizeApproximateRounded } from "@/app/utils/humanize";
 import { getFullPartyName } from "@/app/utils/party";
 import { range } from "@/app/utils/range";
-import { formatCurrency } from "@/app/utils/utils";
 import Skeleton from "../skeletons/Skeleton";
 import styles from "./HorizontalBars.module.css";
+
+export interface HorizontalBarItem {
+  key: string;
+  label: string;
+  value: number;
+  displayValue: string;
+}
+
+export function HorizontalBars({ items }: { items: HorizontalBarItem[] }) {
+  const max = Math.max(...items.map((i) => i.value), 0);
+  return (
+    <ul className={styles.bars}>
+      {items.map((item) => {
+        const pct = max > 0 ? (item.value / max) * 100 : 0;
+        return (
+          <li key={item.key} className={styles.barRow}>
+            <div className={styles.labelRow}>
+              <span className={styles.label}>{item.label}</span>
+              <span className={styles.value}>{item.displayValue}</span>
+            </div>
+            <div
+              className={styles.track}
+              role="img"
+              aria-label={`${item.label}: ${item.displayValue}`}
+            >
+              <div className={styles.fill} style={{ width: `${pct}%` }} />
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
 
 const PARTY_ORDER: Record<string, number> = {
   DEM: 0,
@@ -64,31 +96,12 @@ export default function HorizontalPartyBars({
       return a.localeCompare(b);
     });
 
-  const max = Math.max(...Object.values(partySummary));
+  const items: HorizontalBarItem[] = parties.map((party) => ({
+    key: party,
+    label: getPartyLabel(party),
+    value: partySummary[party],
+    displayValue: `$${humanizeApproximateRounded(partySummary[party])}`,
+  }));
 
-  return (
-    <ul className={styles.bars}>
-      {parties.map((party) => {
-        const pct = max > 0 ? (partySummary[party] / max) * 100 : 0;
-        const label = getPartyLabel(party);
-        return (
-          <li key={party} className={styles.barRow}>
-            <div className={styles.labelRow}>
-              <span className={styles.label}>{label}</span>
-              <span className={styles.value}>
-                {`$${humanizeApproximateRounded(partySummary[party])}`}
-              </span>
-            </div>
-            <div
-              className={styles.track}
-              role="img"
-              aria-label={`${label}: ${formatCurrency(partySummary[party], true)}`}
-            >
-              <div className={styles.fill} style={{ width: `${pct}%` }} />
-            </div>
-          </li>
-        );
-      })}
-    </ul>
-  );
+  return <HorizontalBars items={items} />;
 }

@@ -37,7 +37,29 @@ export default async function AllCompanySpendingMap({
     hyphen: true,
   });
   if (isError(data)) {
-    return <ErrorText subject="expenditures by state" />;
+    return (
+      <div>
+        <h2
+          id="company-spending-by-state"
+          className={sharedStyles.sectionTitle}
+        >
+          Approximate
+          <InformationalTooltip>
+            <p>
+              Some committees (particularly super PACs) spend cross-state or are
+              not associated with a specific candidate, and contributions to
+              them are omitted from this chart.
+            </p>
+            <p>
+              This relies on manual classification and so represents a
+              conservative estimate of industry spending.
+            </p>
+          </InformationalTooltip>{" "}
+          {sectorText}linked contributions to candidates by state
+        </h2>
+        <ErrorText subject="expenditures by state" />
+      </div>
+    );
   }
   const mapData = data as MapData;
   return (

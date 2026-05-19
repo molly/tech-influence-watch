@@ -19,11 +19,12 @@
 .accent-text {
   color: var(--main-text);
   font-family: var(--font-display);
-  font-weight: 400;
 }
 
 .title {
-  font-size: clamp(3rem, 10vw, 4rem);
+  composes: accent-text;
+  font-size: clamp(3rem, 5vw, 5rem);
+  font-weight: 800;
   margin: 0;
 }
 
@@ -42,6 +43,18 @@
   }
 }
 
+.fullWidthHeader {
+  width: 100%;
+  border-bottom: 1px solid var(--card-border);
+  margin-bottom: 1rem;
+}
+
+.header {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
 .section {
   padding: 1rem 0;
 }
@@ -54,12 +67,12 @@
 
 .errorCardContent {
   height: 100%;
-  padding: 0 1rem 1rem 1rem;
+  padding: 1rem 0;
 }
 
 .errorCardContentStandalone {
   height: 100%;
-  padding: 1rem;
+  padding: 1rem 0;
   min-height: 5rem;
 }
 
@@ -69,6 +82,10 @@
   flex: 0 0 auto;
   flex-direction: column;
   color: var(--secondary-text);
+}
+
+.smallCardError {
+  justify-content: center;
 }
 
 .moneyCardHeader {
@@ -108,6 +125,18 @@
   margin-left: 0.5rem;
   vertical-align: middle;
   text-decoration: none;
+}
+
+.breadcrumb {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: var(--secondary-text);
+  letter-spacing: 10%;
+
+  &:not(:last-child)::after {
+    content: "·";
+    margin: 0 0.5rem;
+  }
 }
 
 .plainList {

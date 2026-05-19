@@ -20,7 +20,9 @@ export default async function TotalCompanySpending({
   const sectorText = humanizeSector(sector, { context: "industry" });
   if (isError(companyTotalsData)) {
     return (
-      <div className={`${sharedStyles.smallCard} ${className}`}>
+      <div
+        className={`${sharedStyles.smallCard} ${sharedStyles.smallCardError} ${className}`}
+      >
         <ErrorText
           subject={`the total amount of money contributed by ${sectorText.toLowerCase()} companies and individuals`}
         />

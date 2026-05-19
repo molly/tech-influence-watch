@@ -29,5 +29,12 @@ export default function Skeleton({
       width: `${getRandomInt(randWidth[0], randWidth[1])}rem`,
     }),
   };
-  return <div {...rest} className={className} style={style} />;
+  return (
+    <div
+      {...rest}
+      className={className}
+      style={style}
+      suppressHydrationWarning={!!(randWidth || randHeight)}
+    />
+  );
 }

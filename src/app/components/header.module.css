@@ -7,7 +7,7 @@
 }
 
 .topbar {
-  background-color: var(--color-blue-700);
+  background-color: var(--citation-needed-blue);
   width: 100%;
 }
 
@@ -70,13 +70,17 @@
   margin: 0.5rem 0 0.5rem 1rem;
 }
 
-.titleH1 {
+.logo {
+  composes: accent-text from "@/app/shared.module.css";
+  flex-direction: column;
+  color: var(--color-white);
   display: block;
   font-size: 1.8rem;
-  margin: 0;
+  font-weight: 800;
+  margin: 0.5rem 0 0.5rem 1rem;
 }
 
-.titleWatch {
+.logoWatch {
   color: var(--accent);
 }
 

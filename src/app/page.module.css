@@ -1,11 +1,3 @@
-.totalsRow {
-  display: grid;
-  grid-template-columns: 1fr;
-  margin: 0 auto 1rem auto;
-  border-top: 1px solid var(--divider-color);
-  border-bottom: 1px solid var(--card-border);
-}
-
 .columns {
   display: grid;
   grid-template-columns: 1fr;
@@ -60,29 +52,7 @@
   }
 }
 
-@media (max-width: 575px) {
-  .totalsRow > :not(:last-child) {
-    border-right: 0;
-    border-bottom: 1px solid var(--card-border);
-  }
-}
-
-@media (min-width: 576px) {
-  .totalsRow {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 576px) and (max-width: 767px) {
-  .totalsRow > :not(:last-child) {
-    border-bottom: 1px solid var(--card-border);
-  }
-}
-
 @media (min-width: 768px) {
-  .totalsRow {
-    grid-template-columns: repeat(3, 1fr);
-  }
   .columns {
     grid-template-columns: 1fr 1fr;
     grid-template-areas: "mainColumn sideColumn";

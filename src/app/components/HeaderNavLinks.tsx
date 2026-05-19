@@ -17,6 +17,7 @@ const NAV_ITEMS: NavItem[] = [
       { label: "By committees", href: "/2026/committees", useSector: true },
       { label: "By companies", href: "/2026/companies", useSector: true },
       { label: "By individuals", href: "/2026/individuals", useSector: true },
+      { label: "By beneficiary", href: "/2026/beneficiaries", useSector: true },
       {
         label: "Recent expenditures",
         href: "/2026/expenditures",

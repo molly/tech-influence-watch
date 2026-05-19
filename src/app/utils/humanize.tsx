@@ -20,14 +20,26 @@ export const humanizeNumber = (value: number): string => {
   return value.toString();
 };
 
-export const humanizeApproximateRounded = (value: number): string => {
-  if (value < 1000) {
-    return value.toString();
+export const humanizeApproximateRounded = (
+  value: number,
+  decimalPlaces?: number,
+): string => {
+  const format = (n: number): string => {
+    if (decimalPlaces !== undefined) {
+      return parseFloat(n.toFixed(decimalPlaces)).toString();
+    }
+    return Math.floor(n).toString();
+  };
+  if (value >= 1_000_000_000) {
+    return `${format(value / 1_000_000_000)}B`;
   }
-  if (value < 1000000) {
-    return `${Math.floor(value / 1000)}K`;
+  if (value >= 1_000_000) {
+    return `${format(value / 1_000_000)}M`;
   }
-  return `${Math.floor(value / 1000000)}M`;
+  if (value >= 1_000) {
+    return `${format(value / 1_000)}K`;
+  }
+  return value.toString();
 };
 
 // This always rounds DOWN.
@@ -66,16 +78,10 @@ export const humanizeRoundedCurrency = (
 };
 
 export function formatCompact(value: number): string {
-  if (value >= 1_000_000_000) {
-    return `$${parseFloat((value / 1_000_000_000).toPrecision(3))}B`;
+  if (value < 1_000) {
+    return `$${value}`;
   }
-  if (value >= 1_000_000) {
-    return `$${parseFloat((value / 1_000_000).toPrecision(3))}M`;
-  }
-  if (value >= 1_000) {
-    return `$${parseFloat((value / 1_000).toPrecision(3))}K`;
-  }
-  return `$${value}`;
+  return `$${humanizeApproximateRounded(value, 2)}`;
 }
 
 export const pluralize = (

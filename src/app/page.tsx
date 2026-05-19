@@ -4,6 +4,7 @@ import InfluencedRaces from "./components/InfluencedRaces";
 import { MoneyCardSkeleton } from "./components/MoneyCard";
 import SuperPACsByReceipts from "./components/PACsByReceipts";
 import SuperPACsByReceiptsTableContents from "./components/SuperPACsByReceiptsTableContents";
+import TotalsRow from "./components/TotalsRow";
 import AllCashByCommittee from "./components/home/AllCashByCommittee";
 import AllCompanySpendingByParty from "./components/home/AllCompanySpendingByParty";
 import AllCompanySpendingMap from "./components/home/AllCompanySpendingMap";
@@ -33,7 +34,7 @@ export default async function Home({
     <div className={sharedStyles.mainLayout}>
       <Header />
       <main className={sharedStyles.main}>
-        <div className={styles.totalsRow}>
+        <TotalsRow>
           <Suspense fallback={<MoneyCardSkeleton />}>
             <TotalCompanySpending sector={sector} />
           </Suspense>
@@ -43,7 +44,7 @@ export default async function Home({
           <Suspense fallback={<MoneyCardSkeleton />}>
             <TotalExpenditures sector={sector} />
           </Suspense>
-        </div>
+        </TotalsRow>
         <div className={styles.columns}>
           <div className={styles.mainColumn}>
             <InfluencedRaces sector={sector} />

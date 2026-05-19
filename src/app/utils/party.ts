@@ -23,3 +23,26 @@ export const getFullPartyName = (
       return party;
   }
 };
+
+export const getPartyAbbreviation = (party: string): string => {
+  switch (party.charAt(0).toUpperCase()) {
+    case "D":
+      return "Dem";
+    case "R":
+      return "Rep";
+    case "L":
+      return "Lib";
+    case "G":
+      return "Gre";
+    case "I":
+      return "Ind";
+    case "N":
+      return "Non";
+    case "U":
+      return "Unk";
+    case "O":
+      return "Oth";
+    default:
+      return party;
+  }
+};

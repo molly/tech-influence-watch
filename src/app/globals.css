@@ -52,15 +52,17 @@
 
   --accent: var(--color-lime-500);
   --accent-on-light: var(--color-lime-600);
+  --citation-needed-blue: #0645ad;
 
   --party-republican: #b57a7a;
   --party-democrat: #7a9ab5;
   --party-libertarian: #c9a84c;
   --party-green: #6a9e7f;
   --party-independent: #ddddbb;
-  --party-unknown: var(--color-neutral-300);
+  --party-unknown: #8a8a87;
+
   --background: var(--color-white);
-  --card-background: #fefefe;
+  --card-background: #fafaf7;
   --card-background-rgb: 254, 254, 254;
   --card-border: var(--color-neutral-300);
   --divider-color: var(--color-black);
@@ -108,11 +110,6 @@
   --admin-primary: #0066cc;
   --admin-panel-bg: #f0f7ff;
 
-  --background-gradient: radial-gradient(
-    circle at center,
-    var(--background-start) 0%,
-    var(--background-end) 100%
-  );
   --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --shadow-lg:
@@ -134,6 +131,7 @@
     --table-background-secondary: var(--color-neutral-900);
     --chart-skeleton: var(--color-neutral-700);
     --divider-color: var(--color-neutral-200);
+    --citation-needed-blue: #032763;
 
     --main-text: var(--color-neutral-200);
     --text-stroke: var(--color-neutral-200);

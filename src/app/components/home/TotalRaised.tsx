@@ -23,7 +23,9 @@ export default async function TotalRaised({
   });
   if (isError(receiptsData)) {
     return (
-      <div className={`${sharedStyles.smallCard} ${className}`}>
+      <div
+        className={`${sharedStyles.smallCard} ${sharedStyles.smallCardError} ${className}`}
+      >
         <ErrorText
           subject={`the total amount of money raised by ${sectorText}focused political action committees`}
         />
@@ -31,7 +33,8 @@ export default async function TotalRaised({
     );
   }
   const totals = receiptsData as CommitteeTotalsSnapshot;
-  const confirmedCash = (totals.net_receipts ?? totals.receipts) + totals.cash_on_hand;
+  const confirmedCash =
+    (totals.net_receipts ?? totals.receipts) + totals.cash_on_hand;
 
   let claimed;
   if (totals.claimed_committed) {

@@ -18,7 +18,9 @@ export default async function TotalDisbursements({
   const sectorText = humanizeSector(sector, { abbrev: true });
   if (isError(expendituresData)) {
     return (
-      <div className={`secondary ${sharedStyles.smallCard} ${className}`}>
+      <div
+        className={`secondary ${sharedStyles.smallCard} ${sharedStyles.smallCardError} ${className}`}
+      >
         <ErrorText subject={`the total expenditures by ${sectorText} PACs`} />
       </div>
     );
