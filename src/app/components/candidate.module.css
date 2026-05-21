@@ -32,6 +32,11 @@
   margin-left: 0;
 }
 
+.candidateName {
+  font-weight: 600;
+  text-decoration: underline;
+}
+
 .chartCandidateImage,
 .chartPlaceholderImage {
   width: 20px !important;

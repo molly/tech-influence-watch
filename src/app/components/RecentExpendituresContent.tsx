@@ -30,14 +30,14 @@ export function RecentExpendituresContentSkeleton({
       key={`recent-expenditures-skeleton-row-${i}`}
     >
       <div>
-        <Skeleton width="18rem" onCard={true} />
+        <Skeleton width="8rem" height="0.8rem" />
       </div>
       <div className={styles.expenditureNameAndAmount}>
-        <Skeleton randWidth={[10, 20]} onCard={true} />
-        <Skeleton width="6rem" onCard={true} />
+        <Skeleton randWidth={[10, 15]} />
+        <Skeleton width="3rem" />
       </div>
-      <Skeleton width="15rem" onCard={true} />
-      <Skeleton width="25rem" height="0.8rem" onCard={true} />
+      <Skeleton width="6rem" height="0.8rem" />
+      <Skeleton randWidth={[6, 15]} height="0.8rem" />
     </div>
   ));
 }
@@ -107,7 +107,7 @@ export default function RecentExpendituresContent({
         key={expenditure.transaction_id}
         className={styles.recentExpenditureRow}
       >
-        <div className={styles.expenditureDescription}>
+        <div className={styles.expenditureDate}>
           {expenditure.expenditure_date &&
             formatDateFromString(expenditure.expenditure_date)}
           {!expenditure.expenditure_date &&

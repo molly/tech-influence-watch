@@ -2,8 +2,8 @@ import { Suspense } from "react";
 
 import {
   HorizontalBars,
-  HorizontalPartyBarsSkeleton,
-} from "@/app/components/home/HorizontalPartyBars";
+  HorizontalBarsSkeleton,
+} from "@/app/components/home/HorizontalBars";
 import MaybeLink from "@/app/components/MaybeLink";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import { Beneficiary } from "@/app/types/Beneficiaries";
@@ -152,7 +152,7 @@ export default function BeneficiariesSidebar({
       {/* By recipient type */}
       <section className={styles.sidebarSection}>
         <SidebarSectionHeader title="By recipient type" />
-        <Suspense fallback={<HorizontalPartyBarsSkeleton numBars={3} />}>
+        <Suspense fallback={<HorizontalBarsSkeleton numBars={3} />}>
           <HorizontalBars
             items={(["pac", "candidate", "party"] as DisplayType[]).map(
               (type) => ({
@@ -173,7 +173,7 @@ export default function BeneficiariesSidebar({
           Crypto and AI industry contributions to candidates&apos; campaigns, grouped
           by the federal office sought.
         </p>
-        <Suspense fallback={<HorizontalPartyBarsSkeleton numBars={3} />}>
+        <Suspense fallback={<HorizontalBarsSkeleton numBars={3} />}>
           <HorizontalBars
             items={officeOrder.map((office) => {
               const label = OFFICE_LABELS[office] ?? office;

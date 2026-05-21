@@ -8,6 +8,7 @@
   line-height: inherit;
   padding: 0;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .tooltip {

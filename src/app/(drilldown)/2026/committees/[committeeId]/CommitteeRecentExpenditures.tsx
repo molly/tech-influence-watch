@@ -19,14 +19,13 @@ export async function CommitteeRecentExpendituresContent({
 }: {
   committeeId: string;
 }) {
-  const [committeeData, expendituresData] = await Promise.all([
-    fetchCommitteeDetails(committeeId),
+  const [expendituresData] = await Promise.all([
     fetchRecentCommitteeExpenditures(committeeId),
   ]);
-  if (isError(expendituresData) || isError(committeeData)) {
+  if (isError(expendituresData)) {
     return (
       <div className={sharedStyles.errorCardContent}>
-        {is4xx(expendituresData) || is4xx(committeeData) ? (
+        {is4xx(expendituresData) ? (
           <span className="secondary">Committee not found.</span>
         ) : (
           <ErrorText subject="the recent expenditures by this committee" />
@@ -36,7 +35,6 @@ export async function CommitteeRecentExpendituresContent({
   }
 
   const committeeExpenditures = expendituresData as Expenditure[];
-  const committee = committeeData as CommitteeDetails;
   if (!committeeExpenditures.length) {
     return (
       <div className={sharedStyles.errorCardContent}>

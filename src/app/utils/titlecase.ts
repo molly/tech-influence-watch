@@ -18,8 +18,11 @@ export function sentenceCase(str: string, lowercaseRest = true): string {
 
 export function titlecaseCompany(str: string): string {
   let titlecased = titlecase(str);
+  if (str.toUpperCase() === "OPENAI") {
+    return "OpenAI";
+  }
   titlecased = titlecased.replace(
-    /\b([A-Z]|AH|TJ|GP|SV|LLC|DRW|DBA|CMT|RRE|USA|HBAR|BTC|CFG|PAC)\b/gi,
+    /\b([A-Z]|AH|TJ|GP|SV|LLC|DRW|DBA|CMT|RRE|USA|HBAR|BTC|CFG|PAC|AI)\b/gi,
     function (txt) {
       return txt.toUpperCase();
     },

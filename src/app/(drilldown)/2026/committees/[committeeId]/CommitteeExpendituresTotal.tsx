@@ -53,6 +53,7 @@ export default async function CommitteeExpendituresTotal({
       amount={formatCurrency(expenditures, true)}
       topText="Total spending"
       tooltip={tooltip}
+      bottomText="in independent expenditures."
     />
   );
 }

@@ -1,16 +1,15 @@
 /* Page two-column layout */
+
 .columns {
-  display: grid;
-  grid-template-columns: 4fr 3fr;
-  align-items: start;
-  column-gap: 4rem;
+  composes: columns from "@/app/shared.module.css";
 }
 
-.mainColumn,
+.mainColumn {
+  composes: mainColumn from "@/app/shared.module.css";
+}
+
 .sideColumn {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  composes: sideColumn from "@/app/shared.module.css";
 }
 
 /* Top recipient cards */
@@ -127,82 +126,39 @@
 /* Controls bar */
 
 .controls {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem 1rem;
-  padding: 0.4rem 0;
-  border-bottom: 1px solid var(--table-color);
-  flex-wrap: wrap;
+  composes: controls from "@/app/shared.module.css";
 }
 
 .controlsLeft {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
+  composes: controlsLeft from "@/app/shared.module.css";
 }
 
 .controlsRight {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
+  composes: controlsRight from "@/app/shared.module.css";
 }
 
 .controlLabel {
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--secondary-text);
+  composes: controlLabel from "@/app/shared.module.css";
 }
 
 .controlGroup {
-  display: flex;
+  composes: controlGroup from "@/app/shared.module.css";
 }
 
 .controlBtn {
-  background: none;
-  border: 1px solid var(--card-border);
-  box-sizing: border-box;
-  margin-right: -1px;
-  padding: 0.2rem 0.5rem;
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: var(--main-text);
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.controlBtn:hover {
-  background: var(--color-neutral-100);
-  color: var(--main-text);
-  text-decoration: none;
+  composes: controlBtn from "@/app/shared.module.css";
 }
 
 .controlBtnActive {
-  composes: controlBtn;
-  background: var(--color-black);
-  color: var(--color-white);
-  border-color: var(--color-black);
-}
-
-.controlBtnActive:hover {
-  background: var(--color-neutral-800);
-  color: var(--color-white);
-  text-decoration: none;
+  composes: controlBtnActive from "@/app/shared.module.css";
 }
 
 .sortArrow {
-  display: inline-block;
-  transform: translateY(-0.15em);
+  composes: sortArrow from "@/app/shared.module.css";
 }
 
 .showingCount {
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--secondary-text);
-  white-space: nowrap;
+  composes: showingCount from "@/app/shared.module.css";
 }
 
 /* Table */
@@ -466,6 +422,11 @@
   flex: 1;
   min-width: 0;
   padding-block: 0.4rem;
+
+  & a {
+    color: var(--main-text);
+    text-decoration: underline;
+  }
 }
 
 .sidebarCandidateName {
@@ -574,20 +535,6 @@ a .sidebarCandidateName:hover {
 /* Dark mode */
 
 @media (prefers-color-scheme: dark) {
-  .controlBtn:hover {
-    background: var(--color-neutral-700);
-  }
-
-  .controlBtnActive {
-    background: var(--color-neutral-200);
-    color: var(--color-black);
-  }
-
-  .controlBtnActive:hover {
-    background: var(--color-neutral-300);
-    color: var(--color-black);
-  }
-
   .pageBtn:hover {
     background: var(--color-neutral-700);
   }

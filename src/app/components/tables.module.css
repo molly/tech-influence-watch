@@ -9,7 +9,6 @@
   width: 100%;
 }
 
-
 .superPacTable,
 .influencedTable {
   width: 100%;
@@ -22,8 +21,10 @@
 .influencedTableHeader {
   position: sticky;
   top: 0;
-  text-transform: uppercase;
+  font-family: var(--font-mono);
   font-size: 0.7rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
   border-bottom: 1px solid var(--table-color);
   vertical-align: bottom;
   color: var(--table-header-color);

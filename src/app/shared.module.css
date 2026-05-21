@@ -48,6 +48,10 @@
   margin-bottom: 1rem;
 }
 
+.fullWidthHeaderNoBorder {
+  width: 100%;
+}
+
 .header {
   max-width: var(--max-width);
   margin: 0 auto;
@@ -88,6 +92,9 @@
 }
 
 .moneyCardHeader {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 1.8px;
   color: var(--secondary-text);
   text-transform: uppercase;
 }
@@ -117,6 +124,7 @@
 .sectorBadge {
   background-color: var(--color-black);
   color: var(--color-white);
+  font-family: var(--font-mono);
   font-size: 0.6rem;
   text-transform: uppercase;
   padding: 0.1rem 0.25rem;
@@ -127,16 +135,18 @@
 }
 
 .breadcrumb {
+  font-family: var(--font-mono);
   font-size: 0.8rem;
   text-transform: uppercase;
   color: var(--secondary-text);
-  letter-spacing: 10%;
+  letter-spacing: 1.5px;
 
   &:not(:last-child)::after {
-    content: "·";
+    content: "/";
     margin: 0 0.5rem;
   }
 }
+
 
 .plainList {
   list-style: none;
@@ -189,6 +199,105 @@
   margin-bottom: 1rem;
 }
 
+/* Two-column page layout */
+
+.columns {
+  display: grid;
+  grid-template-columns: 4fr 3fr;
+  align-items: start;
+  column-gap: 4rem;
+}
+
+.mainColumn,
+.sideColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Sort / filter control bar */
+
+.controls {
+  display: flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--table-color);
+  flex-wrap: wrap;
+}
+
+.controlsLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.controlsRight {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.controlLabel {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--secondary-text);
+}
+
+.controlGroup {
+  display: flex;
+}
+
+.controlBtn {
+  background: none;
+  border: 1px solid var(--card-border);
+  box-sizing: border-box;
+  margin-right: -1px;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--main-text);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.controlBtn:hover {
+  background: var(--color-neutral-100);
+  color: var(--main-text);
+  text-decoration: none;
+}
+
+.controlBtnActive {
+  composes: controlBtn;
+  background: var(--color-black);
+  color: var(--color-white);
+  border-color: var(--color-black);
+}
+
+.controlBtnActive:hover {
+  background: var(--color-neutral-800);
+  color: var(--color-white);
+  text-decoration: none;
+}
+
+.sortArrow {
+  font-size: 0.4rem;
+  display: inline-block;
+  transform: translateY(-0.3em);
+}
+
+.showingCount {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--secondary-text);
+  white-space: nowrap;
+}
+
 @media (min-width: 500px) {
   .highlight {
     font-size: clamp(2rem, 5vw, 3rem);
@@ -196,9 +305,29 @@
   }
 }
 
+@media (max-width: 575px) {
+  .card {
+    padding-left: 0;
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   .sectorBadge {
     background-color: var(--color-lime-900);
     color: var(--color-lime-300);
+  }
+
+  .controlBtn:hover {
+    background: var(--color-neutral-700);
+  }
+
+  .controlBtnActive {
+    background: var(--color-neutral-200);
+    color: var(--color-black);
+  }
+
+  .controlBtnActive:hover {
+    background: var(--color-neutral-300);
+    color: var(--color-black);
   }
 }

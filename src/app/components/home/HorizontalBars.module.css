@@ -40,18 +40,24 @@
   justify-content: space-between;
   align-items: baseline;
   gap: 0.5rem;
+  font-weight: 600;
 }
 
 .label {
   color: var(--main-text);
-  font-size: 0.9rem;
-  text-decoration: none;
+  font-size: 0.8rem;
 }
 
 .value {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
+}
+
+.subtitle {
+  font-size: 0.8rem;
+  color: var(--secondary-text);
+  font-weight: 400;
 }
 
 .track {
@@ -59,7 +65,7 @@
   height: 10px;
   overflow: hidden;
   display: flex;
-  background-color: var(--color-neutral-50);
+  background-color: var(--color-neutral-200);
 }
 
 /* Single-color fill (HorizontalPartyBars) */
@@ -89,9 +95,10 @@
 }
 
 .groupHeader {
-  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
   font-weight: bold;
-  letter-spacing: 0.05em;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
   color: var(--secondary-text);
 }
@@ -115,6 +122,6 @@
 
 @media (prefers-color-scheme: dark) {
   .track {
-    background-color: var(--color-neutral-800);
+    background-color: var(--color-neutral-700);
   }
 }

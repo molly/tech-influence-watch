@@ -2,22 +2,53 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 
+import { fetchCommitteeDetails } from "@/app/actions/fetch";
 import { MoneyCardSkeleton } from "@/app/components/MoneyCard";
 import { SpendingByPartySkeleton } from "@/app/components/SpendingByPartyWithOpposition";
+import TotalsRow from "@/app/components/TotalsRow";
 import COMMITTEES from "@/app/data/committees";
 import sharedStyles from "@/app/shared.module.css";
+import { CommitteeDetails } from "@/app/types/Committee";
+import { isError } from "@/app/utils/errors";
 import { customMetadata } from "@/app/utils/metadata";
 
 import CommitteeDetailsSection, {
   CommitteeDetailsSkeleton,
 } from "./CommitteeDetailsSection";
 import CommitteeDisbursements from "./CommitteeDisbursements";
+import CommitteeExpendituresByCandidate from "./CommitteeExpendituresByCandidate";
 import CommitteeExpendituresByParty from "./CommitteeExpendituresByParty";
 import CommitteeExpendituresTotal from "./CommitteeExpendituresTotal";
 import CommitteeRaised from "./CommitteeRaised";
 import CommitteeRecentExpenditures from "./CommitteeRecentExpenditures";
 import styles from "./page.module.css";
 import TopDonors, { TopDonorsSkeleton } from "./TopDonors";
+
+async function CommitteeExpendituresBottomSections({
+  committeeId,
+}: {
+  committeeId: string;
+}) {
+  const committeeData = await fetchCommitteeDetails(committeeId);
+  if (isError(committeeData)) {
+    return null;
+  }
+  const committee = committeeData as CommitteeDetails;
+  if (!committee.by_party) {
+    return null;
+  }
+  return (
+    <>
+      <section className={sharedStyles.section}>
+        <h2 className={sharedStyles.sectionTitle}>By candidate</h2>
+        <Suspense>
+          <CommitteeExpendituresByCandidate committeeId={committeeId} />
+        </Suspense>
+      </section>
+      <CommitteeRecentExpenditures committeeId={committeeId} />
+    </>
+  );
+}
 
 export async function generateMetadata({
   params,
@@ -44,50 +75,93 @@ export default async function CommitteePage({
   const { sort } = await searchParams;
 
   return (
-    <div className={styles.page}>
+    <>
       <Suspense fallback={<CommitteeDetailsSkeleton />}>
         <CommitteeDetailsSection committeeId={committeeId} />
       </Suspense>
-      <section className={styles.moneyCardRow}>
-        <Suspense fallback={<MoneyCardSkeleton />}>
-          <CommitteeRaised committeeId={committeeId} />
-        </Suspense>
-        <Suspense fallback={<MoneyCardSkeleton />}>
-          <CommitteeExpendituresTotal committeeId={committeeId} />
-        </Suspense>
-        <Suspense fallback={<MoneyCardSkeleton />}>
-          <CommitteeDisbursements committeeId={committeeId} />
-        </Suspense>
-      </section>
-      <div className={styles.committeeWrapper}>
-        <section className={styles.donorSection}>
-          <div className={styles.donorSectionHeaderGroup}>
-            <h3 className={styles.donorSectionHeader}>Top donors</h3>
-            <div className={styles.donorSortLink}>
-              Sort by:{" "}
-              <Link href={`?sort=${sort === "date" ? "donor" : "date"}`}>
-                {sort === "date" ? "Donor" : "Date"}
-              </Link>
-            </div>
-          </div>
-          <Suspense fallback={<TopDonorsSkeleton />}>
-            <TopDonors committeeId={committeeId} sort={sort} />
+      <div className={sharedStyles.main}>
+        <TotalsRow>
+          <Suspense fallback={<MoneyCardSkeleton />}>
+            <CommitteeRaised committeeId={committeeId} />
           </Suspense>
-        </section>
-        <div className={styles.rightColumn}>
-          <div className={sharedStyles.constrainedWrapper}>
-            <section
-              className={`${sharedStyles.section} ${sharedStyles.constrainWidth}`}
-            >
-              <h2 id="expenditures-label">Expenditures</h2>
-              <Suspense fallback={<SpendingByPartySkeleton />}>
-                <CommitteeExpendituresByParty committeeId={committeeId} />
-              </Suspense>
-            </section>
+          <Suspense fallback={<MoneyCardSkeleton />}>
+            <CommitteeExpendituresTotal committeeId={committeeId} />
+          </Suspense>
+          <Suspense fallback={<MoneyCardSkeleton />}>
+            <CommitteeDisbursements committeeId={committeeId} />
+          </Suspense>
+        </TotalsRow>
+        <div className={styles.committeeWrapper}>
+          <section className={styles.donorSection}>
+            <div className={styles.donorSectionHeaderGroup}>
+              <h2 className={styles.donorSectionHeader}>Top donors</h2>
+            </div>
+            <div className={sharedStyles.controls}>
+              <div className={sharedStyles.controlsLeft}>
+                <span className={sharedStyles.controlLabel}>Sort</span>
+                <div className={sharedStyles.controlGroup}>
+                  <Link
+                    href="?"
+                    className={
+                      sort !== "date"
+                        ? sharedStyles.controlBtnActive
+                        : sharedStyles.controlBtn
+                    }
+                  >
+                    {sort !== "date" ? (
+                      <>
+                        Amount <span className={sharedStyles.sortArrow}>↓</span>
+                      </>
+                    ) : (
+                      "Amount"
+                    )}
+                  </Link>
+                  <Link
+                    href="?sort=date"
+                    className={
+                      sort === "date"
+                        ? sharedStyles.controlBtnActive
+                        : sharedStyles.controlBtn
+                    }
+                  >
+                    {sort === "date" ? (
+                      <>
+                        Date <span className={sharedStyles.sortArrow}>↓</span>
+                      </>
+                    ) : (
+                      "Date"
+                    )}
+                  </Link>
+                </div>
+              </div>
+            </div>
+            <Suspense fallback={<TopDonorsSkeleton />}>
+              <TopDonors committeeId={committeeId} sort={sort} />
+            </Suspense>
+          </section>
+          <div className={styles.rightColumn}>
+            <div className={sharedStyles.constrainedWrapper}>
+              <section
+                className={`${sharedStyles.section} ${sharedStyles.constrainWidth}`}
+              >
+                <h2
+                  className={sharedStyles.sectionTitle}
+                  id="expenditures-label"
+                >
+                  Expenditures
+                </h2>
+                <Suspense fallback={<SpendingByPartySkeleton />}>
+                  <CommitteeExpendituresByParty committeeId={committeeId} />
+                </Suspense>
+              </section>
+            </div>
+
+            <Suspense>
+              <CommitteeExpendituresBottomSections committeeId={committeeId} />
+            </Suspense>
           </div>
-          <CommitteeRecentExpenditures committeeId={committeeId} />
         </div>
       </div>
-    </div>
+    </>
   );
 }

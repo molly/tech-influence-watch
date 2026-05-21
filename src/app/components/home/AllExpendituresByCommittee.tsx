@@ -12,7 +12,7 @@ import { isError } from "@/app/utils/errors";
 
 import ErrorText from "../ErrorText";
 import AllExpendituresByCommitteeChart from "./AllExpendituresByCommitteeChart";
-import { HorizontalPartyBarsSkeleton } from "./HorizontalPartyBars";
+import { HorizontalBarsSkeleton } from "./HorizontalBars";
 
 async function AllExpendituresByCommitteeContent({
   labelId,
@@ -52,7 +52,7 @@ export default function AllExpendituresByCommittee({
       >
         PAC expenditures
       </h2>
-      <Suspense fallback={<HorizontalPartyBarsSkeleton numBars={4} />}>
+      <Suspense fallback={<HorizontalBarsSkeleton numBars={4} />}>
         <AllExpendituresByCommitteeContent
           labelId="expenditures-by-committee-label"
           sector={sector}

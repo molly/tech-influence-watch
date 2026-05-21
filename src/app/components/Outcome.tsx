@@ -58,7 +58,7 @@ export default function Outcome({
           <>
             {`${inSentence ? " is a" : "A"}waiting results from the ${getSubraceName(nextRace)} on `}
             <span className="no-wrap">
-              ${formatDateFromString(nextRace.date)}
+              {formatDateFromString(nextRace.date)}
             </span>
           </>
         );

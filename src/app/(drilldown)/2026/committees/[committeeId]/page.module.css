@@ -1,14 +1,6 @@
-.page {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: var(--max-width);
-  gap: 1rem;
-  padding: 0 1rem;
-}
-
 .description {
   margin-top: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .committeeWrapper {
@@ -23,14 +15,29 @@
   text-align: left;
 }
 
+.committeeDetail {
+  &:not(:first-child) {
+    &:before {
+      content: " · ";
+      margin: 0 0.25rem;
+    }
+  }
+}
+
+.fecId {
+  font-variant-numeric: tabular-nums;
+}
+
 .moneyCardRow {
   display: grid;
   gap: inherit;
   grid-template-columns: repeat(4, minmax(10rem, 25rem));
 }
+
 .rightColumn {
   display: flex;
   flex-direction: column;
+  flex: 1;
   gap: inherit;
 }
 
@@ -44,31 +51,38 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.5rem;
+  border-bottom: 1px solid var(--divider-color);
+  padding-bottom: 0.5rem;
 }
 
 .donorSectionHeader {
-  padding: 0 1rem;
+  font-family: var(--font-display);
   margin: 0;
-  font-size: 1.5rem;
 }
 
-.donorSortLink {
-  padding: 0 1rem;
+.donorAmount {
+  font-variant-numeric: tabular-nums;
+}
+
+.donorSummaryAmount {
+  font-weight: 500;
 }
 
 .donorRow {
   display: flex;
   flex-direction: column;
   padding: 1rem;
-  border-top: 1px solid var(--card-border);
+
+  & ~ .donorRow {
+    border-top: 1px solid var(--card-border);
+  }
 }
 
 .donorSummary {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 1.2rem;
+  font-size: 1rem;
 }
 
 .redactedName {
@@ -88,19 +102,16 @@
 }
 
 .donorSubRow {
-  margin-left: 1rem;
-  padding: 0.5rem 0;
-  font-size: 1rem;
+  padding: 0.25rem 0;
+  font-size: 0.875rem;
 }
 
 .donorSubRowPrimary {
   display: flex;
   justify-content: space-between;
-  align-items: center;
 }
 
 .subRowCurrency {
-  color: var(--secondary-text);
   justify-content: end;
 }
 
@@ -118,21 +129,26 @@
 }
 
 .contributionDescription {
+  font-family: var(--font-mono);
   color: var(--secondary-text);
-  font-size: 0.9rem;
-  font-style: italic;
-  margin-left: 1.5rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.7px;
 }
 
 .donorDate {
-  font-size: 1rem;
+  font-size: 0.875rem;
   align-self: center;
   white-space-collapse: preserve;
 }
 
 .donorDateRange {
-  font-size: 1rem;
-  margin-left: 1rem;
+  font-size: 0.875rem;
+}
+
+
+.candidateTargetParty {
+  font-weight: 400;
+  color: var(--secondary-text);
 }
 
 .committeeDisbursementsListItem {
@@ -141,13 +157,12 @@
   padding: 0.25em 0;
 }
 
-@media (max-width: 576px) {
+@media (max-width: 575px) {
   .moneyCardRow {
     grid-template-columns: minmax(16rem, 25rem);
   }
 
   .donorSubRow {
-    margin-left: 0;
     align-items: flex-start;
   }
 

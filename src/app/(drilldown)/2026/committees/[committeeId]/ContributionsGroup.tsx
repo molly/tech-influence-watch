@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import Claimed from "@/app/components/individualOrCompany/Claimed";
 import MaybeLink from "@/app/components/MaybeLink";
 import { ContributionsGroup as ContributionsGroupType } from "@/app/types/Contributions";
-import { getDonorDetails,IndividualDonorType } from "@/app/utils/donorDetails";
+import { getDonorDetails, IndividualDonorType } from "@/app/utils/donorDetails";
 import { titlecaseCompany } from "@/app/utils/titlecase";
 import { formatCurrency } from "@/app/utils/utils";
 
@@ -60,10 +60,12 @@ export default function ContributionsGroup({
     <div className={styles.donorRow}>
       <div className={styles.donorSummary}>
         <span className={styles.donorCompany}>
-          <MaybeLink href={donorGroup.link}>{name}</MaybeLink>
+          <MaybeLink href={donorGroup.link} className="secondaryLink">{name}</MaybeLink>
           {isClaimed && <Claimed />}
         </span>
-        <span>{formatCurrency(donorGroup.total)}</span>
+        <span className={`${styles.donorSummaryAmount} ${styles.donorAmount}`}>
+          {formatCurrency(donorGroup.total)}
+        </span>
       </div>
       <div className={styles.contributionsContainer}>
         {donorGroup.contributions.map((donor, ind) => (

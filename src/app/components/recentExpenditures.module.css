@@ -9,6 +9,13 @@
   }
 }
 
+.expenditureDate {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 1.5px;
+  color: var(--secondary-text);
+}
+
 .expenditureDescription {
   font-size: 0.9rem;
   color: var(--secondary-text);
@@ -21,6 +28,7 @@
 .expenditureNameAndAmount {
   display: flex;
   justify-content: space-between;
+  margin: 0.1rem 0.1rem 0.1rem 0;
 }
 
 .expenditureAmount {
@@ -35,7 +43,7 @@
 }
 
 .expenditureTarget {
-  margin-right: 0.25rem;
+  margin: 0.1rem 0.1rem 0.1rem 0;
 }
 
 .tableCardContent {

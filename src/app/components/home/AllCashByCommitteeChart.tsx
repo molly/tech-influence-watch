@@ -74,7 +74,7 @@ export default function AllCashByCommitteeChart({
                 <span>
                   <a
                     href={`/2026/committees/${committee.id}`}
-                    className={styles.label}
+                    className={`${styles.label} secondaryLink`}
                   >
                     {committee.name}
                   </a>

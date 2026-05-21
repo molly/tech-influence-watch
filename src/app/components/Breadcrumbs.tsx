@@ -19,7 +19,9 @@ export default function Breadcrumbs({ crumbs }: { crumbs: Crumb[] }) {
         return (
           <span key={i} className={styles.breadcrumb}>
             {href && !isLast ? (
-              <Link href={href}>{name}</Link>
+              <Link className="secondaryLink" href={href}>
+                {name}
+              </Link>
             ) : (
               <span>{name}</span>
             )}

@@ -13,10 +13,15 @@ import styles from "./page.module.css";
 
 export function CommitteeDetailsSkeleton() {
   return (
-    <div>
-      <Skeleton height="1.75rem" width="10rem" />
-      <Skeleton width="90%" />
-      <Skeleton width="60%" />
+    <div className={sharedStyles.fullWidthHeaderNoBorder}>
+      <section className={sharedStyles.header}>
+        <Breadcrumbs
+          crumbs={["Spending", { name: "Committees", href: "/committees" }]}
+        />
+        <Skeleton height="5rem" width="15rem" />
+        <Skeleton width="60%" />
+        <Skeleton width="90%" />
+      </section>
     </div>
   );
 }
@@ -32,7 +37,15 @@ export default async function CommitteeDetailsSection({
     if (is4xx(committeeData)) {
       return <div className="secondary">Committee not found.</div>;
     } else {
-      return <ErrorText subject="information about this committee" />;
+      return (
+        <div className={sharedStyles.fullWidthHeaderNoBorder}>
+          <section className={sharedStyles.header}>
+            <p>
+              <ErrorText subject="information about this committee" />
+            </p>
+          </section>
+        </div>
+      );
     }
   }
 
@@ -42,16 +55,24 @@ export default async function CommitteeDetailsSection({
     const parts: React.ReactNode[] = [];
 
     if (committee.committee_type_full) {
-      parts.push(committee.committee_type_full);
+      parts.push(
+        <span className={styles.committeeDetail}>
+          {committee.committee_type_full}
+        </span>,
+      );
     }
 
     if (committee.designation_full) {
-      parts.push(` - ${committee.designation_full}`);
+      parts.push(
+        <span className={styles.committeeDetail}>
+          {committee.designation_full}
+        </span>,
+      );
     }
 
     parts.push(
-      <span key="id">
-        {" | ID: "}
+      <span key="id" className={`${styles.fecId} ${styles.committeeDetail}`}>
+        {"ID: "}
         <a
           href={`https://www.fec.gov/data/committee/${committee.id}`}
           target="_blank"
@@ -64,7 +85,9 @@ export default async function CommitteeDetailsSection({
 
     if (committee.first_f1_date) {
       parts.push(
-        ` | Registration date: ${formatDateFromString(committee.first_f1_date)}`,
+        <span className={styles.committeeDetail}>
+          Registration date: {formatDateFromString(committee.first_f1_date)}
+        </span>,
       );
     }
 
@@ -72,18 +95,24 @@ export default async function CommitteeDetailsSection({
   };
 
   return (
-    <div className={sharedStyles.fullWidthHeader}>
+    <div className={sharedStyles.fullWidthHeaderNoBorder}>
       <section className={sharedStyles.header}>
-        <Breadcrumbs crumbs={["Spending", "Beneficiaries"]} />
-      <h1>{committee.name}</h1>
-      <span className="secondary small">{renderDetails()}</span>
-      {committee.description && (
-        <div
-          className={styles.description}
-          dangerouslySetInnerHTML={{ __html: committee.description }}
-        ></div>
-      )}
-    </section>
+        <Breadcrumbs
+          crumbs={[
+            "Spending",
+            { name: "Committees", href: "/committees" },
+            committee.name,
+          ]}
+        />
+        <h1 className={sharedStyles.title}>{committee.name}</h1>
+        <span className="secondary small">{renderDetails()}</span>
+        {committee.description && (
+          <div
+            className={styles.description}
+            dangerouslySetInnerHTML={{ __html: committee.description }}
+          ></div>
+        )}
+      </section>
     </div>
   );
 }

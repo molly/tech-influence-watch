@@ -7,7 +7,7 @@ import {
   fetchCommitteeTotalReceipts,
 } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
-import { HorizontalPartyBarsSkeleton } from "@/app/components/home/HorizontalPartyBars";
+import { HorizontalBarsSkeleton } from "@/app/components/home/HorizontalBars";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import sharedStyles from "@/app/shared.module.css";
 import type {
@@ -71,7 +71,7 @@ function CommitteeListSkeleton() {
       <div className={styles.committeeName}>
         <Skeleton randWidth={[10, 30]} />
       </div>
-      <HorizontalPartyBarsSkeleton />
+      <HorizontalBarsSkeleton />
       <div className={listStyles.amountCell}>
         <Skeleton randWidth={[5, 15]} />
       </div>

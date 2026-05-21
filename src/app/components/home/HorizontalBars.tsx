@@ -8,12 +8,21 @@ import styles from "./HorizontalBars.module.css";
 export interface HorizontalBarItem {
   key: string;
   label: string;
+  labelNode?: React.ReactNode;
+  subtitle?: string;
   value: number;
-  displayValue: string;
+  displayValue?: string;
+  ariaLabel?: string;
 }
 
-export function HorizontalBars({ items }: { items: HorizontalBarItem[] }) {
-  const max = Math.max(...items.map((i) => i.value), 0);
+export function HorizontalBars({
+  items,
+  max: maxProp,
+}: {
+  items: HorizontalBarItem[];
+  max?: number;
+}) {
+  const max = maxProp ?? Math.max(...items.map((i) => i.value), 0);
   return (
     <ul className={styles.bars}>
       {items.map((item) => {
@@ -21,15 +30,22 @@ export function HorizontalBars({ items }: { items: HorizontalBarItem[] }) {
         return (
           <li key={item.key} className={styles.barRow}>
             <div className={styles.labelRow}>
-              <span className={styles.label}>{item.label}</span>
+              <span className={styles.label}>{item.labelNode ?? item.label}</span>
               <span className={styles.value}>{item.displayValue}</span>
             </div>
+            {item.subtitle && (
+              <div className={styles.subtitle}>{item.subtitle}</div>
+            )}
             <div
               className={styles.track}
               role="img"
-              aria-label={`${item.label}: ${item.displayValue}`}
+              aria-label={
+                item.ariaLabel ?? `${item.label}: ${item.displayValue}`
+              }
             >
-              <div className={styles.fill} style={{ width: `${pct}%` }} />
+              {item.value > 0 && (
+                <div className={styles.fill} style={{ width: `${pct}%` }} />
+              )}
             </div>
           </li>
         );
@@ -66,11 +82,7 @@ const getPartyLabel = (party: string): string => {
   return name.charAt(0).toUpperCase() + name.slice(1);
 };
 
-export function HorizontalPartyBarsSkeleton({
-  numBars = 1,
-}: {
-  numBars?: number;
-}) {
+export function HorizontalBarsSkeleton({ numBars = 1 }: { numBars?: number }) {
   return (
     <ul className={styles.bars}>
       {range(numBars).map((i) => (
@@ -86,7 +98,7 @@ export function HorizontalPartyBarsSkeleton({
   );
 }
 
-export default function HorizontalPartyBars({
+export function HorizontalPartyBars({
   partySummary,
 }: {
   partySummary: Record<string, number>;
@@ -110,3 +122,5 @@ export default function HorizontalPartyBars({
 
   return <HorizontalBars items={items} />;
 }
+
+export default HorizontalBars;

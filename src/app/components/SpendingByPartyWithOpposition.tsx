@@ -1,14 +1,15 @@
 import { ExpendituresByPartySnapshot } from "../types/Expenditures";
 import { formatCompact } from "../utils/humanize";
 import { formatCurrency } from "../utils/utils";
+import { HorizontalBarItem, HorizontalBars } from "./home/HorizontalBars";
 import styles from "./home/HorizontalBars.module.css";
 
 const GROUPS = [
   {
     header: "Support",
     rows: [
-      { key: "rep_support" as const, label: "Republican" },
       { key: "dem_support" as const, label: "Democrat" },
+      { key: "rep_support" as const, label: "Republican" },
     ],
   },
   {
@@ -20,74 +21,57 @@ const GROUPS = [
   },
 ];
 
-const SINGLE_BAR_TEXT: Record<
-  "rep_support" | "dem_support" | "dem_oppose" | "rep_oppose",
-  (amount: string) => string
-> = {
-  rep_support: (a) =>
-    `All ${a} spent supporting Republicans — nothing spent opposing any candidate or supporting Democrats.`,
-  dem_support: (a) =>
-    `All ${a} spent supporting Democrats — nothing spent opposing any candidate or supporting Republicans.`,
-  dem_oppose: (a) =>
-    `All ${a} spent opposing Democrats — nothing spent supporting any candidate or opposing Republicans.`,
-  rep_oppose: (a) =>
-    `All ${a} spent opposing Republicans — nothing spent supporting any candidate or opposing Democrats.`,
-};
-
 export function SpendingByPartySkeleton() {
-  return null;
+  return (
+    <div className={styles.groups}>
+      {GROUPS.map((group) => {
+        const items: HorizontalBarItem[] = group.rows.map(({ key, label }) => ({
+          key,
+          label,
+          value: 0,
+        }));
+
+        return (
+          <div key={group.header} className={styles.group}>
+            <div className={styles.groupHeader}>{group.header}</div>
+            <HorizontalBars items={items} />
+          </div>
+        );
+      })}
+    </div>
+  );
 }
 
 export default function SpendingByPartyWithOpposition({
   expenditures,
   labelId: _labelId,
+  max,
 }: {
   expenditures: ExpendituresByPartySnapshot;
   labelId: string;
+  max?: number;
 }) {
-  const allValues = GROUPS.flatMap((g) =>
-    g.rows.map((r) => expenditures[r.key]),
-  );
-  const max = Math.max(...allValues, 0);
-
-  const nonZeroKeys = (
-    Object.keys(SINGLE_BAR_TEXT) as (keyof typeof SINGLE_BAR_TEXT)[]
-  ).filter((k) => expenditures[k] > 0);
-
-  if (nonZeroKeys.length === 1) {
-    const key = nonZeroKeys[0];
-    return <p>{SINGLE_BAR_TEXT[key](formatCurrency(expenditures[key], true))}</p>;
-  }
+  const allKeys = GROUPS.flatMap((g) => g.rows.map((r) => r.key));
+  const globalMax = max ?? allKeys.reduce((sum, k) => sum + expenditures[k], 0);
 
   return (
     <div className={styles.groups}>
-      {GROUPS.map((group) => (
-        <div key={group.header} className={styles.group}>
-          <div className={styles.groupHeader}>{group.header}</div>
-          {group.rows.map(({ key, label }) => {
-            const value = expenditures[key];
-            const pct = max > 0 ? (value / max) * 100 : 0;
+      {GROUPS.map((group) => {
+        const items: HorizontalBarItem[] = group.rows.map(({ key, label }) => ({
+          key,
+          label,
+          value: expenditures[key],
+          displayValue: formatCompact(expenditures[key]),
+          ariaLabel: `${label}: ${formatCurrency(expenditures[key], true)}`,
+        }));
 
-            return (
-              <div key={key} className={styles.barRow}>
-                <div className={styles.labelRow}>
-                  <span className={styles.label}>{label}</span>
-                  <span className={styles.value}>{formatCompact(value)}</span>
-                </div>
-                <div
-                  className={styles.track}
-                  role="img"
-                  aria-label={`${label}: ${formatCurrency(value, true)}`}
-                >
-                  {value > 0 && (
-                    <div className={styles.fill} style={{ width: `${pct}%` }} />
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      ))}
+        return (
+          <div key={group.header} className={styles.group}>
+            <div className={styles.groupHeader}>{group.header}</div>
+            <HorizontalBars items={items} max={globalMax} />
+          </div>
+        );
+      })}
     </div>
   );
 }

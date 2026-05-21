@@ -33,7 +33,7 @@ export default function SpendingByCommittee({
         return (
           <li key={id} className={styles.barRow}>
             <div className={styles.labelRow}>
-              <a href={`/2026/committees/${id}`} className={styles.label}>
+              <a href={`/2026/committees/${id}`} className={`${styles.label} secondaryLink`}>
                 {name}
                 {sector === "all" && committeeConstants[id]?.sector && (
                   <span className={sharedStyles.sectorBadge}>

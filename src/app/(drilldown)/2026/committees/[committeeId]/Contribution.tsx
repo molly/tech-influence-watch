@@ -26,7 +26,7 @@ function ContributorName({
   } else if (!donorDetails.company) {
     return (
       <span className={styles.donorCompany}>
-        <MaybeLink href={contribution.link}>{donorDetails.name}</MaybeLink>
+        <MaybeLink href={contribution.link} className="secondaryLink">{donorDetails.name}</MaybeLink>
       </span>
     );
   } else {
@@ -84,7 +84,7 @@ function CompanyName({
   return (
     <div>
       <span className={styles.donorCompany}>
-        <MaybeLink href={link}>{companyName}</MaybeLink>
+        <MaybeLink href={link} className="secondaryLink">{companyName}</MaybeLink>
       </span>
       {alias && (
         <div className={styles.aliasAndDate}>
@@ -141,7 +141,9 @@ function ContributionAmount({
     contribution.contribution_receipt_amount
   ) {
     return (
-      <span className={isSubRow ? styles.subRowCurrency : ""}>
+      <span
+        className={`${styles.donorAmount} ${isSubRow ? styles.subRowCurrency : ""}`}
+      >
         {formatCurrency(contribution.contribution_receipt_amount)}
       </span>
     );
@@ -150,7 +152,9 @@ function ContributionAmount({
     contribution.total_receipt_amount
   ) {
     return (
-      <span className={isSubRow ? styles.subRowCurrency : ""}>
+      <span
+        className={`${styles.donorAmount} ${isSubRow ? styles.subRowCurrency : ""}`}
+      >
         {formatCurrency(contribution.total_receipt_amount)}
       </span>
     );
@@ -210,9 +214,9 @@ export default async function Contribution({
       <div className={styles.donorSubRow}>
         <div className={styles.donorSubRowPrimary}>
           <div>
-            {!donorDetails.isIndividual && donorDetails.company === groupName
-              ? null
-              : donorIdentifier}
+            {donorDetails.company === groupName ? null : (
+              <span>{donorIdentifier}</span>
+            )}
             <ContributionDate contribution={contribution} />
             {contribution.claimed && <Claimed />}
           </div>
@@ -227,7 +231,10 @@ export default async function Contribution({
     );
   } else {
     // TOP-LEVEL ROW
-    if (donorDetails.isIndividual) {
+    if (
+      donorDetails.isIndividual &&
+      donorDetails.name !== donorDetails.company
+    ) {
       donorIdentifier = (
         <div>
           <div>

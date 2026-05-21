@@ -477,18 +477,21 @@ export default function InfluencedRacesContents({
           <th
             className={`${styles.tableCellCollapse1} small-cell center-cell tableCellCollapse2`}
           >
-            Other support
-            <InformationalTooltip>
-              <p>
-                Contributions from cryptocurrency industry companies or
-                associated individuals to this candidate or aligned committees,
-                which have not gone through the crypto-focused super PACs.
-              </p>
-              <p>
-                This relies on manual classification and so represents a
-                conservative estimate of industry spending.
-              </p>
-            </InformationalTooltip>
+            Other{" "}
+            <span className="no-wrap">
+              support
+              <InformationalTooltip>
+                <p>
+                  Contributions from cryptocurrency industry companies or
+                  associated individuals to this candidate or aligned committees,
+                  which have not gone through the crypto-focused super PACs.
+                </p>
+                <p>
+                  This relies on manual classification and so represents a
+                  conservative estimate of industry spending.
+                </p>
+              </InformationalTooltip>
+            </span>
           </th>
           <th className={`${styles.tableCellCollapse1} small-cell center-cell`}>
             Goal{" "}

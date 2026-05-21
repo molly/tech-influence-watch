@@ -17,7 +17,11 @@ export function CandidateSkeleton({ onCard }: { onCard?: boolean }) {
   return (
     <div className={styles.candidateInfoBlock}>
       <CandidateImage />
-      <Skeleton width="10rem" className={sharedStyles.noMargin} onCard={onCard} />
+      <Skeleton
+        width="10rem"
+        className={sharedStyles.noMargin}
+        onCard={onCard}
+      />
     </div>
   );
 }
@@ -196,7 +200,11 @@ export default function Candidate({
         {candidateImage}
         {!chart && (
           <span>
-            <span className={candidateNameClassName}>{name}</span>
+            <span
+              className={`${styles.candidateName} ${candidateNameClassName}`}
+            >
+              {name}
+            </span>
             {(() => {
               const parts: string[] = [];
               if (candidateSummary?.party) {
@@ -214,9 +222,7 @@ export default function Candidate({
               if (parts.length === 0) {
                 return null;
               }
-              return (
-                <span className="secondary"> ({parts.join(", ")})</span>
-              );
+              return <span className="secondary"> ({parts.join(", ")})</span>;
             })()}
           </span>
         )}

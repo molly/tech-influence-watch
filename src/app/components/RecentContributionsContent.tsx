@@ -135,7 +135,7 @@ export default function RecentContributionsContent({
         key={`recent-contribution-${i}`}
         className={styles.recentExpenditureRow}
       >
-        <div className={styles.expenditureDescription}>
+        <div className={styles.expenditureDate}>
           {date && formatDateFromString(date)}
         </div>
         <div className={styles.expenditureNameAndAmount}>

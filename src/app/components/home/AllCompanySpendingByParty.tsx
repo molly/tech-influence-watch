@@ -9,9 +9,7 @@ import { isError } from "@/app/utils/errors";
 import { humanizeSector } from "@/app/utils/sector";
 
 import ErrorText from "../ErrorText";
-import HorizontalPartyBars, {
-  HorizontalPartyBarsSkeleton,
-} from "./HorizontalPartyBars";
+import { HorizontalBarsSkeleton, HorizontalPartyBars } from "./HorizontalBars";
 
 async function AllCompanySpendingByPartyContent({
   sector,
@@ -55,7 +53,7 @@ export default function AllCompanySpendingByParty({
         Contributions from {sectorText} companies and associated individuals to
         candidates and PACs
       </div>
-      <Suspense fallback={<HorizontalPartyBarsSkeleton numBars={4} />}>
+      <Suspense fallback={<HorizontalBarsSkeleton numBars={4} />}>
         <AllCompanySpendingByPartyContent sector={sector} />
       </Suspense>
     </section>

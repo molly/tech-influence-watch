@@ -9,7 +9,7 @@ import { isError } from "@/app/utils/errors";
 
 import ErrorText from "../ErrorText";
 import AllCashByCommitteeChart from "./AllCashByCommitteeChart";
-import { HorizontalPartyBarsSkeleton } from "./HorizontalPartyBars";
+import { HorizontalBarsSkeleton } from "./HorizontalBars";
 
 async function AllCashByCommitteeContent({
   labelId,
@@ -43,7 +43,7 @@ export default function AllCashByCommittee({ sector }: { sector: Sector }) {
         All cash raised by PACs, including unspent funds from previous election
         cycles and transfers from other committees
       </div>
-      <Suspense fallback={<HorizontalPartyBarsSkeleton numBars={4} />}>
+      <Suspense fallback={<HorizontalBarsSkeleton numBars={4} />}>
         <AllCashByCommitteeContent
           labelId="cash-by-committee-label"
           sector={sector}
