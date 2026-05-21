@@ -10,50 +10,50 @@ import { Contributions } from "@/app/types/Contributions";
 import { is4xx, isError } from "@/app/utils/errors";
 
 import { formatCurrency } from "../../../../utils/utils";
+import styles from "./page.module.css";
 
 function renderBottomText(committee: CommitteeDetails, donors: Contributions) {
+  const hasBreakdown =
+    donors.total_transferred > 0 ||
+    (committee.last_cash_on_hand_end_period &&
+      committee.last_cash_on_hand_end_period > 0) ||
+    (committee.claimedCommitted && committee.claimedCommitted > 0);
+
+  if (!hasBreakdown) {
+    return <div>from direct contributions this cycle.</div>;
+  }
+
   return (
-    <div>
-      {donors.total_transferred > 0 ||
-      (committee.last_cash_on_hand_end_period &&
-        committee.last_cash_on_hand_end_period > 0) ||
-      (committee.claimedCommitted && committee.claimedCommitted > 0) ? (
-        <>
-          <div>
-            <span className="bold">
-              {formatCurrency(donors.total_contributed, true)}
-            </span>{" "}
-            came from direct contributions this cycle.
-          </div>
-          {donors.total_transferred > 0 && (
-            <div>
-              <span className="bold">
-                {formatCurrency(donors.total_transferred, true)}
-              </span>{" "}
-              was transferred from other committees.
-            </div>
-          )}
-          {(committee.last_cash_on_hand_end_period || 0) > 0 && (
-            <div>
-              <span className="bold">
-                {formatCurrency(committee.last_cash_on_hand_end_period, true)}
-              </span>{" "}
-              was cash on hand from last cycle.
-            </div>
-          )}
-          {(committee.claimedCommitted || 0) > 0 && (
-            <div>
-              They claim to have{" "}
-              <span className="bold">
-                {formatCurrency(committee.claimedCommitted, true)}
-              </span>{" "}
-              in committed funds, though these have not yet been reflected in
-              FEC filings.
-            </div>
-          )}
-        </>
-      ) : (
-        "from direct contributions this cycle."
+    <div className={styles.moneyCardBreakdown}>
+      <div className={styles.moneyCardBreakdownRow}>
+        <span>Direct contributions this cycle</span>
+        <span className={styles.moneyCardBreakdownAmount}>
+          {formatCurrency(donors.total_contributed, true)}
+        </span>
+      </div>
+      {donors.total_transferred > 0 && (
+        <div className={styles.moneyCardBreakdownRow}>
+          <span>Transferred from other committees</span>
+          <span className={styles.moneyCardBreakdownAmount}>
+            {formatCurrency(donors.total_transferred, true)}
+          </span>
+        </div>
+      )}
+      {(committee.last_cash_on_hand_end_period || 0) > 0 && (
+        <div className={styles.moneyCardBreakdownRow}>
+          <span>Carried forward from last cycle</span>
+          <span className={styles.moneyCardBreakdownAmount}>
+            {formatCurrency(committee.last_cash_on_hand_end_period, true)}
+          </span>
+        </div>
+      )}
+      {(committee.claimedCommitted || 0) > 0 && (
+        <div className={styles.moneyCardBreakdownRow}>
+          <span>Committed funds (not yet in FEC filings)</span>
+          <span className={styles.moneyCardBreakdownAmount}>
+            {formatCurrency(committee.claimedCommitted, true)}
+          </span>
+        </div>
       )}
     </div>
   );

@@ -11,17 +11,20 @@ export default function SpendingByCommittee({
   committeeConstants,
   labelId: _labelId,
   sector,
+  max: maxProp,
 }: {
   expenditures: Record<string, number>;
   committeeConstants: Record<string, CommitteeConstant>;
   labelId: string;
   sector: Sector;
+  max?: number;
 }) {
   const committees = Object.keys(expenditures)
     .sort((a, b) => expenditures[b] - expenditures[a])
     .slice(0, 6);
 
-  const max = Math.max(...committees.map((id) => expenditures[id]), 0);
+  const max =
+    maxProp ?? Math.max(...committees.map((id) => expenditures[id]), 0);
 
   return (
     <ul className={styles.bars}>
@@ -33,7 +36,10 @@ export default function SpendingByCommittee({
         return (
           <li key={id} className={styles.barRow}>
             <div className={styles.labelRow}>
-              <a href={`/2026/committees/${id}`} className={`${styles.label} secondaryLink`}>
+              <a
+                href={`/2026/committees/${id}`}
+                className={`${styles.label} secondaryLink`}
+              >
                 {name}
                 {sector === "all" && committeeConstants[id]?.sector && (
                   <span className={sharedStyles.sectorBadge}>
@@ -41,7 +47,10 @@ export default function SpendingByCommittee({
                   </span>
                 )}
               </a>
-              <span className={styles.value}>{formatCompact(spending)}</span>
+              <span className={styles.value}>
+                {formatCompact(spending)}
+                <span className={styles.pct}> ({Math.round(pct)}%)</span>
+              </span>
             </div>
             <div
               className={styles.track}

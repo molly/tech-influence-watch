@@ -1,32 +1,21 @@
 .totalsRow {
   display: grid;
   grid-template-columns: 1fr;
-  margin: 0 auto 1rem auto;
-  border-top: 1px solid var(--divider-color);
-  border-bottom: 1px solid var(--card-border);
-}
-
-@media (max-width: 575px) {
-  .totalsRow > :not(:last-child) {
-    border-right: 0;
-    border-bottom: 1px solid var(--card-border);
-  }
+  gap: 1rem;
+  margin: 1rem 0;
+  max-width: 20rem;
 }
 
 @media (min-width: 576px) {
   .totalsRow {
     grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 576px) and (max-width: 767px) {
-  .totalsRow > :not(:last-child) {
-    border-bottom: 1px solid var(--card-border);
+    max-width: unset;
   }
 }
 
 @media (min-width: 768px) {
   .totalsRow {
     grid-template-columns: repeat(3, 1fr);
+    max-width: calc(3 * 20rem + 2 * 1rem);
   }
 }

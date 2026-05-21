@@ -343,14 +343,16 @@
 }
 
 .sidebarColumnLabel {
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.9rem;
   color: var(--secondary-text);
   white-space: nowrap;
 }
 
 .sidebarSubtitle {
+  font-family: var(--font-serif);
+  font-style: italic;
   font-size: 0.8rem;
   color: var(--secondary-text);
   margin: 0 0 0.5rem;

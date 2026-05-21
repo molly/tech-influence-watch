@@ -129,7 +129,7 @@ export default function BeneficiariesSidebar({
   return (
     <aside className={styles.sidebarAside}>
       <section className={styles.sidebarSection}>
-        <SidebarSectionHeader title="Top candidates" rightLabel="$ Received" />
+        <SidebarSectionHeader title="Top candidates" rightLabel="$ received" />
         <p className={styles.sidebarSubtitle}>
           {`${humanizeSector(sector, { context: "industry", abbrev: true })} contributions to individuals running for federal office,
           including both direct contributions and contributions to their
@@ -170,8 +170,8 @@ export default function BeneficiariesSidebar({
       <section className={styles.sidebarSection}>
         <SidebarSectionHeader title="By office sought" />
         <p className={styles.sidebarSubtitle}>
-          Crypto and AI industry contributions to candidates&apos; campaigns, grouped
-          by the federal office sought.
+          Crypto and AI industry contributions to candidates&apos; campaigns,
+          grouped by the federal office sought.
         </p>
         <Suspense fallback={<HorizontalBarsSkeleton numBars={3} />}>
           <HorizontalBars

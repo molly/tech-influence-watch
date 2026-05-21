@@ -11,6 +11,8 @@
   display: flex;
   align-items: center;
   gap: 0.4rem;
+  font-family: var(--font-serif);
+  font-style: italic;
 }
 
 .legendSwatch {
@@ -54,6 +56,12 @@
   white-space: nowrap;
 }
 
+.pct {
+  color: var(--secondary-text);
+  font-size: 0.7rem;
+  font-weight: 400;
+}
+
 .subtitle {
   font-size: 0.8rem;
   color: var(--secondary-text);
@@ -65,7 +73,8 @@
   height: 10px;
   overflow: hidden;
   display: flex;
-  background-color: var(--color-neutral-200);
+  background-color: transparent;
+  border: 1px solid var(--color-neutral-800);
 }
 
 /* Single-color fill (HorizontalPartyBars) */
@@ -95,7 +104,6 @@
 }
 
 .groupHeader {
-  font-family: var(--font-mono);
   font-size: 0.7rem;
   font-weight: bold;
   letter-spacing: 1.5px;

@@ -41,6 +41,8 @@
 }
 
 .subtitle {
+  font-family: var(--font-serif);
+  font-style: italic;
   color: var(--secondary-text);
   font-size: 0.9em;
   margin-bottom: 1em;

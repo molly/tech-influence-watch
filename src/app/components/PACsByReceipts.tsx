@@ -50,14 +50,14 @@ export default function PACsByReceipts({
     <div className={styles.superPacCard}>
       <div className={styles.tableCardContent}>
         <h2 className={sharedStyles.sectionTitle}>
-          Top super PACs by total receipts
+          {`Top ${type === "super" ? "super " : ""}PACs by total receipts`}
         </h2>
-        <p className="secondary smaller">
+        <p className={sharedStyles.subtitle}>
           Issues in FEC reporting may affect this list; see the{" "}
           <Link href="/about/faq#pacs-data">FAQ</Link>.
         </p>
         {fullPage && type === "super" && (
-          <p className="secondary smaller">
+          <p className={sharedStyles.subtitle}>
             This list includes only PACs that are designated with the FEC as
             independent expenditure only political committees (super PACs), and
             does not include hybrid PACs. To view all political action and party
@@ -88,7 +88,7 @@ export default function PACsByReceipts({
       <div className={styles.tableCardContent}>
         {!fullPage && type === "super" && (
           <>
-            <div className="secondary smaller">
+            <div className={sharedStyles.subtitle}>
               This list includes only PACs that are designated with the FEC as
               independent expenditure only political committees (super PACs),
               and does not include hybrid PACs. To view all political action and

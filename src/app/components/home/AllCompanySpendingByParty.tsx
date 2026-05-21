@@ -6,10 +6,27 @@ import sharedStyles from "@/app/shared.module.css";
 import { CompanyTotals } from "@/app/types/Companies";
 import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
+import { formatCompact } from "@/app/utils/humanize";
 import { humanizeSector } from "@/app/utils/sector";
 
 import ErrorText from "../ErrorText";
 import { HorizontalBarsSkeleton, HorizontalPartyBars } from "./HorizontalBars";
+
+async function SpendingTotal({ sector }: { sector: Sector }) {
+  const data = await fetchCompanyTotalSpending(sector);
+  if (isError(data)) {
+    return null;
+  }
+  return (
+    <span className={sharedStyles.sectionTitleAmount}>
+      of{" "}
+      <span className={sharedStyles.sectionTitleAmountValue}>
+        {formatCompact((data as CompanyTotals).total)}
+      </span>{" "}
+      total
+    </span>
+  );
+}
 
 async function AllCompanySpendingByPartyContent({
   sector,
@@ -28,7 +45,7 @@ async function AllCompanySpendingByPartyContent({
     UNK,
     OTH: Object.values(rest).reduce((acc, amt) => acc + amt, 0),
   };
-  return <HorizontalPartyBars partySummary={partySummary} />;
+  return <HorizontalPartyBars partySummary={partySummary} max={summary.total} />;
 }
 
 export default function AllCompanySpendingByParty({
@@ -48,6 +65,9 @@ export default function AllCompanySpendingByParty({
         className={sharedStyles.sectionTitle}
       >
         Contributions by party
+        <Suspense fallback={null}>
+          <SpendingTotal sector={sector} />
+        </Suspense>
       </h2>
       <div className={styles.subtitle}>
         Contributions from {sectorText} companies and associated individuals to

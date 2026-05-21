@@ -4,15 +4,16 @@ import type { Metadata } from "next";
 import {
   Barlow_Semi_Condensed,
   Big_Shoulders,
+  IBM_Plex_Sans,
   Roboto,
-  Roboto_Mono,
+  Source_Serif_4,
 } from "next/font/google";
 
 import Footer from "./components/Footer";
 import { BASE_METADATA } from "./utils/metadata";
 
 export const revalidate = 3600;
-const sansFont = Barlow_Semi_Condensed({
+const sansFont = IBM_Plex_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
   weight: ["400", "500", "600", "700"],
@@ -28,10 +29,11 @@ const robotoFont = Roboto({
   variable: "--font-roboto",
   weight: ["400", "700"],
 });
-const monoFont = Roboto_Mono({
+const serifFont = Source_Serif_4({
   subsets: ["latin"],
-  variable: "--font-mono",
-  weight: ["400"],
+  weight: ["400", "600"],
+  style: ["normal", "italic"],
+  variable: "--font-serif",
 });
 
 export const metadata: Metadata = BASE_METADATA;
@@ -47,7 +49,7 @@ export default function RootLayout({
         <link rel="me" href="https://hachyderm.io/@followthecrypto" />
       </head>
       <body
-        className={`${sansFont.variable} ${displayFont.variable} ${robotoFont.variable} ${monoFont.variable}`}
+        className={`${sansFont.variable} ${serifFont.variable} ${displayFont.variable} ${robotoFont.variable}`}
       >
         <div className="flex1">{children}</div>
         <Footer />

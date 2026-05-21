@@ -71,9 +71,10 @@ export default async function CommitteeDetailsSection({
     }
 
     parts.push(
-      <span key="id" className={`${styles.fecId} ${styles.committeeDetail}`}>
+      <span key="id" className={styles.committeeDetail}>
         {"ID: "}
         <a
+          className={`${styles.fecId} unstyled`}
           href={`https://www.fec.gov/data/committee/${committee.id}`}
           target="_blank"
           rel="noopener noreferrer"
@@ -86,7 +87,7 @@ export default async function CommitteeDetailsSection({
     if (committee.first_f1_date) {
       parts.push(
         <span className={styles.committeeDetail}>
-          Registration date: {formatDateFromString(committee.first_f1_date)}
+          Registered {formatDateFromString(committee.first_f1_date)}
         </span>,
       );
     }

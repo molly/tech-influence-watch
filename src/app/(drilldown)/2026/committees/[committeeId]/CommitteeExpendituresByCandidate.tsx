@@ -1,13 +1,20 @@
 import Link from "next/link";
 
-import { fetchAllExpenditures, fetchCommitteeTotalExpenditures } from "@/app/actions/fetch";
+import {
+  fetchAllExpenditures,
+  fetchCommitteeTotalExpenditures,
+} from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import {
   HorizontalBarItem,
   HorizontalBars,
 } from "@/app/components/home/HorizontalBars";
 import { STATES_BY_ABBR } from "@/app/data/states";
-import { CommitteeTotalExpenditures, Expenditure } from "@/app/types/Expenditures";
+import sharedStyles from "@/app/shared.module.css";
+import {
+  CommitteeTotalExpenditures,
+  Expenditure,
+} from "@/app/types/Expenditures";
 import { isError } from "@/app/utils/errors";
 import { getRaceName } from "@/app/utils/races";
 import { titlecaseIndividualName } from "@/app/utils/titlecase";
@@ -30,7 +37,11 @@ function getCandidateName(expenditure: Expenditure): string {
     const firstName = expenditure.candidate_first_name
       ? expenditure.candidate_first_name.split(" ")[0]
       : "";
-    parts = [firstName, expenditure.candidate_middle_name, expenditure.candidate_last_name];
+    parts = [
+      firstName,
+      expenditure.candidate_middle_name,
+      expenditure.candidate_last_name,
+    ];
   } else {
     parts = [expenditure.candidate_first_name, expenditure.candidate_name];
   }
@@ -86,7 +97,9 @@ export default async function CommitteeExpendituresByCandidate({
     const state = expenditure.candidate_office_state;
     const raceId = getExpenditureRaceId(expenditure);
     const lastName = (
-      expenditure.candidate_last_name ?? expenditure.candidate_name ?? ""
+      expenditure.candidate_last_name ??
+      expenditure.candidate_name ??
+      ""
     ).toUpperCase();
     const key = `${state}-${raceId}-${lastName}`;
 
@@ -122,6 +135,8 @@ export default async function CommitteeExpendituresByCandidate({
     return null;
   }
 
+  const raceCount = new Set(sorted.map((t) => `${t.state}-${t.raceId}`)).size;
+
   const totalExpenditures =
     !isError(totalsData) &&
     (totalsData as CommitteeTotalExpenditures).expenditures != null
@@ -149,7 +164,8 @@ export default async function CommitteeExpendituresByCandidate({
           </Link>
           {partyLetter && (
             <span className={styles.candidateTargetParty}>
-              {" "}({partyLetter})
+              {" "}
+              ({partyLetter})
             </span>
           )}
         </>
@@ -160,5 +176,15 @@ export default async function CommitteeExpendituresByCandidate({
     };
   });
 
-  return <HorizontalBars items={items} max={totalExpenditures} />;
+  return (
+    <>
+      <h2 className={`${sharedStyles.sectionTitle} ${styles.sectionTitleRow}`}>
+        By candidate
+        <span className={styles.sectionTitleCount}>
+          {raceCount} {raceCount === 1 ? "race" : "races"}
+        </span>
+      </h2>
+      <HorizontalBars items={items} max={totalExpenditures} />
+    </>
+  );
 }

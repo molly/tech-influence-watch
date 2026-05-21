@@ -40,7 +40,6 @@ async function CommitteeExpendituresBottomSections({
   return (
     <>
       <section className={sharedStyles.section}>
-        <h2 className={sharedStyles.sectionTitle}>By candidate</h2>
         <Suspense>
           <CommitteeExpendituresByCandidate committeeId={committeeId} />
         </Suspense>
@@ -96,66 +95,55 @@ export default async function CommitteePage({
             <div className={styles.donorSectionHeaderGroup}>
               <h2 className={styles.donorSectionHeader}>Top donors</h2>
             </div>
-            <div className={sharedStyles.controls}>
-              <div className={sharedStyles.controlsLeft}>
-                <span className={sharedStyles.controlLabel}>Sort</span>
-                <div className={sharedStyles.controlGroup}>
-                  <Link
-                    href="?"
-                    className={
-                      sort !== "date"
-                        ? sharedStyles.controlBtnActive
-                        : sharedStyles.controlBtn
-                    }
-                  >
-                    {sort !== "date" ? (
-                      <>
-                        Amount <span className={sharedStyles.sortArrow}>↓</span>
-                      </>
-                    ) : (
-                      "Amount"
-                    )}
-                  </Link>
-                  <Link
-                    href="?sort=date"
-                    className={
-                      sort === "date"
-                        ? sharedStyles.controlBtnActive
-                        : sharedStyles.controlBtn
-                    }
-                  >
-                    {sort === "date" ? (
-                      <>
-                        Date <span className={sharedStyles.sortArrow}>↓</span>
-                      </>
-                    ) : (
-                      "Date"
-                    )}
-                  </Link>
-                </div>
-              </div>
+            <div className={sharedStyles.inlineSortControls}>
+              <span className={sharedStyles.inlineSortLabel}>Sort by</span>
+              <Link
+                href="?"
+                className={
+                  sort !== "date"
+                    ? sharedStyles.inlineSortOptionActive
+                    : sharedStyles.inlineSortOption
+                }
+              >
+                Amount
+                {sort !== "date" && (
+                  <>
+                    {" "}
+                    <span className={sharedStyles.inlineSortArrow}>↓</span>
+                  </>
+                )}
+              </Link>
+              <span className={sharedStyles.inlineSortSeparator}>·</span>
+              <Link
+                href="?sort=date"
+                className={
+                  sort === "date"
+                    ? sharedStyles.inlineSortOptionActive
+                    : sharedStyles.inlineSortOption
+                }
+              >
+                Date
+                {sort === "date" && (
+                  <>
+                    {" "}
+                    <span className={sharedStyles.inlineSortArrow}>↓</span>
+                  </>
+                )}
+              </Link>
             </div>
             <Suspense fallback={<TopDonorsSkeleton />}>
               <TopDonors committeeId={committeeId} sort={sort} />
             </Suspense>
           </section>
           <div className={styles.rightColumn}>
-            <div className={sharedStyles.constrainedWrapper}>
-              <section
-                className={`${sharedStyles.section} ${sharedStyles.constrainWidth}`}
-              >
-                <h2
-                  className={sharedStyles.sectionTitle}
-                  id="expenditures-label"
-                >
-                  Expenditures
-                </h2>
-                <Suspense fallback={<SpendingByPartySkeleton />}>
-                  <CommitteeExpendituresByParty committeeId={committeeId} />
-                </Suspense>
-              </section>
-            </div>
-
+            <section className={sharedStyles.section}>
+              <h2 className={sharedStyles.sectionTitle} id="expenditures-label">
+                Expenditures
+              </h2>
+              <Suspense fallback={<SpendingByPartySkeleton />}>
+                <CommitteeExpendituresByParty committeeId={committeeId} />
+              </Suspense>
+            </section>
             <Suspense>
               <CommitteeExpendituresBottomSections committeeId={committeeId} />
             </Suspense>

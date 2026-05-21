@@ -67,19 +67,21 @@ export default async function AllCompanySpendingMap({
   return (
     <>
       <h2 id="company-spending-by-state" className={sharedStyles.sectionTitle}>
-        Approximate
-        <InformationalTooltip>
-          <p>
-            Some committees (particularly super PACs) spend cross-state or are
-            not associated with a specific candidate, and contributions to them
-            are omitted from this chart.
-          </p>
-          <p>
-            This relies on manual classification and so represents a
-            conservative estimate of industry spending.
-          </p>
-        </InformationalTooltip>{" "}
-        {sectorText}linked contributions to candidates by state
+        <span>
+          Approximate
+          <InformationalTooltip>
+            <p>
+              Some committees (particularly super PACs) spend cross-state or are
+              not associated with a specific candidate, and contributions to
+              them are omitted from this chart.
+            </p>
+            <p>
+              This relies on manual classification and so represents a
+              conservative estimate of industry spending.
+            </p>
+          </InformationalTooltip>{" "}
+          {sectorText}linked contributions to candidates by state
+        </span>
       </h2>
       <ChloroplethMap
         domain={generateDomain(10000, 10000000)}

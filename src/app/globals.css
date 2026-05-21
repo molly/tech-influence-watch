@@ -64,6 +64,7 @@
   --background: var(--color-white);
   --card-background: #fafaf7;
   --card-background-rgb: 254, 254, 254;
+  --money-card-border: var(--color-black);
   --card-border: var(--color-neutral-300);
   --divider-color: var(--color-black);
   --map-background: var(--color-white);

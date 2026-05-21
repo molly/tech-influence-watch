@@ -18,9 +18,11 @@ export interface HorizontalBarItem {
 export function HorizontalBars({
   items,
   max: maxProp,
+  showPct,
 }: {
   items: HorizontalBarItem[];
   max?: number;
+  showPct?: boolean;
 }) {
   const max = maxProp ?? Math.max(...items.map((i) => i.value), 0);
   return (
@@ -30,8 +32,15 @@ export function HorizontalBars({
         return (
           <li key={item.key} className={styles.barRow}>
             <div className={styles.labelRow}>
-              <span className={styles.label}>{item.labelNode ?? item.label}</span>
-              <span className={styles.value}>{item.displayValue}</span>
+              <span className={styles.label}>
+                {item.labelNode ?? item.label}
+              </span>
+              <span className={styles.value}>
+                {item.displayValue}
+                {showPct && max > 0 && (
+                  <span className={styles.pct}> ({Math.round(pct)}%)</span>
+                )}
+              </span>
             </div>
             {item.subtitle && (
               <div className={styles.subtitle}>{item.subtitle}</div>
@@ -100,8 +109,10 @@ export function HorizontalBarsSkeleton({ numBars = 1 }: { numBars?: number }) {
 
 export function HorizontalPartyBars({
   partySummary,
+  max,
 }: {
   partySummary: Record<string, number>;
+  max?: number;
 }) {
   const parties = Object.keys(partySummary)
     .filter((p) => partySummary[p] > 0)
@@ -120,7 +131,7 @@ export function HorizontalPartyBars({
     displayValue: `$${humanizeApproximateRounded(partySummary[party])}`,
   }));
 
-  return <HorizontalBars items={items} />;
+  return <HorizontalBars items={items} max={max} showPct={max !== undefined} />;
 }
 
 export default HorizontalBars;

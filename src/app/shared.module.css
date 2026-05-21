@@ -37,14 +37,10 @@
 
 .card {
   padding: 1rem;
-  &:not(:last-child) {
-    border-right: 1px solid var(--card-border);
-  }
 }
 
 .fullWidthHeader {
   width: 100%;
-  border-bottom: 1px solid var(--card-border);
   margin-bottom: 1rem;
 }
 
@@ -63,9 +59,35 @@
 }
 
 .sectionTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
   font-family: var(--font-display);
   border-bottom: 1px solid var(--divider-color);
   padding-bottom: 0.5rem;
+}
+
+.sectionTitleAmount {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.9rem;
+  font-weight: normal;
+  color: var(--secondary-text);
+}
+
+.sectionTitleAmountValue {
+  font-weight: bold;
+  font-family: var(--font-sans);
+  font-style: normal;
+  color: var(--main-text);
+}
+
+.subtitle {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--secondary-text);
+  font-size: 0.9em;
+  margin-bottom: 1em;
 }
 
 .errorCardContent {
@@ -84,7 +106,9 @@
   display: flex;
   flex: 0 0 auto;
   flex-direction: column;
-  color: var(--secondary-text);
+  font-size: 0.9rem;
+  border: 1px solid var(--money-card-border);
+  box-shadow: 3px 3px var(--accent);
 }
 
 .smallCardError {
@@ -92,11 +116,10 @@
 }
 
 .moneyCardHeader {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 1.8px;
-  color: var(--secondary-text);
-  text-transform: uppercase;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--main-text);
 }
 
 .constrainedWrapper {
@@ -124,29 +147,29 @@
 .sectorBadge {
   background-color: var(--color-black);
   color: var(--color-white);
-  font-family: var(--font-mono);
   font-size: 0.6rem;
   text-transform: uppercase;
   padding: 0.1rem 0.25rem;
-  border-radius: 2px;
   margin-left: 0.5rem;
   vertical-align: middle;
   text-decoration: none;
 }
 
+.breadcrumbs {
+  margin-bottom: 0.5rem;
+}
+
 .breadcrumb {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  text-transform: uppercase;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.9rem;
   color: var(--secondary-text);
-  letter-spacing: 1.5px;
 
   &:not(:last-child)::after {
     content: "/";
-    margin: 0 0.5rem;
+    margin: 0 0.25rem;
   }
 }
-
 
 .plainList {
   list-style: none;
@@ -220,7 +243,6 @@
 .controls {
   display: flex;
   align-items: center;
-  font-family: var(--font-mono);
   justify-content: space-between;
   gap: 0.5rem 1rem;
   padding: 0.4rem 0;
@@ -290,6 +312,56 @@
   transform: translateY(-0.3em);
 }
 
+/* Inline sort controls (text-style, no button borders) */
+
+.inlineSortControls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--table-color);
+}
+
+.inlineSortLabel {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.9rem;
+  color: var(--secondary-text);
+}
+
+.inlineSortOption {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--main-text);
+  text-decoration: none;
+}
+
+.inlineSortOption:hover {
+  text-decoration: underline;
+  color: var(--main-text);
+}
+
+.inlineSortOptionActive {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-green-700);
+  text-decoration: none;
+}
+
+.inlineSortOptionActive:hover {
+  text-decoration: none;
+  color: var(--color-green-700);
+}
+
+.inlineSortArrow {
+  color: var(--color-green-700);
+}
+
+.inlineSortSeparator {
+  color: var(--secondary-text);
+  user-select: none;
+}
+
 .showingCount {
   font-size: 0.65rem;
   text-transform: uppercase;
@@ -302,12 +374,6 @@
   .highlight {
     font-size: clamp(2rem, 5vw, 3rem);
     white-space: nowrap;
-  }
-}
-
-@media (max-width: 575px) {
-  .card {
-    padding-left: 0;
   }
 }
 
@@ -329,5 +395,17 @@
   .controlBtnActive:hover {
     background: var(--color-neutral-300);
     color: var(--color-black);
+  }
+
+  .inlineSortOptionActive {
+    color: var(--color-green-400);
+  }
+
+  .inlineSortOptionActive:hover {
+    color: var(--color-green-400);
+  }
+
+  .inlineSortArrow {
+    color: var(--color-green-400);
   }
 }

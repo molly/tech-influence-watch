@@ -24,10 +24,12 @@ export default function AllCashByCommitteeChart({
   committees,
   labelId: _labelId,
   sector,
+  max: maxProp,
 }: {
   committees: CommitteeConstantWithContributions[];
   labelId: string;
   sector: Sector;
+  max?: number;
 }) {
   const top6 = committees.slice(0, 6);
   const claimedNotInTop6 = committees.filter(
@@ -42,10 +44,12 @@ export default function AllCashByCommitteeChart({
     ? [...BASE_LEGEND_ITEMS, CLAIMED_LEGEND_ITEM]
     : BASE_LEGEND_ITEMS;
 
-  const maxTotal = Math.max(
-    ...committeesToShow.map((c) => c.total + (c.claimedCommitted || 0)),
-    0,
-  );
+  const maxTotal =
+    maxProp ??
+    Math.max(
+      ...committeesToShow.map((c) => c.total + (c.claimedCommitted || 0)),
+      0,
+    );
 
   const pct = (value: number) => (maxTotal > 0 ? (value / maxTotal) * 100 : 0);
 
@@ -84,7 +88,13 @@ export default function AllCashByCommitteeChart({
                     </span>
                   )}
                 </span>
-                <span className={styles.value}>{formatCompact(barTotal)}</span>
+                <span className={styles.value}>
+                  {formatCompact(barTotal)}
+                  <span className={styles.pct}>
+                    {" "}
+                    ({Math.round(pct(barTotal))}%)
+                  </span>
+                </span>
               </div>
               <div
                 className={styles.track}

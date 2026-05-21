@@ -3,9 +3,7 @@
   gap: 2rem;
   margin-bottom: 1rem;
   border-bottom: 1px solid var(--color-neutral-200);
-  font-family: var(--font-mono);
   font-size: 0.7rem;
-  letter-spacing: 1.5px;
 }
 
 .button {
@@ -16,7 +14,6 @@
   padding: 0.25rem 1rem;
   color: var(--main-text);
   font-size: 0.75rem;
-  text-transform: uppercase;
   cursor: pointer;
 }
 
