@@ -20,7 +20,7 @@ export default function CommitteeHeader({
           className={sharedStyles.title}
         >{`${humanizeSector(sector, { abbrev: true })} PACs`}</h1>
         {total && numCommittees && (
-          <p className={sharedStyles.subtitle}>
+          <p className={sharedStyles.headerSubtitle}>
             <span className="bold">{numCommittees}</span>
             {` tracked ${humanizeSector(sector, { context: "industry", lowercase: true })} PACs have more than `}
             <span className="bold">{total}</span>

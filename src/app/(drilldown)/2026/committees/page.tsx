@@ -43,6 +43,9 @@ export async function generateMetadata({
 
 type PacGroup = "super" | "hybrid" | "connected" | "other";
 
+const FOOTNOTE =
+  "Due to different reporting frequencies for receipts and expenditures, committees sometimes appear to have spent more than they have raised.";
+
 function getPacGroup(committee: CommitteeConstantWithContributions): PacGroup {
   if (committee.committee_type === "O") {
     return "super";
@@ -72,8 +75,11 @@ function CommitteeListSkeleton() {
         <Skeleton randWidth={[10, 30]} />
       </div>
       <HorizontalBarsSkeleton />
-      <div className={listStyles.amountCell}>
-        <Skeleton randWidth={[5, 15]} />
+      <div className={styles.amountPlaceholder}>
+        <Skeleton randWidth={[5, 10]} />
+      </div>
+      <div className={styles.amountRaised}>
+        <Skeleton randWidth={[5, 10]} />
       </div>
     </div>
   ));
@@ -84,11 +90,13 @@ function CommitteeRow({
   maxTotal,
   sector = "all",
   indented = false,
+  prominentTotal = false,
 }: {
   committee: CommitteeConstantWithContributions;
   maxTotal: number;
   sector?: Sector;
   indented?: boolean;
+  prominentTotal?: boolean;
 }) {
   const spent = committee.independent_expenditures || 0;
   const totalRaised = committee.total;
@@ -123,20 +131,16 @@ function CommitteeRow({
           />
         )}
       </div>
-      <div className={listStyles.amountCell}>
-        {spent > 0 ? (
-          <>
-            <span className={listStyles.amountCash}>
-              ${humanizeApproximateRounded(spent, 1)} spent
-            </span>
-            <span className={listStyles.amountDivider}>/</span>
-          </>
-        ) : (
-          <span className={listStyles.amountCashPlaceholder}>$0 spent</span>
-        )}
-        <span className={listStyles.amountRaised}>
-          ${humanizeApproximateRounded(totalRaised, 1)} raised
-        </span>
+      <div
+        className={spent > 0 ? styles.amountSpent : styles.amountPlaceholder}
+      >
+        {spent > 0 ? `$${humanizeApproximateRounded(spent, 1)}` : "—"}
+        {spent > totalRaised && <sup title={FOOTNOTE}>†</sup>}
+      </div>
+      <div
+        className={prominentTotal ? styles.networkTotal : styles.amountRaised}
+      >
+        ${humanizeApproximateRounded(totalRaised, 1)}
       </div>
     </div>
   );
@@ -156,8 +160,6 @@ function CommitteeGroup({
   if (committees.length === 0) {
     return null;
   }
-
-  const groupTotal = committees.reduce((sum, c) => sum + c.total, 0);
 
   // Split into network subgroups and standalone committees
   const networkMap = new Map<string, CommitteeConstantWithContributions[]>();
@@ -203,12 +205,37 @@ function CommitteeGroup({
 
   return (
     <div className={styles.committeeGroup}>
-      <h3>
-        {title}{" "}
-        <span className={listStyles.subheadTotal}>
-          ${humanizeApproximateRounded(groupTotal, 1)} cash on hand
+      <h3 className={styles.groupHeading}>
+        {title}
+        <span className={styles.groupCount}>
+          {committees.length}{" "}
+          {committees.length === 1 ? "committee" : "committees"}
         </span>
       </h3>
+      <div className={styles.columnHeaders}>
+        <div className={styles.columnHeaderLabel}>Committee</div>
+        <div className={styles.barColumnHeaderInner}>
+          <span className={styles.columnHeaderLabel}>
+            Spent vs. cash on hand
+          </span>
+          <div className={styles.legendInline}>
+            <div className={styles.legendItem}>
+              <div
+                className={`${styles.legendSwatch} ${styles.legendSwatchSpent}`}
+              />
+              <span>Spent</span>
+            </div>
+            <div className={styles.legendItem}>
+              <div
+                className={`${styles.legendSwatch} ${styles.legendSwatchRaised}`}
+              />
+              <span>Cash on hand</span>
+            </div>
+          </div>
+        </div>
+        <div className={styles.columnHeaderLabelRight}>Spent</div>
+        <div className={styles.columnHeaderLabelRight}>Raised</div>
+      </div>
       {slots.map((slot) => {
         if (slot.kind === "network") {
           const networkTotal = slot.members.reduce(
@@ -224,13 +251,17 @@ function CommitteeGroup({
           return (
             <div key={slot.name} className={styles.networkGroup}>
               <div className={styles.networkLabel}>
-                {slot.name} network{" "}
-                {networkSector && (
-                  <span className={sharedStyles.sectorBadge}>
-                    {networkSector}
+                <div className={styles.networkLabelLeft}>
+                  <span className={styles.networkLabelName}>
+                    {slot.name} network
                   </span>
-                )}{" "}
-                <span className={listStyles.subheadTotal}>
+                  {networkSector && (
+                    <span className={sharedStyles.sectorBadge}>
+                      {networkSector}
+                    </span>
+                  )}
+                </div>
+                <span className={styles.networkTotal}>
                   ${humanizeApproximateRounded(networkTotal, 1)}
                 </span>
               </div>
@@ -252,6 +283,7 @@ function CommitteeGroup({
             committee={slot.committee}
             maxTotal={maxTotal}
             sector={sector}
+            prominentTotal
           />
         );
       })}
@@ -319,20 +351,6 @@ export default async function CommitteesPage({
       />
       <div className={sharedStyles.main}>
         <div className="single-column-page">
-          <div className={styles.legend}>
-            <div className={styles.legendItem}>
-              <div
-                className={`${styles.legendSwatch} ${styles.legendSwatchCash}`}
-              />
-              <span>Spent</span>
-            </div>
-            <div className={styles.legendItem}>
-              <div
-                className={`${styles.legendSwatch} ${styles.legendSwatchRaised}`}
-              />
-              <span>Cash on hand</span>
-            </div>
-          </div>
           <Suspense fallback={<CommitteeListSkeleton />}>
             {PAC_GROUP_ORDER.map((group) => (
               <CommitteeGroup
@@ -344,6 +362,10 @@ export default async function CommitteesPage({
               />
             ))}
           </Suspense>
+          <div className={styles.footnoteSection}>
+            <sup>†</sup>
+            <span className={styles.footnote}>{FOOTNOTE}</span>
+          </div>
         </div>
       </div>
     </>

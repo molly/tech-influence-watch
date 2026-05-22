@@ -19,8 +19,9 @@ export function CommitteeDetailsSkeleton() {
           crumbs={["Spending", { name: "Committees", href: "/committees" }]}
         />
         <Skeleton height="5rem" width="15rem" />
-        <Skeleton width="60%" />
-        <Skeleton width="90%" />
+        <Skeleton width="min(45rem, 100%)" margin="1rem 0" />
+        <Skeleton width="min(48rem, 100%)" />
+        <Skeleton width="min(32rem, 80%)" />
       </section>
     </div>
   );
@@ -109,7 +110,7 @@ export default async function CommitteeDetailsSection({
         <span className="secondary small">{renderDetails()}</span>
         {committee.description && (
           <div
-            className={styles.description}
+            className={sharedStyles.headerSubtitle}
             dangerouslySetInnerHTML={{ __html: committee.description }}
           ></div>
         )}

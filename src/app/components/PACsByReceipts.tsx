@@ -71,11 +71,11 @@ export default function PACsByReceipts({
           <tr className={styles.superPacTableHeader}>
             <th className={styles.rowIndex}>#</th>
             <th className="text-cell">Name</th>
-            <th className={`text-cell ${styles.tableCellCollapse1}`}>
+            <th className={`text-cell ${styles.pacCellCollapse}`}>
               Description
             </th>
             {type === "all" && (
-              <th className={`text-cell ${styles.tableCellCollapse1}`}>Type</th>
+              <th className={`text-cell ${styles.pacCellCollapse}`}>Type</th>
             )}
           </tr>
         </thead>

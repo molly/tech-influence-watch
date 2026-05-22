@@ -34,7 +34,7 @@ export default async function TotalCompanySpending({
   return (
     <MoneyCard
       topText="Industry contributions"
-      amount={humanizeRoundedCurrency(spending.total, true)}
+      amount={humanizeRoundedCurrency(spending.total, true, 1)}
       bottomText={`from tracked ${sectorText.toLowerCase()} companies and individuals.`}
       tooltip={
         <InformationalTooltip>

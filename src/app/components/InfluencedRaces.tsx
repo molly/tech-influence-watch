@@ -7,7 +7,6 @@ import sharedStyles from "@/app/shared.module.css";
 import { type Sector } from "@/app/types/Sector";
 import { humanizeSector, sectorHref } from "@/app/utils/sector";
 
-import { useBreakpoint } from "../hooks/useBreakpoint";
 import InfluencedRacesContents from "./InfluencedRacesContents";
 
 export default function InfluencedRaces({
@@ -17,7 +16,6 @@ export default function InfluencedRaces({
   sector: Sector;
   fullPage?: boolean;
 }) {
-  const useCompact = useBreakpoint(650);
   const sectorText = humanizeSector(sector, {
     context: "industry",
     abbrev: true,
@@ -29,7 +27,6 @@ export default function InfluencedRaces({
         className={sharedStyles.sectionTitle}
       >{`${fullPage ? "R" : "Top r"}aces influenced by ${sectorText} super PAC money`}</h2>
       <InfluencedRacesContents
-        small={useCompact}
         fullPage={fullPage}
         sector={sector}
       />

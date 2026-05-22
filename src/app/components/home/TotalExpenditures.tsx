@@ -30,7 +30,7 @@ export default async function TotalDisbursements({
   return (
     <MoneyCard
       topText="PAC spending"
-      amount={humanizeRoundedCurrency(expenditures, true)}
+      amount={humanizeRoundedCurrency(expenditures, true, 1)}
       bottomText="spent directly on federal elections this cycle."
       className={className}
     />

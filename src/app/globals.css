@@ -123,6 +123,7 @@
     --card-background: var(--color-neutral-800);
     --card-background-rgb: 30, 41, 59;
     --card-border: var(--color-neutral-700);
+    --money-card-border: var(--color-neutral-300);
     --map-background: var(--card-background);
     --logo-background: var(--color-neutral-400);
     --placeholder-color: var(--color-neutral-700);
@@ -137,8 +138,9 @@
     --main-text: var(--color-neutral-200);
     --text-stroke: var(--color-neutral-200);
     --secondary-text: var(--color-neutral-400);
-    --link-text: var(--color-lime-300);
-    --link-text-hover: var(--color-lime-100);
+    --link-text: var(--color-lime-500);
+    --link-text-hover: var(--color-lime-300);
+    --accent: var(--color-lime-600);
 
     --skeleton-start: var(--color-neutral-700);
     --skeleton-end: var(--color-neutral-800);
@@ -312,6 +314,11 @@ iframe {
 }
 
 a.unstyled {
+  color: inherit;
+  text-decoration: underline;
+}
+
+a.unstyled-no-underline {
   color: inherit;
   text-decoration: none;
 }

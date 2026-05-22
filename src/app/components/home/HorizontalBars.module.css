@@ -82,6 +82,7 @@
   height: 100%;
   background: var(--accent);
   transition: width 0.3s ease;
+  border: 1px solid var(--accent);
 }
 
 /* Stacked segments (AllCashByCommitteeChart) */
@@ -106,30 +107,46 @@
 .groupHeader {
   font-size: 0.7rem;
   font-weight: bold;
-  letter-spacing: 1.5px;
   text-transform: uppercase;
-  color: var(--secondary-text);
 }
 
 /* Segment / swatch colors */
 .colorCash {
   background: var(--color-lime-800);
+  border-color: var(--color-lime-800);
 }
 
 .colorContributed {
-  background: var(--accent-on-light);
+  background: var(--color-lime-600);
+  border-color: var(--color-lime-600);
 }
 
 .colorTransferred {
   background: var(--color-lime-300);
+  border-color: var(--color-lime-300);
 }
 
 .colorClaimed {
   background: var(--color-neutral-300);
+  border-color: var(--color-lime-300);
 }
 
 @media (prefers-color-scheme: dark) {
   .track {
-    background-color: var(--color-neutral-700);
+    position: relative;
+    border: none;
+  }
+
+  .track::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid var(--color-neutral-400);
+    pointer-events: none;
+  }
+
+  .fill {
+    position: relative;
+    z-index: 1;
   }
 }

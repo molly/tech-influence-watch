@@ -8,7 +8,6 @@ import {
   fetchConstant,
 } from "@/app/actions/fetch";
 import styles from "@/app/components/tables.module.css";
-import pageStyles from "@/app/page.module.css";
 import sharedStyles from "@/app/shared.module.css";
 import { ElectionGroup, ElectionsByState, Race } from "@/app/types/Elections";
 import {
@@ -55,38 +54,18 @@ function computeSectorTotals(
   return { support, oppose };
 }
 
-const renderPlaintextSpending = (candidate: ExpenditureCandidateSummary) => {
-  const support = candidate.support_total
-    ? `${formatCurrency(candidate.support_total, true)} to support`
-    : null;
-  const oppose = candidate.oppose_total
-    ? `${formatCurrency(candidate.oppose_total, true)} to oppose`
-    : null;
-  return [support, oppose].filter(Boolean).join(" and ");
-};
-
-function InfluencedRacesContentsSkeleton({
-  fullPage,
-  small,
-}: {
-  fullPage: boolean;
-  small?: boolean;
-}) {
+function InfluencedRacesContentsSkeleton({ fullPage }: { fullPage: boolean }) {
   return range(fullPage ? 20 : 5).map((i) => (
     <div key={`influenced-race-skeleton-${i}`} className={styles.influencedRow}>
       <CandidateSkeleton onCard={true} />
-      {!small && (
-        <>
-          {[2.5, 6, 5, 5, 5, 5, 13].map((width, ind) => (
-            <Skeleton
-              key={`skeleton-${ind}`}
-              onCard={true}
-              width={`${width}rem`}
-              className={sharedStyles.noMarginBottomHalfLeft}
-            />
-          ))}
-        </>
-      )}
+      {[2.5, 6, 5, 5, 5, 5, 13].map((width, ind) => (
+        <Skeleton
+          key={`skeleton-${ind}`}
+          onCard={true}
+          width={`${width}rem`}
+          className={`${sharedStyles.noMarginBottomHalfLeft} ${styles.skeletonExtra}`}
+        />
+      ))}
     </div>
   ));
 }
@@ -230,12 +209,10 @@ function CandidateRow({
   candidate,
   race,
   beneficiary,
-  small,
 }: {
   candidate: ExpenditureCandidateSummary;
   race: ElectionGroup;
   beneficiary?: Beneficiary;
-  small?: boolean;
 }) {
   const raceHref = `/2026/elections/${candidate.state}-${candidate.race}`;
   const raceName = getRaceName(
@@ -243,101 +220,90 @@ function CandidateRow({
     race.year,
     true,
   );
-  if (!small) {
-    return (
-      <tr className={styles.influencedTableRow} key={candidate.common_name}>
-        <td className="text-cell">
-          <Link className="unstyled" href={raceHref}>
-            <Candidate
-              candidateSummary={candidate}
-              candidateImageClassName={pageStyles.hideImageXs}
-            />
-          </Link>
-        </td>
-        <td className="center-cell">
-          <Link
-            className="unstyled"
-            href={`/2026/states/${STATES_BY_ABBR[candidate.state].replaceAll(" ", "-").toLowerCase()}`}
-          >
-            {candidate.state}
-          </Link>
-        </td>
-        <td className={`${styles.tableCellCollapse2} center-cell small-cell`}>
-          <Link className="unstyled" href={raceHref}>
-            {raceName}
-          </Link>
-        </td>
-        <td
-          className={`${styles.tableCellCollapse2} ${candidate.support_total ? "number-cell" : "center-cell"}`}
-        >
+  const stateHref = `/2026/states/${STATES_BY_ABBR[candidate.state].replaceAll(" ", "-").toLowerCase()}`;
+
+  return (
+    <tr className={styles.influencedTableRow}>
+      <td className={`text-cell ${styles.candidateCol}`}>
+        <Link className="unstyled-no-underline" href={raceHref}>
+          <Candidate candidateSummary={candidate} />
+        </Link>
+        <div className={styles.mobileMeta}>
+          <Link href={stateHref}>{STATES_BY_ABBR[candidate.state]}</Link>
+          {" · "}
+          <Link href={raceHref}>{raceName}</Link>
+        </div>
+      </td>
+      <td className={`center-cell ${styles.stateCol}`}>
+        <Link className="unstyled-no-underline" href={stateHref}>
+          {candidate.state}
+        </Link>
+      </td>
+      <td className={`center-cell small-cell ${styles.officeCol}`}>
+        <Link className="unstyled-no-underline" href={raceHref}>
+          {raceName}
+        </Link>
+      </td>
+      <td
+        className={`${styles.supportCol} ${candidate.support_total ? "number-cell" : `center-cell ${styles.noValue}`}`}
+      >
+        <span className={styles.mobileLabel}>Support</span>
+        <span className={styles.mobileValue}>
           {candidate.support_total ? (
             formatCurrency(candidate.support_total, true)
           ) : (
             <span className={styles.nilCell}>—</span>
           )}
-        </td>
-        <td
-          className={`${styles.tableCellCollapse2} ${candidate.oppose_total ? "number-cell" : "center-cell"}`}
-        >
+        </span>
+      </td>
+      <td
+        className={`${styles.opposeCol} ${candidate.oppose_total ? "number-cell" : `center-cell ${styles.noValue}`}`}
+      >
+        <span className={styles.mobileLabel}>Oppose</span>
+        <span className={styles.mobileValue}>
           {candidate.oppose_total ? (
             formatCurrency(candidate.oppose_total, true)
           ) : (
             <span className={styles.nilCell}>—</span>
           )}
-        </td>
-        <td
-          className={`${styles.tableCellCollapse1} small-cell ${beneficiary ? "number-cell" : "center-cell"}  `}
-        >
+        </span>
+      </td>
+      <td
+        className={`small-cell ${styles.otherCol} ${beneficiary ? "number-cell" : `center-cell ${styles.noValue}`}`}
+      >
+        <span className={styles.mobileLabel}>Direct contributions</span>
+        <span className={styles.mobileValue}>
           {beneficiary ? (
             formatCurrency(beneficiary.total, true)
           ) : (
             <span className={styles.nilCell}>—</span>
           )}
-        </td>
-        <td className={`${styles.tableCellCollapse1} small-cell center-cell`}>
-          <GoalOutcome candidate={candidate} races={race.races} />
-        </td>
-        <td className="text-cell">
+        </span>
+      </td>
+      <td className={`small-cell center-cell ${styles.goalCol}`}>
+        <GoalOutcome candidate={candidate} races={race.races} />
+      </td>
+      <td className={`text-cell ${styles.outcomeCol}`}>
+        <div className={styles.outcomeContent}>
           <Outcome candidate={candidate} races={race.races} />
-        </td>
-      </tr>
-    );
-  } else {
-    const goalOutcome = (
-      <GoalOutcome
-        candidate={candidate}
-        races={race.races}
-        explanatoryText={true}
-      />
-    );
-    return (
-      <div key={candidate.common_name} className={styles.influencedRow}>
-        <Candidate candidateSummary={candidate} imageOnly={true} />
-        <div>
-          {`${renderPlaintextSpending(candidate)} ${candidate.common_name} for `}
-          <Link
-            href={raceHref}
-          >{`${STATES_BY_ABBR[candidate.state]} ${raceName}`}</Link>
-          .
-          <div className={styles.influencedRowOutcome}>
-            <Outcome candidate={candidate} races={race.races} />
-            {goalOutcome && (
-              <div className={styles.goalOutcomeRow}>{goalOutcome}</div>
-            )}
-          </div>
         </div>
-      </div>
-    );
-  }
+        <div className={styles.mobileGoalOutcome}>
+          <GoalOutcome
+            candidate={candidate}
+            races={race.races}
+            explanatoryText={true}
+          />
+        </div>
+      </td>
+    </tr>
+  );
 }
 
 export default function InfluencedRacesContents({
   fullPage = false,
-  small = false,
   sector = "all",
 }: {
   fullPage?: boolean;
-  small?: boolean;
   sector?: Sector;
 }) {
   const [expenditures, setExpenditures] = useState<
@@ -387,9 +353,7 @@ export default function InfluencedRacesContents({
   }, [fullPage, sector]);
 
   if (!raceDetailsData || (sector !== "all" && !committeeConstants)) {
-    return (
-      <InfluencedRacesContentsSkeleton fullPage={fullPage} small={small} />
-    );
+    return <InfluencedRacesContentsSkeleton fullPage={fullPage} />;
   }
 
   if (isError(expenditures) || isError(raceDetailsData)) {
@@ -453,38 +417,29 @@ export default function InfluencedRacesContents({
         candidate={candidate}
         race={raceDetails[candidate.state][candidate.race]}
         beneficiary={beneficiary}
-        small={small}
       />
     );
   });
 
-  if (small) {
-    return <div className={styles.influencedList}>{contents}</div>;
-  }
   return (
     <table className={styles.influencedTable}>
       <thead className={styles.inheritBorderRadius}>
         <tr className={styles.influencedTableHeader}>
           <th className="text-cell">Candidate</th>
           <th className="center-cell">State</th>
-          <th className={`${styles.tableCellCollapse2} center-cell small-cell`}>
-            Office
-          </th>
-          <th className={`${styles.tableCellCollapse2} number-cell`}>
-            Support
-          </th>
-          <th className={`${styles.tableCellCollapse2} number-cell`}>Oppose</th>
-          <th
-            className={`${styles.tableCellCollapse1} small-cell center-cell tableCellCollapse2`}
-          >
-            Other{" "}
+          <th className="center-cell small-cell">Office</th>
+          <th className="number-cell">Support</th>
+          <th className="number-cell">Oppose</th>
+          <th className="small-cell center-cell">
+            Direct{" "}
             <span className="no-wrap">
-              support
+              contributions
               <InformationalTooltip>
                 <p>
                   Contributions from cryptocurrency industry companies or
-                  associated individuals to this candidate or aligned committees,
-                  which have not gone through the crypto-focused super PACs.
+                  associated individuals to this candidate or aligned
+                  committees, which have not gone through the crypto-focused
+                  super PACs.
                 </p>
                 <p>
                   This relies on manual classification and so represents a
@@ -493,7 +448,7 @@ export default function InfluencedRacesContents({
               </InformationalTooltip>
             </span>
           </th>
-          <th className={`${styles.tableCellCollapse1} small-cell center-cell`}>
+          <th className="small-cell center-cell">
             Goal{" "}
             <span className="no-wrap">
               achieved?

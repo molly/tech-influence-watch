@@ -201,7 +201,7 @@ export default function Candidate({
         {!chart && (
           <span>
             <span
-              className={`${styles.candidateName} ${candidateNameClassName}`}
+              className={`${styles.candidateName} ${candidateNameClassName ? candidateNameClassName : ""}`}
             >
               {name}
             </span>

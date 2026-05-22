@@ -18,7 +18,7 @@ export default async function BeneficiariesHeader({
       <section className={sharedStyles.header}>
         <Breadcrumbs crumbs={["Spending", "Beneficiaries"]} />
         <h1 className={sharedStyles.title}>Beneficiaries</h1>
-        <p className={sharedStyles.subtitle}>
+        <p className={sharedStyles.headerSubtitle}>
           <span>
             {`Tracked ${humanizeSector(sector, { context: "industry", lowercase: true })} sources have contributed more than `}
             <span className="bold">

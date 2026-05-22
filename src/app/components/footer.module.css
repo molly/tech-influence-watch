@@ -1,8 +1,8 @@
 .footer {
   width: 100%;
   border-top: 1px solid var(--color-neutral-200);
+  background-color: var(--color-neutral-50);
   font-size: 0.9rem;
-  color: var(--color-neutral-400);
   margin-top: 2rem;
 }
 
@@ -12,13 +12,12 @@
   padding: 20px 24px;
 }
 
-.description,
-.links {
-  margin-bottom: 0.5rem;
+.description {
+  font-family: var(--font-serif);
 }
 
 .copyright {
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   margin: 0;
 }
 
@@ -26,6 +25,8 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  font-size: 0.8rem;
+  margin: 1rem 0;
 }
 
 .links a + a::before {
@@ -37,5 +38,6 @@
 @media (prefers-color-scheme: dark) {
   .footer {
     border-top-color: var(--color-neutral-700);
+    background-color: var(--color-black);
   }
 }

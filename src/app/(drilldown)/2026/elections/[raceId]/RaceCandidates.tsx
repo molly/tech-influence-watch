@@ -84,7 +84,7 @@ export default function RaceCandidates({
             ("withdrew" in candidate && candidate.withdrew) ||
             ("declined" in candidate && candidate.declined);
           const isPresumptive = presumptiveCandidateNames.has(candidate.name);
-          let candidateNameClassName;
+          let candidateNameClassName = "";
           if (defeated) {
             candidateNameClassName = styles.defeatedCandidateName;
           } else if (!isRaceUpcoming || isPresumptive) {

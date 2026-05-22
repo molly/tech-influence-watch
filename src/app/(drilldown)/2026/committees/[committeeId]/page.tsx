@@ -17,7 +17,9 @@ import CommitteeDetailsSection, {
 } from "./CommitteeDetailsSection";
 import CommitteeDisbursements from "./CommitteeDisbursements";
 import CommitteeExpendituresByCandidate from "./CommitteeExpendituresByCandidate";
-import CommitteeExpendituresByParty from "./CommitteeExpendituresByParty";
+import CommitteeExpendituresByParty, {
+  CommitteeExpendituresByPartySkeleton,
+} from "./CommitteeExpendituresByParty";
 import CommitteeExpendituresTotal from "./CommitteeExpendituresTotal";
 import CommitteeRaised from "./CommitteeRaised";
 import CommitteeRecentExpenditures from "./CommitteeRecentExpenditures";
@@ -137,10 +139,7 @@ export default async function CommitteePage({
           </section>
           <div className={styles.rightColumn}>
             <section className={sharedStyles.section}>
-              <h2 className={sharedStyles.sectionTitle} id="expenditures-label">
-                Expenditures
-              </h2>
-              <Suspense fallback={<SpendingByPartySkeleton />}>
+              <Suspense fallback={<CommitteeExpendituresByPartySkeleton />}>
                 <CommitteeExpendituresByParty committeeId={committeeId} />
               </Suspense>
             </section>

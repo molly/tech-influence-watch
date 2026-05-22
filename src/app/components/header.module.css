@@ -27,7 +27,6 @@
   font-size: 1rem;
   display: block;
   color: var(--color-white);
-  letter-spacing: 0;
 }
 
 .logoLink:hover {

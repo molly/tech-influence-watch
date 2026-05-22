@@ -27,6 +27,15 @@
   margin: 0;
 }
 
+.headerSubtitle {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  max-width: 80ch;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
 .titleH2 {
   font-size: clamp(2rem, 8vw, 3rem);
 }
@@ -108,7 +117,7 @@
   flex-direction: column;
   font-size: 0.9rem;
   border: 1px solid var(--money-card-border);
-  box-shadow: 3px 3px var(--accent);
+  box-shadow: 6px 6px var(--accent);
 }
 
 .smallCardError {
@@ -202,7 +211,8 @@
 }
 
 .linkRow {
-  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  margin-top: 1rem;
 }
 
 .floatRight {
@@ -260,13 +270,6 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-}
-
-.controlLabel {
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--secondary-text);
 }
 
 .controlGroup {
@@ -334,6 +337,7 @@
   font-weight: 400;
   color: var(--main-text);
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .inlineSortOption:hover {
@@ -346,6 +350,7 @@
   font-weight: 700;
   color: var(--color-green-700);
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .inlineSortOptionActive:hover {
@@ -363,9 +368,9 @@
 }
 
 .showingCount {
-  font-size: 0.65rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.7rem;
   color: var(--secondary-text);
   white-space: nowrap;
 }

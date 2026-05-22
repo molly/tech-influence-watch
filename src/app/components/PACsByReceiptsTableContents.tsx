@@ -81,12 +81,19 @@ export default async function PACsByReceiptsTableContents({
             className={`${styles.superPacRow}${highlighted ? ` ${styles.superPacCryptoRow}` : ""}`}
           >
             <td className={styles.rowIndex}>{ind + 1}</td>
-            <td className="text-cell">{committeeIdentifier}</td>
-            <td className={`text-cell ${styles.tableCellCollapse1}`}>
+            <td className="text-cell">
+              {committeeIdentifier}
+              {committee.description && (
+                <div className={styles.descriptionInline}>
+                  {committee.description}
+                </div>
+              )}
+            </td>
+            <td className={`text-cell ${styles.pacCellCollapse}`}>
               {committee.description}
             </td>
             {type === "all" && (
-              <td className={`text-cell ${styles.tableCellCollapse1}`}>
+              <td className={`text-cell ${styles.pacCellCollapse}`}>
                 <span className="no-wrap">
                   {committee.committee_type_full?.split(" (")[0].split(" -")[0]}
                 </span>

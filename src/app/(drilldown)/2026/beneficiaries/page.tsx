@@ -200,15 +200,15 @@ function Pagination({
     <div className={styles.pagination}>
       {page > 1 ? (
         <Link href={buildPageHref(page - 1, params)} className={styles.pageBtn}>
-          ← Prev
+          ← Previous
         </Link>
       ) : (
         <span className={`${styles.pageBtn} ${styles.pageBtnDisabled}`}>
-          ← Prev
+          ← Previous
         </span>
       )}
       <span className={styles.pageInfo}>
-        {page} / {totalPages}
+        Page {page} of {totalPages}
       </span>
       {page < totalPages ? (
         <Link href={buildPageHref(page + 1, params)} className={styles.pageBtn}>
@@ -293,7 +293,7 @@ export default async function BeneficiariesList({
               {topCandidate && (
                 <Suspense fallback={<TopCardSkeleton />}>
                   <TopCard
-                    label="Top Candidate"
+                    label="Top candidate"
                     id={topCandidate.id}
                     beneficiary={topCandidate.beneficiary}
                   />
@@ -311,7 +311,7 @@ export default async function BeneficiariesList({
               {topParty && (
                 <Suspense fallback={<TopCardSkeleton />}>
                   <TopCard
-                    label="Top Party Committee"
+                    label="Top party committee"
                     id={topParty.id}
                     beneficiary={topParty.beneficiary}
                   />
@@ -386,6 +386,7 @@ export default async function BeneficiariesList({
           sector={sector}
           beneficiaries={beneficiaries}
           allOrder={allOrder}
+          max={companyTotals.total}
         />
       </main>
     </>

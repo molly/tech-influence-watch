@@ -68,7 +68,7 @@ export default function SpendingByPartyWithOpposition({
         return (
           <div key={group.header} className={styles.group}>
             <div className={styles.groupHeader}>{group.header}</div>
-            <HorizontalBars items={items} max={globalMax} />
+            <HorizontalBars items={items} max={globalMax} showPct={max !== undefined} />
           </div>
         );
       })}

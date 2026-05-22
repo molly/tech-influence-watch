@@ -8,6 +8,8 @@ export default function Skeleton({
   randHeight,
   width,
   randWidth,
+  margin,
+  inline,
   ...rest
 }: {
   onCard?: boolean;
@@ -15,6 +17,8 @@ export default function Skeleton({
   randHeight?: [number, number];
   width?: string;
   randWidth?: [number, number];
+  margin?: string;
+  inline?: boolean;
 } & Omit<React.HTMLAttributes<HTMLDivElement>, "style">) {
   let className = onCard ? styles.skeletonCard : styles.skeleton;
   if (rest.className) {
@@ -29,6 +33,12 @@ export default function Skeleton({
     ...(randWidth && {
       width: `${getRandomInt(randWidth[0], randWidth[1])}rem`,
     }),
+    ...(margin
+      ? { margin }
+      : inline
+        ? { marginBottom: 0, marginLeft: "0.25rem", marginRight: "0.25rem" }
+        : {}),
+    ...(inline && { display: "inline-block" }),
   };
   return (
     <div

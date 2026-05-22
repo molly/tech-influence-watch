@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { ReactNode, Suspense } from "react";
 
 import {
   HorizontalBars,
@@ -6,9 +6,11 @@ import {
 } from "@/app/components/home/HorizontalBars";
 import MaybeLink from "@/app/components/MaybeLink";
 import Skeleton from "@/app/components/skeletons/Skeleton";
+import sharedStyles from "@/app/shared.module.css";
 import { Beneficiary } from "@/app/types/Beneficiaries";
 import { Sector } from "@/app/types/Sector";
 import { humanizeApproximateRounded } from "@/app/utils/humanize";
+import { formatCompact } from "@/app/utils/humanize";
 import { getPartyAbbreviation } from "@/app/utils/party";
 import { range } from "@/app/utils/range";
 import { humanizeSector } from "@/app/utils/sector";
@@ -41,7 +43,7 @@ function SidebarSectionHeader({
   rightLabel,
 }: {
   title: string;
-  rightLabel?: string;
+  rightLabel?: ReactNode;
 }) {
   return (
     <div className={styles.sidebarSectionHeader}>
@@ -115,16 +117,22 @@ export default function BeneficiariesSidebar({
   sector,
   beneficiaries,
   allOrder,
+  max,
 }: {
   sector: Sector;
   beneficiaries: Record<string, Beneficiary>;
   allOrder: string[];
+  max: number;
 }) {
   const topCandidates = getTopCandidates(allOrder, beneficiaries, 10);
   const typeBreakdown = getTypeBreakdown(allOrder, beneficiaries);
   const officeBreakdown = getOfficeBreakdown(allOrder, beneficiaries);
 
   const officeOrder = ["P", "S", "H"].filter((o) => officeBreakdown[o]);
+  const officeTotal = officeOrder.reduce(
+    (sum, o) => sum + (officeBreakdown[o] as OfficeBreakdownEntry).total,
+    0,
+  );
 
   return (
     <aside className={styles.sidebarAside}>
@@ -151,7 +159,18 @@ export default function BeneficiariesSidebar({
 
       {/* By recipient type */}
       <section className={styles.sidebarSection}>
-        <SidebarSectionHeader title="By recipient type" />
+        <SidebarSectionHeader
+          title="By recipient type"
+          rightLabel={
+            <>
+              of{" "}
+              <span className={sharedStyles.sectionTitleAmountValue}>
+                {formatCompact(max)}
+              </span>{" "}
+              total
+            </>
+          }
+        />
         <Suspense fallback={<HorizontalBarsSkeleton numBars={3} />}>
           <HorizontalBars
             items={(["pac", "candidate", "party"] as DisplayType[]).map(
@@ -162,16 +181,31 @@ export default function BeneficiariesSidebar({
                 displayValue: `$${humanizeApproximateRounded(typeBreakdown[type], 1)}`,
               }),
             )}
+            max={max}
+            showPct
           />
         </Suspense>
       </section>
 
       {/* By office sought */}
       <section className={styles.sidebarSection}>
-        <SidebarSectionHeader title="By office sought" />
+        <SidebarSectionHeader
+          title="By office sought"
+          rightLabel={
+            <>
+              of{" "}
+              <span className={sharedStyles.sectionTitleAmountValue}>
+                {formatCompact(officeTotal)}
+              </span>{" "}
+              total
+            </>
+          }
+        />
         <p className={styles.sidebarSubtitle}>
-          Crypto and AI industry contributions to candidates&apos; campaigns,
-          grouped by the federal office sought.
+          Crypto and AI industry contributions to candidates&rsquo; campaigns,
+          grouped by the federal office sought. This does not include
+          contributions to PACs not affiliated with a specific candidate, such
+          as super PACs or party committees.
         </p>
         <Suspense fallback={<HorizontalBarsSkeleton numBars={3} />}>
           <HorizontalBars
@@ -187,6 +221,8 @@ export default function BeneficiariesSidebar({
                 displayValue: `$${humanizeApproximateRounded(total, 1)}`,
               };
             })}
+            max={officeTotal}
+            showPct
           />
         </Suspense>
       </section>

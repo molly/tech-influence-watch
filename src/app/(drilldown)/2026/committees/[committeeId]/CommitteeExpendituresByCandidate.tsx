@@ -16,6 +16,7 @@ import {
   Expenditure,
 } from "@/app/types/Expenditures";
 import { isError } from "@/app/utils/errors";
+import { formatCompact } from "@/app/utils/humanize";
 import { getRaceName } from "@/app/utils/races";
 import { titlecaseIndividualName } from "@/app/utils/titlecase";
 import { formatCurrency } from "@/app/utils/utils";
@@ -180,11 +181,20 @@ export default async function CommitteeExpendituresByCandidate({
     <>
       <h2 className={`${sharedStyles.sectionTitle} ${styles.sectionTitleRow}`}>
         By candidate
-        <span className={styles.sectionTitleCount}>
-          {raceCount} {raceCount === 1 ? "race" : "races"}
+        <span>
+          <span className={styles.sectionTitleCount}>
+            {raceCount} {raceCount === 1 ? "race" : "races"}
+          </span>
+          <span className={sharedStyles.sectionTitleAmount}>
+            of{" "}
+            <span className={sharedStyles.sectionTitleAmountValue}>
+              {formatCompact(totalExpenditures)}
+            </span>{" "}
+            total
+          </span>
         </span>
       </h2>
-      <HorizontalBars items={items} max={totalExpenditures} />
+      <HorizontalBars items={items} max={totalExpenditures} showPct />
     </>
   );
 }

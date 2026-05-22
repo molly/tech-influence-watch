@@ -9,6 +9,11 @@
   width: 100%;
 }
 
+.superPacCard,
+.influencedCard {
+  container-type: inline-size;
+}
+
 .superPacTable,
 .influencedTable {
   width: 100%;
@@ -87,6 +92,7 @@
 
 .rowIndex {
   width: 2.5ch;
+  vertical-align: top;
   text-align: right;
   color: var(--secondary-text);
 }
@@ -102,8 +108,38 @@
   color: var(--tertiary-text);
 }
 
+/* Mobile-only helpers — hidden by default, shown in container query */
+.mobileMeta {
+  display: none;
+}
+
+.mobileLabel {
+  display: none;
+}
+
+.mobileGoalOutcome {
+  display: none;
+}
+
 .trackedCommittee {
   font-weight: 700;
+}
+
+.descriptionInline {
+  display: none;
+  font-size: 0.85em;
+  color: var(--secondary-text);
+  margin-top: 0.15em;
+}
+
+@container (max-width: 600px) {
+  .pacCellCollapse {
+    display: none;
+  }
+
+  .descriptionInline {
+    display: block;
+  }
 }
 
 @media (max-width: 1100px) {
@@ -115,6 +151,158 @@
 @media (max-width: 900px) {
   .tableCellCollapse2 {
     display: none;
+  }
+}
+
+@container (max-width: 800px) {
+  /* Transform table into stacked card layout */
+  .influencedTable,
+  .influencedTable tbody {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .influencedTableHeader {
+    display: none;
+  }
+
+  .influencedTableRow {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    border: 1px solid var(--card-border);
+  }
+
+  /* Collapse adjacent card borders into a single line */
+  .influencedTableRow + .influencedTableRow {
+    margin-top: -1px;
+  }
+
+  /* Override the shared border-bottom rule so all card borders are the same color */
+  .influencedTableRow:not(:last-child) {
+    border-bottom: 1px solid var(--card-border);
+  }
+
+  /* Desktop-only columns — content moved into mobileMeta / mobileGoalOutcome */
+  .influencedTableRow .stateCol,
+  .influencedTableRow .officeCol,
+  .influencedTableRow .goalCol {
+    display: none;
+  }
+
+  /* Candidate header */
+  .influencedTableRow .candidateCol {
+    display: block;
+    padding: 0.6rem 0.5rem 0.35rem 0;
+  }
+
+  /*
+   * Spending rows: two-column grid — label (1fr) | value (auto).
+   * Left-indented by avatar width + margins so labels align with the name text.
+   * Avatar wrapper is 56px wide with 0.5em margins on each side at 0.9rem font = 0.45rem each.
+   */
+  .influencedTableRow .supportCol,
+  .influencedTableRow .opposeCol,
+  .influencedTableRow .otherCol {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+    column-gap: 1rem;
+    padding: 0.2rem 1rem 0.2rem calc(56px + 0.9rem);
+    text-align: left;
+    max-width: 28rem;
+  }
+
+  /* Hide spending rows with no value (must come after the re-show and col rules) */
+  .influencedTableRow .noValue {
+    display: none;
+  }
+
+  /* Outcome row — same indent, tinted background fills full width */
+  .influencedTableRow .outcomeCol {
+    display: flex;
+    flex-direction: column;
+    padding: 0.4rem 1rem;
+    margin-top: 0.4rem;
+    background: var(--table-background-secondary);
+    font-size: 0.9em;
+  }
+
+  .outcomeContent .no-wrap {
+    font-style: italic;
+    color: var(--secondary-text);
+  }
+
+  /* Mobile-only elements */
+  .mobileMeta {
+    display: block;
+    padding-left: calc(56px + 0.9rem);
+    font-size: 0.85em;
+    color: var(--secondary-text);
+    margin-top: 0.1rem;
+  }
+
+  .mobileLabel {
+    display: inline;
+    color: var(--secondary-text);
+    font-weight: 400;
+    font-size: 1em;
+  }
+
+  .mobileValue {
+    font-weight: 700;
+    text-align: right;
+  }
+
+  .mobileGoalOutcome {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.85em;
+  }
+
+  .skeletonExtra {
+    display: none;
+  }
+}
+
+@container (min-width: 450px) and (max-width: 800px) {
+  /* Two-column card: candidate left, spending right, outcome full-width */
+  .influencedTableRow {
+    display: grid;
+    grid-template-columns: minmax(12rem, 45%) 1fr;
+    align-items: start;
+  }
+
+  .influencedTableRow .candidateCol {
+    grid-column: 1;
+    grid-row: 1 / span 10;
+    padding: 0.6rem 0.5rem 0.6rem 0;
+  }
+
+  .influencedTableRow .supportCol,
+  .influencedTableRow .opposeCol,
+  .influencedTableRow .otherCol {
+    grid-column: 2;
+    padding: 0.3rem 1rem 0.3rem 0.5rem;
+    max-width: none;
+  }
+
+  /* Give 1.2rem top gap to whichever spending cell is first visible */
+  .influencedTableRow .supportCol {
+    padding-top: 1.2rem;
+  }
+
+  .influencedTableRow:has(.supportCol.noValue) .opposeCol {
+    padding-top: 1.2rem;
+  }
+
+  .influencedTableRow:has(.supportCol.noValue):has(.opposeCol.noValue) .otherCol {
+    padding-top: 1.2rem;
+  }
+
+  .influencedTableRow .outcomeCol {
+    grid-column: 1 / -1;
+    margin-top: 0;
   }
 }
 

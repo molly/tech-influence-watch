@@ -1,7 +1,59 @@
-.legend {
+.groupHeading {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  border-bottom: 1px solid var(--divider-color);
+  padding-bottom: 0.5rem;
+  margin: 2rem 0 0;
   display: flex;
-  gap: 1.5rem;
-  margin: 0.75rem 0;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.groupCount {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.9rem;
+  font-weight: normal;
+  color: var(--secondary-text);
+}
+
+.columnHeaders {
+  display: grid;
+  grid-template-columns: 16rem 1fr 7rem 8rem;
+  gap: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.columnHeaders > * {
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--color-neutral-300);
+}
+
+.columnHeaderLabel {
+  font-size: 0.8rem;
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--secondary-text);
+}
+
+.columnHeaderLabelRight {
+  font-size: 0.8rem;
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--secondary-text);
+  text-align: right;
+}
+
+.barColumnHeaderInner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.legendInline {
+  display: flex;
+  gap: 1rem;
 }
 
 .legendItem {
@@ -15,13 +67,12 @@
 }
 
 .legendSwatch {
-  width: 2rem;
-  height: 0.65rem;
-  border-radius: 999px;
+  width: 10px;
+  height: 10px;
   flex-shrink: 0;
 }
 
-.legendSwatchCash {
+.legendSwatchSpent {
   background: var(--color-lime-800);
 }
 
@@ -30,32 +81,64 @@
 }
 
 .networkGroup {
-  border-left: 2px solid var(--color-lime-800);
-  margin: 0.5rem 0 0 0;
+  margin: 0.75rem 0;
 }
 
 .networkLabel {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--color-lime-800);
-  margin-bottom: 0.1rem;
-  padding-left: 0.5rem;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 0.5rem 0 0.35rem 0;
+  gap: 1rem;
 }
 
-.committeeRowIndented {
-  padding-left: 0.5rem !important;
+.networkLabelLeft {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  flex-wrap: wrap;
 }
 
-.committeeGroup ~ .committeeGroup {
-  margin-top: 2rem;
+.networkLabelName {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--main-text);
+}
+
+.networkDescription {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--secondary-text);
+}
+
+.networkTotal {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--main-text);
+  white-space: nowrap;
+  flex-shrink: 0;
+  text-align: right;
 }
 
 .committeeRow {
   display: grid;
-  grid-template-columns: 16rem 1fr 10rem;
+  grid-template-columns: 16.825rem 1fr 7rem 8rem;
   align-items: center;
   gap: 0.75rem;
   padding: 0.4rem 0;
+}
+
+.committeeRowIndented {
+  grid-template-columns: 16rem 1fr 7rem 8rem;
+  border-left: 2px solid var(--color-black);
+  padding-left: 0.7rem;
+}
+
+.committeeGroup ~ .committeeGroup {
+  margin-top: 2rem;
 }
 
 .committeeName {
@@ -74,31 +157,66 @@
   min-width: 0;
 }
 
+.amountSpent {
+  font-size: 0.875rem;
+  text-align: right;
+  white-space: nowrap;
+  color: var(--color-lime-800);
+}
+
+.amountRaised {
+  font-size: 0.875rem;
+  text-align: right;
+  white-space: nowrap;
+  color: var(--secondary-text);
+}
+
+.amountPlaceholder {
+  font-size: 0.875rem;
+  text-align: right;
+  white-space: nowrap;
+  color: var(--secondary-text);
+}
+
+.footnoteSection {
+  margin-top: 2rem;
+}
+
+.footnote {
+  font-family: var(--font-serif);
+  font-style: italic;
+}
+
 @media (prefers-color-scheme: dark) {
-  .networkLabel {
-    color: var(--color-lime-500);
+  .networkLabelName {
+    color: var(--main-text);
   }
 
-  .networkGroup {
-    border-left-color: var(--color-lime-500);
-  }
-
-  .legendSwatchCash {
+  .legendSwatchSpent {
     background: var(--color-lime-600);
   }
 
   .legendSwatchRaised {
     background: var(--color-lime-500);
   }
+
+  .amountSpent {
+    color: var(--color-lime-500);
+  }
 }
 
 @media (max-width: 900px) {
   .committeeRow {
-    grid-template-columns: 1fr;
-    gap: 0.2rem 0;
+    grid-template-columns: 1fr 7rem 7rem;
+    grid-template-rows: auto auto;
+    gap: 0.2rem 0.5rem;
   }
 
-  .committeeRowIndented {
-    padding-left: 0.5rem;
+  .committeeName {
+    grid-column: 1 / -1;
+  }
+
+  .columnHeaders {
+    display: none;
   }
 }

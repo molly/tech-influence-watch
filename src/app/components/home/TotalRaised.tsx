@@ -39,7 +39,7 @@ export default async function TotalRaised({
 
   let claimed;
   if (totals.claimed_committed) {
-    claimed = ` They claim to have another ${humanizeRoundedCurrency(totals.claimed_committed, true)} committed.`;
+    claimed = ` They claim to have another ${humanizeRoundedCurrency(totals.claimed_committed, true, 1)} committed.`;
   }
   const bottomText = (
     <div>
@@ -50,7 +50,7 @@ export default async function TotalRaised({
   return (
     <MoneyCard
       topText="PAC funds on hand"
-      amount={humanizeRoundedCurrency(confirmedCash, true)}
+      amount={humanizeRoundedCurrency(confirmedCash, true, 1)}
       bottomText={bottomText}
       className={className}
     />

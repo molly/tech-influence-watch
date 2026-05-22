@@ -1,6 +1,7 @@
 import MaybeLink from "@/app/components/MaybeLink";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import sharedStyles from "@/app/shared.module.css";
+import COMMITTEES from "@/app/data/committees";
 import { Beneficiary } from "@/app/types/Beneficiaries";
 import { humanizeApproximateRounded } from "@/app/utils/humanize";
 
@@ -57,6 +58,9 @@ export default function TopCard({
     beneficiary.type === "candidate" && beneficiary.candidate_details.race_link
       ? `/2026${beneficiary.candidate_details.race_link}`
       : undefined;
+  const committeeHref =
+    id in COMMITTEES ? `/2026/committees/${id}` : undefined;
+  const nameHref = raceHref ?? committeeHref;
 
   return (
     <div className={`${styles.topCard} ${partyBorderClass}`}>
@@ -65,7 +69,7 @@ export default function TopCard({
         {isTracked && <span className={sharedStyles.sectorBadge}>crypto</span>}
       </div>
       <div className={styles.topCardName}>
-        <MaybeLink href={raceHref}>{name}</MaybeLink>
+        <MaybeLink href={nameHref} className="unstyled">{name}</MaybeLink>
         {partyLetter && (
           <span className={styles.topCardParty}> ({partyLetter})</span>
         )}
