@@ -6,6 +6,7 @@ import {
   fetchBeneficiaries,
   fetchBeneficiariesOrder,
   fetchCompanyTotalSpending,
+  fetchConstant,
 } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import MaybeLink from "@/app/components/MaybeLink";
@@ -17,6 +18,7 @@ import {
   CandidateBeneficiary as CandidateBeneficiaryType,
   CommitteeBeneficiary as CommitteeBeneficiaryType,
 } from "@/app/types/Beneficiaries";
+import { CommitteeConstant } from "@/app/types/Committee";
 import { CompanyTotals } from "@/app/types/Companies";
 import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
@@ -78,31 +80,14 @@ function RecipientTableSkeleton() {
   ));
 }
 
-function TopCandidatesSkeleton() {
-  return range(10).map((ind) => (
-    <tr
-      className={styles.beneficiaryRow}
-      key={`skeleton-candidates-row-${ind}`}
-    >
-      <PartyBorderCell partyCode={"U"} />
-      <td className={styles.recipientCell}>
-        <Skeleton height="1rem" randWidth={[6, 14]} />
-        <Skeleton width="12rem" height="1rem" />
-      </td>
-      <td className="center-cell">–</td>
-      <td className={styles.numberCellSkeleton}>
-        <Skeleton width="2rem" height="1rem" />
-      </td>
-    </tr>
-  ));
-}
-
 function CommitteeRow({
   id,
   beneficiary,
+  committeeConstants,
 }: {
   id: string;
   beneficiary: CommitteeBeneficiaryType;
+  committeeConstants: Record<string, CommitteeConstant> | null;
 }) {
   const partyCode = getPartyCode(beneficiary);
   const partyLetter = partyCode ? partyCode[0] : "";
@@ -112,6 +97,7 @@ function CommitteeRow({
     : id;
   const description = getDescription(beneficiary);
   const isTracked = id in COMMITTEES;
+  const sector = committeeConstants?.[id]?.sector;
 
   return (
     <tr className={styles.beneficiaryRow}>
@@ -122,8 +108,8 @@ function CommitteeRow({
         >
           <span className={styles.recipientName}>
             {name}
-            {isTracked && (
-              <span className={sharedStyles.sectorBadge}>crypto</span>
+            {isTracked && sector && (
+              <span className={sharedStyles.sectorBadge}>{sector}</span>
             )}
           </span>
         </MaybeLink>
@@ -242,12 +228,17 @@ export default async function BeneficiariesList({
   const page = Math.max(1, parseInt(rawPage, 10) || 1);
   const sector = parseSector(rawSector) as Sector;
 
-  const [beneficiariesData, beneficiariesOrderData, companyTotalsData] =
-    await Promise.all([
-      fetchBeneficiaries(sector),
-      fetchBeneficiariesOrder(sector),
-      fetchCompanyTotalSpending(sector),
-    ]);
+  const [
+    beneficiariesData,
+    beneficiariesOrderData,
+    companyTotalsData,
+    committeeConstants,
+  ] = await Promise.all([
+    fetchBeneficiaries(sector),
+    fetchBeneficiariesOrder(sector),
+    fetchCompanyTotalSpending(sector),
+    fetchConstant<Record<string, CommitteeConstant>>("committees"),
+  ]);
 
   if (
     isError(beneficiariesData) ||
@@ -355,6 +346,7 @@ export default async function BeneficiariesList({
                           key={id}
                           id={id}
                           beneficiary={beneficiary}
+                          committeeConstants={committeeConstants}
                         />
                       );
                     }

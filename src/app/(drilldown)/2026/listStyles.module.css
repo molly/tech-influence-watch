@@ -2,6 +2,73 @@
   margin: 1rem auto 0;
 }
 
+.groupHeading {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  border-bottom: 1px solid var(--divider-color);
+  padding-bottom: 0.5rem;
+  margin: 2rem 0 0;
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.groupHeadingSpaceBetween {
+  composes: groupHeading;
+  justify-content: space-between;
+}
+
+.groupHeadingSubGroup {
+  display: flex;
+  gap: inherit;
+  align-items: inherit;
+}
+
+.groupCount {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.9rem;
+  font-weight: normal;
+  color: var(--secondary-text);
+}
+
+.groupSubtitle {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.9rem;
+  color: var(--secondary-text);
+  margin: 0.35rem 0;
+}
+
+.groupTotal {
+  margin-left: auto;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.columnHeaderLabel {
+  font-size: 0.8rem;
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--secondary-text);
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--color-neutral-300);
+}
+
+.columnHeaderLabelRight {
+  font-size: 0.8rem;
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--secondary-text);
+  text-align: right;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--color-neutral-300);
+}
+
 .subhead {
   margin: 1.5rem 0 0.25rem 0;
   font-size: 0.75rem;
@@ -50,6 +117,12 @@
   white-space: nowrap;
 }
 
+.pct {
+  color: var(--secondary-text);
+  font-size: 0.7rem;
+  font-weight: 400;
+}
+
 .amountCell {
   font-size: 0.875rem;
   text-align: right;
@@ -78,20 +151,35 @@
 
 @media (prefers-color-scheme: dark) {
   .barTrack {
-    background: var(--color-neutral-600);
+    position: relative;
+    border: none;
+    background: transparent;
+  }
+
+  .barTrack::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 1px solid var(--color-neutral-400);
+    pointer-events: none;
   }
 
   .bar {
+    position: relative;
+    z-index: 1;
     background: var(--color-lime-600);
+  }
+
+  .barRaised {
+    position: relative;
+    z-index: 1;
+    background: var(--color-lime-500);
   }
 
   .amountCash {
     color: var(--color-lime-600);
   }
 
-  .barRaised {
-    background: var(--color-lime-500);
-  }
   .amountRaised {
     color: var(--color-lime-500);
   }
@@ -109,5 +197,11 @@
 
   .amountDivider {
     display: none;
+  }
+
+  .groupHeading,
+  .groupHeadingSubGroup {
+    flex-direction: column;
+    gap: 0.25rem;
   }
 }

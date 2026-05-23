@@ -21,10 +21,7 @@ const SECTOR_PATHS = [
 
 export default function SectorWrapper() {
   const pathname = usePathname();
-  // /2026/committees/[id] yes, /2026/committees/ranking/[type] no
-  const isCommitteesPath =
-    pathname === "/2026/committees" ||
-    /^\/2026\/committees\/(?!ranking)[^/]+/.test(pathname);
+  const isCommitteesPath = /^\/2026\/committees\/?$/.test(pathname);
   const showSector =
     isCommitteesPath ||
     SECTOR_PATHS.some((p) => pathname === p || pathname.startsWith(p + "/"));

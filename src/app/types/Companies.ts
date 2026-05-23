@@ -6,6 +6,8 @@ export enum CompanyCategory {
   advocacy = "advocacy",
   capital = "capital",
   crypto = "crypto",
+  ai = "ai",
+  tech = "tech",
 }
 
 export interface CompanyConstant {

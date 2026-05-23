@@ -488,14 +488,6 @@ a .sidebarCandidateName:hover {
   .topCardsGrid {
     grid-template-columns: repeat(2, 1fr);
   }
-
-  .topCard:nth-child(2) {
-    border-right: none;
-  }
-
-  .topCard:nth-child(-n + 2) {
-    border-bottom: 1px solid var(--card-border);
-  }
 }
 
 @media (max-width: 768px) {

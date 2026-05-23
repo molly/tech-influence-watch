@@ -134,13 +134,17 @@ function CommitteeRow({
       <div
         className={spent > 0 ? styles.amountSpent : styles.amountPlaceholder}
       >
+        <span className={styles.amountSpentLabel}>Spent </span>
         {spent > 0 ? `$${humanizeApproximateRounded(spent, 1)}` : "—"}
         {spent > totalRaised && <sup title={FOOTNOTE}>†</sup>}
       </div>
       <div
-        className={prominentTotal ? styles.networkTotal : styles.amountRaised}
+        className={
+          prominentTotal ? styles.networkTotalStandalone : styles.amountRaised
+        }
       >
-        ${humanizeApproximateRounded(totalRaised, 1)}
+        <span className={styles.amountRaisedLabel}>Cash on hand </span>$
+        {humanizeApproximateRounded(totalRaised, 1)}
       </div>
     </div>
   );
