@@ -1,5 +1,4 @@
-/* eslint-disable @next/next/no-img-element */
-
+import Image from "next/image";
 import Link from "next/link";
 
 import { ImageAd as ImageAdType } from "@/app/types/Ads";
@@ -31,10 +30,13 @@ export default function ImageAd({
           </div>
         )}
         <div>
-          <img
+          <Image
             className={styles.adImage}
             src={`https://storage.googleapis.com/follow-the-crypto-ads/${ad.src}`}
             alt={ad.alt || "Advertisement"}
+            width={0}
+            height={0}
+            sizes="100vw"
           />
         </div>
         <div>

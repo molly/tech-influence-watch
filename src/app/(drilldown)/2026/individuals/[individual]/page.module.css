@@ -35,9 +35,13 @@
   align-items: center;
 }
 
+.individualImageWrapper {
+  position: relative;
+  width: 20rem;
+  height: 10rem;
+}
+
 .individualImage {
-  max-width: 20rem;
-  max-height: 10rem;
   object-fit: contain;
 }
 

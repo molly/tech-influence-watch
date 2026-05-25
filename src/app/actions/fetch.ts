@@ -17,6 +17,7 @@ import {
   CommitteeDetails,
   CommitteeTotalsSnapshot,
   TotalsForCommittees,
+  TransferEdge,
 } from "@/app/types/Committee";
 import {
   Contributions,
@@ -306,6 +307,85 @@ export const fetchCommitteesWithContributions = cache(
 export const fetchCommitteeDetails = cache(
   async (committeeId: string): Promise<CommitteeDetails | ErrorType> =>
     fetchSnapshot("committees", committeeId),
+);
+
+// Fetch inter-committee transfer graph for tracked committees
+export const fetchCommitteeTransferGraph = cache(
+  async (sector: Sector = "all"): Promise<TransferEdge[] | ErrorType> => {
+    const [contributionsData, committeeConstants] = await Promise.all([
+      fetchCollection("contributions"),
+      fetchConstant<Record<string, CommitteeConstant>>("committees"),
+    ]);
+    if (isError(contributionsData)) {
+      return contributionsData as ErrorType;
+    }
+    if (!committeeConstants) {
+      return { error: true, message: "Committee constants not found" } as ErrorType;
+    }
+    const trackedIds = new Set(
+      Object.entries(committeeConstants)
+        .filter(
+          ([, c]) =>
+            sector === "all" || c.sector === sector || c.sector === "tech",
+        )
+        .map(([id]) => id),
+    );
+    const docs = contributionsData as DocumentData[];
+
+    type EdgeAccum = { fromId: string; toId: string; amount: number; seen: Set<string> };
+    const edgeMap = new Map<string, EdgeAccum>();
+
+    for (const docSnap of docs) {
+      const toId = docSnap.id as string;
+      if (!trackedIds.has(toId)) {
+        continue;
+      }
+      const data = docSnap.data() as Contributions;
+      if (!data.by_date) {
+        continue;
+      }
+      for (const entry of data.by_date) {
+        if (!entry.link) {
+          continue;
+        }
+        const match = entry.link.match(/^\/committees\/([^/]+)$/);
+        if (!match) {
+          continue;
+        }
+        const fromId = match[1];
+        if (!trackedIds.has(fromId) || fromId === toId) {
+          continue;
+        }
+        const edgeKey = `${fromId}→${toId}`;
+        if (!edgeMap.has(edgeKey)) {
+          edgeMap.set(edgeKey, { fromId, toId, amount: 0, seen: new Set() });
+        }
+        const edge = edgeMap.get(edgeKey)!;
+        const txId = entry.transaction_id;
+        if (txId) {
+          if (edge.seen.has(txId)) {
+            continue;
+          }
+          edge.seen.add(txId);
+        }
+        edge.amount += entry.contribution_receipt_amount ?? 0;
+      }
+    }
+
+    const edges: TransferEdge[] = [];
+    for (const { fromId, toId, amount } of edgeMap.values()) {
+      if (amount > 0) {
+        edges.push({
+          fromId,
+          fromName: committeeConstants[fromId]?.name ?? fromId,
+          toId,
+          toName: committeeConstants[toId]?.name ?? toId,
+          amount,
+        });
+      }
+    }
+    return edges;
+  },
 );
 
 // Fetch donors for a specific committee

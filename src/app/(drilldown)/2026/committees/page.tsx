@@ -5,14 +5,15 @@ import { Suspense } from "react";
 import {
   fetchCommitteesWithContributions,
   fetchCommitteeTotalReceipts,
+  fetchCommitteeTransferGraph,
 } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
-import { HorizontalBarsSkeleton } from "@/app/components/home/HorizontalBars";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import sharedStyles from "@/app/shared.module.css";
 import type {
   CommitteeConstantWithContributions,
   CommitteeTotalsSnapshot,
+  TransferEdge,
 } from "@/app/types/Committee";
 import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
@@ -27,6 +28,7 @@ import { humanizeSector, parseSector } from "@/app/utils/sector";
 import listStyles from "../listStyles.module.css";
 import CommitteeHeader from "./CommitteeHeader";
 import styles from "./CommitteeList.module.css";
+import SankeyDiagram from "./SankeyDiagram";
 
 export async function generateMetadata({
   searchParams,
@@ -74,7 +76,6 @@ function CommitteeListSkeleton() {
       <div className={styles.committeeName}>
         <Skeleton randWidth={[10, 30]} />
       </div>
-      <HorizontalBarsSkeleton />
       <div className={styles.amountPlaceholder}>
         <Skeleton randWidth={[5, 10]} />
       </div>
@@ -87,22 +88,20 @@ function CommitteeListSkeleton() {
 
 function CommitteeRow({
   committee,
-  maxTotal,
   sector = "all",
   indented = false,
   prominentTotal = false,
+  transferredOut = 0,
 }: {
   committee: CommitteeConstantWithContributions;
-  maxTotal: number;
   sector?: Sector;
   indented?: boolean;
   prominentTotal?: boolean;
+  transferredOut?: number;
 }) {
   const spent = committee.independent_expenditures || 0;
-  const totalRaised = committee.total;
-  const spentBarPct = maxTotal > 0 ? (spent / maxTotal) * 100 : 0;
-  const cashBarPct =
-    maxTotal > 0 ? (Math.max(0, totalRaised - spent) / maxTotal) * 100 : 0;
+  const fundsThisCycle = committee.total;
+  const remaining = Math.max(0, committee.total - transferredOut - spent);
   return (
     <div
       className={`${styles.committeeRow}${indented ? ` ${styles.committeeRowIndented}` : ""}`}
@@ -117,34 +116,32 @@ function CommitteeRow({
           <span className={sharedStyles.sectorBadge}>{committee.sector}</span>
         )}
       </div>
-      <div className={listStyles.barTrack}>
-        {spent > 0 && (
-          <div
-            className={listStyles.bar}
-            style={{ width: `${spentBarPct}%` }}
-          />
-        )}
-        {cashBarPct > 0 && (
-          <div
-            className={listStyles.barRaised}
-            style={{ width: `${cashBarPct}%` }}
-          />
-        )}
+      <div className={styles.amountFunds}>
+        <span className={styles.amountFundsLabel}>Funds this cycle </span>$
+        {humanizeApproximateRounded(fundsThisCycle, 1)}
+      </div>
+      <div
+        className={
+          transferredOut > 0
+            ? styles.amountTransferred
+            : styles.transferredPlaceholder
+        }
+      >
+        <span className={styles.amountTransferredLabel}>Transferred out </span>
+        {transferredOut > 0
+          ? `$${humanizeApproximateRounded(transferredOut, 1)}`
+          : "—"}
       </div>
       <div
         className={spent > 0 ? styles.amountSpent : styles.amountPlaceholder}
       >
         <span className={styles.amountSpentLabel}>Spent </span>
         {spent > 0 ? `$${humanizeApproximateRounded(spent, 1)}` : "—"}
-        {spent > totalRaised && <sup title={FOOTNOTE}>†</sup>}
+        {spent > fundsThisCycle && <sup title={FOOTNOTE}>†</sup>}
       </div>
-      <div
-        className={
-          prominentTotal ? styles.networkTotalStandalone : styles.amountRaised
-        }
-      >
-        <span className={styles.amountRaisedLabel}>Cash on hand </span>$
-        {humanizeApproximateRounded(totalRaised, 1)}
+      <div className={styles.amountRaised}>
+        <span className={styles.amountRaisedLabel}>Remaining </span>$
+        {humanizeApproximateRounded(remaining, 1)}
       </div>
     </div>
   );
@@ -153,17 +150,35 @@ function CommitteeRow({
 function CommitteeGroup({
   title,
   committees,
-  maxTotal,
   sector = "all",
+  transferEdges = [],
 }: {
   title: string;
   committees: CommitteeConstantWithContributions[];
-  maxTotal: number;
   sector?: Sector;
+  transferEdges?: TransferEdge[];
 }) {
   if (committees.length === 0) {
     return null;
   }
+
+  const sentOutById = new Map<string, number>();
+  for (const edge of transferEdges) {
+    sentOutById.set(
+      edge.fromId,
+      (sentOutById.get(edge.fromId) ?? 0) + edge.amount,
+    );
+  }
+
+  const totalSpent = committees.reduce(
+    (sum, c) => sum + (c.independent_expenditures || 0),
+    0,
+  );
+  const totalPooled = committees.reduce(
+    (sum, c) => sum + c.total_contributed + c.last_cash_on_hand_end_period,
+    0,
+  );
+  const totalRemaining = Math.max(0, totalPooled - totalSpent);
 
   // Split into network subgroups and standalone committees
   const networkMap = new Map<string, CommitteeConstantWithContributions[]>();
@@ -209,43 +224,32 @@ function CommitteeGroup({
 
   return (
     <div className={styles.committeeGroup}>
-      <h3 className={styles.groupHeading}>
-        {title}
-        <span className={styles.groupCount}>
-          {committees.length}{" "}
-          {committees.length === 1 ? "committee" : "committees"}
+      <h3 className={listStyles.groupHeadingSpaceBetween}>
+        <span className={listStyles.groupHeadingSubGroup}>{title}</span>
+        <span className={sharedStyles.sectionTitleAmount}>
+          <span className={sharedStyles.sectionTitleAmountValue}>
+            {committees.length}
+          </span>{" "}
+          {committees.length === 1 ? "committee has" : "committees have"} spent{" "}
+          <span className={sharedStyles.sectionTitleAmountValue}>
+            {humanizeRoundedCurrency(totalSpent, true)}
+          </span>{" "}
+          and {committees.length === 1 ? "has" : "have"}{" "}
+          <span className={sharedStyles.sectionTitleAmountValue}>
+            {humanizeRoundedCurrency(totalRemaining, true)}
+          </span>{" "}
+          remaining
         </span>
       </h3>
       <div className={styles.columnHeaders}>
         <div className={styles.columnHeaderLabel}>Committee</div>
-        <div className={styles.barColumnHeaderInner}>
-          <span className={styles.columnHeaderLabel}>
-            Spent vs. cash on hand
-          </span>
-          <div className={styles.legendInline}>
-            <div className={styles.legendItem}>
-              <div
-                className={`${styles.legendSwatch} ${styles.legendSwatchSpent}`}
-              />
-              <span>Spent</span>
-            </div>
-            <div className={styles.legendItem}>
-              <div
-                className={`${styles.legendSwatch} ${styles.legendSwatchRaised}`}
-              />
-              <span>Cash on hand</span>
-            </div>
-          </div>
-        </div>
+        <div className={styles.columnHeaderLabelRight}>Funds this cycle</div>
+        <div className={styles.columnHeaderLabelRight}>Transferred out</div>
         <div className={styles.columnHeaderLabelRight}>Spent</div>
-        <div className={styles.columnHeaderLabelRight}>Raised</div>
+        <div className={styles.columnHeaderLabelRight}>Remaining</div>
       </div>
       {slots.map((slot) => {
         if (slot.kind === "network") {
-          const networkTotal = slot.members.reduce(
-            (sum, c) => sum + c.total,
-            0,
-          );
           const networkSector = slot.members.some((c) => c.sector === "tech")
             ? "tech"
             : slot.members.some((c) => c.sector === "crypto") &&
@@ -255,27 +259,22 @@ function CommitteeGroup({
           return (
             <div key={slot.name} className={styles.networkGroup}>
               <div className={styles.networkLabel}>
-                <div className={styles.networkLabelLeft}>
-                  <span className={styles.networkLabelName}>
-                    {slot.name} network
-                  </span>
-                  {networkSector && (
-                    <span className={sharedStyles.sectorBadge}>
-                      {networkSector}
-                    </span>
-                  )}
-                </div>
-                <span className={styles.networkTotal}>
-                  ${humanizeApproximateRounded(networkTotal, 1)}
+                <span className={styles.networkLabelName}>
+                  {slot.name} network
                 </span>
+                {networkSector && sector === "all" && (
+                  <span className={sharedStyles.sectorBadge}>
+                    {networkSector}
+                  </span>
+                )}
               </div>
               {slot.members.map((committee) => (
                 <CommitteeRow
                   key={committee.id}
                   committee={committee}
-                  maxTotal={maxTotal}
                   sector={sector}
                   indented
+                  transferredOut={sentOutById.get(committee.id) ?? 0}
                 />
               ))}
             </div>
@@ -285,9 +284,9 @@ function CommitteeGroup({
           <CommitteeRow
             key={slot.committee.id}
             committee={slot.committee}
-            maxTotal={maxTotal}
             sector={sector}
             prominentTotal
+            transferredOut={sentOutById.get(slot.committee.id) ?? 0}
           />
         );
       })}
@@ -303,9 +302,10 @@ export default async function CommitteesPage({
   const { sector: rawSector } = await searchParams;
   const sector = parseSector(rawSector);
 
-  const [data, receiptsData] = await Promise.all([
+  const [data, receiptsData, transferData] = await Promise.all([
     fetchCommitteesWithContributions(sector),
     fetchCommitteeTotalReceipts(sector),
+    fetchCommitteeTransferGraph(sector),
   ]);
 
   if (isError(data)) {
@@ -331,18 +331,17 @@ export default async function CommitteesPage({
     grouped[getPacGroup(committee)].push(committee);
   }
 
-  const maxTotal = Math.max(...committees.map((c) => c.total), 1);
-
   let cardAmount: string;
   if (!isError(receiptsData)) {
     const totals = receiptsData as CommitteeTotalsSnapshot;
     const confirmedCash =
       (totals.net_receipts ?? totals.receipts) + totals.cash_on_hand;
-    cardAmount = humanizeRoundedCurrency(confirmedCash, true);
+    cardAmount = humanizeRoundedCurrency(confirmedCash, true, 1);
   } else {
     cardAmount = humanizeRoundedCurrency(
       committees.reduce((sum, c) => sum + c.total, 0),
       true,
+      1,
     );
   }
 
@@ -355,14 +354,28 @@ export default async function CommitteesPage({
       />
       <div className={sharedStyles.main}>
         <div className="single-column-page">
+          {transferData !== null &&
+            !isError(transferData) &&
+            !isError(data) && (
+              <SankeyDiagram
+                sector={sector}
+                committees={committees}
+                totalFunds={cardAmount}
+                transferEdges={transferData as TransferEdge[]}
+              />
+            )}
           <Suspense fallback={<CommitteeListSkeleton />}>
             {PAC_GROUP_ORDER.map((group) => (
               <CommitteeGroup
                 key={group}
                 title={PAC_GROUP_LABELS[group]}
                 committees={grouped[group]}
-                maxTotal={maxTotal}
                 sector={sector}
+                transferEdges={
+                  transferData !== null && !isError(transferData)
+                    ? (transferData as TransferEdge[])
+                    : []
+                }
               />
             ))}
           </Suspense>

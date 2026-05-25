@@ -1,4 +1,4 @@
-/* eslint-disable @next/next/no-img-element */
+import Image from "next/image";
 import { Metadata } from "next";
 import Link from "next/link";
 
@@ -87,11 +87,14 @@ export default async function IndividualPage({
     <>
       <section className={styles.imageAndName}>
         <div className={styles.imageAndAttribution}>
-          <img
-            src={`https://storage.googleapis.com/follow-the-crypto-misc-assets/${individualParam}.webp`}
-            alt={`${individual.name} photo`}
-            className={styles.individualImage}
-          />
+          <div className={styles.individualImageWrapper}>
+            <Image
+              fill
+              src={`https://storage.googleapis.com/follow-the-crypto-misc-assets/${individualParam}.webp`}
+              alt={`${individual.name} photo`}
+              className={styles.individualImage}
+            />
+          </div>
           {individual.photoCredit && (
             <a href={individual.photoCredit} className={styles.attribution}>
               (image attribution)

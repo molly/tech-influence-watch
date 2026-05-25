@@ -1,4 +1,4 @@
-/* eslint-disable @next/next/no-img-element */
+import Image from "next/image";
 import Link from "next/link";
 
 import { fetchConstant, fetchIndividualTotalSpending } from "@/app/actions/fetch";
@@ -62,7 +62,8 @@ export default async function IndividualsList({ sector = "all" }: { sector?: Sec
         return (
           <div key={individual.id} className={styles.individualRow}>
             <div className={styles.avatarWrapper}>
-              <img
+              <Image
+                fill
                 src={`https://storage.googleapis.com/follow-the-crypto-misc-assets/${individual.id}.webp`}
                 alt={individual.name}
                 className={styles.avatar}

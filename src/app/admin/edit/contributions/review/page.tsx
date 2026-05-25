@@ -161,6 +161,7 @@ export default function ContributionReviewPage() {
           {};
         snapshot.forEach((doc) => {
           const contribs = doc.data() as Contributions;
+          if (!contribs.groups) return;
           counts[doc.id] = countUnreviewed(contribs);
         });
         setReviewCounts(counts);

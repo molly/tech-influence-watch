@@ -1,5 +1,4 @@
 /* Page two-column layout */
-
 .columns {
   composes: columns from "@/app/shared.module.css";
 }

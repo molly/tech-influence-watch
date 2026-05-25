@@ -1,4 +1,4 @@
-/* eslint-disable @next/next/no-img-element */
+import Image from "next/image";
 import { Metadata } from "next";
 import Link from "next/link";
 
@@ -51,9 +51,11 @@ export default function AboutPage() {
           democracy.
         </p>
         <div className={styles.quoteCard}>
-          <img
-            src={`https://storage.googleapis.com/follow-the-crypto-misc-assets/brian-armstrong.webp`}
+          <Image
+            src="https://storage.googleapis.com/follow-the-crypto-misc-assets/brian-armstrong.webp"
             alt="Brian Armstrong photograph"
+            width={240}
+            height={240}
             className={styles.quoteCardImage}
           />
           <div>

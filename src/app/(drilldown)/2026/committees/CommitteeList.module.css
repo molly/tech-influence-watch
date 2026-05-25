@@ -20,7 +20,7 @@
 
 .columnHeaders {
   display: grid;
-  grid-template-columns: 16rem 1fr 7rem 8rem;
+  grid-template-columns: 1fr repeat(4, 7rem);
   gap: 0.75rem;
   margin-bottom: 0.25rem;
 }
@@ -45,58 +45,14 @@
   text-align: right;
 }
 
-.barColumnHeaderInner {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.legendInline {
-  display: flex;
-  gap: 1rem;
-}
-
-.legendItem {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.8rem;
-  font-family: var(--font-serif);
-  font-style: italic;
-  color: var(--secondary-text);
-}
-
-.legendSwatch {
-  width: 10px;
-  height: 10px;
-  flex-shrink: 0;
-}
-
-.legendSwatchSpent {
-  background: var(--color-lime-800);
-}
-
-.legendSwatchRaised {
-  background: var(--color-lime-500);
-}
-
 .networkGroup {
   margin: 0.75rem 0;
 }
 
 .networkLabel {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
+  align-items: center;
   padding: 0.5rem 0 0.35rem 0;
-  gap: 1rem;
-}
-
-.networkLabelLeft {
-  display: flex;
-  align-items: baseline;
-  gap: 0.4rem;
-  flex-wrap: wrap;
 }
 
 .networkLabelName {
@@ -126,14 +82,14 @@
 
 .committeeRow {
   display: grid;
-  grid-template-columns: 16.825rem 1fr 7rem 8rem;
+  grid-template-columns: 1fr repeat(4, 7rem);
   align-items: center;
   gap: 0.75rem;
   padding: 0.4rem 0;
 }
 
 .committeeRowIndented {
-  grid-template-columns: 16rem 1fr 7rem 8rem;
+  composes: committeeRow;
   border-left: 2px solid var(--color-black);
   padding-left: 0.7rem;
 }
@@ -158,26 +114,19 @@
   min-width: 0;
 }
 
+.amountFundsLabel,
 .amountSpentLabel,
+.amountTransferredLabel,
 .amountRaisedLabel {
   display: none;
 }
 
-.amountSpent {
-  font-size: 0.875rem;
-  text-align: right;
-  white-space: nowrap;
-  color: var(--color-lime-800);
-}
-
-.amountRaised {
-  font-size: 0.875rem;
-  text-align: right;
-  white-space: nowrap;
-  color: var(--secondary-text);
-}
-
-.amountPlaceholder {
+.amountFunds,
+.amountTransferred,
+.amountSpent,
+.amountRaised,
+.amountPlaceholder,
+.transferredPlaceholder {
   font-size: 0.875rem;
   text-align: right;
   white-space: nowrap;
@@ -198,14 +147,6 @@
     color: var(--main-text);
   }
 
-  .legendSwatchSpent {
-    background: var(--color-lime-600);
-  }
-
-  .legendSwatchRaised {
-    background: var(--color-lime-500);
-  }
-
   .amountSpent {
     color: var(--color-lime-500);
   }
@@ -213,21 +154,12 @@
 
 @media (max-width: 900px) {
   .committeeRow {
-    grid-template-columns: 1fr 7rem 7rem;
-    grid-template-rows: auto auto;
+    grid-template-columns: 1fr repeat(4, 6rem);
     gap: 0.2rem 0.5rem;
   }
 
-  .committeeName {
-    grid-column: 1 / -1;
-  }
-
   .columnHeaders {
-    grid-template-columns: 1fr 7em 7em;
-  }
-
-  .barColumnHeaderInner {
-    display: none;
+    grid-template-columns: 1fr repeat(4, 6rem);
   }
 }
 
@@ -245,11 +177,17 @@
     gap: 0;
   }
 
+  .amountFundsLabel,
   .amountSpentLabel,
+  .amountTransferredLabel,
   .amountRaisedLabel {
     display: inline;
     font-family: var(--font-serif);
     font-style: italic;
+  }
+
+  .transferredPlaceholder {
+    display: none;
   }
 
   .networkTotalStandalone {

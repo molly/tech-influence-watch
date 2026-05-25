@@ -76,6 +76,7 @@
 
 .quoteCardImage {
   max-width: 100%;
+  height: auto;
 }
 
 .footnotes {

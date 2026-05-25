@@ -274,8 +274,8 @@ export default async function BeneficiariesList({
         totalSpending={companyTotals.total}
         numBeneficiaries={allOrder.length}
       />
-      <main className={`${sharedStyles.main} ${styles.columns}`}>
-        <div className={styles.mainColumn}>
+      <div className={`${sharedStyles.main} ${sharedStyles.columns}`}>
+        <div className={sharedStyles.mainColumn}>
           <section>
             <h2 className={sharedStyles.sectionTitle}>
               Top recipient in each category
@@ -380,7 +380,7 @@ export default async function BeneficiariesList({
           allOrder={allOrder}
           max={companyTotals.total}
         />
-      </main>
+      </div>
     </>
   );
 }

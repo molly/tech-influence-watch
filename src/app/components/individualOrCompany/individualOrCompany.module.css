@@ -1,10 +1,10 @@
 .contributionRow {
   display: flex;
   flex-direction: column;
-  padding: 1rem;
+  padding: 1rem 0;
 
-  &:nth-child(even) {
-    background: var(--table-background-secondary);
+  & ~ .contributionRow {
+    border-top: 1px solid var(--card-border);
   }
 }
 
@@ -12,7 +12,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 1.2rem;
+  font-size: 1rem;
 }
 
 .contributionsContainer {
@@ -24,13 +24,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-left: 1rem;
-  padding: 0.5rem 0;
-  font-size: 1rem;
+  padding: 0.25rem 0;
+  font-size: 0.9rem;
 }
 
 .subRowCurrency {
-  color: var(--secondary-text);
+  font-variant-numeric: tabular-nums;
 }
 
 .contributionCommittee {

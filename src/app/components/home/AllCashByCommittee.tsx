@@ -2,11 +2,15 @@ import { Suspense } from "react";
 
 import {
   fetchCommitteesWithContributions,
+  fetchCommitteeTotalReceipts,
   fetchCompanyTotalSpending,
 } from "@/app/actions/fetch";
 import styles from "@/app/page.module.css";
 import sharedStyles from "@/app/shared.module.css";
-import { CommitteeConstantWithContributions } from "@/app/types/Committee";
+import {
+  CommitteeConstantWithContributions,
+  CommitteeTotalsSnapshot,
+} from "@/app/types/Committee";
 import { CompanyTotals } from "@/app/types/Companies";
 import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
@@ -17,7 +21,7 @@ import AllCashByCommitteeChart from "./AllCashByCommitteeChart";
 import { HorizontalBarsSkeleton } from "./HorizontalBars";
 
 async function CashTotal({ sector }: { sector: Sector }) {
-  const data = await fetchCompanyTotalSpending(sector);
+  const data = await fetchCommitteeTotalReceipts(sector);
   if (isError(data)) {
     return null;
   }
@@ -25,7 +29,7 @@ async function CashTotal({ sector }: { sector: Sector }) {
     <span className={sharedStyles.sectionTitleAmount}>
       of{" "}
       <span className={sharedStyles.sectionTitleAmountValue}>
-        {formatCompact((data as CompanyTotals).total)}
+        {formatCompact((data as CommitteeTotalsSnapshot).receipts)}
       </span>{" "}
       total
     </span>
@@ -39,16 +43,16 @@ async function AllCashByCommitteeContent({
   labelId: string;
   sector: Sector;
 }) {
-  const [committeesData, companySpendingData] = await Promise.all([
+  const [committeesData, committeeRaisedData] = await Promise.all([
     fetchCommitteesWithContributions(sector),
-    fetchCompanyTotalSpending(sector),
+    fetchCommitteeTotalReceipts(sector),
   ]);
   if (isError(committeesData)) {
     return <ErrorText subject="receipts by committee" />;
   }
-  const max = isError(companySpendingData)
+  const max = isError(committeeRaisedData)
     ? undefined
-    : (companySpendingData as CompanyTotals).total;
+    : (committeeRaisedData as CommitteeTotalsSnapshot).receipts;
   return (
     <AllCashByCommitteeChart
       committees={committeesData as CommitteeConstantWithContributions[]}

@@ -22,9 +22,9 @@ export default function CommitteeHeader({
         {total && numCommittees && (
           <p className={sharedStyles.headerSubtitle}>
             <span className="bold">{numCommittees}</span>
-            {` tracked ${humanizeSector(sector, { context: "industry", lowercase: true })} PACs have more than `}
+            {` tracked ${humanizeSector(sector, { context: "industry", lowercase: true })} PACs are deploying more than `}
             <span className="bold">{total}</span>
-            {` on hand to influence 2026 elections.`}
+            {` to influence 2026 elections, between funds already spent and cash still on hand.`}
           </p>
         )}
       </section>

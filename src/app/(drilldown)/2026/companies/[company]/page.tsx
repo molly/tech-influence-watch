@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -18,6 +17,7 @@ import { formatCompanyName } from "@/app/utils/names";
 import { titlecase } from "@/app/utils/titlecase";
 import { formatCurrency } from "@/app/utils/utils";
 
+import CompanyHeader from "./CompanyHeader";
 import CompanySpendingMap from "./CompanySpendingMap";
 import styles from "./page.module.css";
 
@@ -73,50 +73,13 @@ export default async function CompanyPage({
 
   return (
     <>
-      <section className={styles.companyLogoAndName}>
-        <div className={styles.companyLogoWrapper}>
-          <img
-            src={`https://storage.googleapis.com/follow-the-crypto-misc-assets/${companyParam}.webp`}
-            alt={`${company.name} logo`}
-            className={styles.companyLogoImage}
-          />
-        </div>
-        <div className={styles.companyText}>
-          <h1 className={styles.companyName}>{company.name}</h1>
-          <div className="secondary">
-            {company.country && company.country}
-            {company.relatedIndividuals.length > 0 && (
-              <>
-                {company.country && <span> | </span>}
-                <span>Related people: </span>
-                <ul className={styles.plainList}>
-                  {company.relatedIndividuals.map((individual) => (
-                    <li key={individual.id} className={styles.plainListItem}>
-                      <Link href={`/2026/individuals/${individual.id}`}>
-                        {individual.name}
-                      </Link>
-                      {individual.title && ` (${individual.title})`}
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-          </div>
-          <div className={styles.description}>
-            <span
-              dangerouslySetInnerHTML={{
-                __html: company.description || "",
-              }}
-            />
-          </div>
-        </div>
-      </section>
-      <div className={styles.page}>
+      <CompanyHeader company={company} companyParam={companyParam} />
+      <div className={`${sharedStyles.main} ${sharedStyles.columns}`}>
         <section className={styles.contributionSection}>
-          <h3 className={styles.contributionSectionHeader}>
+          <h2 className={sharedStyles.sectionTitle}>
             <span>Contributions</span>
             <span>{formatCurrency(companyTotal, true)}</span>
-          </h3>
+          </h2>
           {visibleContributions.length > 0 ? (
             visibleContributions.map(
               (
@@ -141,7 +104,7 @@ export default async function CompanyPage({
             </div>
           )}
         </section>
-        <div className={styles.spendingWrapper}>
+        <div className={sharedStyles.sideColumn}>
           <section
             className={`${styles.spendingByStateSection} ${sharedStyles.constrainWidth}`}
           >

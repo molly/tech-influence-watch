@@ -101,18 +101,17 @@ function CompanyListGroup({
   return (
     <div className={styles.companyGroup}>
       <h3 className={listStyles.groupHeadingSpaceBetween}>
-        <span className={listStyles.groupHeadingSubGroup}>
-          {title}
-          <span className={listStyles.groupCount}>
-            {groups.length} {groups.length === 1 ? "company" : "companies"}
-          </span>
-        </span>
+        <span className={listStyles.groupHeadingSubGroup}>{title}</span>
         {hasTotals && (
           <span className={sharedStyles.sectionTitleAmount}>
             <span className={sharedStyles.sectionTitleAmountValue}>
               {humanizeRoundedCurrency(sectionTotal, true)}
             </span>{" "}
-            contributed
+            contributed by{" "}
+            <span className={sharedStyles.sectionTitleAmountValue}>
+              {groups.length}
+            </span>{" "}
+            {groups.length === 1 ? "company" : "companies"}
           </span>
         )}
       </h3>

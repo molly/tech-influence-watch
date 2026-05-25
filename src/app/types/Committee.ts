@@ -104,3 +104,11 @@ export type TotalsForCommittees = {
   crypto: CommitteeTotalsSnapshot;
   ai: CommitteeTotalsSnapshot;
 };
+
+export type TransferEdge = {
+  fromId: string;
+  fromName: string;
+  toId: string;
+  toName: string;
+  amount: number;
+};
