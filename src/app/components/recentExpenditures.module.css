@@ -1,11 +1,10 @@
 .recentExpenditureRow {
   display: flex;
   flex-direction: column;
-  padding-bottom: 1rem;
+  padding: 1rem 0;
 
-  &:has(~ .recentExpenditureRow) {
-    border-bottom: 1px solid var(--table-color);
-    margin-bottom: 1rem;
+  & ~ .recentExpenditureRow {
+    border-top: 1px solid var(--table-color);
   }
 }
 
@@ -14,7 +13,7 @@
   color: var(--secondary-text);
 }
 
-.expenditureDescription {
+.expenditureDetails {
   font-size: 0.9rem;
   color: var(--secondary-text);
 }
@@ -38,10 +37,26 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  font-weight: 600;
+}
+
+.expenditureRace,
+.expenditureDescription {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--secondary-text);
 }
 
 .expenditureTarget {
   margin: 0.1rem 0.1rem 0.1rem 0;
+}
+
+.expenditureDescription {
+  font-size: 0.8rem;
+
+  * ~ *:before {
+    content: " - ";
+  }
 }
 
 .tableCardContent {
@@ -54,4 +69,58 @@
   color: var(--secondary-text);
   font-size: 0.9em;
   margin-bottom: 1em;
+}
+
+.dateGroup {
+  & ~ .dateGroup {
+    margin-top: 2rem;
+  }
+}
+
+.dateGroupHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--table-color);
+  padding-bottom: 0.5rem;
+  column-gap: 1rem;
+}
+
+.dateGroupDateGroup {
+  display: flex;
+  align-items: center;
+  column-gap: 0.5rem;
+}
+
+.dateGroupDate {
+  font-family: var(--font-display);
+  display: inline;
+  margin: 0;
+}
+
+.dateGroupMeta {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--secondary-text);
+}
+
+.dateGroupTotal {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--secondary-text);
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+@media (min-width: 576px) {
+  .dateGroupMeta::before {
+    content: " – ";
+  }
+}
+@media (max-width: 575px) {
+  .dateGroupHeader,
+  .dateGroupDateGroup {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

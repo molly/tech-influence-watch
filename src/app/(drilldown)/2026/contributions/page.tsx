@@ -1,14 +1,24 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
+import Breadcrumbs from "@/app/components/Breadcrumbs";
 import AllRecentContributions from "@/app/components/home/AllRecentContributions";
+import sharedStyles from "@/app/shared.module.css";
 import { customMetadata } from "@/app/utils/metadata";
-import { parseSector } from "@/app/utils/sector";
+import { humanizeSector, parseSector } from "@/app/utils/sector";
 
-export const metadata: Metadata = customMetadata({
-  title: "Recent Contributions",
-  description:
-    "Recent contributions to PACs from cryptocurrency-focused companies and individuals.",
-});
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ sector?: string }>;
+}): Promise<Metadata> {
+  const { sector: rawSector } = await searchParams;
+  const sector = parseSector(rawSector);
+  return customMetadata({
+    title: "Recent contributions",
+    description: `Recent political contributions from ${humanizeSector(sector, { hyphen: true, lowercase: true })}focused companies and individuals.`,
+  });
+}
 
 export default async function ContributionsList({
   searchParams,
@@ -19,9 +29,35 @@ export default async function ContributionsList({
   const sector = parseSector(rawSector);
 
   return (
-    <section className="single-column-page">
-      <h1>Recent contributions from tracked companies and individuals</h1>
-      <AllRecentContributions fullPage={true} sector={sector} />
-    </section>
+    <>
+      <div className={sharedStyles.fullWidthHeader}>
+        <section className={sharedStyles.header}>
+          <Breadcrumbs crumbs={["Recent", "Contributions"]} />
+          <h1 className={sharedStyles.title}>Recent contributions</h1>
+          <Suspense
+            fallback={
+              <p className={sharedStyles.headerSubtitle}>
+                Contributions from tracked companies and individuals.
+              </p>
+            }
+          >
+            <p className={sharedStyles.headerSubtitle}>
+              Contributions from
+              {` tracked ${humanizeSector(sector, { context: "industry", lowercase: true })} companies and individuals.`}
+            </p>
+          </Suspense>
+        </section>
+      </div>
+      <div className={sharedStyles.main}>
+        <div className="single-column-page">
+          <h2 className={sharedStyles.sectionTitle}>Contributions</h2>
+          <div className={sharedStyles.subtitle}>
+            Grouped by date of receipt. Depending on committee filing schedules,
+            recent contributions may not yet appear here.
+          </div>
+          <AllRecentContributions fullPage={true} sector={sector} />
+        </div>
+      </div>
+    </>
   );
 }

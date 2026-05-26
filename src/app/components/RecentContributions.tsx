@@ -35,12 +35,12 @@ export default function RecentContributions({
       )}
       {children}
       {!fullPage && (
-        <div className={styles.viewMoreLinks}>
+        <div className={tableStyles.viewMoreLinks}>
           <Link
             href={sectorHref("/2026/contributions", sector ?? "all")}
-            className={styles.viewMoreLink}
+            className={tableStyles.viewMoreLink}
           >
-            &raquo; All recent contributions
+            &raquo; More recent contributions
           </Link>
         </div>
       )}

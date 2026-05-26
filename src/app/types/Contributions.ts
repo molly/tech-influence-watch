@@ -1,4 +1,5 @@
 import { Committee, ScheduleA } from "./FECTypes";
+import { BESector } from "./Sector";
 
 export interface ManualReview {
   reviewed: boolean;
@@ -139,6 +140,7 @@ export type RecentContribution = IndividualOrCompanyContribution & {
   source_type: "individual" | "company";
   source_company?: string[];
   source_company_ids?: string[];
+  source_sector?: BESector;
   committee_description?: string;
   candidate_ids?: string[];
   sponsor_candidate_ids?: string[];

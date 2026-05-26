@@ -19,11 +19,6 @@ const NAV_ITEMS: NavItem[] = [
       { label: "By companies", href: "/2026/companies", useSector: true },
       { label: "By individuals", href: "/2026/individuals", useSector: true },
       { label: "By beneficiary", href: "/2026/beneficiaries", useSector: true },
-      {
-        label: "Recent expenditures",
-        href: "/2026/expenditures",
-        useSector: true,
-      },
     ],
   },
   {
@@ -35,18 +30,24 @@ const NAV_ITEMS: NavItem[] = [
     ],
   },
   {
+    id: "recent",
+    label: "Recent",
+    children: [
+      { label: "Contributions", href: "/2026/contributions", useSector: true },
+      { label: "Expenditures", href: "/2026/expenditures", useSector: true },
+    ],
+  },
+  {
     id: "rankings",
     label: "Rankings",
     children: [
       {
         label: "Super PACs",
         href: "/2026/committees/ranking/super",
-        useSector: true,
       },
       {
         label: "All committees",
         href: "/2026/committees/ranking/all",
-        useSector: true,
       },
     ],
   },

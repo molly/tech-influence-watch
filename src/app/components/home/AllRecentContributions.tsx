@@ -51,6 +51,8 @@ async function AllRecentContributionsContent({
     <RecentContributionsContent
       contributions={contributions}
       trackedCommitteeIds={trackedCommitteeIds}
+      fullPage={fullPage}
+      sector={sector}
     />
   );
 }

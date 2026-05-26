@@ -39,6 +39,20 @@ export const formatDateFromString = (date?: string): string => {
   );
 };
 
+export function formatRelativeDate(dateKey: string): string {
+  const today = DateTime.utc().startOf("day");
+  const date = DateTime.fromISO(dateKey, { zone: "utc" }).startOf("day");
+  const daysAgo = Math.round(today.diff(date, "days").days);
+  const weekday = date.toFormat("cccc");
+  if (daysAgo === 0) {
+    return `today · ${weekday}`;
+  }
+  if (daysAgo === 1) {
+    return `yesterday · ${weekday}`;
+  }
+  return `${daysAgo} days ago · ${weekday}`;
+}
+
 export const isUpcomingDate = (
   date: string,
   { inclusive }: { inclusive?: boolean } = {},

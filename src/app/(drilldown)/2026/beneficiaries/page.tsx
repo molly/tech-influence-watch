@@ -55,6 +55,7 @@ export async function generateMetadata({
     description: `Beneficiaries of ${humanizeSector(sector, { context: "industry", lowercase: true })} spending`,
   });
 }
+
 function PartyBorderCell({ partyCode }: { partyCode: string }) {
   const className = getPartyBorderClass(partyCode);
   return (

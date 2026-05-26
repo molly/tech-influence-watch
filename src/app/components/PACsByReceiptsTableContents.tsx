@@ -85,6 +85,18 @@ export default async function PACsByReceiptsTableContents({
               {committeeIdentifier}
               {committee.description && (
                 <div className={styles.descriptionInline}>
+                  {type === "all" && (
+                    <>
+                      <span className="no-wrap">
+                        {
+                          committee.committee_type_full
+                            ?.split(" (")[0]
+                            .split(" -")[0]
+                        }
+                      </span>
+                      <br />
+                    </>
+                  )}
                   {committee.description}
                 </div>
               )}

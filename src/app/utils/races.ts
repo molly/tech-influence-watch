@@ -66,6 +66,26 @@ export const getRaceName = (
   return raceName;
 };
 
+export const getStateFromRaceId = (raceId?: string) => {
+  if (!raceId) {
+    return "";
+  }
+  const raceIdCaps = raceId.toUpperCase();
+  if (raceIdCaps === "PRESIDENT") {
+    return "";
+  }
+
+  const raceParts = raceIdCaps.split("-");
+
+  if (raceParts[0].length == 1) {
+    // Short ID, does not have state
+    return "";
+  } else {
+    // Full ID with state
+    return raceParts[0];
+  }
+};
+
 type SubraceArg = {
   type?: RaceType;
   party?: string | null;
