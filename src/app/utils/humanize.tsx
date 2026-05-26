@@ -142,6 +142,9 @@ export const pluralize = (
   return value === 1 ? singular : plural;
 };
 
+export const possessive = (term: string) =>
+  term.endsWith("s") ? `${term}’` : `${term}’s`;
+
 export function humanizeList<T>(
   values: T[],
 ): T | React.ReactElement | string | null {

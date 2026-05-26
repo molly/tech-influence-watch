@@ -49,7 +49,7 @@ export default function ContributionsGroup({
           className={styles.contributionCommittee}
           data-committee-id={contributionsGroup.committee_id}
         >
-          <MaybeLink href={recipient?.link}>
+          <MaybeLink className="unstyled" href={recipient?.link}>
             {recipient?.committee_name
               ? titlecaseCommittee(recipient.committee_name, false)
               : contributionsGroup.committee_id}
@@ -61,7 +61,9 @@ export default function ContributionsGroup({
             </>
           )}
         </span>
-        <span>{formatCurrency(contributionsGroup.total)}</span>
+        <span className={styles.summaryAmount}>
+          {formatCurrency(contributionsGroup.total)}
+        </span>
       </div>
       <CommitteeDetails
         recipient={recipient}

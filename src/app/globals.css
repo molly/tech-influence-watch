@@ -68,7 +68,7 @@
   --card-border: var(--color-neutral-300);
   --divider-color: var(--color-black);
   --map-background: var(--color-white);
-  --logo-background: var(--card-background);
+  --logo-background: #fbfaf3;
   --placeholder-color: var(--color-neutral-300);
   --table-color: var(--color-neutral-200);
   --table-header-color: var(--color-neutral-700);

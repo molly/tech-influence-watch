@@ -32,6 +32,11 @@
   font-variant-numeric: tabular-nums;
 }
 
+.summaryAmount {
+  font-variant-numeric: tabular-nums;
+  font-weight: bold;
+}
+
 .contributionCommittee {
   font-weight: bold;
 }
@@ -41,17 +46,32 @@
 }
 
 .contributionDate {
-  font-size: 1rem;
-  align-self: center;
+  font-size: 0.9rem;
   white-space-collapse: preserve;
+
+  &:not(:first-child) {
+    &::before {
+      content: " – ";
+    }
+  }
 }
 
 .committeeDetails {
-  color: var(--secondary-text);
+  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
 }
 
-.committeeDetail:not(:last-child):after {
-  content: " | ";
+.committeeDetail {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--secondary-text);
+
+  &:not(:first-child) {
+    &:before {
+      content: " · ";
+      margin: 0 0.25rem;
+    }
+  }
 }
 
 .svgWrapper {
@@ -73,4 +93,20 @@
   font-size: 0.9rem;
   font-weight: bold;
   text-align: center;
+}
+
+@media (max-width: 575px) {
+  .contributionSubRow {
+    align-items: flex-start;
+  }
+
+  .contributionDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .contributionDate:not(:first-child)::before {
+    content: "";
+  }
 }

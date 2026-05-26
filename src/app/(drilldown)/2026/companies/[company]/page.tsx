@@ -1,25 +1,62 @@
 import { Metadata } from "next";
-import Link from "next/link";
 import { Suspense } from "react";
 
 import { fetchCompany, fetchNonCandidateCommittees } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
+import { HorizontalPartyBars } from "@/app/components/home/HorizontalBars";
 import ContributionsGroup from "@/app/components/individualOrCompany/ContributionsGroup";
-import SpendingByParty from "@/app/components/individualOrCompany/SpendingByParty";
-import InformationalTooltip from "@/app/components/InformationalTooltip";
 import USMapSkeleton from "@/app/components/skeletons/USMapSkeleton";
 import sharedStyles from "@/app/shared.module.css";
 import { Company } from "@/app/types/Companies";
 import { IndividualOrCompanyContributionGroup } from "@/app/types/Contributions";
+import {
+  isMultiCandidateCommittee,
+  isSingleCandidateCommittee,
+} from "@/app/utils/committees";
 import { isError } from "@/app/utils/errors";
+import { humanizeApproximateRounded } from "@/app/utils/humanize";
 import { customMetadata } from "@/app/utils/metadata";
 import { formatCompanyName } from "@/app/utils/names";
 import { titlecase } from "@/app/utils/titlecase";
-import { formatCurrency } from "@/app/utils/utils";
 
 import CompanyHeader from "./CompanyHeader";
+import CompanySpendingBreakdown from "./CompanySpendingBreakdown";
 import CompanySpendingMap from "./CompanySpendingMap";
 import styles from "./page.module.css";
+
+type SpendingCategory = "superPac" | "party" | "candidate";
+
+// FEC committee type codes X and Y are party committees
+const PARTY_COMMITTEE_TYPES = new Set(["Y"]);
+
+function classifyGroup(
+  group: IndividualOrCompanyContributionGroup,
+  nonCandidateCommittees: Set<string>,
+): SpendingCategory {
+  const { recipient } = group;
+  const committeeType = group.contributions[0]?.committee_type;
+
+  // Check party first — party committees (DSCC, NRSC, NRCC, etc.) can have
+  // candidate_ids, so checking candidate committees first would misclassify them.
+  if (
+    recipient?.committee_type_full?.toLowerCase().includes("party") ||
+    (committeeType && PARTY_COMMITTEE_TYPES.has(committeeType))
+  ) {
+    return "party";
+  }
+  if (!recipient) {
+    return "superPac";
+  }
+  const hasBeneficiaries = Object.keys(recipient.candidate_details).length > 0;
+  if (
+    hasBeneficiaries &&
+    (isSingleCandidateCommittee(recipient, nonCandidateCommittees) ||
+      isMultiCandidateCommittee(recipient, nonCandidateCommittees))
+  ) {
+    return "candidate";
+  }
+  return "superPac";
+}
 
 export async function generateMetadata({
   params,
@@ -71,6 +108,25 @@ export default async function CompanyPage({
     0,
   );
 
+  const superPacGroups: IndividualOrCompanyContributionGroup[] = [];
+  const partyGroups: IndividualOrCompanyContributionGroup[] = [];
+  const candidateGroups: IndividualOrCompanyContributionGroup[] = [];
+
+  for (const group of visibleContributions) {
+    const category = classifyGroup(group, nonCandidateCommittees);
+    if (category === "superPac") {
+      superPacGroups.push(group);
+    } else if (category === "party") {
+      partyGroups.push(group);
+    } else {
+      candidateGroups.push(group);
+    }
+  }
+
+  const superPacTotal = superPacGroups.reduce((sum, g) => sum + g.total, 0);
+  const partyTotal = partyGroups.reduce((sum, g) => sum + g.total, 0);
+  const candidateTotal = candidateGroups.reduce((sum, g) => sum + g.total, 0);
+
   return (
     <>
       <CompanyHeader company={company} companyParam={companyParam} />
@@ -78,7 +134,16 @@ export default async function CompanyPage({
         <section className={styles.contributionSection}>
           <h2 className={sharedStyles.sectionTitle}>
             <span>Contributions</span>
-            <span>{formatCurrency(companyTotal, true)}</span>
+            <span className={sharedStyles.sectionTitleAmount}>
+              <span className={sharedStyles.sectionTitleAmountValue}>
+                ${humanizeApproximateRounded(companyTotal, 1)}
+              </span>{" "}
+              across{" "}
+              <span className={sharedStyles.sectionTitleAmountValue}>
+                {visibleContributions.length}
+              </span>{" "}
+              recipients
+            </span>
           </h2>
           {visibleContributions.length > 0 ? (
             visibleContributions.map(
@@ -104,47 +169,61 @@ export default async function CompanyPage({
             </div>
           )}
         </section>
-        <div className={sharedStyles.sideColumn}>
-          <section
-            className={`${styles.spendingByStateSection} ${sharedStyles.constrainWidth}`}
-          >
-            <div className={sharedStyles.card}>
-              <h2 id="company-spending-by-state">
-                <span>
-                  Approximate
-                  <InformationalTooltip>
-                    <p>
-                      Some committees (particularly super PACs) spend
-                      cross-state or are not associated with a specific
-                      candidate, and contributions to them are omitted from this
-                      chart.
-                    </p>
-                    <p>
-                      This relies on manual classification and so represents a
-                      conservative estimate of industry spending.
-                    </p>
-                  </InformationalTooltip>{" "}
-                  spending by state
+        <div
+          className={`${sharedStyles.sideColumn} ${sharedStyles.constrainedColumn}`}
+        >
+          <CompanySpendingBreakdown
+            companyName={company.name}
+            superPacGroups={superPacGroups}
+            partyGroups={partyGroups}
+            candidateGroups={candidateGroups}
+          />
+          <section className={sharedStyles.section}>
+            <h2 className={sharedStyles.sectionTitle} id="spending-by-party">
+              <span>Contributions by party</span>
+              <span className={sharedStyles.sectionTitleAmount}>
+                of{" "}
+                <span className={sharedStyles.sectionTitleAmountValue}>
+                  ${humanizeApproximateRounded(companyTotal, 1)}
                 </span>
-              </h2>
-              <Suspense fallback={<USMapSkeleton />}>
-                <CompanySpendingMap
-                  companyId={companyParam}
-                  labelId="company-spending-by-state"
-                />
-              </Suspense>
-            </div>
-          </section>
-          <section
-            className={`${styles.spendingByPartySection} ${sharedStyles.constrainWidth}`}
-          >
-            <h2 id="spending-by-party">Contributions by party</h2>
+              </span>
+            </h2>
             {company.party_summary && (
-              <SpendingByParty
+              <HorizontalPartyBars
                 partySummary={company.party_summary}
-                labelId="spending-by-party"
+                max={Object.values(company.party_summary).reduce(
+                  (a, b) => a + b,
+                  0,
+                )}
               />
             )}
+          </section>
+          <section
+            className={`${sharedStyles.section} ${styles.spendingByStateSection}`}
+          >
+            <h2
+              className={sharedStyles.sectionTitle}
+              id="company-spending-by-state"
+            >
+              <span>Spending by state</span>
+              <span className={sharedStyles.sectionTitleAmount}>
+                of{" "}
+                <span className={sharedStyles.sectionTitleAmountValue}>
+                  ${humanizeApproximateRounded(candidateTotal, 1)}
+                </span>{" "}
+                directly benefitting candidates
+              </span>
+            </h2>
+            <div className={sharedStyles.subtitle}>
+              Approximate. Some committee spending is cross-state or not tied to
+              a specific candidate, and is omitted here.
+            </div>
+            <Suspense fallback={<USMapSkeleton />}>
+              <CompanySpendingMap
+                companyId={companyParam}
+                labelId="company-spending-by-state"
+              />
+            </Suspense>
           </section>
         </div>
       </div>

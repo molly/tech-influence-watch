@@ -30,10 +30,14 @@ function CandidateStateAndOffice({
     details.office
   ) {
     return (
-      <MaybeLink href={details.race_link}>
-        {STATES_BY_ABBR[details.state]}{" "}
-        {getRaceName(`${details.state}-${details.office}-${details.district}`)}
-      </MaybeLink>
+      <span className={styles.committeeDetail}>
+        <MaybeLink href={details.race_link}>
+          {STATES_BY_ABBR[details.state]}{" "}
+          {getRaceName(
+            `${details.state}-${details.office}-${details.district}`,
+          )}
+        </MaybeLink>
+      </span>
     );
   } else if (
     details.state &&
@@ -75,7 +79,7 @@ function CandidateCommitteeDetails({
       </span>
       {(recipient.party || details.party) && (
         <span className={styles.committeeDetail}>
-          {getFullPartyName((recipient.party || details.party)[0], false)}
+          {getFullPartyName((recipient.party || details.party)[0], true)}
         </span>
       )}
       <CandidateStateAndOffice details={details} />
@@ -121,7 +125,7 @@ function MultiCandidateCommitteeDetails({
       </span>
       {party && (
         <span className={styles.committeeDetail}>
-          {getFullPartyName(party[0], false)}
+          {getFullPartyName(party[0], true)}
         </span>
       )}
       {races && (
@@ -161,7 +165,7 @@ export default function CommitteeDetails({
         <span className={styles.committeeDetail}>{recipient.description}</span>
         {recipient.party && (
           <span className={styles.committeeDetail}>
-            {getFullPartyName(recipient.party[0], false)}
+            {getFullPartyName(recipient.party[0], true)}
           </span>
         )}
         {recipient.designation_full &&

@@ -36,7 +36,10 @@ function Contributor({
         // Individual found in relatedIndividuals - show name (linked) and title
         return (
           <span className={styles.contributionSource}>
-            <MaybeLink href={`/2026/individuals/${individual.id}`}>
+            <MaybeLink
+              className="unstyled"
+              href={`/2026/individuals/${individual.id}`}
+            >
               {individual.name}
             </MaybeLink>
             {individual.title && (
@@ -45,7 +48,6 @@ function Contributor({
                 <span className="secondary">({individual.title})</span>
               </>
             )}
-            {" – "}
           </span>
         );
       }
@@ -85,11 +87,10 @@ function Contributor({
             </span>
           </>
         )}
-        {" – "}
       </span>
     );
   } else if (company) {
-    return <span className={styles.contributionSource}>{`${company} – `}</span>;
+    return <span className={styles.contributionSource}>{company}</span>;
   }
   return null;
 }
@@ -135,7 +136,7 @@ function ContributionAmount({
     contribution.contribution_receipt_amount
   ) {
     return (
-      <span className={isSubRow ? styles.subRowCurrency : ""}>
+      <span className={isSubRow ? styles.subRowCurrency : styles.summaryAmount}>
         {formatCurrency(contribution.contribution_receipt_amount)}
       </span>
     );
@@ -144,7 +145,7 @@ function ContributionAmount({
     contribution.total_receipt_amount
   ) {
     return (
-      <span className={isSubRow ? styles.subRowCurrency : ""}>
+      <span className={isSubRow ? styles.subRowCurrency : styles.summaryAmount}>
         {formatCurrency(contribution.total_receipt_amount)}
       </span>
     );
@@ -173,7 +174,7 @@ export default function Contribution({
   if (isSubRow) {
     return (
       <div className={styles.contributionSubRow}>
-        <div>
+        <div className={styles.contributionDetails}>
           <Contributor
             contribution={contribution}
             company={company}
@@ -194,7 +195,9 @@ export default function Contribution({
             className={styles.contributionCommittee}
             data-committee-id={contribution.committee_id}
           >
-            <MaybeLink href={recipient?.link}>{formattedName}</MaybeLink>
+            <MaybeLink className="unstyled" href={recipient?.link}>
+              {formattedName}
+            </MaybeLink>
             {"claimed" in contribution && contribution.claimed && <Claimed />}
           </span>
           <ContributionAmount contribution={contribution} />
@@ -203,7 +206,7 @@ export default function Contribution({
           recipient={recipient}
           nonCandidateCommittees={nonCandidateCommittees}
         />
-        <div>
+        <div className={styles.contributionDetails}>
           <Contributor
             contribution={contribution}
             company={company}

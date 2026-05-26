@@ -312,6 +312,11 @@ export const fetchCommitteeDetails = cache(
 // Fetch inter-committee transfer graph for tracked committees
 export const fetchCommitteeTransferGraph = cache(
   async (sector: Sector = "all"): Promise<TransferEdge[] | ErrorType> => {
+    return {
+      error: true,
+      message:
+        "This endpoint is currently disabled while we investigate data discrepancies",
+    } as ErrorType;
     const [contributionsData, committeeConstants] = await Promise.all([
       fetchCollection("contributions"),
       fetchConstant<Record<string, CommitteeConstant>>("committees"),
@@ -320,7 +325,10 @@ export const fetchCommitteeTransferGraph = cache(
       return contributionsData as ErrorType;
     }
     if (!committeeConstants) {
-      return { error: true, message: "Committee constants not found" } as ErrorType;
+      return {
+        error: true,
+        message: "Committee constants not found",
+      } as ErrorType;
     }
     const trackedIds = new Set(
       Object.entries(committeeConstants)
@@ -332,7 +340,12 @@ export const fetchCommitteeTransferGraph = cache(
     );
     const docs = contributionsData as DocumentData[];
 
-    type EdgeAccum = { fromId: string; toId: string; amount: number; seen: Set<string> };
+    type EdgeAccum = {
+      fromId: string;
+      toId: string;
+      amount: number;
+      seen: Set<string>;
+    };
     const edgeMap = new Map<string, EdgeAccum>();
 
     for (const docSnap of docs) {
