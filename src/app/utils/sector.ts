@@ -1,5 +1,6 @@
 import { CommitteeConstant } from "../types/Committee";
 import { CompanyConstant } from "../types/Companies";
+import { IndividualConstant } from "../types/Individuals";
 import { BESector, Sector } from "../types/Sector";
 
 const SECTOR_LABELS: Record<Sector, string> = {
@@ -66,7 +67,10 @@ export function sectorHref(path: string, sector: Sector): string {
  * Backend sector "tech" means the entity spans all sectors and should appear
  * in both "crypto" and "ai" filtered views.
  */
-function matchesSector(entitySector: BESector | undefined, sector: Sector): boolean {
+function matchesSector(
+  entitySector: BESector | undefined,
+  sector: Sector,
+): boolean {
   if (entitySector === "tech") {
     return true; // tech appears in all sector views
   }
@@ -99,4 +103,29 @@ export function getCompanyIdsForSector(
       .filter(([, c]) => matchesSector(c.sector, sector))
       .map(([id]) => id),
   );
+}
+
+export function getSectorsForIndividual(
+  individual: IndividualConstant,
+  companyConstants: Record<string, CompanyConstant>,
+): BESector[] {
+  if (individual.sector) {
+    return [individual.sector];
+  } else if (!individual.company) {
+    return [];
+  }
+  return [
+    ...new Set(
+      individual.company
+        .map(
+          (companyString) =>
+            (
+              Object.values(companyConstants).find(
+                (cc) => cc.name === companyString,
+              ) ?? {}
+            ).sector,
+        )
+        .filter((x) => x !== undefined),
+    ),
+  ];
 }

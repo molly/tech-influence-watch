@@ -1,7 +1,9 @@
+import { CompanyConstant } from "./Companies";
 import {
   IndividualOrCompanyContribution,
   IndividualOrCompanyContributionGroup,
 } from "./Contributions";
+import { BESector } from "./Sector";
 
 export interface IndividualConstant {
   name: string;
@@ -11,6 +13,12 @@ export interface IndividualConstant {
   photoCredit?: string;
   sector?: import("./Sector").BESector;
 }
+
+export type IndividualListData = IndividualConstant & {
+  total: number;
+  companyDetails: CompanyConstant[];
+  allSectors: BESector[];
+};
 
 export type IndividualTotalByIndividual = {
   by_party: Record<string, number>;

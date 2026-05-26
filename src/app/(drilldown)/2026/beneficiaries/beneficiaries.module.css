@@ -1,16 +1,3 @@
-/* Page two-column layout */
-.columns {
-  composes: columns from "@/app/shared.module.css";
-}
-
-.mainColumn {
-  composes: mainColumn from "@/app/shared.module.css";
-}
-
-.sideColumn {
-  composes: sideColumn from "@/app/shared.module.css";
-}
-
 /* Top recipient cards */
 
 .topCardsGrid {

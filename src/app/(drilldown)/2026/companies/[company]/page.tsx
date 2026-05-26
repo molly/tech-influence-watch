@@ -3,8 +3,14 @@ import { Suspense } from "react";
 
 import { fetchCompany, fetchNonCandidateCommittees } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
-import { HorizontalPartyBars } from "@/app/components/home/HorizontalBars";
-import ContributionsGroup from "@/app/components/individualOrCompany/ContributionsGroup";
+import {
+  HorizontalBarsSkeleton,
+  HorizontalPartyBars,
+} from "@/app/components/home/HorizontalBars";
+import ContributionsGroup, {
+  ContributionsGroupSkeleton,
+} from "@/app/components/individualOrCompany/ContributionsGroup";
+import Skeleton from "@/app/components/skeletons/Skeleton";
 import USMapSkeleton from "@/app/components/skeletons/USMapSkeleton";
 import sharedStyles from "@/app/shared.module.css";
 import { Company } from "@/app/types/Companies";
@@ -17,17 +23,15 @@ import { isError } from "@/app/utils/errors";
 import { humanizeApproximateRounded } from "@/app/utils/humanize";
 import { customMetadata } from "@/app/utils/metadata";
 import { formatCompanyName } from "@/app/utils/names";
+import { range } from "@/app/utils/range";
 import { titlecase } from "@/app/utils/titlecase";
 
-import CompanyHeader from "./CompanyHeader";
+import CompanyHeader, { CompanyHeaderSkeleton } from "./CompanyHeader";
 import CompanySpendingBreakdown from "./CompanySpendingBreakdown";
 import CompanySpendingMap from "./CompanySpendingMap";
 import styles from "./page.module.css";
 
 type SpendingCategory = "superPac" | "party" | "candidate";
-
-// FEC committee type codes X and Y are party committees
-const PARTY_COMMITTEE_TYPES = new Set(["Y"]);
 
 function classifyGroup(
   group: IndividualOrCompanyContributionGroup,
@@ -40,7 +44,7 @@ function classifyGroup(
   // candidate_ids, so checking candidate committees first would misclassify them.
   if (
     recipient?.committee_type_full?.toLowerCase().includes("party") ||
-    (committeeType && PARTY_COMMITTEE_TYPES.has(committeeType))
+    (committeeType && committeeType === "Y")
   ) {
     return "party";
   }
@@ -71,6 +75,34 @@ export async function generateMetadata({
     title: companyName,
     description: `Election spending by ${companyName} and related individuals.`,
   });
+}
+
+function ContributionsSectionSkeleton() {
+  return (
+    <section className={styles.contributionSection}>
+      <h2 className={sharedStyles.sectionTitle}>
+        <span>Contributions</span>
+        <span className={sharedStyles.sectionTitleAmount}>
+          <Skeleton width="11rem" />
+        </span>
+      </h2>
+      {range(5).map((i) => (
+        <ContributionsGroupSkeleton key={`cg-skeleton-${i}`} />
+      ))}
+    </section>
+  );
+}
+
+function ContributionsByPartySkeleton() {
+  return (
+    <section className={sharedStyles.section}>
+      <h2 className={sharedStyles.sectionTitle} id="spending-by-party">
+        <span>Contributions by party</span>
+        <Skeleton width="5rem" />
+      </h2>
+      <HorizontalBarsSkeleton numBars={3} />
+    </section>
+  );
 }
 
 export default async function CompanyPage({
@@ -123,96 +155,102 @@ export default async function CompanyPage({
     }
   }
 
-  const superPacTotal = superPacGroups.reduce((sum, g) => sum + g.total, 0);
-  const partyTotal = partyGroups.reduce((sum, g) => sum + g.total, 0);
   const candidateTotal = candidateGroups.reduce((sum, g) => sum + g.total, 0);
 
   return (
     <>
-      <CompanyHeader company={company} companyParam={companyParam} />
+      <Suspense fallback={<CompanyHeaderSkeleton />}>
+        <CompanyHeader company={company} companyParam={companyParam} />
+      </Suspense>
       <div className={`${sharedStyles.main} ${sharedStyles.columns}`}>
-        <section className={styles.contributionSection}>
-          <h2 className={sharedStyles.sectionTitle}>
-            <span>Contributions</span>
-            <span className={sharedStyles.sectionTitleAmount}>
-              <span className={sharedStyles.sectionTitleAmountValue}>
-                ${humanizeApproximateRounded(companyTotal, 1)}
-              </span>{" "}
-              across{" "}
-              <span className={sharedStyles.sectionTitleAmountValue}>
-                {visibleContributions.length}
-              </span>{" "}
-              recipients
-            </span>
-          </h2>
-          {visibleContributions.length > 0 ? (
-            visibleContributions.map(
-              (
-                contributionGroup: IndividualOrCompanyContributionGroup,
-                ind: number,
-              ) => {
-                return (
-                  <ContributionsGroup
-                    key={`contrib-group-${ind}`}
-                    contributionsGroup={contributionGroup}
-                    recipient={contributionGroup.recipient}
-                    company={company.name}
-                    relatedIndividuals={company.relatedIndividuals}
-                    nonCandidateCommittees={nonCandidateCommittees}
-                  />
-                );
-              },
-            )
-          ) : (
-            <div className={`secondary ${styles.contributionRow}`}>
-              No contributions yet.
-            </div>
-          )}
-        </section>
+        <Suspense fallback={<ContributionsSectionSkeleton />}>
+          <section className={styles.contributionSection}>
+            <h2 className={sharedStyles.sectionTitle}>
+              <span>Contributions</span>
+              <span className={sharedStyles.sectionTitleAmount}>
+                <span className={sharedStyles.sectionTitleAmountValue}>
+                  ${humanizeApproximateRounded(companyTotal, 1)}
+                </span>{" "}
+                across{" "}
+                <span className={sharedStyles.sectionTitleAmountValue}>
+                  {visibleContributions.length}
+                </span>{" "}
+                recipients
+              </span>
+            </h2>
+            {visibleContributions.length > 0 ? (
+              visibleContributions.map(
+                (
+                  contributionGroup: IndividualOrCompanyContributionGroup,
+                  ind: number,
+                ) => {
+                  return (
+                    <ContributionsGroup
+                      key={`contrib-group-${ind}`}
+                      contributionsGroup={contributionGroup}
+                      recipient={contributionGroup.recipient}
+                      company={company.name}
+                      relatedIndividuals={company.relatedIndividuals}
+                      nonCandidateCommittees={nonCandidateCommittees}
+                    />
+                  );
+                },
+              )
+            ) : (
+              <div className={`secondary ${styles.contributionRow}`}>
+                No contributions yet.
+              </div>
+            )}
+          </section>
+        </Suspense>
         <div
           className={`${sharedStyles.sideColumn} ${sharedStyles.constrainedColumn}`}
         >
-          <CompanySpendingBreakdown
-            companyName={company.name}
-            superPacGroups={superPacGroups}
-            partyGroups={partyGroups}
-            candidateGroups={candidateGroups}
-          />
-          <section className={sharedStyles.section}>
-            <h2 className={sharedStyles.sectionTitle} id="spending-by-party">
-              <span>Contributions by party</span>
-              <span className={sharedStyles.sectionTitleAmount}>
-                of{" "}
-                <span className={sharedStyles.sectionTitleAmountValue}>
-                  ${humanizeApproximateRounded(companyTotal, 1)}
+          <Suspense fallback={null}>
+            <CompanySpendingBreakdown
+              companyName={company.name}
+              superPacGroups={superPacGroups}
+              partyGroups={partyGroups}
+              candidateGroups={candidateGroups}
+            />
+          </Suspense>
+          <Suspense fallback={<ContributionsByPartySkeleton />}>
+            <section className={sharedStyles.section}>
+              <h2 className={sharedStyles.sectionTitle} id="spending-by-party">
+                <span>Contributions by party</span>
+                <span className={sharedStyles.sectionTitleAmount}>
+                  of{" "}
+                  <span className={sharedStyles.sectionTitleAmountValue}>
+                    ${humanizeApproximateRounded(companyTotal, 1)}
+                  </span>
                 </span>
-              </span>
-            </h2>
-            {company.party_summary && (
-              <HorizontalPartyBars
-                partySummary={company.party_summary}
-                max={Object.values(company.party_summary).reduce(
-                  (a, b) => a + b,
-                  0,
-                )}
-              />
-            )}
-          </section>
-          <section
-            className={`${sharedStyles.section} ${styles.spendingByStateSection}`}
-          >
+              </h2>
+              {company.party_summary && (
+                <HorizontalPartyBars
+                  partySummary={company.party_summary}
+                  max={Object.values(company.party_summary).reduce(
+                    (a, b) => a + b,
+                    0,
+                  )}
+                />
+              )}
+            </section>
+          </Suspense>
+          <section className={sharedStyles.section}>
             <h2
               className={sharedStyles.sectionTitle}
               id="company-spending-by-state"
             >
               <span>Spending by state</span>
-              <span className={sharedStyles.sectionTitleAmount}>
-                of{" "}
-                <span className={sharedStyles.sectionTitleAmountValue}>
-                  ${humanizeApproximateRounded(candidateTotal, 1)}
-                </span>{" "}
-                directly benefitting candidates
-              </span>
+              <Suspense fallback={<Skeleton width="10rem" />}>
+                <span className={sharedStyles.sectionTitleAmount}>
+                  of{" "}
+                  <span className={sharedStyles.sectionTitleAmountValue}>
+                    ${humanizeApproximateRounded(candidateTotal, 1)}
+                  </span>{" "}
+                  directly benefitting candidates
+                </span>
+              </Suspense>
             </h2>
             <div className={sharedStyles.subtitle}>
               Approximate. Some committee spending is cross-state or not tied to

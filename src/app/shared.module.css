@@ -39,6 +39,10 @@
 .heroWithStat {
   display: grid;
   grid-template-columns: 1fr 20rem;
+
+  .headerSubtitle {
+    margin-right: 1rem;
+  }
 }
 
 .titleH2 {
@@ -387,6 +391,12 @@
   font-size: 0.7rem;
   color: var(--secondary-text);
   white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .columns {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 575px) {

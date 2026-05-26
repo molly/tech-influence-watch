@@ -125,7 +125,7 @@
     --card-border: var(--color-neutral-700);
     --money-card-border: var(--color-neutral-300);
     --map-background: var(--card-background);
-    --logo-background: var(--color-neutral-400);
+    --logo-background: #1a1814;
     --placeholder-color: var(--color-neutral-700);
     --table-color: var(--color-neutral-700);
     --table-header-color: var(--color-neutral-400);

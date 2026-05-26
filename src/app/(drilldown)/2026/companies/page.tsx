@@ -144,7 +144,9 @@ function CompanyListGroup({
         return (
           <div key={id} className={styles.companyRow}>
             <div className={styles.companyName} title={companies[id].name}>
-              <Link href={`/2026/companies/${id}`}>{companies[id].name}</Link>
+              <Link className="unstyled" href={`/2026/companies/${id}`}>
+                {companies[id].name}
+              </Link>
               {showCryptoBadge && (
                 <span className={sharedStyles.sectorBadge}>crypto</span>
               )}

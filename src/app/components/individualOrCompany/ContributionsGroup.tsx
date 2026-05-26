@@ -4,13 +4,44 @@ import {
   RecipientDetails,
 } from "@/app/types/Contributions";
 import { IndividualConstant } from "@/app/types/Individuals";
+import { range } from "@/app/utils/range";
 import { titlecaseCommittee } from "@/app/utils/titlecase";
 import { formatCurrency } from "@/app/utils/utils";
 
+import Skeleton from "../skeletons/Skeleton";
 import Claimed from "./Claimed";
 import CommitteeDetails from "./CommitteeDetails";
 import Contribution from "./Contribution";
 import styles from "./individualOrCompany.module.css";
+
+export function ContributionsGroupSkeleton() {
+  return (
+    <div className={styles.contributionRow}>
+      <div className={styles.contributionSummary}>
+        <span className={styles.contributionCommittee}>
+          <Skeleton randWidth={[3, 20]} />
+        </span>
+        <span className={styles.summaryAmount}>
+          <Skeleton width="8rem" />
+        </span>
+      </div>
+      <Skeleton randWidth={[10, 25]} height="0.9rem" />
+      <div className={styles.contributionsContainer}>
+        {range(5).map((i) => (
+          <div key={`cgc-${i}`} className={styles.contributionSubRow}>
+            <div className={styles.contributionDetails}>
+              <Skeleton randWidth={[6, 18]} />
+            </div>
+
+            <div className={styles.subRowCurrency}>
+              <Skeleton width="7rem" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function ContributionsGroup({
   contributionsGroup,
