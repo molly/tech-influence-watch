@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Suspense } from "react";
 
 import {
@@ -10,6 +9,7 @@ import {
 } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import MaybeLink from "@/app/components/MaybeLink";
+import Pagination from "@/app/components/Pagination";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import COMMITTEES from "@/app/data/committees";
 import sharedStyles from "@/app/shared.module.css";
@@ -171,44 +171,6 @@ function buildPageHref(
   return `?${sp.toString()}`;
 }
 
-function Pagination({
-  page,
-  totalPages,
-  params,
-}: {
-  page: number;
-  totalPages: number;
-  params: { sector?: string; sort?: string; type?: string };
-}) {
-  if (totalPages <= 1) {
-    return null;
-  }
-  return (
-    <div className={styles.pagination}>
-      {page > 1 ? (
-        <Link href={buildPageHref(page - 1, params)} className={styles.pageBtn}>
-          ← Previous
-        </Link>
-      ) : (
-        <span className={`${styles.pageBtn} ${styles.pageBtnDisabled}`}>
-          ← Previous
-        </span>
-      )}
-      <span className={styles.pageInfo}>
-        Page {page} of {totalPages}
-      </span>
-      {page < totalPages ? (
-        <Link href={buildPageHref(page + 1, params)} className={styles.pageBtn}>
-          Next →
-        </Link>
-      ) : (
-        <span className={`${styles.pageBtn} ${styles.pageBtnDisabled}`}>
-          Next →
-        </span>
-      )}
-    </div>
-  );
-}
 
 export default async function BeneficiariesList({
   searchParams,
@@ -369,7 +331,19 @@ export default async function BeneficiariesList({
               <Pagination
                 page={clampedPage}
                 totalPages={totalPages}
-                params={{ sector: rawSector, sort, type }}
+                totalItems={sorted.length}
+                pageSize={PAGE_SIZE}
+                itemLabel="recipients"
+                sortLabel={
+                  sort === "name"
+                    ? "name"
+                    : sort === "recent"
+                      ? "most recent contributions"
+                      : "total industry contributions"
+                }
+                hrefs={Array.from({ length: totalPages }, (_, i) =>
+                  buildPageHref(i + 1, { sector: rawSector, sort, type }),
+                )}
               />
             </Suspense>
           </section>

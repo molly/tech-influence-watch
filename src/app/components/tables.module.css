@@ -228,6 +228,12 @@
     font-size: 0.9em;
   }
 
+  @media (prefers-color-scheme: dark) {
+    .influencedTableRow .outcomeCol {
+      background: var(--color-neutral-800);
+    }
+  }
+
   .outcomeContent .no-wrap {
     font-style: italic;
     color: var(--secondary-text);
@@ -257,7 +263,7 @@
   .mobileGoalOutcome {
     display: block;
     margin-top: 0.25rem;
-    font-size: 0.85em;
+    font-size: 1em;
   }
 
   .skeletonExtra {
@@ -296,7 +302,9 @@
     padding-top: 1.2rem;
   }
 
-  .influencedTableRow:has(.supportCol.noValue):has(.opposeCol.noValue) .otherCol {
+  .influencedTableRow:has(.supportCol.noValue):has(.opposeCol.noValue)
+    .otherCol,
+  .influencedTableRow:not(:has(.supportCol)) .otherCol {
     padding-top: 1.2rem;
   }
 

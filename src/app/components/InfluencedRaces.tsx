@@ -1,20 +1,25 @@
-"use client";
-
 import Link from "next/link";
+import { Suspense } from "react";
 
 import styles from "@/app/components/tables.module.css";
 import sharedStyles from "@/app/shared.module.css";
 import { type Sector } from "@/app/types/Sector";
 import { humanizeSector, sectorHref } from "@/app/utils/sector";
 
-import InfluencedRacesContents from "./InfluencedRacesContents";
+import InfluencedRacesContents, {
+  InfluencedRacesContentsSkeleton,
+} from "./InfluencedRacesContents";
 
 export default function InfluencedRaces({
   sector,
   fullPage = false,
+  page = 1,
+  rawSector,
 }: {
   sector: Sector;
   fullPage?: boolean;
+  page?: number;
+  rawSector?: string;
 }) {
   const sectorText = humanizeSector(sector, {
     context: "industry",
@@ -26,10 +31,14 @@ export default function InfluencedRaces({
       <h2
         className={sharedStyles.sectionTitle}
       >{`${fullPage ? "R" : "Top r"}aces influenced by ${sectorText} super PAC money`}</h2>
-      <InfluencedRacesContents
-        fullPage={fullPage}
-        sector={sector}
-      />
+      <Suspense fallback={<InfluencedRacesContentsSkeleton fullPage={fullPage} />}>
+        <InfluencedRacesContents
+          fullPage={fullPage}
+          sector={sector}
+          page={page}
+          rawSector={rawSector}
+        />
+      </Suspense>
       {!fullPage && (
         <div className={styles.viewMoreLinks}>
           <Link

@@ -1,0 +1,93 @@
+.paginationBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0 0.75rem;
+  flex-wrap: wrap;
+}
+
+.info {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.875rem;
+  color: var(--secondary-text);
+  margin: 0;
+}
+
+.info strong {
+  font-style: normal;
+  color: var(--main-text);
+  font-weight: 700;
+}
+
+.pageButtons {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--divider-color);
+}
+
+.pageBtn {
+  min-width: 2rem;
+  height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 0;
+  cursor: pointer;
+  text-decoration: none;
+  padding: 0 0.4rem;
+  background: none;
+  border: none;
+  border-right: 1px solid var(--table-color);
+  color: var(--main-text);
+  white-space: nowrap;
+}
+
+.pageButtons > .pageBtn:last-child,
+.pageButtons > .ellipsis:last-child {
+  border-right: none;
+}
+
+.pageBtn:hover {
+  background: var(--color-neutral-100);
+  text-decoration: none;
+}
+
+.pageBtnActive {
+  background: var(--main-text);
+  color: var(--background);
+  border-color: var(--main-text);
+  pointer-events: none;
+}
+
+.pageBtnDisabled {
+  color: var(--secondary-text);
+  border-color: var(--table-color);
+  cursor: default;
+  pointer-events: none;
+}
+
+.ellipsis {
+  min-width: 2rem;
+  height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  color: var(--secondary-text);
+  border-right: 1px solid var(--table-color);
+}
+
+@media (prefers-color-scheme: dark) {
+  .pageBtn:hover {
+    background: var(--color-neutral-700);
+  }
+
+  .pageBtnActive {
+    background: var(--main-text);
+    color: var(--background);
+  }
+}

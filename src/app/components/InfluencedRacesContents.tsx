@@ -1,5 +1,8 @@
 import Link from "next/link";
-import { useEffect, useState } from "react";
+
+import Pagination from "./Pagination";
+
+const PAGE_SIZE = 20;
 
 import {
   fetchAllStateElections,
@@ -14,7 +17,7 @@ import {
   ExpenditureCandidateSummary,
   ExpendituresByCandidate,
 } from "@/app/types/Expenditures";
-import { ErrorType, isError } from "@/app/utils/errors";
+import { isError } from "@/app/utils/errors";
 import { getRaceName, getUpcomingRaceForCandidate } from "@/app/utils/races";
 import { range } from "@/app/utils/range";
 import { formatCurrency } from "@/app/utils/utils";
@@ -30,31 +33,11 @@ import InformationalTooltip from "./InformationalTooltip";
 import Outcome from "./Outcome";
 import Skeleton from "./skeletons/Skeleton";
 
-function computeSectorTotals(
-  candidateName: string,
-  state: string,
-  race: string,
-  raceDetails: Record<string, ElectionsByState>,
-  committeeIds: Set<string>,
-): { support: number; oppose: number } {
-  const raceSpending = raceDetails[state]?.[race]?.spending ?? {};
-  let support = 0;
-  let oppose = 0;
-  for (const [committeeId, spending] of Object.entries(raceSpending)) {
-    if (committeeIds.has(committeeId)) {
-      for (const subraceSpending of Object.values(spending.subraces)) {
-        const candidateSpending = subraceSpending.candidates[candidateName];
-        if (candidateSpending) {
-          support += candidateSpending.support;
-          oppose += candidateSpending.oppose;
-        }
-      }
-    }
-  }
-  return { support, oppose };
-}
-
-function InfluencedRacesContentsSkeleton({ fullPage }: { fullPage: boolean }) {
+export function InfluencedRacesContentsSkeleton({
+  fullPage,
+}: {
+  fullPage: boolean;
+}) {
   return range(fullPage ? 20 : 5).map((i) => (
     <div key={`influenced-race-skeleton-${i}`} className={styles.influencedRow}>
       <CandidateSkeleton onCard={true} />
@@ -299,64 +282,41 @@ function CandidateRow({
   );
 }
 
-export default function InfluencedRacesContents({
+function buildPageHref(p: number, rawSector?: string) {
+  const sp = new URLSearchParams();
+  if (rawSector) {
+    sp.set("sector", rawSector);
+  }
+  if (p > 1) {
+    sp.set("electionsPage", String(p));
+  }
+  const str = sp.toString();
+  return str ? `?${str}` : "?";
+}
+
+export default async function InfluencedRacesContents({
   fullPage = false,
   sector = "all",
+  page = 1,
+  rawSector,
 }: {
   fullPage?: boolean;
   sector?: Sector;
+  page?: number;
+  rawSector?: string;
 }) {
-  const [expenditures, setExpenditures] = useState<
-    ExpendituresByCandidate | ErrorType
-  >({
-    order: [],
-    candidates: {},
-  });
-  const [raceDetailsData, setRaceDetails] = useState<
-    Record<string, ElectionsByState> | ErrorType | null
-  >();
-  const [beneficiaries, setBeneficiaries] = useState<Record<
-    string,
-    Beneficiary
-  > | null>();
-  const [committeeConstants, setCommitteeConstants] = useState<Record<
-    string,
-    CommitteeConstant
-  > | null>(null);
+  const fetchLimit = sector === "all" && !fullPage ? 5 : undefined;
+  const [expenditureData, raceData, beneficiariesData, committeeData] =
+    await Promise.all([
+      fetchCandidateExpenditures(fetchLimit),
+      fetchAllStateElections(),
+      fetchBeneficiaries(sector),
+      sector !== "all"
+        ? fetchConstant<Record<string, CommitteeConstant>>("committees")
+        : Promise.resolve(null),
+    ]);
 
-  useEffect(() => {
-    setCommitteeConstants(null); // eslint-disable-line react-hooks/set-state-in-effect
-    (async function () {
-      const fetchLimit = sector === "all" && !fullPage ? 5 : undefined;
-      const [expenditureData, raceData, beneficiariesData, committeeData] =
-        await Promise.all([
-          fetchCandidateExpenditures(fetchLimit),
-          fetchAllStateElections(),
-          fetchBeneficiaries(sector),
-          sector !== "all"
-            ? fetchConstant<Record<string, CommitteeConstant>>("committees")
-            : Promise.resolve(null),
-        ]);
-      setExpenditures(expenditureData);
-      setRaceDetails(raceData);
-      setBeneficiaries(
-        isError(beneficiariesData)
-          ? {}
-          : (beneficiariesData as Record<string, Beneficiary>),
-      );
-      setCommitteeConstants(
-        sector !== "all" && !isError(committeeData)
-          ? (committeeData as Record<string, CommitteeConstant>)
-          : null,
-      );
-    })();
-  }, [fullPage, sector]);
-
-  if (!raceDetailsData || (sector !== "all" && !committeeConstants)) {
-    return <InfluencedRacesContentsSkeleton fullPage={fullPage} />;
-  }
-
-  if (isError(expenditures) || isError(raceDetailsData)) {
+  if (isError(expenditureData) || isError(raceData)) {
     return (
       <div className={sharedStyles.errorCardContentStandalone}>
         <ErrorText subject="the list of races" />
@@ -364,8 +324,15 @@ export default function InfluencedRacesContents({
     );
   }
 
-  const { order, candidates } = expenditures as ExpendituresByCandidate;
-  const raceDetails = raceDetailsData as Record<string, ElectionsByState>;
+  const { order, candidates } = expenditureData as ExpendituresByCandidate;
+  const raceDetails = raceData as Record<string, ElectionsByState>;
+  const beneficiaries = isError(beneficiariesData)
+    ? {}
+    : (beneficiariesData as Record<string, Beneficiary>);
+  const committeeConstants =
+    sector !== "all" && !isError(committeeData)
+      ? (committeeData as Record<string, CommitteeConstant>)
+      : null;
 
   let rows: string[];
   let displayCandidates: Record<string, ExpenditureCandidateSummary>;
@@ -376,19 +343,13 @@ export default function InfluencedRacesContents({
     const filtered: Record<string, ExpenditureCandidateSummary> = {};
     for (const name of order) {
       const candidate = candidates[name];
-      const { support, oppose } = computeSectorTotals(
-        name,
-        candidate.state,
-        candidate.race,
-        raceDetails,
-        committeeIds,
+      const raceSpending =
+        raceDetails[candidate.state]?.[candidate.race]?.spending ?? {};
+      const hasSectorSpending = Object.keys(raceSpending).some((id) =>
+        committeeIds.has(id),
       );
-      if (support > 0 || oppose > 0) {
-        filtered[name] = {
-          ...candidate,
-          support_total: support,
-          oppose_total: oppose,
-        };
+      if (hasSectorSpending) {
+        filtered[name] = candidate;
       }
     }
     rows = Object.keys(filtered).sort((a, b) => {
@@ -405,7 +366,12 @@ export default function InfluencedRacesContents({
     displayCandidates = candidates;
   }
 
-  const contents = rows.map((candidateName) => {
+  const totalPages = fullPage ? Math.ceil(rows.length / PAGE_SIZE) : 1;
+  const displayRows = fullPage
+    ? rows.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+    : rows;
+
+  const contents = displayRows.map((candidateName) => {
     const candidate = displayCandidates[candidateName];
     const beneficiary =
       beneficiaries && candidate.candidate_id
@@ -422,49 +388,64 @@ export default function InfluencedRacesContents({
   });
 
   return (
-    <table className={styles.influencedTable}>
-      <thead className={styles.inheritBorderRadius}>
-        <tr className={styles.influencedTableHeader}>
-          <th className="text-cell">Candidate</th>
-          <th className="center-cell">State</th>
-          <th className="center-cell small-cell">Office</th>
-          <th className="number-cell">Support</th>
-          <th className="number-cell">Oppose</th>
-          <th className="small-cell center-cell">
-            Direct{" "}
-            <span className="no-wrap">
-              contributions
-              <InformationalTooltip>
-                <p>
-                  Contributions from cryptocurrency industry companies or
-                  associated individuals to this candidate or aligned
-                  committees, which have not gone through the crypto-focused
-                  super PACs.
-                </p>
-                <p>
-                  This relies on manual classification and so represents a
-                  conservative estimate of industry spending.
-                </p>
-              </InformationalTooltip>
-            </span>
-          </th>
-          <th className="small-cell center-cell">
-            Goal{" "}
-            <span className="no-wrap">
-              achieved?
-              <InformationalTooltip>
-                <span>
-                  The PACs&rsquo; goal is considered to have been achieved if a
-                  candidate they supported won their election, or if a candidate
-                  they opposed lost.
-                </span>
-              </InformationalTooltip>
-            </span>
-          </th>
-          <th className="long-text-cell">Outcome</th>
-        </tr>
-      </thead>
-      <tbody className={styles.inheritBorderRadius}>{contents}</tbody>
-    </table>
+    <>
+      <table className={styles.influencedTable}>
+        <thead className={styles.inheritBorderRadius}>
+          <tr className={styles.influencedTableHeader}>
+            <th className="text-cell">Candidate</th>
+            <th className="center-cell">State</th>
+            <th className="center-cell small-cell">Office</th>
+            <th className="number-cell">Support</th>
+            <th className="number-cell">Oppose</th>
+            <th className="small-cell center-cell">
+              Direct{" "}
+              <span className="no-wrap">
+                contributions
+                <InformationalTooltip>
+                  <p>
+                    Contributions from cryptocurrency industry companies or
+                    associated individuals to this candidate or aligned
+                    committees, which have not gone through the crypto-focused
+                    super PACs.
+                  </p>
+                  <p>
+                    This relies on manual classification and so represents a
+                    conservative estimate of industry spending.
+                  </p>
+                </InformationalTooltip>
+              </span>
+            </th>
+            <th className="small-cell center-cell">
+              Goal{" "}
+              <span className="no-wrap">
+                achieved?
+                <InformationalTooltip>
+                  <span>
+                    The PACs&rsquo; goal is considered to have been achieved if
+                    a candidate they supported won their election, or if a
+                    candidate they opposed lost.
+                  </span>
+                </InformationalTooltip>
+              </span>
+            </th>
+            <th className="long-text-cell">Outcome</th>
+          </tr>
+        </thead>
+        <tbody className={styles.inheritBorderRadius}>{contents}</tbody>
+      </table>
+      {fullPage && (
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          totalItems={rows.length}
+          pageSize={PAGE_SIZE}
+          itemLabel="races"
+          sortLabel="total super PAC spending"
+          hrefs={Array.from({ length: totalPages }, (_, i) =>
+            buildPageHref(i + 1, rawSector),
+          )}
+        />
+      )}
+    </>
   );
 }
