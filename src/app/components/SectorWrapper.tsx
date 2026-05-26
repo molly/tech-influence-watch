@@ -12,7 +12,6 @@ const SECTOR_PATHS = [
   "/2026/contributions",
   "/2026/elections",
   "/2026/expenditures",
-  "/2026/individuals",
   "/2026/quidproquo",
   "/2026/spending",
   "/2026/states",
@@ -20,7 +19,8 @@ const SECTOR_PATHS = [
 
 export default function SectorWrapper() {
   const pathname = usePathname();
-  const isExactTopLevelPath = /^\/2026\/(committees|companies)\/?$/.test(pathname);
+  const isExactTopLevelPath =
+    /^\/2026\/(committees|companies|individuals)\/?$/.test(pathname);
   const showSector =
     isExactTopLevelPath ||
     SECTOR_PATHS.some((p) => pathname === p || pathname.startsWith(p + "/"));

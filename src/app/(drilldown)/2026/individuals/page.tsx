@@ -19,12 +19,9 @@ import {
 import { isError } from "@/app/utils/errors";
 import { humanizeRoundedCurrency } from "@/app/utils/humanize";
 import { customMetadata } from "@/app/utils/metadata";
-import {
-  getSectorsForIndividual,
-  humanizeSector,
-  parseSector,
-} from "@/app/utils/sector";
+import { humanizeSector, parseSector } from "@/app/utils/sector";
 
+import { hydrateIndividualConstant } from "./individuals.utils";
 import IndividualsList, { IndividualsListSkeleton } from "./IndividualsList";
 
 export const metadata: Metadata = customMetadata({
@@ -88,21 +85,9 @@ export default async function IndividualsPage({
   const individuals: IndividualListData[] = Object.values(
     data as Record<string, IndividualConstant>,
   )
-    .map((individual) => ({
-      ...individual,
-      companyDetails: individual.company
-        ? (individual.company
-            .map(
-              (companyString) =>
-                Object.values(companyConstants).find(
-                  (cc) => cc.name === companyString,
-                ) ?? {},
-            )
-            .filter((cc) => cc !== undefined) as CompanyConstant[])
-        : [],
-      allSectors: getSectorsForIndividual(individual, companyConstants),
-      total: individualTotalsArray[individual.id]?.total || 0,
-    }))
+    .map((i) =>
+      hydrateIndividualConstant(i, individualTotalsArray, companyConstants),
+    )
     .filter(
       (individual) =>
         individual.total > 0 &&

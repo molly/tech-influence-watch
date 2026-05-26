@@ -6,18 +6,20 @@ import { IndividualOrCompanyContributionGroup } from "@/app/types/Contributions"
 import { humanizeApproximateRounded, possessive } from "@/app/utils/humanize";
 import { titlecaseCommittee } from "@/app/utils/titlecase";
 
-import styles from "./page.module.css";
+import styles from "./individualOrCompany.module.css";
 
 export default function CompanySpendingBreakdown({
-  companyName,
+  name,
   superPacGroups,
   partyGroups,
   candidateGroups,
+  hasMap = true,
 }: {
-  companyName: string;
+  name: string;
   superPacGroups: IndividualOrCompanyContributionGroup[];
   partyGroups: IndividualOrCompanyContributionGroup[];
   candidateGroups: IndividualOrCompanyContributionGroup[];
+  hasMap?: boolean;
 }) {
   const superPacTotal = superPacGroups.reduce((sum, g) => sum + g.total, 0);
   const partyTotal = partyGroups.reduce((sum, g) => sum + g.total, 0);
@@ -33,7 +35,7 @@ export default function CompanySpendingBreakdown({
     .sort((a, b) => b.total - a.total)[0];
   const total = superPacTotal + partyTotal + candidateTotal;
 
-  if (total === 0) {
+  if (superPacTotal === 0) {
     return null;
   }
 
@@ -46,13 +48,12 @@ export default function CompanySpendingBreakdown({
       className={`${styles.spendingBreakdownSection} ${sharedStyles.scopeCard}`}
     >
       <h2 className={styles.breakdownTitle}>
-        Where {possessive(companyName)} ${humanizeApproximateRounded(total, 1)}{" "}
-        went
+        Where {possessive(name)} ${humanizeApproximateRounded(total, 1)} went
       </h2>
       <div
         className={styles.breakdownBar}
         role="img"
-        aria-label={`${companyName} spending breakdown: ${Math.round(superPacPct)}% Super PACs, ${Math.round(partyPct)}% Party committees, ${Math.round(candidatePct)}% benefitting specific candidates`}
+        aria-label={`${name} spending breakdown: ${Math.round(superPacPct)}% Super PACs, ${Math.round(partyPct)}% Party committees, ${Math.round(candidatePct)}% benefitting specific candidates`}
       >
         {superPacTotal > 0 && (
           <div
@@ -109,8 +110,8 @@ export default function CompanySpendingBreakdown({
           <div
             className={styles.breakdownNoteHighlight}
           >{`$${humanizeApproximateRounded(superPacTotal, 1)} (${Math.round(superPacPct)}%) went to super PACs.`}</div>
-          Partisan super PACs are classified by party below; super PACs that
-          genuinely cross party lines
+          Partisan PACs are classified by party below. PACs that genuinely cross
+          party lines
           {topNonPartisanSuperPac?.recipient?.committee_name && (
             <>
               {" "}
@@ -129,14 +130,18 @@ export default function CompanySpendingBreakdown({
               )
             </>
           )}{" "}
-          are classified as non-partisan / unknown. None of this money is in the
-          state map&nbsp;&mdash; super PAC contributions aren&rsquo;t tied to a
-          state until the PAC spends them. To learn more about a super
-          PAC&rsquo;s spending, click on a{" "}
-          <Link href="/2026/committees" className="unstyled">
-            tracked super PAC
-          </Link>
-          .
+          are classified as non-partisan / unknown.
+          {hasMap && (
+            <span>
+              None of this money is in the state map&nbsp;&mdash; such
+              contributions aren&rsquo;t tied to a state until the PAC spends
+              them. To learn more about a PAC&rsquo;s spending, click on a{" "}
+              <Link href="/2026/committees" className="unstyled">
+                tracked super PAC
+              </Link>
+              .
+            </span>
+          )}
         </div>
       )}
     </section>

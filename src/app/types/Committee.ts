@@ -112,3 +112,5 @@ export type TransferEdge = {
   toName: string;
   amount: number;
 };
+
+export type SpendingCategory = "superPac" | "party" | "candidate";

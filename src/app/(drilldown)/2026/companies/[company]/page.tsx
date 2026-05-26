@@ -10,15 +10,13 @@ import {
 import ContributionsGroup, {
   ContributionsGroupSkeleton,
 } from "@/app/components/individualOrCompany/ContributionsGroup";
+import SpendingScope from "@/app/components/individualOrCompany/SpendingScope";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import USMapSkeleton from "@/app/components/skeletons/USMapSkeleton";
 import sharedStyles from "@/app/shared.module.css";
 import { Company } from "@/app/types/Companies";
 import { IndividualOrCompanyContributionGroup } from "@/app/types/Contributions";
-import {
-  isMultiCandidateCommittee,
-  isSingleCandidateCommittee,
-} from "@/app/utils/committees";
+import { classifyGroup } from "@/app/utils/committees";
 import { isError } from "@/app/utils/errors";
 import { humanizeApproximateRounded } from "@/app/utils/humanize";
 import { customMetadata } from "@/app/utils/metadata";
@@ -27,40 +25,8 @@ import { range } from "@/app/utils/range";
 import { titlecase } from "@/app/utils/titlecase";
 
 import CompanyHeader, { CompanyHeaderSkeleton } from "./CompanyHeader";
-import CompanySpendingBreakdown from "./CompanySpendingBreakdown";
 import CompanySpendingMap from "./CompanySpendingMap";
 import styles from "./page.module.css";
-
-type SpendingCategory = "superPac" | "party" | "candidate";
-
-function classifyGroup(
-  group: IndividualOrCompanyContributionGroup,
-  nonCandidateCommittees: Set<string>,
-): SpendingCategory {
-  const { recipient } = group;
-  const committeeType = group.contributions[0]?.committee_type;
-
-  // Check party first — party committees (DSCC, NRSC, NRCC, etc.) can have
-  // candidate_ids, so checking candidate committees first would misclassify them.
-  if (
-    recipient?.committee_type_full?.toLowerCase().includes("party") ||
-    (committeeType && committeeType === "Y")
-  ) {
-    return "party";
-  }
-  if (!recipient) {
-    return "superPac";
-  }
-  const hasBeneficiaries = Object.keys(recipient.candidate_details).length > 0;
-  if (
-    hasBeneficiaries &&
-    (isSingleCandidateCommittee(recipient, nonCandidateCommittees) ||
-      isMultiCandidateCommittee(recipient, nonCandidateCommittees))
-  ) {
-    return "candidate";
-  }
-  return "superPac";
-}
 
 export async function generateMetadata({
   params,
@@ -116,7 +82,11 @@ export default async function CompanyPage({
     fetchNonCandidateCommittees(),
   ]);
   if (isError(companyData)) {
-    return <ErrorText subject="company data" />;
+    return (
+      <div className={sharedStyles.main}>
+        <ErrorText subject="information about this company" />
+      </div>
+    );
   }
   const company = companyData as Company;
 
@@ -207,8 +177,8 @@ export default async function CompanyPage({
           className={`${sharedStyles.sideColumn} ${sharedStyles.constrainedColumn}`}
         >
           <Suspense fallback={null}>
-            <CompanySpendingBreakdown
-              companyName={company.name}
+            <SpendingScope
+              name={company.name}
               superPacGroups={superPacGroups}
               partyGroups={partyGroups}
               candidateGroups={candidateGroups}

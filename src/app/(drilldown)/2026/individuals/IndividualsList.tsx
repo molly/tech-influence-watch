@@ -3,10 +3,11 @@ import Link from "next/link";
 
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import { IndividualListData } from "@/app/types/Individuals";
-import { humanizeList, humanizeRoundedCurrency } from "@/app/utils/humanize";
+import { humanizeRoundedCurrency } from "@/app/utils/humanize";
 import { range } from "@/app/utils/range";
 
 import listStyles from "../listStyles.module.css";
+import CompanyLinks from "./CompanyLinks";
 import styles from "./IndividualsList.module.css";
 
 export function IndividualsListSkeleton() {
@@ -33,55 +34,6 @@ export function IndividualsListSkeleton() {
         </div>
       ))}
     </div>
-  );
-}
-
-function CompanyLinks({ individual }: { individual: IndividualListData }) {
-  const companyEls = [];
-  if (!individual.company || individual.company.length === 0) {
-    return null;
-  }
-  const sectors = new Set(
-    individual.companyDetails
-      .map((cd) => cd.sector)
-      .filter((s) => s !== undefined),
-  );
-  const isOneSector = sectors.size === 1;
-  for (let c of individual.company) {
-    const details = individual.companyDetails.find((cd) => cd.name === c);
-    if (details) {
-      const link = (
-        <Link
-          className="unstyled"
-          href={`/2026/companies/${details.id}`}
-          key={`${individual.id}-${details.id}`}
-        >
-          {details.name}
-        </Link>
-      );
-      if (isOneSector || details.sector === "tech") {
-        companyEls.push(link);
-      } else {
-        companyEls.push(
-          <span className={styles.companyWithBadge}>
-            {link} <span className={styles.sectorBadge}>{details.sector}</span>
-          </span>,
-        );
-      }
-    } else {
-      companyEls.push(c);
-    }
-  }
-  if (!companyEls.length) {
-    return null;
-  }
-  return (
-    <span className={styles.company}>
-      {humanizeList(companyEls)}{" "}
-      {sectors.size === 1 && [...sectors][0] !== "tech" && (
-        <span className={styles.sectorBadge}>{[...sectors][0]}</span>
-      )}
-    </span>
   );
 }
 
@@ -132,7 +84,11 @@ export default async function IndividualsList({
                         associated with{" "}
                       </span>
                     )}
-                    <CompanyLinks individual={individual} />
+                    <CompanyLinks
+                      individual={individual}
+                      className={styles.company}
+                      showBadge={true}
+                    />
                   </span>
                 )}
               </div>

@@ -312,11 +312,6 @@ export const fetchCommitteeDetails = cache(
 // Fetch inter-committee transfer graph for tracked committees
 export const fetchCommitteeTransferGraph = cache(
   async (sector: Sector = "all"): Promise<TransferEdge[] | ErrorType> => {
-    return {
-      error: true,
-      message:
-        "This endpoint is currently disabled while we investigate data discrepancies",
-    } as ErrorType;
     const [contributionsData, committeeConstants] = await Promise.all([
       fetchCollection("contributions"),
       fetchConstant<Record<string, CommitteeConstant>>("committees"),

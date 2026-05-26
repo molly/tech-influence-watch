@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import Breadcrumbs from "@/app/components/Breadcrumbs";
+import { CompanyBadges } from "@/app/components/individualOrCompany/Badges";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import sharedStyles from "@/app/shared.module.css";
 import { Company } from "@/app/types/Companies";
@@ -44,7 +45,13 @@ export default function CompanyHeader({
   return (
     <div className={sharedStyles.fullWidthHeader}>
       <section className={sharedStyles.header}>
-        <Breadcrumbs crumbs={["Spending", "Companies"]} />
+        <Breadcrumbs
+          crumbs={[
+            "Spending",
+            { name: "Companies", href: "/2026/companies" },
+            company.name,
+          ]}
+        />
         <div className={styles.companyHeader}>
           <div className={styles.companyLogoWrapper}>
             <Image
@@ -59,6 +66,7 @@ export default function CompanyHeader({
             {company.name}
           </h1>
           <div className={`${styles.companyDetails}`}>
+            <CompanyBadges name={company.name} sector={company.sector} />
             {company.country && company.country}
             {company.relatedIndividuals.length > 0 && (
               <>

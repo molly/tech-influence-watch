@@ -1,30 +1,42 @@
-.page {
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column-reverse;
-  gap: 1rem;
-  width: 100%;
-  padding: 0 1rem;
+.main {
+  composes: main from "@/app/shared.module.css";
+  max-width: 100rem;
+}
+
+.header {
+  composes: header from "@/app/shared.module.css";
+  margin-bottom: 2rem;
+}
+
+.heroWithStat {
+  composes: heroWithStat from "@/app/shared.module.css";
 }
 
 .imageAndName {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  width: 100%;
+  display: grid;
+  grid-template-columns: auto 1fr;
   gap: 1rem;
-  text-align: center;
-  padding: 0 1rem;
 }
 
 .imageAndAttribution {
   display: flex;
   flex-direction: column;
-  align-items: center;
+}
+
+.individualImageWrapper {
+  position: relative;
+  width: 10rem;
+  height: 10rem;
+}
+
+.individualImage {
+  object-fit: cover;
 }
 
 .attribution {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--secondary-text);
   font-size: 0.7rem;
 }
 
@@ -35,19 +47,10 @@
   align-items: center;
 }
 
-.individualImageWrapper {
-  position: relative;
-  width: 20rem;
-  height: 10rem;
-}
-
-.individualImage {
-  object-fit: contain;
-}
-
-.individualName {
-  composes: titleH3 from "@/app/shared.module.css";
-  margin: 0;
+.individualDescription {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--secondary-text);
 }
 
 .plainList {
@@ -68,30 +71,6 @@
   margin-top: 1rem;
 }
 
-.contributionCardHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.contributionCardSwitcher {
-  font-size: 0.8rem;
-  padding: 0.5rem 1rem;
-}
-
-.contributionSection {
-  composes: card from "@/app/shared.module.css";
-  width: 100%;
-  padding: 1rem 0;
-}
-
-.contributionSectionHeader {
-  padding: 0 1rem;
-  font-size: 1.5rem;
-  margin-bottom: 0;
-}
-
 .spendingWrapper {
   composes: constrainedWrapper from "@/app/shared.module.css";
 }
@@ -103,36 +82,13 @@
   padding: 1rem;
 }
 
-@media (min-width: 576px) {
-  .imageAndName {
-    flex-direction: row;
-    gap: 2rem;
-    text-align: left;
+@media (max-width: 768px) {
+  .heroWithStat {
+    grid-template-columns: 1fr;
   }
 
-  .descriptionSkeleton {
-    align-items: flex-start;
-  }
-
-  .individualName {
-    text-align: left;
-  }
-
-  .individualImage {
+  .moneyCard {
+    margin-top: 1rem;
     max-width: 20rem;
-  }
-}
-
-@media (min-width: 1000px) {
-  .page {
-    flex-direction: row;
-  }
-
-  .contributionSection {
-    width: 66%;
-  }
-
-  .spendingWrapper {
-    width: 33%;
   }
 }

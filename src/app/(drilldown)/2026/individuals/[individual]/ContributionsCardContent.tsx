@@ -4,14 +4,18 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 
 import Contribution from "@/app/components/individualOrCompany/Contribution";
-import ContributionsGroup from "@/app/components/individualOrCompany/ContributionsGroup";
+import ContributionsGroup, {
+  ContributionsGroupSkeleton,
+} from "@/app/components/individualOrCompany/ContributionsGroup";
+import Skeleton from "@/app/components/skeletons/Skeleton";
+import sharedStyles from "@/app/shared.module.css";
 import {
   IndividualOrCompanyContributionGroup,
   RecipientDetails,
 } from "@/app/types/Contributions";
 import { IndividualContributions } from "@/app/types/Individuals";
-
-import styles from "./page.module.css";
+import { humanizeApproximateRounded } from "@/app/utils/humanize";
+import { range } from "@/app/utils/range";
 
 function ByDate({
   individual,
@@ -60,12 +64,30 @@ function ByRecipient({
   );
 }
 
+export function ContributionsCardSkeleton() {
+  return (
+    <section>
+      <h2 className={sharedStyles.sectionTitle}>
+        <span>Contributions</span>
+        <span className={sharedStyles.sectionTitleAmount}>
+          <Skeleton width="11rem" />
+        </span>
+      </h2>
+      {range(5).map((i) => (
+        <ContributionsGroupSkeleton key={`cg-skeleton-${i}`} />
+      ))}
+    </section>
+  );
+}
+
 export default function ContributionsCardContent({
   individual,
   nonCandidateCommittees: nonCandidateCommitteesArray = [],
+  totalContributionAmount,
 }: {
   individual: IndividualContributions;
   nonCandidateCommittees?: string[];
+  totalContributionAmount: number;
 }) {
   const nonCandidateCommittees = new Set(nonCandidateCommitteesArray);
   const searchParams = useSearchParams();
@@ -79,22 +101,69 @@ export default function ContributionsCardContent({
   );
 
   return (
-    <>
-      <div className={styles.contributionCardHeader}>
-        <h3 className={styles.contributionSectionHeader}>Contributions</h3>
+    <section>
+      <h2 className={sharedStyles.sectionTitle}>
+        Contributions
+        <span className={sharedStyles.sectionTitleAmount}>
+          <span className={sharedStyles.sectionTitleAmountValue}>
+            ${humanizeApproximateRounded(totalContributionAmount, 1)}
+          </span>{" "}
+          across{" "}
+          <span className={sharedStyles.sectionTitleAmountValue}>
+            {individual.contributions.length}
+          </span>{" "}
+          recipients
+        </span>
+      </h2>
+      <div className={sharedStyles.inlineSortControls}>
+        <span className={sharedStyles.inlineSortLabel}>Sort by</span>
         <Link
-          href={`${pathname}/${sort === "recipient" ? "?sort=date" : ""}`}
-          className={styles.contributionCardSwitcher}
+          href={pathname}
+          className={
+            sort !== "date"
+              ? sharedStyles.inlineSortOptionActive
+              : sharedStyles.inlineSortOption
+          }
         >
-          {`Sort by ${sort === "date" ? "recipient" : "date"}`}
+          Recipient
+          {sort !== "date" && (
+            <>
+              {" "}
+              <span className={sharedStyles.inlineSortArrow}>↓</span>
+            </>
+          )}
+        </Link>
+        <span className={sharedStyles.inlineSortSeparator}>·</span>
+        <Link
+          href={`${pathname}?sort=date`}
+          className={
+            sort === "date"
+              ? sharedStyles.inlineSortOptionActive
+              : sharedStyles.inlineSortOption
+          }
+        >
+          Date
+          {sort === "date" && (
+            <>
+              {" "}
+              <span className={sharedStyles.inlineSortArrow}>↓</span>
+            </>
+          )}
         </Link>
       </div>
       {sort === "recipient" && (
-        <ByRecipient individual={individual} nonCandidateCommittees={nonCandidateCommittees} />
+        <ByRecipient
+          individual={individual}
+          nonCandidateCommittees={nonCandidateCommittees}
+        />
       )}
       {sort === "date" && (
-        <ByDate individual={individual} recipientsByCommitteeId={recipientsByCommitteeId} nonCandidateCommittees={nonCandidateCommittees} />
+        <ByDate
+          individual={individual}
+          recipientsByCommitteeId={recipientsByCommitteeId}
+          nonCandidateCommittees={nonCandidateCommittees}
+        />
       )}
-    </>
+    </section>
   );
 }

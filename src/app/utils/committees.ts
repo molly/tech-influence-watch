@@ -1,4 +1,8 @@
-import { RecipientDetails } from "@/app/types/Contributions";
+import { SpendingCategory } from "@/app/types/Committee";
+import {
+  IndividualOrCompanyContributionGroup,
+  RecipientDetails,
+} from "@/app/types/Contributions";
 
 export function getUniqueCandidateIds(recipient: RecipientDetails) {
   // If a candidate has run for multiple offices, sometimes they end up duplicated in candidate_ids
@@ -94,4 +98,33 @@ export function getDesignation(designation_full: string | undefined) {
   } else {
     return ` ${designation_full[0].toLowerCase() + designation_full.slice(1)}`;
   }
+}
+
+export function classifyGroup(
+  group: IndividualOrCompanyContributionGroup,
+  nonCandidateCommittees: Set<string>,
+): SpendingCategory {
+  const { recipient } = group;
+  const committeeType = group.contributions[0]?.committee_type;
+
+  // Check party first — party committees (DSCC, NRSC, NRCC, etc.) can have
+  // candidate_ids, so checking candidate committees first would misclassify them.
+  if (
+    recipient?.committee_type_full?.toLowerCase().includes("party") ||
+    (committeeType && committeeType === "Y")
+  ) {
+    return "party";
+  }
+  if (!recipient) {
+    return "superPac";
+  }
+  const hasBeneficiaries = Object.keys(recipient.candidate_details).length > 0;
+  if (
+    hasBeneficiaries &&
+    (isSingleCandidateCommittee(recipient, nonCandidateCommittees) ||
+      isMultiCandidateCommittee(recipient, nonCandidateCommittees))
+  ) {
+    return "candidate";
+  }
+  return "superPac";
 }

@@ -69,6 +69,7 @@
   --divider-color: var(--color-black);
   --map-background: var(--color-white);
   --logo-background: #fbfaf3;
+  --scope-background: #fbfaf3;
   --placeholder-color: var(--color-neutral-300);
   --table-color: var(--color-neutral-200);
   --table-header-color: var(--color-neutral-700);
@@ -125,7 +126,7 @@
     --card-border: var(--color-neutral-700);
     --money-card-border: var(--color-neutral-300);
     --map-background: var(--card-background);
-    --logo-background: #1a1814;
+    --scope-background: #1e1b16;
     --placeholder-color: var(--color-neutral-700);
     --table-color: var(--color-neutral-700);
     --table-header-color: var(--color-neutral-400);

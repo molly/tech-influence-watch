@@ -127,6 +127,8 @@
   font-size: 0.9rem;
   border: 1px solid var(--money-card-border);
   box-shadow: 6px 6px var(--color-lime-600);
+  margin-bottom: 6px; /* Avoids overflow outside of bounding box */
+  margin-right: 6px;
 }
 
 .smallCardError {
@@ -141,7 +143,7 @@
 }
 
 .scopeCard {
-  background-color: var(--logo-background);
+  background-color: var(--scope-background);
   border: 1px solid var(--card-border);
 }
 
@@ -170,6 +172,8 @@
 .sectorBadge {
   background-color: var(--color-black);
   color: var(--color-white);
+  font-family: var(--font-sans);
+  font-style: normal;
   font-size: 0.6rem;
   text-transform: uppercase;
   padding: 0.1rem 0.25rem;

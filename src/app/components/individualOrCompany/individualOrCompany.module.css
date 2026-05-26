@@ -29,6 +29,10 @@
   font-size: 0.9rem;
 }
 
+.contributionDetails {
+  font-size: 0.9rem;
+}
+
 .subRowCurrency {
   font-variant-numeric: tabular-nums;
 }
@@ -94,6 +98,126 @@
   font-size: 0.9rem;
   font-weight: bold;
   text-align: center;
+}
+
+.spendingBreakdownSection {
+  composes: card from "@/app/shared.module.css";
+  border: 1px solid var(--card-border);
+  width: 100%;
+}
+
+.breakdownTitle {
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.breakdownBar {
+  display: flex;
+  height: 2rem;
+  width: 100%;
+  gap: 2px;
+  margin-bottom: 1rem;
+}
+
+.breakdownBarSegment {
+  height: 100%;
+  flex-shrink: 0;
+}
+
+.superPacBarSegment {
+  background-color: var(--color-lime-800);
+}
+
+.partyBarSegment {
+  background-color: var(--color-lime-600);
+}
+
+.candidateBarSegment {
+  background-color: var(--color-lime-500);
+}
+
+.breakdownColumns {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.breakdownColumn {
+  border-top: 3px solid transparent;
+  padding-top: 0.5rem;
+}
+
+.superPacColumn {
+  border-top-color: var(--color-lime-800);
+}
+
+.partyColumn {
+  border-top-color: var(--color-lime-600);
+}
+
+.candidateColumn {
+  border-top-color: var(--color-lime-500);
+}
+
+.breakdownLabel {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--secondary-text);
+  margin-bottom: 0.25rem;
+}
+
+.breakdownAmount {
+  font-weight: 800;
+  margin-bottom: 0.25rem;
+}
+
+.breakdownDetails {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.8rem;
+  color: var(--secondary-text);
+  line-height: 1.4;
+}
+
+.breakdownNoteHighlight {
+  font-family: var(--font-sans);
+  font-style: normal;
+  font-weight: 700;
+  color: var(--main-text);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.breakdownNote {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--secondary-text);
+  border-top: 1px solid var(--card-border);
+  padding-top: 0.75rem;
+  margin-bottom: 0;
+}
+
+.badges {
+  margin-bottom: 0.75rem;
+}
+
+.sectorBadge {
+  composes: sectorBadge from "@/app/shared.module.css";
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.3rem 0.6rem;
+  margin-left: 0;
+
+  & ~ .sectorBadge {
+    margin-left: 0.5rem;
+  }
 }
 
 @media (max-width: 575px) {
