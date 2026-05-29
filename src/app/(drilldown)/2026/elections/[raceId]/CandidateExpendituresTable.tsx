@@ -49,11 +49,10 @@ export default function CandidateExpendituresTable({
   return (
     <table className={styles.candidateExpendituresTable}>
       <thead>
-        <tr>
+        <tr className={styles.candidateExpendituresHeader}>
           <th></th>
           <th className="number-cell">Support</th>
           <th className="number-cell">Oppose</th>
-          <th></th>
         </tr>
       </thead>
       <tbody>

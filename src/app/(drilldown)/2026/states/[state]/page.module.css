@@ -41,11 +41,6 @@
   gap: inherit;
 }
 
-.committeeCard,
-.priorCycleCard {
-  composes: card from "@/app/shared.module.css";
-}
-
 .cardSection {
   padding-bottom: 2rem;
 }

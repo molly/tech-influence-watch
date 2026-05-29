@@ -31,8 +31,8 @@ function Embed({ url }: { url: string }) {
   return (
     <iframe
       className={styles.adEmbed}
-      width="560"
-      height="315"
+      width="160"
+      height="100"
       src={url}
       title="YouTube video player"
       allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -66,62 +66,68 @@ export default function GoogleAd({
   }
   return (
     <div className={styles.adGroup}>
-      <h3 className="no-margin">
+      <span className={styles.adHeaderName}>
         <Link href={`/2026/committees/${ad.fec_id}`}>{name}</Link>
-      </h3>
-      <div>
-        {ad.date_range_start && ad.date_range_end && (
-          <div>
-            <b>Shown:</b> {formatDateFromString(ad.date_range_start)} &ndash;{" "}
-            {formatDateFromString(ad.date_range_end)}
+      </span>
+      <div className={styles.adContent}>
+        {ad.videoUrl && (
+          <div className={styles.adEmbedGroup}>
+            <Embed url={ad.videoUrl} />
           </div>
         )}
-        {ad.videoUrl && <Embed url={ad.videoUrl} />}
-        {(ad.extraDetails || ad.coverage) && (
-          <div className={styles.adDetailsWrapper}>
-            {ad.extraDetails && (
-              <span
-                className={styles.adDetails}
-                dangerouslySetInnerHTML={{ __html: ad.extraDetails }}
-              />
-            )}{" "}
-            {ad.coverage && ad.coverage.length && (
-              <span className={styles.adDetails}>
-                News coverage:{" "}
-                {ad.coverage.map((source) => (
-                  <a key={source.href} href={source.href}>
-                    <i>{source.publisher}</i>
-                  </a>
-                ))}
-              </span>
-            )}
-          </div>
-        )}
-        {(cost || ad.impressions) && (
-          <div className={styles.adDetailsWrapper}>
-            {cost && (
-              <span className={styles.adDetails}>
-                <b>
-                  Cost to run:
-                  <InformationalTooltip>
-                    <span>
-                      This is the amount paid to Google to serve the ad, but
-                      does not include other costs (such as production costs).
-                    </span>
-                  </InformationalTooltip>
-                </b>{" "}
-                {cost}
-              </span>
-            )}
-            {ad.impressions && (
-              <span className={styles.adDetails}>
-                <b>Impressions:</b> {formatImpressions(ad.impressions)}
-              </span>
-            )}
-          </div>
-        )}
+        <div className={styles.adDetailsGroup}>
+          {ad.date_range_start && ad.date_range_end && (
+            <div>
+              <b>Shown:</b> {formatDateFromString(ad.date_range_start)} &ndash;{" "}
+              {formatDateFromString(ad.date_range_end)}
+            </div>
+          )}
+          {(ad.extraDetails || ad.coverage) && (
+            <div className={styles.adDetailsWrapper}>
+              {ad.extraDetails && (
+                <span
+                  className={styles.adDetails}
+                  dangerouslySetInnerHTML={{ __html: ad.extraDetails }}
+                />
+              )}{" "}
+              {ad.coverage && ad.coverage.length && (
+                <span className={styles.adDetails}>
+                  News coverage:{" "}
+                  {ad.coverage.map((source) => (
+                    <a key={source.href} href={source.href}>
+                      <i>{source.publisher}</i>
+                    </a>
+                  ))}
+                </span>
+              )}
+            </div>
+          )}
+          {(cost || ad.impressions) && (
+            <div className={styles.adDetailsWrapper}>
+              {cost && (
+                <span className={styles.adDetails}>
+                  <b>
+                    Cost to run:
+                    <InformationalTooltip>
+                      <span>
+                        This is the amount paid to Google to serve the ad, but
+                        does not include other costs (such as production costs).
+                      </span>
+                    </InformationalTooltip>
+                  </b>{" "}
+                  {cost}
+                </span>
+              )}
+              {ad.impressions && (
+                <span className={styles.adDetails}>
+                  <b>Impressions:</b> {formatImpressions(ad.impressions)}
+                </span>
+              )}
+            </div>
+          )}
+        </div>
       </div>
-      <a href={ad.ad_url}>
+      <a className={styles.moreDetails} href={ad.ad_url}>
         <span>More details in Google&rsquo;s Ad Transparency Center</span>
       </a>
     </div>

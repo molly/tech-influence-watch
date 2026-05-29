@@ -1,6 +1,9 @@
+import sharedStyles from "@/app/shared.module.css";
 import { ElectionGroup, Party, Race, RaceType } from "@/app/types/Elections";
 import { PopulatedRaceExpenditureGroup } from "@/app/types/Expenditures";
+import { Sector } from "@/app/types/Sector";
 import { getSubraceName, isUpcomingRace } from "@/app/utils/races";
+import { humanizeSector } from "@/app/utils/sector";
 import { titlecase } from "@/app/utils/titlecase";
 import { formatDateFromString, isUpcomingDate } from "@/app/utils/utils";
 
@@ -13,26 +16,42 @@ function RaceDate({ race }: { race: Race }) {
     return null;
   }
   if (isUpcomingDate(race.date, { inclusive: true })) {
-    return <span>Upcoming on {formatDateFromString(race.date)}.</span>;
+    return (
+      <span>
+        Upcoming on{" "}
+        <span className={sharedStyles.sectionTitleAmountValue}>
+          {formatDateFromString(race.date)}
+        </span>
+      </span>
+    );
   }
-  return <span>Held on {formatDateFromString(race.date)}.</span>;
+  return (
+    <span>
+      Held on{" "}
+      <span className={sharedStyles.sectionTitleAmountValue}>
+        {formatDateFromString(race.date)}
+      </span>
+    </span>
+  );
 }
 
 export default function RaceSummary({
+  sector,
+  sectorCommitteeIds,
   race,
   electionData,
   expenditures,
   upcomingRaces,
 }: {
+  sector: Sector;
+  sectorCommitteeIds: Set<string> | null;
   race: Race;
   electionData: ElectionGroup;
   expenditures: PopulatedRaceExpenditureGroup | null;
   upcomingRaces: Race[];
 }) {
   const raceType = race.type;
-  const relatedExpenditures = expenditures
-    ? expenditures.expenditures.filter((e) => e.subrace === raceType)
-    : [];
+
   const candidates = [...race.candidates].sort((a, b) => {
     const wonA = a.won === true ? 1 : 0;
     const wonB = b.won === true ? 1 : 0;
@@ -51,10 +70,43 @@ export default function RaceSummary({
   const candidateSummaries = candidates.map(
     (c) => electionData.candidates[c.name] || {},
   );
+
+  const raceCandidateIds = race.party
+    ? (candidates
+        .map((c) => electionData.candidates[c.name]?.candidate_id)
+        .filter(Boolean) as string[])
+    : null;
+
+  const sameRaceTypeExpenditures = expenditures
+    ? expenditures.expenditures.filter(
+        (e) =>
+          e.subrace === raceType &&
+          (sectorCommitteeIds === null ||
+            sectorCommitteeIds.has(String(e.committee_id))),
+      )
+    : [];
+  const relatedExpenditures = raceCandidateIds
+    ? sameRaceTypeExpenditures.filter(
+        (e) =>
+          e.candidate_id != null &&
+          raceCandidateIds.some((id) => id.includes(e.candidate_id!)),
+      )
+    : sameRaceTypeExpenditures;
+
   const hasRelatedSpending = relatedExpenditures.length > 0;
-  const hasSpendingInOtherRaces = candidateSummaries.filter(
-    (c) => c.support_total > 0 || c.oppose_total > 0,
-  );
+  const hasSameRaceOtherPartySpending =
+    race.party != null &&
+    relatedExpenditures.length === 0 &&
+    sameRaceTypeExpenditures.length > 0;
+  const hasSpendingInOtherRaces = candidateSummaries.filter((c) => {
+    if (sectorCommitteeIds === null) {
+      return c.support_total > 0 || c.oppose_total > 0;
+    }
+    return (
+      c.expenditure_committees?.some((id) => sectorCommitteeIds.has(id)) ??
+      false
+    );
+  });
   const isRaceUpcoming = isUpcomingRace(race, true) as boolean;
 
   // Collect presumptive nominees: candidates already marked won:true in an upcoming race
@@ -101,22 +153,36 @@ export default function RaceSummary({
           .map((c) => c.party ?? electionData.candidates[c.name]?.party)
           .filter((p): p is Party => !!p),
       );
-      intermediateRaces = upcomingRaces.slice(1).filter(
-        (r) =>
-          !r.party ||
-          (!presumptiveParties.has(r.party) &&
-            !generalCandidateParties.has(r.party)),
-      );
+      intermediateRaces = upcomingRaces
+        .slice(1)
+        .filter(
+          (r) =>
+            !r.party ||
+            (!presumptiveParties.has(r.party) &&
+              !generalCandidateParties.has(r.party)),
+        );
     }
   }
 
   return (
-    <div className={styles.raceSummary}>
+    <div>
       <div className={styles.raceSummaryDetails}>
-        <h3 className="no-margin">{titlecase(getSubraceName(race))}</h3>
-        <RaceDate race={race} />
+        <h2 className={sharedStyles.sectionTitle}>
+          {titlecase(getSubraceName(race))}
+          <span className={sharedStyles.sectionTitleAmount}>
+            <RaceDate race={race} />
+          </span>
+        </h2>
       </div>
-      <h4>Spending by cryptocurrency-focused PACs</h4>
+      <span className={sharedStyles.subtitle}>
+        Spending by{" "}
+        {humanizeSector(sector, {
+          hyphen: true,
+          abbrev: true,
+          lowercase: true,
+        })}
+        focused PACs
+      </span>
       {!hasRelatedSpending && (
         <RaceCandidates
           candidates={candidates}
@@ -126,6 +192,8 @@ export default function RaceSummary({
           isRaceUpcoming={isRaceUpcoming}
           presumptiveCandidateNames={presumptiveCandidateNames}
           intermediateRaces={intermediateRaces}
+          sector={sector}
+          hasSameRaceOtherPartySpending={hasSameRaceOtherPartySpending}
         />
       )}
 

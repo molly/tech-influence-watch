@@ -1,13 +1,6 @@
 .columns {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: center;
-  max-width: var(--max-width);
-  width: 100%;
-  margin: 0 auto;
-  gap: 1rem;
-  padding: 0 1rem;
+  composes: main from "@/app/shared.module.css";
+  composes: columns from "@/app/shared.module.css";
 }
 
 .headerWrapper {
@@ -15,22 +8,13 @@
   justify-self: flex-start;
 }
 
-.electionsColumn,
-.rightColumn {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  /* min-width: 30rem;
-  max-width: 60rem; */
-  gap: 1rem;
-}
-
-.rightColumn {
-  max-width: 40rem;
-}
-
 .electionsColumn {
-  composes: cardWithTable from "@/app/shared.module.css";
+  composes: mainColumn from "@/app/shared.module.css";
+}
+
+.rightColumn {
+  composes: sideColumn from "@/app/shared.module.css";
+  min-width: 35rem;
 }
 
 .electionsColumnHeader {
@@ -38,29 +22,17 @@
   padding: 1rem 1rem 0 1rem;
 }
 
-.raceSummary {
-  padding: 1rem;
-
-  &:nth-child(even) {
-    background-color: var(--table-background-secondary);
-  }
-
-  &:not(:last-child) {
-    margin-bottom: 1rem;
-  }
-
-  &:last-child {
-    border-bottom-left-radius: var(--border-radius);
-    border-bottom-right-radius: var(--border-radius);
-  }
-}
-
 .raceSummaryDetails {
   margin-bottom: 1rem;
 }
 
 .candidateExpendituresTable {
+  font-size: 0.9rem;
   width: 100%;
+}
+
+.candidateExpendituresHeader {
+  font-size: 0.75rem;
 }
 
 .candidateRow {
@@ -71,10 +43,35 @@
   width: 60%;
 }
 
+.spendingAmount {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.nullPlaceholder {
+  color: var(--secondary-text);
+  font-weight: normal;
+}
+
+.resultNote {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--secondary-text);
+  font-size: 0.9rem;
+}
+
 .noSpendingCell {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--secondary-text);
+  font-size: 0.9rem;
   vertical-align: middle;
   text-align: center;
   padding: 1rem;
+}
+
+.electionCandidateName {
+  font-size: 0.9rem;
 }
 
 .wonCandidateName {
@@ -82,15 +79,16 @@
 }
 
 .defeatedCandidateName {
-  font-style: italic;
   text-decoration: line-through;
 }
 
-/* Spending */
-.spendingCard {
-  composes: card from "@/app/shared.module.css";
+.errorText {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--secondary-text);
 }
 
+/* Spending */
 .xlFont {
   font-size: 0.5rem !important;
 }
@@ -101,7 +99,7 @@
   align-items: center;
   justify-content: flex-end;
   text-align: right;
-  font-size: 0.4rem;
+  font-size: 0.3rem;
 }
 
 .candidateLabelName {
@@ -115,11 +113,12 @@
   display: flex;
   align-items: center;
   height: 100%;
-  font-size: 0.4rem;
+  font-size: 0.3rem;
   overflow: visible;
 }
 
-.cryptoSpendingLabel {
+.cryptoSpendingLabel,
+.aiSpendingLabel {
   fill: transparent;
 }
 
@@ -128,6 +127,7 @@
 }
 
 .gridLabel {
+  font-size: 0.3rem;
   fill: var(--main-text);
 }
 
@@ -146,11 +146,11 @@
 }
 
 .outside_supportBar {
-  fill: var(--color-green-400);
+  fill: #5a9b3a;
 }
 
 .outside_opposeBar {
-  fill: var(--color-red-400);
+  fill: #c45656;
 }
 
 .barLabelContainer {
@@ -163,10 +163,6 @@
   pointer-events: none;
 }
 
-.skeletonWithMarginBottom {
-  margin-bottom: 1rem;
-}
-
 .skeletonNoMarginBottom {
   margin-bottom: 0;
 }
@@ -174,19 +170,10 @@
 .barLabel {
   display: flex;
   align-items: center;
-  height: 100%;
-  font-size: 0.35rem;
-  color: var(--main-text);
-}
-
-.barLabelSupport {
-  padding: 0.05rem;
-  background-color: var(--color-green-400);
-}
-
-.barLabelOppose {
-  padding: 0.05rem;
-  background-color: var(--color-red-400);
+  justify-content: center;
+  font-size: 0.25rem;
+  color: var(--secondary-text);
+  background-color: var(--background);
 }
 
 .hugRight {
@@ -198,49 +185,352 @@
 }
 
 /* Committees, other support */
-.committeeCard,
-.otherSupportCard {
-  composes: card from "@/app/shared.module.css";
+.tableCardContent {
+  padding: 0.5rem 0;
 }
 
-.committeeSpendingList,
-.otherSupportContributions {
-  margin: 0.5rem 0 0 0;
-  padding: 0 0 0 2rem;
-}
+.committeeBlock {
+  &:not(:first-child) .committeeHeader {
+    border-top: 1px solid var(--card-border);
+  }
 
-.committeeSpendingListItem,
-.otherSupportContribution {
-  padding: 0.25rem 0;
-}
-
-.otherSupportSection {
-  margin: 1rem 0;
-}
-
-.companyGroup {
-  margin-top: 0.75rem;
-}
-
-.companyGroupHeader {
-  font-weight: 500;
-}
-
-/* Ads */
-.adsCard {
-  composes: card from "@/app/shared.module.css";
-  display: flex;
-  flex-direction: column;
-}
-
-.adGroup {
-  margin-top: 1rem;
   &:not(:last-child) {
-    margin-bottom: 2rem;
+    padding-bottom: 1rem;
   }
 }
 
+.committeeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-top: 1rem;
+  margin-bottom: 0.25rem;
+  gap: 1rem;
+}
+
+.committeeHeaderName {
+  font-weight: 600;
+  margin: 0;
+}
+
+.committeeTotal {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--secondary-text);
+  white-space: nowrap;
+}
+
+.committeeTotalAmount {
+  font-style: normal;
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  font-weight: bold;
+  color: var(--main-text);
+  margin-left: 0.25rem;
+}
+
+.committeeSpendingRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0.5rem 0;
+  gap: 1rem;
+  font-size: 0.9rem;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--hair-color);
+  }
+}
+
+.committeeSpendingAction {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--secondary-text);
+}
+
+.committeeSpendingCandidateName {
+  font-weight: bold;
+  color: var(--main-text);
+}
+
+.committeeRowAmount {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Other support — candidate section */
+.otherSupportSection {
+  margin: 1rem 0;
+  padding: 1rem;
+  background-color: var(--card-background);
+}
+
+.otherSupportCandidateHeading {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem 0;
+}
+
+.otherSupportTotal {
+  margin-bottom: 0.5rem;
+
+  strong {
+    font-weight: 700;
+  }
+
+  em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: var(--secondary-text);
+  }
+}
+
+.otherSupportNarrative {
+  font-family: var(--font-serif);
+  font-style: italic;
+  line-height: 1.5;
+  margin: 0.5rem 0 0.75rem 0;
+
+  strong {
+    font-family: var(--font-sans);
+    font-style: normal;
+    font-weight: 700;
+  }
+}
+
+.vizGroup {
+  margin: 1rem 0;
+}
+
+.vizHeader {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-top: 1.5rem;
+}
+
+/* Sector breakdown bar */
+.sectorBarWrapper {
+  margin: 0.5rem 0;
+}
+
+.sectorBarTrack {
+  display: flex;
+  width: 100%;
+  height: 10px;
+}
+
+.sectorBarLegend {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.sectorBarLegendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+}
+
+.sectorBarSwatch {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+  border: 1px solid var(--main-text);
+}
+
+.sectorBarSegment {
+  position: relative;
+  height: 100%;
+  flex-shrink: 1;
+  min-width: 0;
+  border: 1px solid var(--main-text);
+  border-left: none;
+
+  &:first-child {
+    border-left: 1px solid var(--main-text);
+  }
+}
+
+.sectorBarTech {
+  background-color: var(--color-black);
+}
+
+.sectorBarCrypto {
+  background-color: var(--color-lime-700);
+}
+
+.sectorBarAi {
+  background-color: var(--color-lime-500);
+}
+
+/* Stacked proportional bar */
+.supportBarWrapper {
+  margin: 0.5rem 0 2rem 0;
+}
+
+.supportBarLabels {
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+  margin-bottom: 0.25rem;
+}
+
+.supportBarLabel {
+  flex-shrink: 0;
+  font-size: 0.85rem;
+  text-align: left;
+}
+
+.supportBarLabelName {
+  font-weight: 600;
+}
+
+.supportBarLabelPct {
+  color: var(--secondary-text);
+  font-size: 0.8rem;
+}
+
+.supportBarTrack {
+  display: flex;
+  width: 100%;
+  height: 10px;
+}
+
+.supportBarSegment {
+  position: relative;
+  height: 100%;
+  flex-shrink: 1;
+  min-width: 0;
+  border: 1px solid var(--main-text);
+  border-left: none;
+
+  &:first-child {
+    border-left: 1px solid var(--main-text);
+  }
+
+  &[data-title] {
+    cursor: default;
+  }
+
+  &[data-title]:hover::after {
+    content: attr(data-title);
+    position: absolute;
+    bottom: calc(100% + 4px);
+    right: 0;
+    background: var(--color-black);
+    color: var(--color-neutral-50);
+    padding: 0.2rem 0.4rem;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 10;
+  }
+}
+
+.supportBarSegmentPrimary {
+  background-color: var(--color-black);
+}
+
+.supportBarSegmentSecondary {
+  background-color: var(--color-neutral-400);
+}
+
+/* Company groups */
+.companyGroup {
+  margin-top: 0.25rem;
+
+  & ~ .companyGroup {
+    border-top: 1px solid var(--hair-color);
+    padding-top: 0.4rem;
+    margin-top: 0.4rem;
+  }
+}
+
+.companyGroupHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.companyGroupName {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.companyGroupAmount {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Contribution rows */
+.otherSupportContributions {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.otherSupportContribution {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.1rem 0 0.1rem 1rem;
+  font-size: 0.9rem;
+}
+
+.contributionLeft {
+  flex: 1;
+  min-width: 0;
+}
+
+.contributionName {
+  font-weight: 500;
+}
+
+.contributionRight {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.contributionAmount {
+  font-variant-numeric: tabular-nums;
+}
+
+.contributionVia {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--secondary-text);
+}
+
+/* Ads */
+.adGroup {
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.adHeaderName {
+  font-weight: 600;
+}
+
+.adContent {
+  display: flex;
+  column-gap: 1rem;
+}
+
+.adEmbedGroup {
+  width: 10rem;
+}
+
 .adEmbed {
+  background-color: var(--color-black);
   width: 100%;
   margin: 0.5rem 0;
 }
@@ -278,15 +568,28 @@
   height: auto;
 }
 
+.moreDetails {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.8rem;
+}
+
 .adsEmpty {
   margin: 1rem 0;
 }
 
+.adSubtitle {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.9rem;
+  color: var(--secondary-text);
+  margin-top: 1rem;
+}
+
 @media (max-width: 1000px) {
   .columns {
+    grid-template-columns: 1fr !important;
     max-width: 60rem;
-    flex-direction: column;
-    margin: 0 auto;
   }
 
   .electionsColumn,
@@ -298,6 +601,10 @@
 }
 
 @media (prefers-color-scheme: dark) {
+  .sectorBarTech {
+    background-color: var(--color-neutral-500);
+  }
+
   .mainLayoutLine {
     stroke: var(--color-neutral-400);
   }
@@ -306,7 +613,8 @@
     fill: var(--color-neutral-500);
   }
 
-  .cryptoSpendingLabel {
+  .cryptoSpendingLabel,
+  .aiSpendingLabel {
     fill: var(--color-neutral-300);
   }
 

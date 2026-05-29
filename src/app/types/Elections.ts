@@ -32,6 +32,10 @@ export enum RaceType {
 type OutsideSpending = {
   support_total: number;
   oppose_total: number;
+  crypto_support_total?: number;
+  ai_support_total?: number;
+  crypto_oppose_total?: number;
+  ai_oppose_total?: number;
   support: ScheduleEByCandidate[];
   oppose: ScheduleEByCandidate[];
 };
@@ -40,6 +44,10 @@ export type CandidateSummary = {
   common_name: string;
   oppose_total: number;
   support_total: number;
+  crypto_support_total?: number;
+  ai_support_total?: number;
+  crypto_oppose_total?: number;
+  ai_oppose_total?: number;
   races: RaceType[];
   defeated?: boolean;
   won: boolean;

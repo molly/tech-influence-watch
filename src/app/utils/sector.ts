@@ -20,6 +20,7 @@ interface HumanizeSectorOptions {
   abbrev?: boolean;
   lowercase?: boolean;
   hyphen?: boolean;
+  or?: boolean;
 }
 
 export function humanizeSector(
@@ -42,9 +43,13 @@ export function humanizeSector(
   }
   if (options?.hyphen) {
     if (sector === "all") {
-      return label.replace(" and ", "- and ") + "-";
+      label = label.replace(" and ", "- and ") + "-";
+    } else {
+      label = `${label}-`;
     }
-    return `${label}-`;
+  }
+  if (options?.or) {
+    return label.replace("and", "or");
   }
   return label;
 }
@@ -67,7 +72,7 @@ export function sectorHref(path: string, sector: Sector): string {
  * Backend sector "tech" means the entity spans all sectors and should appear
  * in both "crypto" and "ai" filtered views.
  */
-function matchesSector(
+export function matchesSector(
   entitySector: BESector | undefined,
   sector: Sector,
 ): boolean {

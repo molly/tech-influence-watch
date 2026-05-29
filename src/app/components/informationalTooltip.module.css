@@ -1,3 +1,9 @@
+.tooltipIcon {
+  font-size: 0.75em;
+  vertical-align: super;
+  line-height: 0;
+}
+
 .tooltipButton {
   background-color: transparent;
   border-width: 0;

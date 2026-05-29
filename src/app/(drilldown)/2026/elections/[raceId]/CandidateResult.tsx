@@ -4,6 +4,21 @@ import { formatCurrency } from "@/app/utils/utils";
 
 import styles from "./page.module.css";
 
+function ResultNote({ candidate }: { candidate: RaceCandidate }) {
+  if (!candidate.declined && !candidate.withdrew) {
+    return null;
+  }
+  return (
+    <div className={styles.resultNote}>
+      {candidate.declined
+        ? "Declined to run"
+        : candidate.withdrew
+          ? `Withdrew`
+          : ""}
+    </div>
+  );
+}
+
 export default function CandidateResult({
   candidate,
   candidateSummary,
@@ -42,20 +57,22 @@ export default function CandidateResult({
           writeIn={candidate.writeIn}
           presumptive={isPresumptive}
           noMargins={true}
+          extraText={<ResultNote candidate={candidate} />}
         />
       </td>
-      <td className="number-cell">
-        {supportTotal > 0 && formatCurrency(supportTotal, true)}
+      <td className={`${styles.spendingAmount} number-cell`}>
+        {supportTotal > 0 ? (
+          formatCurrency(supportTotal, true)
+        ) : (
+          <span className={styles.nullPlaceholder}>&ndash;</span>
+        )}
       </td>
-      <td className="number-cell">
-        {opposeTotal > 0 && formatCurrency(opposeTotal, true)}
-      </td>
-      <td className="secondary">
-        {candidate.declined
-          ? "Declined to run"
-          : candidate.withdrew
-            ? `Withdrew`
-            : ""}
+      <td className={`${styles.spendingAmount} number-cell`}>
+        {opposeTotal > 0 ? (
+          formatCurrency(opposeTotal, true)
+        ) : (
+          <span className={styles.nullPlaceholder}>&ndash;</span>
+        )}
       </td>
     </tr>
   );

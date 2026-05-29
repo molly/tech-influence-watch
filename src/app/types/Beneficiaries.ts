@@ -3,6 +3,7 @@ import {
   IndividualOrCompanyContribution,
   RecipientCandidateDetails,
 } from "./Contributions";
+import { BESector } from "./Sector";
 
 export type BeneficiaryCommitteeRef = {
   name: string;
@@ -24,6 +25,7 @@ export type CompanyContributionGroup = {
   company_id: string;
   company_name: string;
   individual_id?: string;
+  sector?: BESector;
   total: number;
   contributions: BeneficiaryContribution[];
 };

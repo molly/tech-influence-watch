@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 import sharedStyles from "@/app/shared.module.css";
 import { CandidateSummary, Party, RaceCandidate } from "@/app/types/Elections";
 import { getFirstLastName } from "@/app/utils/names";
@@ -148,6 +150,7 @@ export default function Candidate({
   candidateClassName,
   candidateNameClassName,
   candidateImageClassName,
+  extraText,
   defeated,
   writeIn,
   presumptive,
@@ -160,6 +163,7 @@ export default function Candidate({
   candidateClassName?: string;
   candidateNameClassName?: string;
   candidateImageClassName?: string;
+  extraText?: ReactNode;
   defeated?: boolean;
   writeIn?: boolean;
   presumptive?: boolean;
@@ -224,6 +228,7 @@ export default function Candidate({
               }
               return <span className="secondary"> ({parts.join(", ")})</span>;
             })()}
+            {extraText}
           </span>
         )}
       </div>

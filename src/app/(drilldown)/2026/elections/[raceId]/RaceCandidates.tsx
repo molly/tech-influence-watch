@@ -6,8 +6,10 @@ import {
   Race,
   RaceCandidate,
 } from "@/app/types/Elections";
+import { Sector } from "@/app/types/Sector";
 import { humanizeList } from "@/app/utils/humanize";
 import { getSubraceName } from "@/app/utils/races";
+import { humanizeSector } from "@/app/utils/sector";
 
 import styles from "./page.module.css";
 
@@ -16,21 +18,34 @@ function NoSpendingCell({
   isRaceUpcoming,
   hasSpendingInOtherRaces,
   intermediateRaces,
+  sector,
+  hasSameRaceOtherPartySpending,
 }: {
   candidates: CandidateSummary[];
   isRaceUpcoming: boolean;
   hasSpendingInOtherRaces: CandidateSummary[];
   intermediateRaces?: Race[];
+  sector: Sector;
+  hasSameRaceOtherPartySpending?: boolean;
 }) {
+  const humanizedSector = humanizeSector(sector, {
+    lowercase: true,
+    hyphen: true,
+    or: true,
+  });
+  const rowSpan =
+    candidates.length + (intermediateRaces ? intermediateRaces.length : 0);
+  if (hasSameRaceOtherPartySpending) {
+    return (
+      <td className={styles.noSpendingCell} rowSpan={rowSpan}>
+        <span>{`No ${humanizedSector}focused PACs made expenditures pertaining to this specific race.`}</span>
+      </td>
+    );
+  }
   return (
-    <td
-      className={styles.noSpendingCell}
-      rowSpan={
-        candidates.length + (intermediateRaces ? intermediateRaces.length : 0)
-      }
-    >
+    <td className={styles.noSpendingCell} rowSpan={rowSpan}>
       <span>
-        {`No cryptocurrency-focused PACs ${isRaceUpcoming ? "have " : ""}made expenditures
+        {`No ${humanizedSector}focused PACs ${isRaceUpcoming ? "have " : ""}made expenditures
     pertaining to this specific race`}
       </span>
       {hasSpendingInOtherRaces.length > 0 && (
@@ -59,6 +74,8 @@ export default function RaceCandidates({
   isRaceUpcoming,
   presumptiveCandidateNames,
   intermediateRaces,
+  sector,
+  hasSameRaceOtherPartySpending,
 }: {
   candidates: RaceCandidate[];
   candidateSummaries: CandidateSummary[];
@@ -67,6 +84,8 @@ export default function RaceCandidates({
   isRaceUpcoming: boolean;
   presumptiveCandidateNames: Set<string>;
   intermediateRaces?: Race[];
+  sector: Sector;
+  hasSameRaceOtherPartySpending?: boolean;
 }) {
   return (
     <table className={styles.candidateExpendituresTable}>
@@ -113,6 +132,8 @@ export default function RaceCandidates({
                   isRaceUpcoming={isRaceUpcoming}
                   hasSpendingInOtherRaces={hasSpendingInOtherRaces}
                   intermediateRaces={intermediateRaces}
+                  sector={sector}
+                  hasSameRaceOtherPartySpending={hasSameRaceOtherPartySpending}
                 />
               )}
             </tr>

@@ -1,4 +1,5 @@
 import {
+  fetchConstant,
   fetchStateElections,
   fetchStateExpenditures,
 } from "@/app/actions/fetch";
@@ -6,11 +7,14 @@ import { CandidateSkeleton } from "@/app/components/Candidate";
 import ErrorText from "@/app/components/ErrorText";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import sharedStyles from "@/app/shared.module.css";
+import { CommitteeConstant } from "@/app/types/Committee";
 import { ElectionsByState } from "@/app/types/Elections";
 import { PopulatedStateExpenditures } from "@/app/types/Expenditures";
+import { Sector } from "@/app/types/Sector";
 import { is4xx, isError } from "@/app/utils/errors";
 import { isUpcomingRace } from "@/app/utils/races";
 import { range } from "@/app/utils/range";
+import { getCommitteeIdsForSector, humanizeSector } from "@/app/utils/sector";
 
 import styles from "./page.module.css";
 import RaceSummary from "./RaceSummary";
@@ -20,17 +24,10 @@ export function ElectionsSkeleton() {
     <>
       {range(2).map((i) => (
         <div className={styles.raceSummary} key={`elections-skeleton-${i}`}>
-          <Skeleton height="1.5rem" width="12rem" onCard={true} />
-          <Skeleton
-            width="15rem"
-            onCard={true}
-            className={styles.skeletonWithMarginBottom}
-          />
-          <Skeleton
-            width="20rem"
-            onCard={true}
-            className={styles.skeletonWithMarginBottom}
-          />
+          <div className={sharedStyles.sectionTitle}>
+            <Skeleton height="2rem" width="18rem" />
+          </div>
+          <Skeleton width="15rem" margin="1rem 0" />
           <table className={styles.candidateExpendituresTable}>
             <thead>
               <tr>
@@ -41,12 +38,12 @@ export function ElectionsSkeleton() {
             <tbody>
               <tr>
                 <td colSpan={2}>
-                  <CandidateSkeleton onCard={true} />
+                  <CandidateSkeleton />
                 </td>
               </tr>
               <tr>
                 <td colSpan={2}>
-                  <CandidateSkeleton onCard={true} />
+                  <CandidateSkeleton />
                 </td>
               </tr>
             </tbody>
@@ -57,17 +54,34 @@ export function ElectionsSkeleton() {
   );
 }
 
-export default async function Elections({ raceId }: { raceId: string }) {
+export default async function Elections({
+  raceId,
+  sector,
+}: {
+  raceId: string;
+  sector: Sector;
+}) {
   const raceIdSplit = raceId.split("-");
   const shortRaceId = raceIdSplit.slice(1).join("-");
   const stateAbbr = raceIdSplit[0];
 
-  const [expendituresData, electionsData] = await Promise.all([
-    fetchStateExpenditures(stateAbbr),
-    fetchStateElections(stateAbbr),
-  ]);
+  const [expendituresData, electionsData, committeeConstantData] =
+    await Promise.all([
+      fetchStateExpenditures(stateAbbr),
+      fetchStateElections(stateAbbr),
+      fetchConstant<Record<string, CommitteeConstant>>("committees"),
+    ]);
+  const committeeConstants = (committeeConstantData || {}) as Record<
+    string,
+    CommitteeConstant
+  >;
+  const sectorCommitteeIds = getCommitteeIdsForSector(
+    sector,
+    committeeConstants,
+  );
 
   if (
+    isError(expendituresData) ||
     isError(electionsData) ||
     !(shortRaceId in (electionsData as ElectionsByState))
   ) {
@@ -77,8 +91,14 @@ export default async function Elections({ raceId }: { raceId: string }) {
       !(shortRaceId in (electionsData as ElectionsByState))
     ) {
       errorText = (
-        <span className="secondary">
-          No cryptocurrency PAC spending has been recorded for this election.
+        <span className={styles.errorText}>
+          No{" "}
+          {humanizeSector(sector, {
+            context: "industry",
+            lowercase: true,
+            or: true,
+          })}{" "}
+          PAC spending has been recorded for this election.
         </span>
       );
     } else {
@@ -107,8 +127,12 @@ export default async function Elections({ raceId }: { raceId: string }) {
           return dateCmp;
         }
       }
-      const hasIncumbentA = a.candidates.some((c) => c.incumbent === true) ? 1 : 0;
-      const hasIncumbentB = b.candidates.some((c) => c.incumbent === true) ? 1 : 0;
+      const hasIncumbentA = a.candidates.some((c) => c.incumbent === true)
+        ? 1
+        : 0;
+      const hasIncumbentB = b.candidates.some((c) => c.incumbent === true)
+        ? 1
+        : 0;
       if (hasIncumbentB !== hasIncumbentA) {
         return hasIncumbentB - hasIncumbentA;
       }
@@ -121,6 +145,8 @@ export default async function Elections({ raceId }: { raceId: string }) {
   return sortedRaces.map((race) => (
     <RaceSummary
       key={`${shortRaceId}-${race.type}${race.party ? `-${race.party}` : ""}`}
+      sector={sector}
+      sectorCommitteeIds={sectorCommitteeIds}
       race={race}
       electionData={elections[shortRaceId]}
       expenditures={expenditures ? expenditures.by_race[raceId] : null}

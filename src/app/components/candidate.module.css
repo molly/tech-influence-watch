@@ -17,9 +17,9 @@
 }
 
 .chartCandidateImageWrapper {
-  width: 24px;
-  height: 24px;
-  border-width: 2px;
+  width: 19px;
+  height: 19px;
+  border-width: 1.5px;
 }
 
 .candidateImage {
@@ -38,8 +38,8 @@
 
 .chartCandidateImage,
 .chartPlaceholderImage {
-  width: 20px !important;
-  height: 20px !important;
+  width: 16px !important;
+  height: 16px !important;
 }
 
 .placeholderImage {

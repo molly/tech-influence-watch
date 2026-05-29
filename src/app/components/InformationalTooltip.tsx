@@ -56,7 +56,7 @@ export default function InformationalTooltip({
         className={styles.tooltipButton}
         {...getReferenceProps()}
       >
-        <sup>ⓘ</sup>
+        <span className={styles.tooltipIcon}>ⓘ</span>
         <FloatingPortal>
           {isOpen && (
             <div

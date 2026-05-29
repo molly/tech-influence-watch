@@ -7,8 +7,11 @@ import { useMemo, useState } from "react";
 import Candidate, { CandidateImage } from "@/app/components/Candidate";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import { useBreakpoint } from "@/app/hooks/useBreakpoint";
+import sharedStyles from "@/app/shared.module.css";
 import { Beneficiary } from "@/app/types/Beneficiaries";
 import { CandidateSummary, ElectionGroup } from "@/app/types/Elections";
+import { Sector } from "@/app/types/Sector";
+import { matchesSector } from "@/app/utils/sector";
 
 import styles from "./page.module.css";
 
@@ -21,6 +24,7 @@ const LEGEND_HEIGHT = 30;
 const CANDIDATE_LABEL_WIDTH = 100;
 const GRID_LABEL_HEIGHT = 15;
 const BAR_LABEL_MIN_WIDTH = 16;
+const CHART_IMAGE_HEIGHT = 20;
 
 function getTotalSpending(candidate: CandidateSummary) {
   return (
@@ -32,7 +36,6 @@ function getTotalSpending(candidate: CandidateSummary) {
 
 function BarLabel({
   x,
-  width,
   y,
   height,
   label,
@@ -41,7 +44,6 @@ function BarLabel({
   backgroundClass,
 }: {
   x: number;
-  width: number;
   y: number;
   height: number;
   label: string;
@@ -49,24 +51,20 @@ function BarLabel({
   negative?: boolean;
   backgroundClass?: string;
 }) {
-  let textStart, hug;
   const minWidth = shouldUseXLFont
     ? BAR_LABEL_MIN_WIDTH * 1.5
     : BAR_LABEL_MIN_WIDTH;
-  if (negative) {
-    textStart = width > minWidth ? x + 1 : x - minWidth - 1;
-    hug = width > minWidth ? "hugLeft" : "hugRight";
-  } else {
-    textStart = width > minWidth ? x - minWidth - 1 : x + 1;
-    hug = width > minWidth ? "hugRight" : "hugLeft";
-  }
+  // x is the left edge for negative (oppose) bars, right edge for positive (support) bars
+  const textStart = negative ? x : x - minWidth;
+  const hug = negative ? "hugLeft" : "hugRight";
+  const LABEL_HEIGHT = 10;
 
   return (
     <motion.foreignObject
       x={textStart}
-      y={y}
+      y={y + height}
       width={minWidth}
-      height={height}
+      height={LABEL_HEIGHT}
       className={styles.barLabelForeignObject}
       initial={{
         opacity: 0,
@@ -77,7 +75,7 @@ function BarLabel({
       <div
         className={`${styles.barLabelContainer} ${styles.barLabel} ${styles[hug]} ${shouldUseXLFont ? styles.xlFont : ""}`}
       >
-        <div className={width > minWidth ? backgroundClass : ""}>{label}</div>
+        {label}
       </div>
     </motion.foreignObject>
   );
@@ -91,7 +89,9 @@ type SpendingHoverState = {
     | "outside_support"
     | "outside_oppose"
     | "crypto_support"
-    | "crypto_oppose";
+    | "crypto_oppose"
+    | "ai_support"
+    | "ai_oppose";
 };
 
 type DummyData = {
@@ -121,7 +121,7 @@ export function SpendingSkeleton() {
     .scaleBand()
     .range([LEGEND_HEIGHT, CHART_HEIGHT - GRID_LABEL_HEIGHT])
     .domain(["1", "2", "3"])
-    .padding(0.5);
+    .padding(0.7);
   const x = d3
     .scaleLinear()
     .domain(xDomain)
@@ -160,7 +160,6 @@ export function SpendingSkeleton() {
               <rect
                 x={x0 + GRIDLINE_WIDTH / 2}
                 y={yCandidate}
-                width={xRaisedWidth - GRIDLINE_WIDTH / 2}
                 height={y.bandwidth()}
                 className={styles.raisedBar}
               />
@@ -168,7 +167,6 @@ export function SpendingSkeleton() {
                 <rect
                   x={xOutsideOpposeStart}
                   y={yCandidate}
-                  width={xOutsideOpposeWidth}
                   height={y.bandwidth()}
                   className={styles.raisedBar}
                 />
@@ -177,8 +175,8 @@ export function SpendingSkeleton() {
               <foreignObject
                 x={0}
                 width={CANDIDATE_LABEL_WIDTH - 25}
-                y={yCandidate - y.bandwidth() / 2}
-                height={y.bandwidth() * 2}
+                y={yCandidate + y.bandwidth() / 2 - CHART_IMAGE_HEIGHT / 2}
+                height={CHART_IMAGE_HEIGHT}
               >
                 <div className={styles.candidateLabel}>
                   <CandidateImage chart={true} />
@@ -200,10 +198,12 @@ export function SpendingSkeleton() {
 export default function Spending({
   election,
   labelId,
+  sector,
   beneficiaries,
 }: {
   election: ElectionGroup;
   labelId: string;
+  sector: Sector;
   beneficiaries?: Record<string, Beneficiary>;
 }) {
   const [hovered, setHovered] = useState<SpendingHoverState | null>(null);
@@ -221,7 +221,7 @@ export default function Spending({
   );
 
   const CHART_HEIGHT = useMemo(
-    () => Math.max(150, candidateNames.length * 40),
+    () => Math.max(150, candidateNames.length * 30),
     [candidateNames],
   );
 
@@ -233,17 +233,23 @@ export default function Spending({
           raised: 0,
           industry_direct: 0,
           industry_super_pac: 0,
+          crypto_industry_super_pac: 0,
+          ai_industry_super_pac: 0,
           outside_support: 0,
           outside_oppose: 0,
           crypto_support: 0,
           crypto_oppose: 0,
+          ai_support: 0,
+          ai_oppose: 0,
         };
         if (!summary) {
           return candidateData;
         }
         candidateData.raised = summary.raised_total || 0;
-        candidateData.crypto_support = summary.support_total || 0;
-        candidateData.crypto_oppose = summary.oppose_total || 0;
+        candidateData.crypto_support = summary.crypto_support_total || 0;
+        candidateData.crypto_oppose = summary.crypto_oppose_total || 0;
+        candidateData.ai_support = summary.ai_support_total || 0;
+        candidateData.ai_oppose = summary.ai_oppose_total || 0;
         if ("outside_spending" in summary && summary.outside_spending) {
           candidateData.outside_support =
             summary.outside_spending.support_total || 0;
@@ -254,6 +260,11 @@ export default function Spending({
         if (candidateId && beneficiaries?.[candidateId]) {
           const beneficiary = beneficiaries[candidateId];
           for (const companyGroup of beneficiary.contributions) {
+            const groupSector = companyGroup.sector;
+            const isCrypto =
+              groupSector != null && matchesSector(groupSector, "crypto");
+            const isAI =
+              groupSector != null && matchesSector(groupSector, "ai");
             for (const contribution of companyGroup.contributions) {
               const isSuperPAC = contribution.committees.some(
                 (c) =>
@@ -261,16 +272,28 @@ export default function Spending({
                   c.committee_type_full?.startsWith("Hybrid"),
               );
               if (!isSuperPAC) {
-                candidateData.industry_direct += contribution.total;
+                const inCurrentSector =
+                  sector === "all" ||
+                  (sector === "crypto" && isCrypto) ||
+                  (sector === "ai" && isAI);
+                if (inCurrentSector) {
+                  candidateData.industry_direct += contribution.total;
+                }
               } else {
                 candidateData.industry_super_pac += contribution.total;
+                if (isCrypto) {
+                  candidateData.crypto_industry_super_pac += contribution.total;
+                }
+                if (isAI) {
+                  candidateData.ai_industry_super_pac += contribution.total;
+                }
               }
             }
           }
         }
         return candidateData;
       }),
-    [candidateNames, election.candidates, beneficiaries],
+    [candidateNames, election.candidates, beneficiaries, sector],
   );
 
   const xDomain = useMemo(
@@ -286,7 +309,7 @@ export default function Spending({
         .scaleBand()
         .range([LEGEND_HEIGHT, CHART_HEIGHT - GRID_LABEL_HEIGHT])
         .domain(candidateNames)
-        .padding(0.5),
+        .padding(0.7),
     [candidateNames, CHART_HEIGHT],
   );
   const x = useMemo(
@@ -309,28 +332,44 @@ export default function Spending({
         industry_direct,
         outside_support,
         crypto_support,
+        ai_support,
         outside_oppose,
         crypto_oppose,
+        ai_oppose,
       } = data[ind];
       const parts: string[] = [];
       if (raised) {
         let raisedStr = `Raised ${altFormatter(raised)}`;
         if (industry_direct > 0) {
-          raisedStr += ` (${altFormatter(industry_direct)} from crypto donors)`;
+          raisedStr += ` (${altFormatter(industry_direct)} from industry donors)`;
         }
         parts.push(raisedStr);
       }
       if (outside_support) {
         let supportStr = `${altFormatter(outside_support)} in outside spending to support`;
-        if (crypto_support > 0) {
-          supportStr += ` (${altFormatter(crypto_support)} from crypto PACs)`;
+        const sectorParts: string[] = [];
+        if (sector !== "ai" && crypto_support > 0) {
+          sectorParts.push(`${altFormatter(crypto_support)} from crypto PACs`);
+        }
+        if (sector !== "crypto" && ai_support > 0) {
+          sectorParts.push(`${altFormatter(ai_support)} from AI PACs`);
+        }
+        if (sectorParts.length > 0) {
+          supportStr += ` (${sectorParts.join(", ")})`;
         }
         parts.push(supportStr);
       }
       if (outside_oppose) {
         let opposeStr = `${altFormatter(outside_oppose)} in outside spending to oppose`;
-        if (crypto_oppose > 0) {
-          opposeStr += ` (${altFormatter(crypto_oppose)} from crypto PACs)`;
+        const sectorParts: string[] = [];
+        if (sector !== "ai" && crypto_oppose > 0) {
+          sectorParts.push(`${altFormatter(crypto_oppose)} from crypto PACs`);
+        }
+        if (sector !== "crypto" && ai_oppose > 0) {
+          sectorParts.push(`${altFormatter(ai_oppose)} from AI PACs`);
+        }
+        if (sectorParts.length > 0) {
+          opposeStr += ` (${sectorParts.join(", ")})`;
         }
         parts.push(opposeStr);
       }
@@ -340,7 +379,22 @@ export default function Spending({
       lines.push(`${nameWithParty}: ${parts.join(", ")}`);
     });
     return lines.join("\n");
-  }, [candidateNames, election.candidates, data]);
+  }, [candidateNames, election.candidates, data, sector]);
+
+  const legendItems = useMemo(
+    () => [
+      { label: "Raised by candidate", type: "raised" as const },
+      { label: "Outside spending to support", type: "support" as const },
+      { label: "Outside spending to oppose", type: "oppose" as const },
+      ...(sector !== "ai"
+        ? [{ label: "Crypto spending", type: "crypto" as const }]
+        : []),
+      ...(sector !== "crypto"
+        ? [{ label: "AI spending", type: "ai" as const }]
+        : []),
+    ],
+    [sector],
+  );
 
   return (
     <div>
@@ -360,6 +414,9 @@ export default function Spending({
             patternUnits="userSpaceOnUse"
           >
             <rect width={HATCH_SIZE / 2} height={HATCH_SIZE} fill="#0f172a" />
+          </pattern>
+          <pattern id="dots" width={2} height={2} patternUnits="userSpaceOnUse">
+            <circle cx={1} cy={1} r={0.6} fill="#0f172a" />
           </pattern>
         </defs>
         {x.ticks(5).map((value, ind) => {
@@ -391,11 +448,14 @@ export default function Spending({
           const {
             raised,
             industry_direct,
-            industry_super_pac,
+            crypto_industry_super_pac,
+            ai_industry_super_pac,
             outside_support,
-            crypto_support,
             outside_oppose,
+            crypto_support,
             crypto_oppose,
+            ai_support,
+            ai_oppose,
           } = data[ind];
           const yCandidate = y(candidate) || 0;
           const x0 = x(0);
@@ -405,17 +465,32 @@ export default function Spending({
             Math.max(1, x(industry_direct) - x0) - GRIDLINE_WIDTH / 2;
           const xOutsideSupport = x(outside_support) - x0;
           const xOutsideSupportWidth = Math.max(1, xOutsideSupport);
-          const combinedCryptoSupport = crypto_support + industry_super_pac;
+          const combinedCryptoSupport =
+            crypto_support + crypto_industry_super_pac;
           const xCryptoSupportWidth = Math.max(
             1,
             x(combinedCryptoSupport) - x0,
           );
+          const combinedAiSupport = ai_support + ai_industry_super_pac;
+          const xAiSupportWidth = Math.max(1, x(combinedAiSupport) - x0);
           const xOutsideOpposeStart = Math.min(x0 - 1, x(-outside_oppose));
           const xOutsideOpposeWidth =
             Math.max(1, x(outside_oppose) - x0) - GRIDLINE_WIDTH / 2;
           const xCryptoOpposeStart = Math.min(x0 - 1, x(-crypto_oppose));
           const xCryptoOpposeWidth =
             Math.max(1, x(crypto_oppose) - x0) - GRIDLINE_WIDTH / 2;
+          const xAiOpposeStart = Math.min(x0 - 1, x(-ai_oppose));
+          const xAiOpposeWidth =
+            Math.max(1, x(ai_oppose) - x0) - GRIDLINE_WIDTH / 2;
+          // When both sectors are visible, stack AI after crypto instead of overlapping
+          const aiSupportX =
+            sector !== "ai" && combinedCryptoSupport > 0
+              ? xRaised + xCryptoSupportWidth
+              : xRaised;
+          const aiOpposeX =
+            sector !== "ai" && crypto_oppose > 0
+              ? xCryptoOpposeStart - xAiOpposeWidth
+              : xAiOpposeStart;
           return (
             <g key={candidate}>
               {raised && (
@@ -444,7 +519,6 @@ export default function Spending({
                     hovered.bar === "raised" && (
                       <BarLabel
                         x={xRaised}
-                        width={xRaisedWidth}
                         y={yCandidate}
                         height={y.bandwidth()}
                         label={gridLabelFormatter(raised)}
@@ -482,7 +556,6 @@ export default function Spending({
                     hovered.bar === "industry_direct" && (
                       <BarLabel
                         x={x0 + xIndustryDirectWidth}
-                        width={xIndustryDirectWidth}
                         y={yCandidate}
                         height={y.bandwidth()}
                         label={gridLabelFormatter(industry_direct)}
@@ -515,7 +588,7 @@ export default function Spending({
                           : 0,
                     }}
                   />
-                  {combinedCryptoSupport > 0 && (
+                  {sector !== "ai" && combinedCryptoSupport > 0 && (
                     <g
                       onMouseEnter={() =>
                         setHovered({ candidate, bar: "crypto_support" })
@@ -544,10 +617,47 @@ export default function Spending({
                         hovered.bar === "crypto_support" && (
                           <BarLabel
                             x={xRaised + xCryptoSupportWidth}
-                            width={xCryptoSupportWidth}
                             y={yCandidate}
                             height={y.bandwidth()}
                             label={gridLabelFormatter(combinedCryptoSupport)}
+                            shouldUseXLFont={shouldUseXLFont}
+                            backgroundClass={styles.barLabelSupport}
+                          />
+                        )}
+                    </g>
+                  )}
+                  {sector !== "crypto" && combinedAiSupport > 0 && (
+                    <g
+                      onMouseEnter={() =>
+                        setHovered({ candidate, bar: "ai_support" })
+                      }
+                      onMouseLeave={() => setHovered(null)}
+                    >
+                      <motion.rect
+                        x={aiSupportX}
+                        y={yCandidate}
+                        width={xAiSupportWidth}
+                        height={y.bandwidth()}
+                        fill="url(#dots)"
+                        className={styles.spendingBar}
+                        initial={false}
+                        animate={{
+                          strokeOpacity:
+                            hovered !== null &&
+                            hovered.candidate === candidate &&
+                            hovered.bar === "ai_support"
+                              ? 1
+                              : 0,
+                        }}
+                      />
+                      {hovered !== null &&
+                        hovered.candidate === candidate &&
+                        hovered.bar === "ai_support" && (
+                          <BarLabel
+                            x={aiSupportX + xAiSupportWidth}
+                            y={yCandidate}
+                            height={y.bandwidth()}
+                            label={gridLabelFormatter(combinedAiSupport)}
                             shouldUseXLFont={shouldUseXLFont}
                             backgroundClass={styles.barLabelSupport}
                           />
@@ -559,7 +669,6 @@ export default function Spending({
                     hovered.bar === "outside_support" && (
                       <BarLabel
                         x={xRaised + xOutsideSupportWidth}
-                        width={xOutsideSupportWidth}
                         y={yCandidate}
                         height={y.bandwidth()}
                         label={gridLabelFormatter(outside_support)}
@@ -592,7 +701,7 @@ export default function Spending({
                           : 0,
                     }}
                   />
-                  {crypto_oppose && (
+                  {sector !== "ai" && crypto_oppose > 0 && (
                     <g
                       onMouseEnter={() =>
                         setHovered({ candidate, bar: "crypto_oppose" })
@@ -621,10 +730,48 @@ export default function Spending({
                         hovered.bar === "crypto_oppose" && (
                           <BarLabel
                             x={xCryptoOpposeStart}
-                            width={xCryptoOpposeWidth}
                             y={yCandidate}
                             height={y.bandwidth()}
                             label={gridLabelFormatter(crypto_oppose)}
+                            shouldUseXLFont={shouldUseXLFont}
+                            negative={true}
+                            backgroundClass={styles.barLabelOppose}
+                          />
+                        )}
+                    </g>
+                  )}
+                  {sector !== "crypto" && ai_oppose > 0 && (
+                    <g
+                      onMouseEnter={() =>
+                        setHovered({ candidate, bar: "ai_oppose" })
+                      }
+                      onMouseLeave={() => setHovered(null)}
+                    >
+                      <motion.rect
+                        x={aiOpposeX}
+                        y={yCandidate}
+                        width={xAiOpposeWidth}
+                        height={y.bandwidth()}
+                        fill="url(#dots)"
+                        className={styles.spendingBar}
+                        initial={false}
+                        animate={{
+                          strokeOpacity:
+                            hovered !== null &&
+                            hovered.candidate === candidate &&
+                            hovered.bar === "ai_oppose"
+                              ? 1
+                              : 0,
+                        }}
+                      />
+                      {hovered !== null &&
+                        hovered.candidate === candidate &&
+                        hovered.bar === "ai_oppose" && (
+                          <BarLabel
+                            x={aiOpposeX}
+                            y={yCandidate}
+                            height={y.bandwidth()}
+                            label={gridLabelFormatter(ai_oppose)}
                             shouldUseXLFont={shouldUseXLFont}
                             negative={true}
                             backgroundClass={styles.barLabelOppose}
@@ -637,7 +784,6 @@ export default function Spending({
                     hovered.bar === "outside_oppose" && (
                       <BarLabel
                         x={xOutsideOpposeStart}
-                        width={xOutsideOpposeWidth}
                         y={yCandidate}
                         height={y.bandwidth()}
                         shouldUseXLFont={shouldUseXLFont}
@@ -651,8 +797,8 @@ export default function Spending({
               <foreignObject
                 x={0}
                 width={CANDIDATE_LABEL_WIDTH - 25}
-                y={yCandidate - y.bandwidth() / 2}
-                height={y.bandwidth() * 2}
+                y={yCandidate + y.bandwidth() / 2 - CHART_IMAGE_HEIGHT / 2}
+                height={CHART_IMAGE_HEIGHT}
               >
                 <div
                   className={`${styles.candidateLabel} ${shouldUseXLFont ? styles.xlFont : ""}`}
@@ -672,86 +818,96 @@ export default function Spending({
           );
         })}
         <g>
-          <g>
-            <rect
-              x={0}
-              y={LEGEND_Y}
-              width={10}
-              height={10}
-              className={styles.raisedBar}
-            />
-            <foreignObject x={12} y={LEGEND_Y - 5} width={65} height={20}>
-              <div
-                className={`${styles.spendingLegend} ${shouldUseXLFont ? styles.xlFont : ""}`}
-              >
-                Raised by candidate
-              </div>
-            </foreignObject>
-          </g>
-          <g transform={`translate(${CHART_WIDTH / 4}, 0)`}>
-            <rect
-              x={0}
-              y={LEGEND_Y}
-              width={10}
-              height={10}
-              className={styles.outside_supportBar}
-            />
-            <foreignObject x={12} y={LEGEND_Y - 5} width={65} height={20}>
-              <div
-                className={`${styles.spendingLegend} ${shouldUseXLFont ? styles.xlFont : ""}`}
-              >
-                Outside spending to support
-              </div>
-            </foreignObject>
-          </g>
-          <g transform={`translate(${(CHART_WIDTH * 2) / 4}, 0)`}>
-            <rect
-              x={0}
-              y={LEGEND_Y}
-              width={10}
-              height={10}
-              className={styles.outside_opposeBar}
-            />
-            <foreignObject x={12} y={LEGEND_Y - 5} width={65} height={20}>
-              <div
-                className={`${styles.spendingLegend} ${shouldUseXLFont ? styles.xlFont : ""}`}
-              >
-                Outside spending to oppose
-              </div>
-            </foreignObject>
-          </g>
-          <g transform={`translate(${(CHART_WIDTH * 3) / 4}, 0)`}>
-            <rect
-              x={0}
-              y={LEGEND_Y}
-              width={10}
-              height={10}
-              className={styles.cryptoSpendingLabel}
-            />
-            <rect
-              x={0}
-              y={LEGEND_Y}
-              width={10}
-              height={10}
-              fill="url(#hatch)"
-            />
-            <foreignObject x={12} y={LEGEND_Y - 5} width={65} height={20}>
-              <div
-                className={`${styles.spendingLegend} ${shouldUseXLFont ? styles.xlFont : ""}`}
-              >
-                Crypto spending
-              </div>
-            </foreignObject>
-          </g>
+          {legendItems.map((item, i) => {
+            const spacing = CHART_WIDTH / legendItems.length;
+            return (
+              <g key={item.type} transform={`translate(${spacing * i}, 0)`}>
+                {item.type === "raised" && (
+                  <rect
+                    x={0}
+                    y={LEGEND_Y}
+                    width={5}
+                    height={5}
+                    className={styles.raisedBar}
+                  />
+                )}
+                {item.type === "support" && (
+                  <rect
+                    x={0}
+                    y={LEGEND_Y}
+                    width={5}
+                    height={5}
+                    className={styles.outside_supportBar}
+                  />
+                )}
+                {item.type === "oppose" && (
+                  <rect
+                    x={0}
+                    y={LEGEND_Y}
+                    width={5}
+                    height={5}
+                    className={styles.outside_opposeBar}
+                  />
+                )}
+                {item.type === "crypto" && (
+                  <>
+                    <rect
+                      x={0}
+                      y={LEGEND_Y}
+                      width={5}
+                      height={5}
+                      className={styles.cryptoSpendingLabel}
+                    />
+                    <rect
+                      x={0}
+                      y={LEGEND_Y}
+                      width={5}
+                      height={5}
+                      fill="url(#hatch)"
+                    />
+                  </>
+                )}
+                {item.type === "ai" && (
+                  <>
+                    <rect
+                      x={0}
+                      y={LEGEND_Y}
+                      width={5}
+                      height={5}
+                      className={styles.aiSpendingLabel}
+                    />
+                    <rect
+                      x={0}
+                      y={LEGEND_Y}
+                      width={5}
+                      height={5}
+                      fill="url(#dots)"
+                    />
+                  </>
+                )}
+                <foreignObject
+                  x={7}
+                  y={LEGEND_Y - 3.5}
+                  width={spacing - 9}
+                  height={12}
+                >
+                  <div
+                    className={`${styles.spendingLegend} ${shouldUseXLFont ? styles.xlFont : ""}`}
+                  >
+                    {item.label}
+                  </div>
+                </foreignObject>
+              </g>
+            );
+          })}
         </g>
       </svg>
       {data.some((d) => d.industry_super_pac > 0) && (
-        <div className="secondary small">
+        <div className={sharedStyles.subtitle}>
           Outside spending bars show money already spent by super PACs. Hatching
-          shows crypto industry contributions to super PACs regardless of
-          whether the super PAC has deployed the funds. Because super PACs can
-          hold unspent cash, the hatched amount may exceed outside spending to
-          date.
+          shows industry contributions to super PACs regardless of whether the
+          super PAC has deployed the funds. Because super PACs can hold unspent
+          cash, the hatched amount may exceed outside spending to date.
         </div>
       )}
     </div>

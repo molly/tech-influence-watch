@@ -13,12 +13,11 @@ export default function Breadcrumbs({ crumbs }: { crumbs: Crumb[] }) {
   return (
     <nav className={styles.breadcrumbs} aria-label="Breadcrumb">
       {crumbs.map((crumb, i) => {
-        const isLast = i === crumbs.length - 1;
         const name = typeof crumb === "string" ? crumb : crumb.name;
         const href = typeof crumb === "string" ? undefined : crumb.href;
         return (
           <span key={i} className={styles.breadcrumb}>
-            {href && !isLast ? (
+            {href ? (
               <Link className="secondaryLink" href={href}>
                 {name}
               </Link>
