@@ -1,12 +1,3 @@
-.page {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 0 1rem;
-  max-width: var(--max-width);
-}
-
 .spendingCards {
   display: grid;
   gap: inherit;
@@ -19,19 +10,12 @@
   align-items: flex-start;
 }
 
-.raceCard {
-  composes: card from "@/app/shared.module.css";
-  width: 50%;
-  padding: 0;
+.sectionTitle {
+  composes: sectionTitle from "@/app/shared.module.css";
+}
 
-  h2,
-  h3 {
-    padding: 1rem 1rem 0 1rem;
-  }
-
-  .cardSection:nth-child(odd) {
-    background: var(--table-background-secondary);
-  }
+.raceSpendingDescription {
+  line-height: 1.5;
 }
 
 .sideColumn {
@@ -49,8 +33,9 @@
   padding-left: 1rem;
 }
 
-.candidateGroup {
-  padding: 0 1rem;
+.committeeSpendingAmount {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
 }
 
 .candidateGroup + .candidateGroup {
@@ -62,10 +47,75 @@
   align-items: center;
   white-space-collapse: preserve;
   margin-top: 1rem;
+  font-family: var(--font-serif);
+  font-style: italic;
 }
 
 .priorCycleCard {
   width: 100%;
+}
+
+/* Company groups (prior cycle contributions) */
+.companyGroup {
+  margin-top: 0.25rem;
+
+  & ~ .companyGroup {
+    border-top: 1px solid var(--hair-color);
+    padding-top: 0.4rem;
+    margin-top: 0.4rem;
+  }
+}
+
+.companyGroupHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.companyGroupName {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.companyGroupAmount {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.priorCycleContributions {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.priorCycleContribution {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.1rem 0 0.1rem 1rem;
+  font-size: 0.9rem;
+}
+
+.contributionLeft {
+  flex: 1;
+  min-width: 0;
+}
+
+.contributionName {
+  font-weight: 500;
+}
+
+.contributionRight {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.contributionAmount {
+  font-variant-numeric: tabular-nums;
 }
 
 .skeletonContainer {
@@ -81,5 +131,10 @@
   .raceCard,
   .committeeCard {
     width: 100%;
+  }
+
+  .sectionTitle {
+    display: flex;
+    flex-direction: column;
   }
 }

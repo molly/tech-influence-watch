@@ -22,8 +22,15 @@
   padding: 1rem 1rem 0 1rem;
 }
 
-.raceSummaryDetails {
-  margin-bottom: 1rem;
+.electionSubtitle {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--secondary-text);
+  font-size: 1rem;
+}
+
+.raceSummaryDetails:not(:first-child) {
+  margin-top: 2rem;
 }
 
 .candidateExpendituresTable {
@@ -80,6 +87,8 @@
 
 .defeatedCandidateName {
   text-decoration: line-through;
+  color: var(--secondary-text);
+  font-weight: normal !important;
 }
 
 .errorText {
@@ -191,11 +200,12 @@
 
 .committeeBlock {
   &:not(:first-child) .committeeHeader {
+    padding-top: 0.5rem;
     border-top: 1px solid var(--card-border);
   }
 
   &:not(:last-child) {
-    padding-bottom: 1rem;
+    padding-bottom: 0.5rem;
   }
 }
 
@@ -203,9 +213,12 @@
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  padding-top: 1rem;
   margin-bottom: 0.25rem;
   gap: 1rem;
+
+  &:not(:first-child) {
+    padding-top: 1rem;
+  }
 }
 
 .committeeHeaderName {

@@ -65,13 +65,20 @@
 
 .defeatedCandidateImage {
   position: relative;
+
+  & > object,
+  & > svg {
+    filter: grayscale(0.65);
+    opacity: 0.6;
+  }
+
   &:after {
-    content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 96 96" enable-background="new 0 0 96 96" xml:space="preserve"><polygon fill="red" points="96,14 82,0 48,34 14,0 0,14 34,48 0,82 14,96 48,62 82,96 96,82 62,48 "/></svg>');
+    content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle cx="8" cy="8" r="8" fill="%23991b1b"/><line x1="4.5" y1="4.5" x2="11.5" y2="11.5" stroke="white" stroke-width="2" stroke-linecap="round"/><line x1="11.5" y1="4.5" x2="4.5" y2="11.5" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>');
     position: absolute;
-    top: -4px;
-    left: -4px;
-    width: 60px;
-    height: 60px;
+    bottom: -2px;
+    right: -2px;
+    width: 16px;
+    height: 16px;
   }
 }
 

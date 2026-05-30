@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { Fragment } from "react";
 
 import { fetchMapData } from "@/app/actions/fetch";
-import ErrorText from "@/app/components/ErrorText";
+import HorizontalBars, {
+  HorizontalBarsSkeleton,
+} from "@/app/components/home/HorizontalBars";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import { STATES_BY_ABBR } from "@/app/data/states";
 import sharedStyles from "@/app/shared.module.css";
@@ -17,95 +18,86 @@ import styles from "./page.module.css";
 
 export function StateExpendituresSkeleton() {
   return (
-    <tbody>
+    <div className={styles.statesList}>
       {range(5).map((i) => (
-        <Fragment key={`state-skeleton-${i}`}>
-          <tr>
-            <td colSpan={2}>
-              <Skeleton width="8rem" onCard={true} />
-            </td>
-            <td>
-              <Skeleton width="6rem" onCard={true} className={sharedStyles.floatRight} />
-            </td>
-          </tr>
-          {range(3).map((j) => (
-            <tr key={`race-skeleton-${i}-${j}`}>
-              <td></td>
-              <td>
+        <div key={`state-skeleton-${i}`} className={styles.stateGroup}>
+          <HorizontalBarsSkeleton numBars={1} />
+          <div className={styles.raceRows}>
+            {range(3).map((j) => (
+              <div key={`race-skeleton-${i}-${j}`} className={styles.raceRow}>
                 <Skeleton width="10rem" onCard={true} />
-              </td>
-              <td>
                 <Skeleton
                   width="5rem"
                   onCard={true}
                   className={sharedStyles.floatRight}
                 />
-              </td>
-            </tr>
-          ))}
-        </Fragment>
+              </div>
+            ))}
+          </div>
+        </div>
       ))}
-    </tbody>
+    </div>
   );
 }
 
-export default async function StateExpenditures({ sector = "all" }: { sector?: Sector }) {
+export default async function StateExpenditures({
+  sector = "all",
+}: {
+  sector?: Sector;
+}) {
   const mapData = await fetchMapData(sector);
   if (isError(mapData)) {
-    return (
-      <tbody>
-        <tr>
-          <td colSpan={3}>
-            <ErrorText subject="expenditures by state" />
-          </td>
-        </tr>
-      </tbody>
-    );
+    // Other segment in this section handles error message
+    return null;
   }
   const data = mapData as MapData;
   const states = Object.keys(data)
     .filter((k) => data[k].total > 0)
     .sort((a, b) => data[b].total - data[a].total);
+  const maxTotal = states.length > 0 ? data[states[0]].total : 1;
 
   return (
-    <tbody>
+    <div className={styles.statesList}>
       {states.map((state) => {
         const stateName = STATES_BY_ABBR[state];
         const raceOrder = Object.keys(data[state].by_race).sort(
           (a, b) => data[state].by_race[b] - data[state].by_race[a],
         );
         return (
-          <Fragment key={state}>
-            <tr className={styles.headerRow}>
-              <td colSpan={2} className="text-cell">
-                <Link
-                  href={`/2026/states/${stateName.toLowerCase().replace(" ", "-")}`}
-                >
-                  {stateName}
-                </Link>
-              </td>
-              <td className="number-cell">
-                {formatCurrency(data[state].total, true)}
-              </td>
-            </tr>
-            {raceOrder.map((raceKey) => {
-              return (
-                <tr key={raceKey}>
-                  <td></td>
-                  <td className="text-cell">
-                    <Link href={`/2026/elections/${raceKey}`}>
-                      {getRaceName(raceKey)}
+          <div key={state} className={styles.stateGroup}>
+            <HorizontalBars
+              items={[
+                {
+                  key: state,
+                  label: stateName,
+                  labelNode: (
+                    <Link
+                      href={`/2026/states/${stateName.toLowerCase().replace(" ", "-")}`}
+                    >
+                      {stateName}
                     </Link>
-                  </td>
-                  <td className="number-cell">
+                  ),
+                  value: data[state].total,
+                  displayValue: formatCurrency(data[state].total, true),
+                },
+              ]}
+              max={maxTotal}
+            />
+            <div className={styles.raceRows}>
+              {raceOrder.map((raceKey) => (
+                <div key={raceKey} className={styles.raceRow}>
+                  <Link href={`/2026/elections/${raceKey}`}>
+                    {getRaceName(raceKey)}
+                  </Link>
+                  <span className={styles.raceAmount}>
                     {formatCurrency(data[state].by_race[raceKey], true)}
-                  </td>
-                </tr>
-              );
-            })}
-          </Fragment>
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
         );
       })}
-    </tbody>
+    </div>
   );
 }

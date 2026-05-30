@@ -89,6 +89,15 @@ export default async function CommitteeSpending({
                     ? committeeConstants[committeeId].name
                     : committeeId}
                 </Link>
+                {sector === "all" &&
+                  committeeConstants[committeeId]?.sector &&
+                  committeeConstants[committeeId].sector !== "tech" && (
+                    <span className={sharedStyles.sectorBadge}>
+                      {committeeConstants[committeeId].sector === "ai"
+                        ? "AI"
+                        : committeeConstants[committeeId].sector}
+                    </span>
+                  )}
               </span>
               <span className={styles.committeeTotal}>
                 Total spending{" "}

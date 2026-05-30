@@ -89,12 +89,6 @@ export default function RaceCandidates({
 }) {
   return (
     <table className={styles.candidateExpendituresTable}>
-      <thead>
-        <tr>
-          <th className={styles.candidateCell}></th>
-          <th></th>
-        </tr>
-      </thead>
       <tbody>
         {candidates.map((candidate, ind) => {
           const summary = electionData.candidates[candidate.name];

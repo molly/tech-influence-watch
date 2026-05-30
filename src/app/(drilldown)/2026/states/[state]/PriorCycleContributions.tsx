@@ -1,10 +1,12 @@
 import Link from "next/link";
 
 import { fetchStateExpenditures } from "@/app/actions/fetch";
+import sharedStyles from "@/app/shared.module.css";
 import {
   PopulatedStateExpenditures,
   PriorCycleDetail,
 } from "@/app/types/Expenditures";
+import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
 import { titlecaseCommittee, titlecaseLastFirst } from "@/app/utils/titlecase";
 import { formatCurrency } from "@/app/utils/utils";
@@ -57,10 +59,12 @@ function formatCandidates(candidates: PriorCycleDetail["candidates"]) {
 
 export default async function PriorCycleContributions({
   stateAbbr,
+  sector,
 }: {
   stateAbbr: string;
+  sector: Sector;
 }) {
-  const data = await fetchStateExpenditures(stateAbbr);
+  const data = await fetchStateExpenditures(stateAbbr, sector);
 
   if (isError(data)) {
     return null;
@@ -77,38 +81,60 @@ export default async function PriorCycleContributions({
   const companies = groupByCompany(details);
 
   return (
-    <div className={styles.priorCycleCard}>
-      <h2>Contributions not tied to 2026 races</h2>
-      <p>
-        {formatCurrency(total, true)} of the company contributions above went to
-        committees linked only to candidates not running in 2026.
+    <div className={sharedStyles.section}>
+      <h2 className={sharedStyles.sectionTitle}>
+        Contributions not tied to 2026 races
+      </h2>
+      <p className={sharedStyles.subtitle}>
+        <span className="bold">{formatCurrency(total, true)}</span> of the
+        direct contributions above went to committees linked only to candidates
+        not running in 2026.
       </p>
       {companies.map(([companyId, company]) => (
-        <div key={companyId} className={styles.cardSection}>
-          <Link href={`/2026/companies/${companyId}`}>
-            <h3>{company.company_name}</h3>
-          </Link>
-          <b>{formatCurrency(company.total, true)}</b>
-          {company.committees.map((c) => {
-            const candidateList = formatCandidates(c.candidates);
-            let committeeName = c.committee_name
-              ? titlecaseCommittee(c.committee_name)
-              : c.committee_id;
-            return (
-              <div key={c.committee_id} className={styles.cardSubsection}>
-                <div>{committeeName}</div>
-                <div className="secondary">
-                  {formatCurrency(c.amount, true)}
-                  {candidateList.length > 0 && (
-                    <span>
-                      , linked to:{" "}
-                      {candidateList.map(titlecaseLastFirst).join(", ")}
+        <div key={companyId} className={styles.companyGroup}>
+          <div className={styles.companyGroupHeader}>
+            <Link
+              href={`/2026/companies/${companyId}`}
+              className={styles.companyGroupName}
+            >
+              {company.company_name}
+            </Link>
+            <span className={styles.companyGroupAmount}>
+              {formatCurrency(company.total, true)}
+            </span>
+          </div>
+          <ul className={styles.priorCycleContributions}>
+            {company.committees.map((c) => {
+              const candidateList = formatCandidates(c.candidates);
+              const committeeName = c.committee_name
+                ? titlecaseCommittee(c.committee_name)
+                : c.committee_id;
+              return (
+                <li
+                  key={c.committee_id}
+                  className={styles.priorCycleContribution}
+                >
+                  <span className={styles.contributionLeft}>
+                    <span className={styles.contributionName}>
+                      {committeeName}
                     </span>
-                  )}
-                </div>
-              </div>
-            );
-          })}
+                    {candidateList.length > 0 && (
+                      <span className="secondary">
+                        {" "}
+                        — linked to:{" "}
+                        {candidateList.map(titlecaseLastFirst).join(", ")}
+                      </span>
+                    )}
+                  </span>
+                  <span className={styles.contributionRight}>
+                    <span className={styles.contributionAmount}>
+                      {formatCurrency(c.amount, true)}
+                    </span>
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
         </div>
       ))}
     </div>

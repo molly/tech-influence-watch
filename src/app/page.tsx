@@ -53,12 +53,17 @@ export default async function Home({
               <CombinedMapToggle
                 companyMap={
                   <Suspense fallback={<USMapSkeleton />}>
-                    <AllCompanySpendingMap sector={sector} showLink={true} />
+                    <AllCompanySpendingMap
+                      showHeader={true}
+                      sector={sector}
+                      showLink={true}
+                    />
                   </Suspense>
                 }
                 superPacMap={
                   <Suspense fallback={<USMapSkeleton />}>
                     <SuperPacSpendingMapWrapper
+                      showHeader={true}
                       sector={sector}
                       showLink={true}
                     />

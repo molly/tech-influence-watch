@@ -3,19 +3,23 @@ import ErrorText from "@/app/components/ErrorText";
 import MoneyCard from "@/app/components/MoneyCard";
 import sharedStyles from "@/app/shared.module.css";
 import { PopulatedStateExpenditures } from "@/app/types/Expenditures";
+import { Sector } from "@/app/types/Sector";
 import { is4xx, isError } from "@/app/utils/errors";
-import { formatCurrency } from "@/app/utils/utils";
+import { humanizeRoundedCurrency } from "@/app/utils/humanize";
+import { humanizeSector } from "@/app/utils/sector";
 
 import styles from "./page.module.css";
 
 export default async function TotalSpending({
+  sector,
   stateAbbr,
   titlecasedState,
 }: {
+  sector: Sector;
   stateAbbr: string;
   titlecasedState: string;
 }) {
-  let data = await fetchStateExpenditures(stateAbbr);
+  let data = await fetchStateExpenditures(stateAbbr, sector);
 
   if (isError(data)) {
     let errorText;
@@ -40,9 +44,9 @@ export default async function TotalSpending({
   return (
     <MoneyCard
       className={styles.totalSpendingCard}
-      topText="Cryptocurrency-focused PACs have spent"
-      amount={formatCurrency(expenditures.total, true)}
-      bottomText={`to influence 2026 elections in ${titlecasedState}`}
+      topText="PAC spending"
+      amount={humanizeRoundedCurrency(expenditures.total, true, 1)}
+      bottomText={`from tracked ${humanizeSector(sector, { lowercase: true, hyphen: true })}focused PACs to influence 2026 elections in ${titlecasedState}`}
     />
   );
 }

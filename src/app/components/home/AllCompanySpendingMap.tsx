@@ -28,9 +28,11 @@ function toStateValues(mapData: MapData): Record<string, number> {
 export default async function AllCompanySpendingMap({
   sector,
   showLink,
+  showHeader,
 }: {
   sector: Sector;
   showLink?: boolean;
+  showHeader?: boolean;
 }) {
   const data = await fetchMapData(sector);
   const sectorText = humanizeSector(sector, {
@@ -41,24 +43,26 @@ export default async function AllCompanySpendingMap({
   if (isError(data)) {
     return (
       <div>
-        <h2
-          id="company-spending-by-state"
-          className={sharedStyles.sectionTitle}
-        >
-          Approximate
-          <InformationalTooltip>
-            <p>
-              Some committees (particularly super PACs) spend cross-state or are
-              not associated with a specific candidate, and contributions to
-              them are omitted from this chart.
-            </p>
-            <p>
-              This relies on manual classification and so represents a
-              conservative estimate of industry spending.
-            </p>
-          </InformationalTooltip>{" "}
-          {sectorText}linked contributions to candidates by state
-        </h2>
+        {showHeader && (
+          <h2
+            id="company-spending-by-state"
+            className={sharedStyles.sectionTitle}
+          >
+            Approximate
+            <InformationalTooltip>
+              <p>
+                Some committees (particularly super PACs) spend cross-state or
+                are not associated with a specific candidate, and contributions
+                to them are omitted from this chart.
+              </p>
+              <p>
+                This relies on manual classification and so represents a
+                conservative estimate of industry spending.
+              </p>
+            </InformationalTooltip>{" "}
+            {sectorText}linked contributions to candidates by state
+          </h2>
+        )}
         <ErrorText subject="expenditures by state" />
       </div>
     );
@@ -66,23 +70,28 @@ export default async function AllCompanySpendingMap({
   const mapData = data as MapData;
   return (
     <>
-      <h2 id="company-spending-by-state" className={sharedStyles.sectionTitle}>
-        <span>
-          Approximate
-          <InformationalTooltip>
-            <p>
-              Some committees (particularly super PACs) spend cross-state or are
-              not associated with a specific candidate, and contributions to
-              them are omitted from this chart.
-            </p>
-            <p>
-              This relies on manual classification and so represents a
-              conservative estimate of industry spending.
-            </p>
-          </InformationalTooltip>{" "}
-          {sectorText}linked contributions to candidates by state
-        </span>
-      </h2>
+      {showHeader && (
+        <h2
+          id="company-spending-by-state"
+          className={sharedStyles.sectionTitle}
+        >
+          <span>
+            Approximate
+            <InformationalTooltip>
+              <p>
+                Some committees (particularly super PACs) spend cross-state or
+                are not associated with a specific candidate, and contributions
+                to them are omitted from this chart.
+              </p>
+              <p>
+                This relies on manual classification and so represents a
+                conservative estimate of industry spending.
+              </p>
+            </InformationalTooltip>{" "}
+            {sectorText}linked contributions to candidates by state
+          </span>
+        </h2>
+      )}
       <ChloroplethMap
         domain={generateDomain(10000, 10000000)}
         stateValues={toStateValues(mapData)}

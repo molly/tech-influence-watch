@@ -1,42 +1,73 @@
-.page {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: var(--max-width);
-  padding: 0 1rem;
+.headerSubtitle {
+  composes: headerSubtitle from "@/app/shared.module.css";
+  margin-bottom: 0;
+}
+
+.section {
+  display: grid;
+  grid-template-areas: "map list";
+  grid-template-columns: 3fr 2fr;
   gap: 1rem;
 }
 
-.mapRow {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-}
-
 .mapContainer {
-  width: 66%;
-  min-width: 25rem;
+  grid-area: map;
+  position: sticky;
+  top: 1rem;
+  align-self: start;
 }
 
 .statesTableCard {
-  composes: cardWithTable from "@/app/shared.module.css";
-  width: 28rem;
+  grid-area: list;
 }
 
-.statesTableHeader {
-  padding: 1rem 1rem 0 1rem;
+.stateGroup {
+  padding: 0.5rem;
 }
 
-.statesTable {
-  width: 100%;
+.raceRows {
+  padding-left: 0.5rem;
 }
 
-.headerRow {
-  font-weight: bold;
+.raceRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.2rem 0;
+  font-size: 0.8rem;
 }
 
-@media (min-width: 576px) {
+.raceAmount {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--secondary-text);
+}
+
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+@media (max-width: 900px) {
+  .statsRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 575px) {
+  .section {
+    grid-template-areas: "map" "list";
+    grid-template-columns: 1fr;
+  }
+
+  .statsRow {
+    grid-template-columns: 1fr;
+  }
+
   .mapContainer {
-    padding: 2rem;
+    position: static;
   }
 }

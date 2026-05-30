@@ -1,24 +1,34 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
+import Breadcrumbs from "@/app/components/Breadcrumbs";
 import AllCompanySpendingMap from "@/app/components/home/AllCompanySpendingMap";
 import SuperPacSpendingMapWrapper from "@/app/components/home/SuperPacSpendingMapWrapper";
 import USMapSkeleton from "@/app/components/skeletons/USMapSkeleton";
+import sharedStyles from "@/app/shared.module.css";
 import { Sector } from "@/app/types/Sector";
 import { customMetadata } from "@/app/utils/metadata";
-import { parseSector } from "@/app/utils/sector";
+import { humanizeSector, parseSector } from "@/app/utils/sector";
 
 import styles from "./page.module.css";
 import StateExpenditures, {
   StateExpendituresSkeleton,
 } from "./StateExpenditures";
 import StateNonPacExpenditures from "./StateNonPacExpenditures";
+import StatesStatsRow, { StatesStatsRowSkeleton } from "./StatesStatsRow";
 
-export const metadata: Metadata = customMetadata({
-  title: "Spending by State",
-  description:
-    "States in which cryptocurrency-focused political action committees have been spending to influence 2026 elections.",
-});
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ sector?: string }>;
+}): Promise<Metadata> {
+  const { sector: rawSector } = await searchParams;
+  const sector = parseSector(rawSector);
+  return customMetadata({
+    title: `Spending by State`,
+    description: `States in which  ${humanizeSector(sector, { hyphen: true, lowercase: true })}focused political action committees have been spending to influence 2026 elections.`,
+  });
+}
 
 export default async function Page({
   searchParams,
@@ -29,58 +39,55 @@ export default async function Page({
   const sector: Sector = parseSector(rawSector);
 
   return (
-    <div className={styles.page}>
-      <section className={styles.mapRow}>
-        <div className={styles.mapContainer}>
-          <Suspense fallback={<USMapSkeleton />}>
-            <SuperPacSpendingMapWrapper sector={sector} />
-          </Suspense>
-        </div>
-        <section className={styles.statesTableCard}>
-          <h2 className={styles.statesTableHeader}>
-            Cryptocurrency PAC spending by state
-          </h2>
-          <table className={styles.statesTable}>
-            <thead>
-              <tr>
-                <th className="text-cell" colSpan={2}>
-                  State
-                </th>
-                <th className="number-cell">Expenditures</th>
-              </tr>
-            </thead>
+    <>
+      <div className={sharedStyles.fullWidthHeader}>
+        <section className={sharedStyles.header}>
+          <Breadcrumbs crumbs={["Elections", "By state"]} />
+          <h1 className={sharedStyles.title}>Elections by state</h1>
+          <p className={styles.headerSubtitle}>
+            Where {humanizeSector(sector, { lowercase: true })} super PAC money
+            is going, and where companies and executives are contributing
+            directly to federal candidates.
+          </p>
+        </section>
+      </div>
+      <div className={`${sharedStyles.main}`}>
+        <Suspense fallback={<StatesStatsRowSkeleton />}>
+          <StatesStatsRow sector={sector} />
+        </Suspense>
+        <h2 className={sharedStyles.sectionTitle}>
+          {humanizeSector(sector)} PAC spending by state
+        </h2>
+        <section className={styles.section}>
+          <div className={styles.mapContainer}>
+            <Suspense fallback={<USMapSkeleton />}>
+              <SuperPacSpendingMapWrapper sector={sector} />
+            </Suspense>
+          </div>
+          <section className={styles.statesTableCard}>
             <Suspense fallback={<StateExpendituresSkeleton />}>
               <StateExpenditures sector={sector} />
             </Suspense>
-          </table>
+          </section>
         </section>
-      </section>
-      <section className={styles.mapRow}>
-        <div className={styles.mapContainer}>
-          <Suspense fallback={<USMapSkeleton />}>
-            <AllCompanySpendingMap sector={sector} />
-          </Suspense>
-        </div>
-        <section className={styles.statesTableCard}>
-          <h2 className={styles.statesTableHeader}>
-            Elections with spending by cryptocurrency industry-associated
-            companies or individuals
-          </h2>
-          <table className={styles.statesTable}>
-            <thead>
-              <tr>
-                <th className="text-cell" colSpan={2}>
-                  State
-                </th>
-                <th className="number-cell">Expenditures</th>
-              </tr>
-            </thead>
+        <h2 className={sharedStyles.sectionTitle}>
+          Direct{" "}
+          {humanizeSector(sector, { lowercase: true, context: "industry" })}{" "}
+          spending by state
+        </h2>
+        <section className={styles.section}>
+          <div className={styles.mapContainer}>
+            <Suspense fallback={<USMapSkeleton />}>
+              <AllCompanySpendingMap sector={sector} />
+            </Suspense>
+          </div>
+          <section className={styles.statesTableCard}>
             <Suspense fallback={<StateExpendituresSkeleton />}>
               <StateNonPacExpenditures sector={sector} />
             </Suspense>
-          </table>
+          </section>
         </section>
-      </section>
-    </div>
+      </div>
+    </>
   );
 }

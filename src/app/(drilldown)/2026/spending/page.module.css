@@ -3,7 +3,6 @@
   flex-direction: column;
   width: 100%;
   max-width: 800px;
-  padding: 0 1rem;
 }
 
 .oppositionSpendingTable {
@@ -13,4 +12,8 @@
 .incidental {
   color: var(--tertiary-text);
   font-style: italic;
+}
+
+.spendingChart {
+  margin-bottom: 1rem;
 }

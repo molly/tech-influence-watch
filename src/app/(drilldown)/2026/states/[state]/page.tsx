@@ -1,11 +1,23 @@
-import type { Metadata } from "next";
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
+import { fetchStateExpenditures } from "@/app/actions/fetch";
+import Breadcrumbs from "@/app/components/Breadcrumbs";
 import { MoneyCardSkeleton } from "@/app/components/MoneyCard";
+import TotalsRow from "@/app/components/TotalsRow";
 import { STATES_BY_FULL } from "@/app/data/states";
 import sharedStyles from "@/app/shared.module.css";
+import { PopulatedStateExpenditures } from "@/app/types/Expenditures";
+import { Sector } from "@/app/types/Sector";
+import { isError } from "@/app/utils/errors";
+import {
+  humanizeNumber,
+  humanizeRoundedCurrency,
+  pluralize,
+} from "@/app/utils/humanize";
 import { customMetadata } from "@/app/utils/metadata";
+import { humanizeSector, parseSector } from "@/app/utils/sector";
 import { titlecase } from "@/app/utils/titlecase";
 
 import ByCommittee, { CommitteeCardContentsSkeleton } from "./ByCommittee";
@@ -22,21 +34,81 @@ function stateNameFromUrl(urlName: string) {
 
 export async function generateMetadata({
   params,
+  searchParams,
 }: {
   params: Promise<{ state: string }>;
+  searchParams: Promise<{ sector?: string }>;
 }): Promise<Metadata> {
   const { state: stateParam } = await params;
+  const { sector: rawSector } = await searchParams;
+  const sector = parseSector(rawSector);
+
   const state = stateNameFromUrl(stateParam);
   return customMetadata({
     title: state,
-    description: `Cryptocurrency-focused political action committee spending on 2026 elections in ${state}.`,
+    description: `${humanizeSector(sector, { hyphen: true })}-focused political action committee spending on 2026 elections in ${state}.`,
   });
+}
+
+async function StateSubtitle({
+  stateAbbr,
+  sector,
+  titlecasedState,
+}: {
+  stateAbbr: string;
+  sector: Sector;
+  titlecasedState: string;
+}) {
+  const expendituresData = await fetchStateExpenditures(stateAbbr, sector);
+  if (!isError(expendituresData)) {
+    const raceCount = isError(expendituresData)
+      ? 0
+      : Object.keys((expendituresData as PopulatedStateExpenditures).by_race)
+          .length;
+    return (
+      <span className={sharedStyles.headerSubtitle}>
+        {`${humanizeSector(sector, { hyphen: true, or: true })}focused PACs have made
+            expenditures in `}
+        <span className="bold">{humanizeNumber(raceCount)}</span>
+        {` ${pluralize(raceCount, "race")} in ${titlecasedState}.`}
+      </span>
+    );
+  }
+  return null;
+}
+
+async function ByCommitteeTotalLabel({
+  stateAbbr,
+  sector,
+}: {
+  stateAbbr: string;
+  sector: Sector;
+}) {
+  const expendituresData = await fetchStateExpenditures(stateAbbr, sector);
+  if (isError(expendituresData)) {
+    return null;
+  }
+  const totalSpending = (expendituresData as PopulatedStateExpenditures).total;
+  if (!totalSpending) {
+    return null;
+  }
+  return (
+    <span className={sharedStyles.sectionTitleAmount}>
+      of{" "}
+      <span className={sharedStyles.sectionTitleAmountValue}>
+        {humanizeRoundedCurrency(totalSpending, true, 1)}
+      </span>{" "}
+      total PAC spending
+    </span>
+  );
 }
 
 export default async function CommitteePage({
   params,
+  searchParams,
 }: {
   params: Promise<{ state: string }>;
+  searchParams: Promise<{ sector?: string }>;
 }) {
   const { state: stateParam } = await params;
   const titlecasedState = stateNameFromUrl(stateParam);
@@ -44,44 +116,78 @@ export default async function CommitteePage({
     notFound();
   }
 
+  const { sector: rawSector } = await searchParams;
+  const sector: Sector = parseSector(rawSector);
+
   const stateAbbr = STATES_BY_FULL[titlecasedState];
 
   return (
-    <div className={styles.page}>
-      <h1 className={sharedStyles.titleH2}>{titlecasedState}</h1>
-      <div className={styles.spendingCards}>
-        <Suspense fallback={<MoneyCardSkeleton />}>
-          <TotalSpending
-            stateAbbr={stateAbbr}
-            titlecasedState={titlecasedState}
+    <>
+      <div className={sharedStyles.fullWidthHeader}>
+        <section className={sharedStyles.header}>
+          <Breadcrumbs
+            crumbs={[
+              "Elections",
+              { name: "By state", href: "/2026/states" },
+              titlecasedState,
+            ]}
           />
-        </Suspense>
-        <Suspense fallback={<MoneyCardSkeleton />}>
-          <CompanySpending
-            stateAbbr={stateAbbr}
-            titlecasedState={titlecasedState}
-          />
-        </Suspense>
-      </div>
-      <div className={styles.raceAndCommitteeSection}>
-        <div className={styles.raceCard}>
-          <h2>By race</h2>
-          <Suspense fallback={<RaceCardContentsSkeleton />}>
-            <ByRace stateAbbr={stateAbbr} />
+          <h1 className={sharedStyles.title}>{titlecasedState}</h1>
+          <Suspense>
+            <StateSubtitle
+              stateAbbr={stateAbbr}
+              sector={sector}
+              titlecasedState={titlecasedState}
+            />
           </Suspense>
-        </div>
-        <div className={styles.sideColumn}>
-          <div className={styles.committeeCard}>
-            <h2>By crypto-focused PACs</h2>
+        </section>
+      </div>
+      <div className={`${sharedStyles.main}`}>
+        <TotalsRow>
+          <Suspense fallback={<MoneyCardSkeleton />}>
+            <TotalSpending
+              sector={sector}
+              stateAbbr={stateAbbr}
+              titlecasedState={titlecasedState}
+            />
+          </Suspense>
+          <Suspense fallback={<MoneyCardSkeleton />}>
+            <CompanySpending
+              sector={sector}
+              stateAbbr={stateAbbr}
+              titlecasedState={titlecasedState}
+            />
+          </Suspense>
+        </TotalsRow>
+        <div className={sharedStyles.columns}>
+          <div className={sharedStyles.mainColumn}>
+            <h2 className={sharedStyles.sectionTitle}>By race</h2>
+            <Suspense fallback={<RaceCardContentsSkeleton />}>
+              <ByRace stateAbbr={stateAbbr} sector={sector} />
+            </Suspense>
+          </div>
+          <div className={sharedStyles.sideColumn}>
+            <h2 className={styles.sectionTitle}>
+              By{" "}
+              {humanizeSector(sector, {
+                lowercase: true,
+                abbrev: true,
+                hyphen: true,
+              })}
+              focused PACs
+              <Suspense>
+                <ByCommitteeTotalLabel stateAbbr={stateAbbr} sector={sector} />
+              </Suspense>
+            </h2>
             <Suspense fallback={<CommitteeCardContentsSkeleton />}>
-              <ByCommittee stateAbbr={stateAbbr} />
+              <ByCommittee stateAbbr={stateAbbr} sector={sector} />
             </Suspense>
           </div>
           <Suspense>
-            <PriorCycleContributions stateAbbr={stateAbbr} />
+            <PriorCycleContributions stateAbbr={stateAbbr} sector={sector} />
           </Suspense>
         </div>
       </div>
-    </div>
+    </>
   );
 }

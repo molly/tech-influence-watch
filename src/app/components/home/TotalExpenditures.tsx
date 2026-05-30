@@ -19,9 +19,7 @@ export default async function TotalDisbursements({
   const sectorText = humanizeSector(sector, { abbrev: true });
   if (isError(expendituresData)) {
     return (
-      <div
-        className={`secondary ${sharedStyles.smallCard} ${sharedStyles.smallCardError} ${className}`}
-      >
+      <div className={`secondary ${sharedStyles.smallCard} ${className}`}>
         <ErrorText subject={`the total expenditures by ${sectorText} PACs`} />
       </div>
     );
@@ -31,7 +29,7 @@ export default async function TotalDisbursements({
     <MoneyCard
       topText="PAC spending"
       amount={humanizeRoundedCurrency(expenditures, true, 1)}
-      bottomText="spent directly on federal elections this cycle."
+      bottomText="spent directly on federal elections this cycle"
       className={className}
     />
   );

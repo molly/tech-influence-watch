@@ -2,30 +2,31 @@ import Link from "next/link";
 
 import { fetchConstant, fetchStateExpenditures } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
-import Skeleton from "@/app/components/skeletons/Skeleton";
+import HorizontalBars, {
+  HorizontalBarItem,
+  HorizontalBarsSkeleton,
+} from "@/app/components/home/HorizontalBars";
 import { CommitteeConstant } from "@/app/types/Committee";
 import { PopulatedStateExpenditures } from "@/app/types/Expenditures";
+import { Sector } from "@/app/types/Sector";
 import { is4xx, isError } from "@/app/utils/errors";
+import { humanizeList } from "@/app/utils/humanize";
+import { getRaceName, sortRaces } from "@/app/utils/races";
 import { formatCurrency } from "@/app/utils/utils";
 
-import styles from "./page.module.css";
-
 export function CommitteeCardContentsSkeleton() {
-  return (
-    <div className={styles.cardSection}>
-      <Skeleton width="15rem" height="1.17em" onCard={true} />
-      <Skeleton width="5em" onCard={true} />
-    </div>
-  );
+  return <HorizontalBarsSkeleton numBars={3} />;
 }
 
 export default async function CommitteeCard({
   stateAbbr,
+  sector,
 }: {
   stateAbbr: string;
+  sector: Sector;
 }) {
   const [expendituresData, committeeData] = await Promise.all([
-    fetchStateExpenditures(stateAbbr),
+    fetchStateExpenditures(stateAbbr, sector),
     fetchConstant("committees"),
   ]);
   const committees = (committeeData || {}) as Record<string, CommitteeConstant>;
@@ -57,31 +58,43 @@ export default async function CommitteeCard({
     );
   });
 
-  return (
-    <div>
-      {committeesSortedByExpenditures.map((committeeId) => {
-        let committee;
-        if (committees && committeeId in committees) {
-          committee = committees[committeeId];
+  const items: HorizontalBarItem[] = committeesSortedByExpenditures.map(
+    (committeeId) => {
+      const committee = committees?.[committeeId];
+      const committeeExpenditures = expenditures.by_committee[committeeId];
+
+      const raceIdSet = new Set<string>();
+      for (const exp of committeeExpenditures.expenditures) {
+        if (exp.candidate_office === "S") {
+          raceIdSet.add(`${stateAbbr}-S`);
+        } else if (exp.candidate_office === "H") {
+          const district = exp.candidate_office_district;
+          raceIdSet.add(district ? `${stateAbbr}-H-${district}` : `${stateAbbr}-H`);
         }
-        return (
-          <div key={committeeId} className={styles.cardSection}>
-            {committee ? (
-              <Link href={`/2026/committees/${committeeId}`}>
-                <h3>{committee.name}</h3>
-              </Link>
-            ) : (
-              <h3>{committeeId}</h3>
-            )}
-            <b>
-              {formatCurrency(
-                expenditures.by_committee[committeeId].total,
-                true,
-              )}
-            </b>
-          </div>
-        );
-      })}
-    </div>
+      }
+
+      const raceNames = Array.from(raceIdSet)
+        .sort(sortRaces)
+        .map((raceId) => getRaceName(raceId));
+
+      const subtitle =
+        raceNames.length > 0
+          ? `Active in ${humanizeList(raceNames)}`
+          : undefined;
+
+      return {
+        key: committeeId,
+        label: committee?.name ?? committeeId,
+        labelNode: committee ? (
+          <Link href={`/2026/committees/${committeeId}`}>{committee.name}</Link>
+        ) : undefined,
+        subtitle,
+        value: committeeExpenditures.total,
+        displayValue: formatCurrency(committeeExpenditures.total, true),
+        ariaLabel: `${committee?.name ?? committeeId}: ${formatCurrency(committeeExpenditures.total, true)}`,
+      };
+    },
   );
+
+  return <HorizontalBars items={items} max={expenditures.total} />;
 }

@@ -87,6 +87,7 @@ export interface StateExpenditures {
   by_race: Record<string, RaceExpenditureGroup>;
   by_companies?: Record<string, number>;
   companies_total?: number;
+  by_race_companies?: Record<string, Record<string, number>>;
   prior_cycle_details?: PriorCycleDetail[];
   prior_cycle_companies_total?: number;
   total: number;
@@ -97,6 +98,7 @@ export interface PopulatedStateExpenditures {
   by_race: Record<string, PopulatedRaceExpenditureGroup>;
   by_companies?: Record<string, number>;
   companies_total?: number;
+  by_race_companies_total?: Record<string, number>;
   prior_cycle_details?: PriorCycleDetail[];
   prior_cycle_companies_total?: number;
   total: number;

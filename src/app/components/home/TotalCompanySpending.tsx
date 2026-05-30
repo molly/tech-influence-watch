@@ -21,9 +21,7 @@ export default async function TotalCompanySpending({
   const sectorText = humanizeSector(sector, { context: "industry" });
   if (isError(companyTotalsData)) {
     return (
-      <div
-        className={`${sharedStyles.smallCard} ${sharedStyles.smallCardError} ${className}`}
-      >
+      <div className={`${sharedStyles.smallCard} ${className}`}>
         <ErrorText
           subject={`the total amount of money contributed by ${sectorText.toLowerCase()} companies and individuals`}
         />
@@ -35,7 +33,7 @@ export default async function TotalCompanySpending({
     <MoneyCard
       topText="Industry contributions"
       amount={humanizeRoundedCurrency(spending.total, true, 1)}
-      bottomText={`from tracked ${sectorText.toLowerCase()} companies and individuals.`}
+      bottomText={`from tracked ${sectorText.toLowerCase()} companies and individuals`}
       tooltip={
         <InformationalTooltip>
           {`This figure includes direct contributions to candidates and committees from ${sectorText.toLowerCase()} companies and individuals, as well as contributions from these entities to the PACs tracked on this site. It is based on manual classification and may not capture all industry-related spending — treat it as a conservative estimate.`}

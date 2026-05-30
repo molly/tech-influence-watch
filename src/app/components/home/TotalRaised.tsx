@@ -24,9 +24,7 @@ export default async function TotalRaised({
   });
   if (isError(receiptsData)) {
     return (
-      <div
-        className={`${sharedStyles.smallCard} ${sharedStyles.smallCardError} ${className}`}
-      >
+      <div className={`${sharedStyles.smallCard}  ${className}`}>
         <ErrorText
           subject={`the total amount of money raised by ${sectorText}focused political action committees`}
         />
@@ -39,11 +37,11 @@ export default async function TotalRaised({
 
   let claimed;
   if (totals.claimed_committed) {
-    claimed = ` They claim to have another ${humanizeRoundedCurrency(totals.claimed_committed, true, 1)} committed.`;
+    claimed = `. They claim to have another ${humanizeRoundedCurrency(totals.claimed_committed, true, 1)} committed.`;
   }
   const bottomText = (
     <div>
-      held by {sectorText}focused committees.{claimed}
+      held by {sectorText}focused committees{claimed}
     </div>
   );
 

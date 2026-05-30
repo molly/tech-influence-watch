@@ -12,20 +12,31 @@ import { ExpendituresByPartySnapshot } from "@/app/types/Expenditures";
 import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
 import { customMetadata } from "@/app/utils/metadata";
-import { parseSector } from "@/app/utils/sector";
+import { humanizeSector, parseSector } from "@/app/utils/sector";
 
 import OppositionSpending, {
   OppositionSpendingSkeleton,
 } from "./OppositionSpending";
 import styles from "./page.module.css";
 
-export const metadata: Metadata = customMetadata({
-  title: "PAC spending by party",
-  description:
-    "Cryptocurrency-focused spending in the 2026 election cycle, broken down by political party.",
-});
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ sector?: string }>;
+}): Promise<Metadata> {
+  const { sector: rawSector } = await searchParams;
+  const sector = parseSector(rawSector);
+  return customMetadata({
+    title: "PAC spending by party",
+    description: `${humanizeSector(sector, { hyphen: true })}focused PAC spending in the 2026 election cycle by political party`,
+  });
+}
 
-async function SpendingByPartyWithOppositionChart({ sector }: { sector: Sector }) {
+async function SpendingByPartyWithOppositionChart({
+  sector,
+}: {
+  sector: Sector;
+}) {
   const data = await fetchAllExpenditureTotalsByParty(sector);
   if (isError(data)) {
     return <ErrorText subject="expenditures by party" />;
@@ -48,16 +59,19 @@ export default async function SpendingPage({
   const sector = parseSector(rawSector);
 
   return (
-    <section className={styles.column}>
-      <h1>Spending by all committees</h1>
-      <section className={sharedStyles.card}>
-        <p>
-          Cryptocurrency-focused PACs have contributed to both support and
-          oppose candidates from Republican and Democratic parties.
-        </p>
-        <Suspense fallback={<SpendingByPartySkeleton />}>
-          <SpendingByPartyWithOppositionChart sector={sector} />
-        </Suspense>
+    <div className={sharedStyles.main}>
+      <h1 className={sharedStyles.title}>Spending by all committees</h1>
+      <p className={sharedStyles.headerSubtitle}>
+        {humanizeSector(sector, { hyphen: true, or: true })}focused PACs have
+        contributed to both support and oppose candidates from Republican and
+        Democratic parties.
+      </p>
+      <section className={styles.column}>
+        <div className={styles.spendingChart}>
+          <Suspense fallback={<SpendingByPartySkeleton />}>
+            <SpendingByPartyWithOppositionChart sector={sector} />
+          </Suspense>
+        </div>
         <p>
           However, spending to oppose Democrats does not always support
           Republicans, and vice versa. For example, when a PAC opposes a
@@ -85,6 +99,6 @@ export default async function SpendingPage({
           <OppositionSpending />
         </Suspense>
       </section>
-    </section>
+    </div>
   );
 }

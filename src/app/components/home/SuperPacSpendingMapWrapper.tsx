@@ -27,9 +27,11 @@ function toStateValues(mapData: MapData): Record<string, number> {
 export default async function SuperPacSpendingMapWrapper({
   sector,
   showLink,
+  showHeader,
 }: {
   sector: Sector;
   showLink?: boolean;
+  showHeader?: boolean;
 }) {
   const data = await fetchMapData(sector);
   const sectorText = humanizeSector(sector, {
@@ -40,7 +42,7 @@ export default async function SuperPacSpendingMapWrapper({
   if (isError(data)) {
     return (
       <div>
-        <h2>Expenditures by {sectorText} PACs by state</h2>
+        {showHeader && <h2>Expenditures by {sectorText} PACs by state</h2>}
         <ErrorText subject="PAC expenditures by state" />
       </div>
     );
@@ -48,12 +50,14 @@ export default async function SuperPacSpendingMapWrapper({
   const mapData = data as MapData;
   return (
     <>
-      <h2
-        id="super-pac-spending-by-state"
-        className={sharedStyles.sectionTitle}
-      >
-        Expenditures by {sectorText} PACs by state
-      </h2>
+      {showHeader && (
+        <h2
+          id="super-pac-spending-by-state"
+          className={sharedStyles.sectionTitle}
+        >
+          Expenditures by {sectorText} PACs by state
+        </h2>
+      )}
       <ChloroplethMap
         domain={generateDomain(10000, 10000000)}
         stateValues={toStateValues(mapData)}

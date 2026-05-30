@@ -84,7 +84,7 @@ export default async function RacePage({
           <Breadcrumbs
             crumbs={[
               { name: "Elections", href: "/2026/elections" },
-              { name: fullStateName, href: `/2026/states/${stateSlug}}` },
+              { name: fullStateName, href: `/2026/states/${stateSlug}` },
               getRaceName(raceId),
             ]}
           />
@@ -95,6 +95,14 @@ export default async function RacePage({
       </div>
       <div className={styles.columns}>
         <div className={styles.electionsColumn}>
+          <span className={styles.electionSubtitle}>
+            Spending by{" "}
+            {humanizeSector(sector, {
+              hyphen: true,
+              lowercase: true,
+            })}
+            focused PACs
+          </span>
           <Suspense fallback={<ElectionsSkeleton />}>
             <Elections raceId={raceId} sector={sector} />
           </Suspense>

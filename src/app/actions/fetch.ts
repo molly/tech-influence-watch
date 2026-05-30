@@ -50,6 +50,7 @@ import {
   ExpendituresByPartySnapshot,
   ExpenditureTotals,
   PopulatedStateExpenditures,
+  PriorCycleDetail,
   RecentExpenditures,
   StateExpenditures,
 } from "../types/Expenditures";
@@ -522,11 +523,35 @@ export const fetchMapData = cache(
         by_companies = stateData[state].by_companies;
         companies_total = stateData[state].companies_total;
       }
+      let by_race_companies: Record<string, number> | undefined;
+      const rawByRaceCompanies = stateData[state].by_race_companies ?? {};
+      if (sectorCompanyIds) {
+        by_race_companies = {};
+        for (const [raceId, companiesMap] of Object.entries(
+          rawByRaceCompanies,
+        )) {
+          const raceTotal = Object.entries(companiesMap)
+            .filter(([id]) => sectorCompanyIds.has(id))
+            .reduce((sum, [, amt]) => sum + amt, 0);
+          if (raceTotal > 0) {
+            by_race_companies[raceId] = raceTotal;
+          }
+        }
+      } else {
+        by_race_companies = Object.fromEntries(
+          Object.entries(rawByRaceCompanies).map(([raceId, companiesMap]) => [
+            raceId,
+            Object.values(companiesMap).reduce((sum, amt) => sum + amt, 0),
+          ]),
+        );
+      }
+
       mapData[state] = {
         total,
         by_race: {},
         by_companies,
         companies_total,
+        by_race_companies,
       };
       for (const raceId of Object.keys(stateData[state].by_race)) {
         mapData[state].by_race[raceId] = stateData[state].by_race[raceId].total;
@@ -540,8 +565,17 @@ export const fetchMapData = cache(
 export const fetchStateExpenditures = cache(
   async (
     stateAbbr: string,
+    sector: Sector = "all",
   ): Promise<PopulatedStateExpenditures | ErrorType> => {
-    const data = await fetchSnapshot("expenditures", "states");
+    const [data, committeeConstants, companyConstants] = await Promise.all([
+      fetchSnapshot("expenditures", "states"),
+      sector !== "all"
+        ? fetchConstant<Record<string, CommitteeConstant>>("committees")
+        : Promise.resolve(null),
+      sector !== "all"
+        ? fetchConstant<Record<string, CompanyConstant>>("companies")
+        : Promise.resolve(null),
+    ]);
     if (isError(data)) {
       return data as ErrorType;
     } else if (!(stateAbbr in data)) {
@@ -552,14 +586,108 @@ export const fetchStateExpenditures = cache(
       const allExpendituresData = await fetchAllExpenditures();
       if (isError(allExpendituresData)) {
         return allExpendituresData as ErrorType;
-      } else {
-        // Populate expenditures
-        const allExpenditures = allExpendituresData as Record<
-          ExpenditureId,
-          Expenditure
-        >;
+      }
+      const allExpenditures = allExpendituresData as Record<
+        ExpenditureId,
+        Expenditure
+      >;
+      if (sector === "all") {
         return hydrateStateExpenditures(stateExpenditures, allExpenditures);
       }
+
+      const sectorCommitteeIds = getCommitteeIdsForSector(
+        sector,
+        committeeConstants ?? {},
+      );
+      const sectorCompanyIds = getCompanyIdsForSector(
+        sector,
+        companyConstants ?? {},
+      );
+
+      const filteredByCommittee: StateExpenditures["by_committee"] = {};
+      const sectorExpIds = new Set<string>();
+      let total = 0;
+      for (const [cid, group] of Object.entries(
+        stateExpenditures.by_committee,
+      )) {
+        if (sectorCommitteeIds?.has(cid)) {
+          filteredByCommittee[cid] = group;
+          total += group.total;
+          for (const expId of group.expenditures) {
+            sectorExpIds.add(expId);
+          }
+        }
+      }
+
+      const filteredByRace: StateExpenditures["by_race"] = {};
+      for (const [raceId, raceGroup] of Object.entries(
+        stateExpenditures.by_race,
+      )) {
+        if (raceGroup.expenditures.some((id) => sectorExpIds.has(id))) {
+          filteredByRace[raceId] = raceGroup;
+        }
+      }
+
+      let filteredByCompanies: Record<string, number> | undefined;
+      let companiesTotal: number | undefined;
+      if (sectorCompanyIds && stateExpenditures.by_companies) {
+        filteredByCompanies = Object.fromEntries(
+          Object.entries(stateExpenditures.by_companies).filter(([id]) =>
+            sectorCompanyIds.has(id),
+          ),
+        );
+        companiesTotal = Object.values(filteredByCompanies).reduce(
+          (s, v) => s + v,
+          0,
+        );
+      }
+
+      let filteredByRaceCompanies: StateExpenditures["by_race_companies"];
+      if (stateExpenditures.by_race_companies) {
+        filteredByRaceCompanies = {};
+        for (const [raceId, companiesMap] of Object.entries(
+          stateExpenditures.by_race_companies,
+        )) {
+          const filtered = sectorCompanyIds
+            ? Object.fromEntries(
+                Object.entries(companiesMap).filter(([id]) =>
+                  sectorCompanyIds.has(id),
+                ),
+              )
+            : companiesMap;
+          const raceTotal = Object.values(filtered).reduce((s, v) => s + v, 0);
+          if (raceTotal > 0) {
+            filteredByRaceCompanies[raceId] = filtered;
+          }
+        }
+      }
+
+      let filteredPriorCycleDetails: PriorCycleDetail[] | undefined;
+      let priorCycleCompaniesTotal: number | undefined;
+      if (sectorCompanyIds && stateExpenditures.prior_cycle_details) {
+        filteredPriorCycleDetails =
+          stateExpenditures.prior_cycle_details.filter((d) =>
+            sectorCompanyIds.has(d.company_id),
+          );
+        priorCycleCompaniesTotal = filteredPriorCycleDetails.reduce(
+          (s, d) => s + d.amount,
+          0,
+        );
+      }
+
+      return hydrateStateExpenditures(
+        {
+          by_committee: filteredByCommittee,
+          by_race: filteredByRace,
+          by_companies: filteredByCompanies,
+          companies_total: companiesTotal,
+          by_race_companies: filteredByRaceCompanies,
+          prior_cycle_details: filteredPriorCycleDetails,
+          prior_cycle_companies_total: priorCycleCompaniesTotal,
+          total,
+        },
+        allExpenditures,
+      );
     }
   },
 );

@@ -3,8 +3,7 @@ import { ElectionGroup, Party, Race, RaceType } from "@/app/types/Elections";
 import { PopulatedRaceExpenditureGroup } from "@/app/types/Expenditures";
 import { Sector } from "@/app/types/Sector";
 import { getSubraceName, isUpcomingRace } from "@/app/utils/races";
-import { humanizeSector } from "@/app/utils/sector";
-import { titlecase } from "@/app/utils/titlecase";
+import { sentenceCase } from "@/app/utils/titlecase";
 import { formatDateFromString, isUpcomingDate } from "@/app/utils/utils";
 
 import CandidateExpendituresTable from "./CandidateExpendituresTable";
@@ -168,21 +167,13 @@ export default function RaceSummary({
     <div>
       <div className={styles.raceSummaryDetails}>
         <h2 className={sharedStyles.sectionTitle}>
-          {titlecase(getSubraceName(race))}
+          {sentenceCase(getSubraceName(race))}
           <span className={sharedStyles.sectionTitleAmount}>
             <RaceDate race={race} />
           </span>
         </h2>
       </div>
-      <span className={sharedStyles.subtitle}>
-        Spending by{" "}
-        {humanizeSector(sector, {
-          hyphen: true,
-          abbrev: true,
-          lowercase: true,
-        })}
-        focused PACs
-      </span>
+
       {!hasRelatedSpending && (
         <RaceCandidates
           candidates={candidates}

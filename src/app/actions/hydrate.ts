@@ -9,11 +9,27 @@ export function hydrateStateExpenditures(
   stateExpenditures: StateExpenditures,
   allExpenditures: Record<ExpenditureId, Expenditure>,
 ): PopulatedStateExpenditures {
+  let by_race_companies_total: Record<string, number> | undefined;
+  if (stateExpenditures.by_race_companies) {
+    by_race_companies_total = {};
+    for (const [raceId, companiesMap] of Object.entries(
+      stateExpenditures.by_race_companies,
+    )) {
+      const raceTotal = Object.values(companiesMap).reduce(
+        (sum, amt) => sum + amt,
+        0,
+      );
+      if (raceTotal > 0) {
+        by_race_companies_total[raceId] = raceTotal;
+      }
+    }
+  }
   const populatedStateExpenditures: PopulatedStateExpenditures = {
     by_committee: {},
     by_race: {},
     by_companies: stateExpenditures.by_companies,
     companies_total: stateExpenditures.companies_total,
+    by_race_companies_total,
     prior_cycle_details: stateExpenditures.prior_cycle_details,
     prior_cycle_companies_total: stateExpenditures.prior_cycle_companies_total,
     total: stateExpenditures.total,
