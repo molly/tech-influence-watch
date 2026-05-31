@@ -27,6 +27,7 @@ import {
 import { getAdDate } from "@/app/utils/ads";
 import { ErrorType, isError } from "@/app/utils/errors";
 
+import { TRUMP_CANDIDATE_ID } from "../data/trump";
 import { Ad, AdGroup } from "../types/Ads";
 import { Beneficiary } from "../types/Beneficiaries";
 import {
@@ -1079,6 +1080,54 @@ export const fetchBeneficiariesWithoutExpendituresOrder = cache(
       return beneficiariesOrderData as ErrorType;
     }
     return beneficiariesOrderData.candidatesWithoutExpendituresOrder;
+  },
+);
+
+export const fetchTrumpBeneficiaries = cache(
+  async (): Promise<
+    | {
+        beneficiaries: Record<string, Beneficiary>;
+        grandTotal: number;
+        committeeNames: Record<string, string>;
+      }
+    | ErrorType
+  > => {
+    const [beneficiariesData, trumpCommitteesData] = await Promise.all([
+      fetchBeneficiaries(),
+      fetchTrumpCommittees(),
+    ]);
+    if (isError(beneficiariesData)) {
+      return beneficiariesData as ErrorType;
+    }
+    const allBeneficiaries = beneficiariesData as Record<string, Beneficiary>;
+    const trumpCommitteeIds = new Set<string>([
+      TRUMP_CANDIDATE_ID,
+      ...(trumpCommitteesData?.ids ?? []),
+    ]);
+    const beneficiaries = Object.fromEntries(
+      Object.entries(allBeneficiaries).filter(([id]) =>
+        trumpCommitteeIds.has(id),
+      ),
+    );
+    const grandTotal = Object.values(beneficiaries).reduce(
+      (sum, b) => sum + b.total,
+      0,
+    );
+    return {
+      beneficiaries,
+      grandTotal,
+      committeeNames: trumpCommitteesData?.names ?? {},
+    };
+  },
+);
+
+export const fetchTrumpGrandTotal = cache(
+  async (): Promise<number | ErrorType> => {
+    const data = await fetchTrumpBeneficiaries();
+    if (isError(data)) {
+      return data as ErrorType;
+    }
+    return (data as { grandTotal: number }).grandTotal;
   },
 );
 

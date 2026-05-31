@@ -48,7 +48,7 @@
 blockquote.pullQuote {
   border-left: 2px solid var(--accent-on-light);
   margin: 0 0 1rem 0;
-  padding: 1rem;
+  padding: 1rem 0 1rem 2rem;
   font-style: italic;
 }
 
@@ -62,41 +62,37 @@ blockquote.pullQuote {
   }
 }
 
-.projectSection {
+.section {
   margin-bottom: 3rem;
-}
-
-.projectSectionHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  border-bottom: 1px solid var(--divider-color);
-  padding-bottom: 0.5rem;
-  margin-bottom: 1.5rem;
-}
-
-.projectSectionHeader h3 {
-  font-family: var(--font-display);
-  font-size: clamp(1.5rem, 3vw, 2rem);
-  font-weight: 700;
-  margin: 0;
-}
-
-.readingTime {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 0.9rem;
-  color: var(--secondary-text);
 }
 
 .projectColumns {
   display: grid;
-  grid-template-columns: 3fr 2fr;
-  gap: 2.5rem;
+  grid-template-columns: 720px auto;
+  grid-template-areas:
+    "text1 aside"
+    "text2 aside";
+  gap: 0 2.5rem;
   align-items: start;
 }
 
+.textColumn1 {
+  grid-area: text1;
+}
+
+.textColumn2 {
+  grid-area: text2;
+}
+
+.textColumn2 > *:first-child {
+  margin-top: 0;
+}
+
 /* Quote card */
+
+.quoteColumn {
+  grid-area: aside;
+}
 
 .quoteCard {
   border: 1px solid var(--card-border);
@@ -153,35 +149,33 @@ blockquote.pullQuote {
   font-style: italic;
 }
 
-/* Rest of content */
-
-.mainText {
-  font-size: 1.1rem;
-  line-height: 1.9;
-  margin-bottom: 2rem;
+.imageAttribution {
+  font-family: var(--font-sans);
+  font-size: 0.6rem;
 }
 
-.mainText i {
-  margin-right: 0.15em;
-}
-
-.footnotes {
+.footnotesAndReferences {
   font-size: 0.9rem;
   border-top: 1px solid var(--divider-color);
   padding-top: 0.75rem;
   margin-top: 2rem;
+  font-family: var(--font-sans);
+}
+
+.references {
+  padding-left: 1.5rem;
+  list-style-type: decimal;
+}
+
+.footnotes {
+  padding-left: 1.5rem;
+  list-style-type: lower-alpha;
+  border-bottom: 1px solid var(--hair-color);
 }
 
 .footnote {
-  display: flex;
-  gap: 0.5rem;
   margin-bottom: 0.4rem;
   line-height: 1.6;
-}
-
-.footnoteLabel {
-  flex-shrink: 0;
-  font-weight: 600;
 }
 
 .footnoteBackref {
@@ -194,53 +188,37 @@ blockquote.pullQuote {
   color: var(--accent-on-light);
 }
 
-.mainText sup {
+.section sup {
   line-height: 0;
 }
 
-.mainText sup a {
+.section sup a {
   text-decoration: none;
-  color: var(--accent-on-light);
+  color: var(--main-text);
 }
 
-.mainText sup a:hover {
+.section sup a:hover {
   text-decoration: underline;
-}
-
-.ctaBlock {
-  margin: 1.5rem 0;
-}
-
-.ctaButton {
-  display: inline-block;
-  background-color: var(--accent);
-  color: var(--color-white);
-  font-weight: 600;
-  font-size: 1rem;
-  padding: 0.5rem 1rem;
-  text-decoration: none;
-  transition:
-    background-color 0.15s,
-    color 0.15s;
-}
-
-.ctaButton:hover {
-  background-color: var(--accent-on-light);
-  color: var(--color-white);
-  text-decoration: none;
 }
 
 /* Responsive */
 
-@media (max-width: 768px) {
+@media (max-width: 999px) {
   .projectColumns {
     grid-template-columns: 1fr;
+    grid-template-areas:
+      "text1"
+      "aside"
+      "text2";
   }
 
   .quoteColumn {
-    order: -1;
+    max-width: 40rem;
+    margin-bottom: 1.5rem;
   }
+}
 
+@media (max-width: 768px) {
   .quoteImageContainer {
     aspect-ratio: 16 / 9;
   }

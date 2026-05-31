@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 
-import { fetchBeneficiaries, fetchTrumpCommittees } from "@/app/actions/fetch";
+import { fetchTrumpBeneficiaries } from "@/app/actions/fetch";
 import Breadcrumbs from "@/app/components/Breadcrumbs";
 import ErrorText from "@/app/components/ErrorText";
 import HorizontalBars, {
@@ -61,31 +61,18 @@ function TrumpContributionsSkeleton() {
 }
 
 async function TrumpContributionsData() {
-  const [beneficiariesData, trumpCommitteesData] = await Promise.all([
-    fetchBeneficiaries(),
-    fetchTrumpCommittees(),
-  ]);
+  const trumpData = await fetchTrumpBeneficiaries();
 
-  if (isError(beneficiariesData)) {
+  if (isError(trumpData)) {
     return <ErrorText subject="contributions data" />;
   }
 
-  const beneficiaries = beneficiariesData as Record<string, Beneficiary>;
-  const trumpCommitteeIds = new Set<string>([
-    TRUMP_CANDIDATE_ID,
-    ...(trumpCommitteesData?.ids ?? []),
-  ]);
-  const trumpCommitteeNames: Record<string, string> =
-    trumpCommitteesData?.names ?? {};
-
-  const trumpBeneficiaries = Object.fromEntries(
-    Object.entries(beneficiaries).filter(([id]) => trumpCommitteeIds.has(id)),
-  );
-
-  const grandTotal = Object.values(trumpBeneficiaries).reduce(
-    (sum, b) => sum + b.total,
-    0,
-  );
+  const { beneficiaries: trumpBeneficiaries, grandTotal, committeeNames: trumpCommitteeNames } =
+    trumpData as {
+      beneficiaries: Record<string, Beneficiary>;
+      grandTotal: number;
+      committeeNames: Record<string, string>;
+    };
 
   const byDonorMap = new Map<string, { company_name: string; total: number }>();
   for (const beneficiary of Object.values(trumpBeneficiaries)) {
