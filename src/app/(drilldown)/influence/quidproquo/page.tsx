@@ -391,6 +391,16 @@ export default function QuidProQuoPage() {
         Cryptocurrency companies are reaping the benefits of their contributions
         to President Trump and other pro-crypto politicians.
       </p>
+      <div className={sharedStyles.noteCard}>
+        <span className={sharedStyles.noteLabel}>Note:</span> This page tracks
+        contributions and business arrangements between cryptocurrency companies
+        and President Trump, and favorable regulatory outcomes that followed.
+        For a focused view of campaign contributions to Trump, see the{" "}
+        <Link href="/influence/trump" className="bold">
+          Trump campaign contributions tracker
+        </Link>
+        .
+      </div>
       <Suspense fallback={<QuidProQuoTableSkeleton />}>
         <QuidProQuoTable />
       </Suspense>

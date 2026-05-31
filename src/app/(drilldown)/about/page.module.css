@@ -1,44 +1,163 @@
-.about h2 {
-  font-size: 2rem;
-  margin: 1.5rem 0;
+.established {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.9rem;
+  color: var(--secondary-text);
+}
+
+.navRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--divider-color);
+  border-bottom: 1px solid var(--card-border);
+  margin-bottom: 2.5rem;
 }
 
 .subpageLinks {
+  max-width: var(--max-width);
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 1rem;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0;
 }
 
-.subpageLinks > * + *::before {
-  content: "·";
-  margin-right: 0.5rem;
-  user-select: none;
-  display: inline-block;
+.subpageLinks > * {
+  font-weight: 600;
+  color: var(--main-text);
+  padding: 0.6rem 1rem;
 }
 
 .subpageLinksActive {
-  color: var(--color-neutral-400);
+  color: var(--main-text);
+  border-bottom: 2px solid var(--accent-on-light);
 }
 
-.title {
-  composes: accent-text from "@/app/shared.module.css";
-  font-size: 3rem;
-  text-align: left;
-  margin: 1rem 0;
+.bodyText {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  line-height: 1.5;
 }
 
-.subhead {
-  composes: accent-text from "@/app/shared.module.css";
-  font-size: 2rem;
-  line-height: 2rem;
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-  text-align: left;
+.opener {
+  font-size: 1.3rem;
 }
+
+blockquote.pullQuote {
+  border-left: 2px solid var(--accent-on-light);
+  margin: 0 0 1rem 0;
+  padding: 1rem;
+  font-style: italic;
+}
+
+.pullQuote cite {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-style: normal;
+
+  *:not(:last-child)::after {
+    content: " · ";
+  }
+}
+
+.projectSection {
+  margin-bottom: 3rem;
+}
+
+.projectSectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px solid var(--divider-color);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.projectSectionHeader h3 {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  margin: 0;
+}
+
+.readingTime {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.9rem;
+  color: var(--secondary-text);
+}
+
+.projectColumns {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+/* Quote card */
+
+.quoteCard {
+  border: 1px solid var(--card-border);
+  overflow: hidden;
+}
+
+.quoteImageArea {
+  position: relative;
+  background: var(--color-black);
+}
+
+.quoteBadgePos {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  margin-left: 0;
+  z-index: 1;
+  background-color: var(--accent-on-light);
+  color: var(--color-white);
+}
+
+.quoteImageContainer {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  width: 100%;
+}
+
+.quoteCardImage {
+  object-fit: cover;
+  object-position: center top;
+  opacity: 0.85;
+}
+
+.quoteContent {
+  padding: 1.25rem 1.25rem 1.25rem 1rem;
+  border-left: 4px solid var(--accent-on-light);
+}
+
+.quote {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  font-style: italic;
+  margin-bottom: 0.75rem;
+}
+
+.quoteAttribution {
+  color: var(--main-text);
+  font-size: 0.9rem;
+}
+
+.quoteAttributionSource {
+  font-size: 0.85rem;
+  color: var(--secondary-text);
+  font-style: italic;
+}
+
+/* Rest of content */
 
 .mainText {
-  font-size: 1.2rem;
-  line-height: 2rem;
+  font-size: 1.1rem;
+  line-height: 1.9;
   margin-bottom: 2rem;
 }
 
@@ -46,45 +165,46 @@
   margin-right: 0.15em;
 }
 
-.quoteCard {
-  composes: card from "@/app/shared.module.css";
-  margin: 2rem auto;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  align-items: center;
-  padding: 2rem;
-}
-
-.quote {
-  font-size: 2rem;
-  line-height: 2.5rem;
-  margin-bottom: 1rem;
-}
-
-.quoteAttribution {
-  color: var(--secondary-text);
-  font-size: 1.5rem;
-  text-align: right;
-}
-
-.quoteAttributionSource {
-  font-size: 1rem;
-  color: var(--secondary-text);
-  text-align: right;
-}
-
-.quoteCardImage {
-  max-width: 100%;
-  height: auto;
-}
-
 .footnotes {
   font-size: 0.9rem;
+  border-top: 1px solid var(--divider-color);
+  padding-top: 0.75rem;
+  margin-top: 2rem;
+}
+
+.footnote {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+  line-height: 1.6;
+}
+
+.footnoteLabel {
+  flex-shrink: 0;
+  font-weight: 600;
+}
+
+.footnoteBackref {
+  font-style: normal;
+  text-decoration: none;
+  color: var(--secondary-text);
+}
+
+.footnoteBackref:hover {
+  color: var(--accent-on-light);
 }
 
 .mainText sup {
   line-height: 0;
+}
+
+.mainText sup a {
+  text-decoration: none;
+  color: var(--accent-on-light);
+}
+
+.mainText sup a:hover {
+  text-decoration: underline;
 }
 
 .ctaBlock {
@@ -110,35 +230,18 @@
   text-decoration: none;
 }
 
-@media (min-width: 576px) {
-  .title {
-    font-size: 4rem;
+/* Responsive */
+
+@media (max-width: 768px) {
+  .projectColumns {
+    grid-template-columns: 1fr;
   }
 
-  .subhead {
-    font-size: 3rem;
-    line-height: 3rem;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
+  .quoteColumn {
+    order: -1;
   }
 
-  .quoteCard {
-    width: 80%;
-  }
-
-  .quoteCardImage {
-    max-width: 15rem;
-  }
-}
-
-@media (min-width: 768px) {
-  .quoteCard {
-    flex-direction: row;
-  }
-}
-
-@media (min-width: 1000px) {
-  .quoteCard {
-    width: 60%;
+  .quoteImageContainer {
+    aspect-ratio: 16 / 9;
   }
 }

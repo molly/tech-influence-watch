@@ -134,7 +134,10 @@ async function TrumpContributionsData() {
             partnerships and other financial arrangements&nbsp;&ndash; such as
             World Liberty Financial and the $TRUMP memecoin&nbsp;&ndash; are
             tracked separately on the{" "}
-            <Link href="/influence/quidproquo">quid pro quo</Link> page.
+            <Link href="/influence/quidproquo" className="bold">
+              quid pro quo
+            </Link>{" "}
+            page.
           </div>
         </div>
         <MoneyCard
