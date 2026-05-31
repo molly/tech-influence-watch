@@ -1,24 +1,30 @@
-.heroSection {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 0.25rem;
-  padding: 1rem 0;
+.heroWithStat {
+  composes: heroWithStat from "@/app/shared.module.css";
+  margin-bottom: 2rem;
+}
+
+.committeeRow {
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--table-color);
+  }
+}
+
+.byCommitteeTable {
   width: 100%;
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+
+  tr td:first-child {
+    padding-left: 0;
+  }
+
+  tr td:nth-child(2) {
+    padding-right: 0;
+  }
 }
 
-.totalAmount {
-  font-size: clamp(2rem, 8vw, 4rem);
-  font-weight: bold;
-}
-
-.card {
-  composes: cardWithTable from "@/app/shared.module.css";
-  width: 100%;
-}
-
-.emptyMessage {
-  padding: 1rem;
-  color: var(--secondary-text);
+@media (max-width: 768px) {
+  .committeeSection {
+    margin-top: 1rem;
+  }
 }

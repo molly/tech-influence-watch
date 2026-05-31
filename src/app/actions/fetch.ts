@@ -747,6 +747,7 @@ export const fetchAllExpenditureTotalsByParty = cache(
   async (
     sector: Sector = "all",
   ): Promise<ExpendituresByPartySnapshot | ErrorType> => {
+    return { error: true };
     const data = await fetchSnapshot("expenditures", "by_party");
     if (isError(data)) {
       return data as ErrorType;
@@ -892,7 +893,9 @@ export const fetchCandidateExpenditures = cache(
 );
 
 export const fetchCandidatesWithOpposeSpending = cache(
-  async (): Promise<ExpenditureCandidateSummary[] | ErrorType> => {
+  async (
+    sector: Sector = "all",
+  ): Promise<ExpenditureCandidateSummary[] | ErrorType> => {
     const [data, oppositionData] = await Promise.all([
       fetchCollection("candidates"),
       fetchConstant("oppositionSpending"),
@@ -913,9 +916,15 @@ export const fetchCandidatesWithOpposeSpending = cache(
       string,
       OppositionConstant
     >;
+    const opposeKey =
+      sector === "crypto"
+        ? "crypto_oppose_total"
+        : sector === "ai"
+          ? "ai_oppose_total"
+          : "oppose_total";
     return Object.values(candidates.candidates)
-      .filter((candidate) => candidate.oppose_total > 0)
-      .sort((a, b) => b.oppose_total - a.oppose_total)
+      .filter((candidate) => (candidate[opposeKey] ?? 0) > 0)
+      .sort((a, b) => (b[opposeKey] ?? 0) - (a[opposeKey] ?? 0))
       .map((candidate) => {
         if (
           candidate.candidate_id &&

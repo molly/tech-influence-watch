@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Suspense } from "react";
+import { ReactNode, Suspense } from "react";
 
-import { fetchAllExpenditureTotalsByParty } from "@/app/actions/fetch";
+import {
+  fetchAllCommitteeTotalExpenditures,
+  fetchAllExpenditureTotalsByParty,
+} from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import SpendingByPartyWithOpposition, {
   SpendingByPartySkeleton,
@@ -11,6 +14,7 @@ import sharedStyles from "@/app/shared.module.css";
 import { ExpendituresByPartySnapshot } from "@/app/types/Expenditures";
 import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
+import { humanizeRoundedCurrency } from "@/app/utils/humanize";
 import { customMetadata } from "@/app/utils/metadata";
 import { humanizeSector, parseSector } from "@/app/utils/sector";
 
@@ -58,12 +62,31 @@ export default async function SpendingPage({
   const { sector: rawSector } = await searchParams;
   const sector = parseSector(rawSector);
 
+  const expendituresData = await fetchAllCommitteeTotalExpenditures(sector);
+  let totalSpending: ReactNode | null = null;
+  if (!isError(expendituresData)) {
+    totalSpending = (
+      <>
+        <span className="bold">
+          {humanizeRoundedCurrency(expendituresData as number, true, 1)}
+        </span>{" "}
+      </>
+    );
+  }
+
   return (
     <div className={sharedStyles.main}>
-      <h1 className={sharedStyles.title}>Spending by all committees</h1>
+      <h1 className={sharedStyles.title}>
+        Spending by{" "}
+        {humanizeSector(sector, {
+          lowercase: true,
+          abbrev: true,
+        })}{" "}
+        PACs
+      </h1>
       <p className={sharedStyles.headerSubtitle}>
-        {humanizeSector(sector, { hyphen: true, or: true })}focused PACs have
-        contributed to both support and oppose candidates from Republican and
+        {humanizeSector(sector, { hyphen: true })}focused PACs have contributed{" "}
+        {totalSpending}to both support and oppose candidates from Republican and
         Democratic parties.
       </p>
       <section className={styles.column}>
@@ -80,23 +103,25 @@ export default async function SpendingPage({
           may intend to support a candidate from the opposing party in a later
           election.
         </p>
-        <p>
-          In some races where PACs have spent heavily to oppose candidates but
-          have not supported any candidates, such as in Illinois&rsquo;{" "}
-          <Link href="/2026/elections/IL-S">Senate primary</Link> and{" "}
-          <Link href="/2026/elections/IL-H-07">District 7 House primary</Link>,
-          these PACs seem more focused on ousting candidates they view as
-          anti-crypto, rather than supporting any specific candidate. The
-          incidental beneficiaries in these cases are marked in lighter italic
-          text in the table below.
-        </p>
+        {sector !== "ai" && (
+          <p>
+            In some races where PACs have spent heavily to oppose candidates but
+            have not supported any candidates, such as in Illinois&rsquo;{" "}
+            <Link href="/2026/elections/IL-S">Senate primary</Link> and{" "}
+            <Link href="/2026/elections/IL-H-07">District 7 House primary</Link>
+            , these PACs seem more focused on ousting candidates they view as a
+            threat to their agenda, rather than supporting any specific
+            candidate. The incidental beneficiaries in these cases are marked in
+            lighter italic text in the table below.
+          </p>
+        )}
         <p>
           Based on committee support spending, individual contributions to other
           candidates, and statements supporting other candidates, opposition
           spending can be categorized based on likely beneficiary:
         </p>
         <Suspense fallback={<OppositionSpendingSkeleton />}>
-          <OppositionSpending />
+          <OppositionSpending sector={sector} />
         </Suspense>
       </section>
     </div>

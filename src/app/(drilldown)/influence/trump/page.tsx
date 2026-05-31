@@ -1,19 +1,24 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 
-import {
-  fetchBeneficiaries,
-  fetchTrumpCommittees,
-} from "@/app/actions/fetch";
+import { fetchBeneficiaries, fetchTrumpCommittees } from "@/app/actions/fetch";
+import Breadcrumbs from "@/app/components/Breadcrumbs";
 import ErrorText from "@/app/components/ErrorText";
-import tableStyles from "@/app/components/tables.module.css";
+import HorizontalBars, {
+  HorizontalBarsSkeleton,
+} from "@/app/components/home/HorizontalBars";
+import MoneyCard, { MoneyCardSkeleton } from "@/app/components/MoneyCard";
+import Skeleton from "@/app/components/skeletons/Skeleton";
 import COMMITTEES from "@/app/data/committees";
 import { TRUMP_CANDIDATE_ID } from "@/app/data/trump";
+import sharedStyles from "@/app/shared.module.css";
 import {
   type Beneficiary,
   type CompanyContributionGroup,
 } from "@/app/types/Beneficiaries";
 import { isError } from "@/app/utils/errors";
+import { humanizeRoundedCurrency } from "@/app/utils/humanize";
 import { customMetadata } from "@/app/utils/metadata";
 import { titlecaseCommittee } from "@/app/utils/titlecase";
 import { formatCurrency } from "@/app/utils/utils";
@@ -21,12 +26,41 @@ import { formatCurrency } from "@/app/utils/utils";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = customMetadata({
-  title: "Contributions to Trump",
+  title: "Crypto industry campaign contributions to President Trump",
   description:
-    "Crypto industry contributions to Donald Trump's campaign committees and affiliated organizations.",
+    "Crypto industry contributions to Donald Trump's campaign committees",
 });
 
-export default async function TrumpContributionsPage() {
+function TrumpContributionsSkeleton() {
+  return (
+    <>
+      <section className={styles.heroWithStat}>
+        <div>
+          <Skeleton height="1.1rem" width="80%" />
+          <Skeleton height="1.1rem" width="55%" />
+        </div>
+        <MoneyCardSkeleton />
+      </section>
+      <div className={sharedStyles.columns}>
+        <div className={sharedStyles.mainColumn}>
+          <h2 className={sharedStyles.sectionTitle}>By donor</h2>
+          <section className={styles.card}>
+            <HorizontalBarsSkeleton numBars={12} />
+          </section>
+        </div>
+        <div className={sharedStyles.sideColumn}>
+          <h2 className={sharedStyles.sectionTitle}>By committee</h2>
+          <section className={styles.card}>
+            <Skeleton width="100%" />
+            <Skeleton width="100%" />
+          </section>
+        </div>
+      </div>
+    </>
+  );
+}
+
+async function TrumpContributionsData() {
   const [beneficiariesData, trumpCommitteesData] = await Promise.all([
     fetchBeneficiaries(),
     fetchTrumpCommittees(),
@@ -41,9 +75,9 @@ export default async function TrumpContributionsPage() {
     TRUMP_CANDIDATE_ID,
     ...(trumpCommitteesData?.ids ?? []),
   ]);
-  const trumpCommitteeNames: Record<string, string> = trumpCommitteesData?.names ?? {};
+  const trumpCommitteeNames: Record<string, string> =
+    trumpCommitteesData?.names ?? {};
 
-  // Filter beneficiaries to Trump-affiliated committees/candidate.
   const trumpBeneficiaries = Object.fromEntries(
     Object.entries(beneficiaries).filter(([id]) => trumpCommitteeIds.has(id)),
   );
@@ -53,11 +87,7 @@ export default async function TrumpContributionsPage() {
     0,
   );
 
-  // Aggregate contributions by donor (company_id) across all Trump committees.
-  const byDonorMap = new Map<
-    string,
-    { company_name: string; total: number }
-  >();
+  const byDonorMap = new Map<string, { company_name: string; total: number }>();
   for (const beneficiary of Object.values(trumpBeneficiaries)) {
     for (const group of beneficiary.contributions as CompanyContributionGroup[]) {
       const existing = byDonorMap.get(group.company_id);
@@ -75,9 +105,6 @@ export default async function TrumpContributionsPage() {
     (a, b) => b[1].total - a[1].total,
   );
 
-  // Build per-committee breakdown from by_committee field on the candidate beneficiary.
-  // The backend collapses all Trump PAC contributions under P80001571, but records
-  // per-committee totals in by_committee: { committee_id: total }.
   const trumpBeneficiary = trumpBeneficiaries[TRUMP_CANDIDATE_ID];
   const byCommitteeEntries = trumpBeneficiary?.by_committee
     ? Object.entries(trumpBeneficiary.by_committee)
@@ -94,34 +121,55 @@ export default async function TrumpContributionsPage() {
     .sort((a, b) => b.total - a.total);
 
   return (
-    <div className="single-column-page">
-      <section className={styles.heroSection}>
-        <h1>Contributions to Donald Trump</h1>
-        <p className="secondary">
-          Crypto industry contributions to Donald Trump&apos;s campaign
-          committees and affiliated organizations, as reported to the FEC.
-        </p>
-        <div className={styles.totalAmount}>{formatCurrency(grandTotal, true)}</div>
-        <div className="secondary">total from tracked crypto companies and individuals</div>
+    <>
+      <section className={styles.heroWithStat}>
+        <div>
+          <p className={sharedStyles.headerSubtitle}>
+            Crypto industry contributions to President Donald Trump&rsquo;s
+            campaign committees and affiliated organizations
+          </p>
+          <div className={sharedStyles.noteCard}>
+            <span className={sharedStyles.noteLabel}>Note:</span> This page
+            tracks direct, FEC-reported campaign contributions only. Business
+            partnerships and other financial arrangements&nbsp;&ndash; such as
+            World Liberty Financial and the $TRUMP memecoin&nbsp;&ndash; are
+            tracked separately on the{" "}
+            <Link href="/influence/quidproquo">quid pro quo</Link> page.
+          </div>
+        </div>
+        <MoneyCard
+          topText="Total from tracked crypto companies & individuals"
+          amount={humanizeRoundedCurrency(grandTotal, true, 1)}
+          bottomText="across all affiliated Trump committees"
+        />
       </section>
 
-      <section className={styles.card}>
-        <h2 className={tableStyles.tableCardContent}>By donor</h2>
-        {sortedDonors.length === 0 ? (
-          <p className={styles.emptyMessage}>No contributions found.</p>
-        ) : (
-          <table>
-            <thead>
-              <tr>
-                <th className="text-cell">Donor</th>
-                <th className="number-cell">Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sortedDonors.map(([companyId, donor]) => (
-                <tr key={companyId} className={tableStyles.beneficiariesRow}>
-                  <td>
-                    {companyId in COMMITTEES ? (
+      <div className={sharedStyles.columns}>
+        <div className={sharedStyles.mainColumn}>
+          <section className={styles.card}>
+            <h2 className={sharedStyles.sectionTitle}>
+              By donor
+              <span className={sharedStyles.sectionTitleAmount}>
+                <span className={sharedStyles.sectionTitleAmountValue}>
+                  {formatCurrency(grandTotal, true)}
+                </span>
+                {" total · "}
+                <span className={sharedStyles.sectionTitleAmountValue}>
+                  {sortedDonors.length}
+                </span>
+                {" donors"}
+              </span>
+            </h2>
+            {sortedDonors.length === 0 ? (
+              <p className={styles.emptyMessage}>No contributions found.</p>
+            ) : (
+              <HorizontalBars
+                max={grandTotal}
+                items={sortedDonors.map(([companyId, donor]) => ({
+                  key: companyId,
+                  label: donor.company_name,
+                  labelNode:
+                    companyId in COMMITTEES ? (
                       <Link href={`/2026/committees/${companyId}`}>
                         {donor.company_name}
                       </Link>
@@ -129,49 +177,63 @@ export default async function TrumpContributionsPage() {
                       <Link href={`/2026/companies/${companyId}`}>
                         {donor.company_name}
                       </Link>
-                    )}
-                  </td>
-                  <td className="number-cell">
-                    {formatCurrency(donor.total, true)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </section>
+                    ),
+                  value: donor.total,
+                  displayValue: formatCurrency(donor.total, true),
+                }))}
+              />
+            )}
+          </section>
+        </div>
 
-      <section className={styles.card}>
-        <h2 className={tableStyles.tableCardContent}>By committee</h2>
-        {byCommittee.length === 0 ? (
-          <p className={styles.emptyMessage}>No contributions found.</p>
-        ) : (
-          <table>
-            <thead>
-              <tr>
-                <th className="text-cell">Committee</th>
-                <th className="number-cell">Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              {byCommittee.map(({ id, name, total }) => (
-                <tr key={id} className={tableStyles.beneficiariesRow}>
-                  <td>
-                    {id in COMMITTEES ? (
-                      <Link href={`/2026/committees/${id}`}>
-                        {titlecaseCommittee(name)}
-                      </Link>
-                    ) : (
-                      titlecaseCommittee(name)
-                    )}
-                  </td>
-                  <td className="number-cell">{formatCurrency(total, true)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </section>
-    </div>
+        <div className={sharedStyles.sideColumn}>
+          <div className={styles.committeeSection}>
+            <h2 className={sharedStyles.sectionTitle}>By committee</h2>
+            {byCommittee.length === 0 ? (
+              <p className={styles.emptyMessage}>No contributions found.</p>
+            ) : (
+              <table className={styles.byCommitteeTable}>
+                <tbody>
+                  {byCommittee.map(({ id, name, total }) => (
+                    <tr key={id} className={styles.committeeRow}>
+                      <td>
+                        {id in COMMITTEES ? (
+                          <Link href={`/2026/committees/${id}`}>
+                            {titlecaseCommittee(name)}
+                          </Link>
+                        ) : (
+                          titlecaseCommittee(name)
+                        )}
+                      </td>
+                      <td className="number-cell">
+                        {formatCurrency(total, true)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+export default function TrumpContributionsPage() {
+  return (
+    <>
+      <div className={sharedStyles.fullWidthHeader}>
+        <section className={sharedStyles.header}>
+          <Breadcrumbs crumbs={["Influence", "Donald Trump"]} />
+          <h1 className={sharedStyles.title}>Contributions to Donald Trump</h1>
+        </section>
+      </div>
+      <div className={sharedStyles.main}>
+        <Suspense fallback={<TrumpContributionsSkeleton />}>
+          <TrumpContributionsData />
+        </Suspense>
+      </div>
+    </>
   );
 }

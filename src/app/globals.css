@@ -71,6 +71,9 @@
   --map-background: var(--color-white);
   --logo-background: #fbfaf3;
   --scope-background: #fbfaf3;
+  --note-background: var(--color-neutral-50);
+  --related-background: var(--color-lime-50);
+  --related-border: var(--color-lime-800);
   --placeholder-color: var(--color-neutral-300);
   --table-color: var(--color-neutral-200);
   --table-header-color: var(--color-neutral-700);
@@ -128,6 +131,7 @@
     --money-card-border: var(--color-neutral-300);
     --map-background: var(--card-background);
     --scope-background: #1e1b16;
+    --note-background: var(--color-neutral-800);
     --placeholder-color: var(--color-neutral-700);
     --table-color: var(--color-neutral-700);
     --table-header-color: var(--color-neutral-400);

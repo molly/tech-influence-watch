@@ -8,6 +8,7 @@ import { STATES_BY_ABBR } from "@/app/data/states";
 import sharedStyles from "@/app/shared.module.css";
 import { OppositionConstant } from "@/app/types/Elections";
 import { ExpenditureCandidateSummary } from "@/app/types/Expenditures";
+import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
 import { getFullPartyName } from "@/app/utils/party";
 import { getRaceName } from "@/app/utils/races";
@@ -57,9 +58,7 @@ function Table({ children }: { children: React.ReactNode }) {
     <table className={styles.oppositionSpendingTable}>
       <thead>
         <tr>
-          <th className={`number-cell ${tableStyles.tableCellCollapse1}`}>
-            Oppose spending
-          </th>
+          <th className="number-cell">Oppose spending</th>
           <th className="text-cell">Targeted candidate</th>
           <th className="text-cell">Election</th>
           <th className="text-cell">Likely intended beneficiary</th>
@@ -79,8 +78,12 @@ export function OppositionSpendingSkeleton() {
           key={`skeleton-row-${i}`}
           className={tableStyles.oppositionSpendingRow}
         >
-          <td className={`number-cell ${tableStyles.tableCellCollapse1}`}>
-            <Skeleton onCard={true} width="5rem" className={sharedStyles.floatRight} />
+          <td className="number-cell">
+            <Skeleton
+              onCard={true}
+              width="5rem"
+              className={sharedStyles.floatRight}
+            />
           </td>
           <td className="text-cell">
             <Skeleton onCard={true} width="8rem" />
@@ -100,8 +103,12 @@ export function OppositionSpendingSkeleton() {
   );
 }
 
-export default async function OppositionSpending() {
-  const data = await fetchCandidatesWithOpposeSpending();
+export default async function OppositionSpending({
+  sector,
+}: {
+  sector: Sector;
+}) {
+  const data = await fetchCandidatesWithOpposeSpending(sector);
   if (isError(data)) {
     return <ErrorText subject="opposition spending" />;
   }
@@ -115,7 +122,7 @@ export default async function OppositionSpending() {
             key={candidate.candidate_id}
             className={tableStyles.oppositionSpendingRow}
           >
-            <td className={`number-cell ${tableStyles.tableCellCollapse1}`}>
+            <td className="number-cell">
               {formatCurrency(candidate.oppose_total, true)}
             </td>
             <td className="text-cell">{candidate.common_name}</td>

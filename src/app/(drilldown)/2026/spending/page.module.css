@@ -17,3 +17,80 @@
 .spendingChart {
   margin-bottom: 1rem;
 }
+
+@media (max-width: 600px) {
+  .oppositionSpendingTable,
+  .oppositionSpendingTable tbody {
+    display: block;
+  }
+
+  .oppositionSpendingTable thead {
+    display: none;
+  }
+
+  .oppositionSpendingTable tr {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--table-color);
+  }
+
+  .oppositionSpendingTable tr:last-child {
+    border-bottom: none;
+  }
+
+  /* amount */
+  .oppositionSpendingTable td:nth-child(1) {
+    grid-column: 2;
+    grid-row: 1;
+    font-weight: bold;
+    padding: 0;
+  }
+
+  /* candidate name */
+  .oppositionSpendingTable td:nth-child(2) {
+    grid-column: 1;
+    grid-row: 1;
+    font-weight: bold;
+    padding: 0;
+  }
+
+  /* election */
+  .oppositionSpendingTable td:nth-child(3) {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    padding: 0.2rem 0 0;
+  }
+
+  /* beneficiary */
+  .oppositionSpendingTable td:nth-child(4) {
+    grid-column: 1;
+    grid-row: 3;
+    padding: 0.5rem 0 0;
+  }
+
+  .oppositionSpendingTable td:nth-child(4)::before {
+    content: "LIKELY BENEFICIARY";
+    display: block;
+    font-size: 0.75em;
+    font-weight: 600;
+    color: var(--secondary-text);
+    margin-bottom: 0.15rem;
+  }
+
+  /* party */
+  .oppositionSpendingTable td:nth-child(5) {
+    grid-column: 2;
+    grid-row: 3;
+    padding: 0.5rem 0 0;
+  }
+
+  .oppositionSpendingTable td:nth-child(5)::before {
+    content: "BENEFICIARY PARTY";
+    display: block;
+    font-size: 0.75em;
+    font-weight: 600;
+    color: var(--secondary-text);
+    margin-bottom: 0.15rem;
+  }
+}

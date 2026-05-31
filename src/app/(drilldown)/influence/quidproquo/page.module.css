@@ -1,0 +1,119 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: var(--max-width);
+  padding: 0 1rem;
+  gap: 1rem;
+}
+
+.qpqTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.qpqTable thead th {
+  font-size: 0.8rem;
+  text-align: left;
+  vertical-align: bottom;
+  color: var(--table-header-color);
+  font-weight: 600;
+  padding: 0.5rem 1rem 0.5rem 0;
+  border-bottom: 1px solid var(--divider-color);
+}
+
+.entityCell {
+  vertical-align: top;
+  padding: 1rem 1rem 1rem 0;
+  width: 12rem;
+}
+
+.entityName {
+  font-weight: 700;
+}
+
+.totalAmount {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.1;
+  margin-top: 0.2rem;
+}
+
+.entityLabel {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  color: var(--secondary-text);
+  text-transform: uppercase;
+  margin-top: 0.15rem;
+}
+
+.benefitCell {
+  vertical-align: top;
+  padding: 1rem 1rem 1rem 0;
+}
+
+.benefitCell ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.benefitCell li {
+  margin-bottom: 0.4rem;
+}
+
+.noBreak {
+  white-space: nowrap;
+}
+
+.benefitCell li:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 700px) {
+  .qpqTable thead {
+    display: none;
+  }
+
+  .qpqTable,
+  .qpqTable tbody {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .qpqRow {
+    display: block;
+    padding: 1rem 0;
+  }
+
+  .entityCell {
+    display: block;
+    width: auto;
+    padding: 0 0 0.75rem 0;
+    border-bottom: 1px dashed var(--table-color);
+  }
+
+  .benefitCell {
+    display: block;
+    padding: 0.6rem 0;
+  }
+
+  .benefitCell::before {
+    display: block;
+    content: attr(data-label);
+    font-style: italic;
+    color: var(--secondary-text);
+    font-size: 0.9em;
+    margin-bottom: 0.35rem;
+  }
+
+  .benefitCell:not(:last-child) {
+    border-bottom: 1px dashed var(--table-color);
+  }
+
+  .benefitCell:empty {
+    display: none;
+  }
+}

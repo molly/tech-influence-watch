@@ -24,8 +24,6 @@
 
 .superPacTableHeader,
 .influencedTableHeader {
-  position: sticky;
-  top: 0;
   font-size: 0.75rem;
   border-bottom: 1px solid var(--table-color);
   vertical-align: bottom;
