@@ -1,0 +1,128 @@
+.card {
+  background-color: var(--color-lime-950);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.5rem;
+}
+
+.label {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-lime-400);
+  margin-bottom: 0.5rem;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 600;
+  color: var(--color-white);
+  margin: 0 0 0.75rem 0;
+  line-height: 1;
+}
+
+.subtitle {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--color-neutral-300);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--color-lime-800);
+  margin: 1rem 0;
+}
+
+.total {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  font-weight: 600;
+  color: var(--color-lime-400);
+  line-height: 1;
+}
+
+.totalLabel {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  color: var(--color-neutral-300);
+  margin-top: 0.25rem;
+}
+
+.entries {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.entry {
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--color-lime-800);
+}
+
+.entry:last-child {
+  border-bottom: none;
+}
+
+.entryTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center
+  gap: 0.5rem;
+}
+
+.entryName {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  color: var(--color-white);
+  font-size: 0.9rem;
+}
+
+.entryAmount {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--color-lime-400);
+  font-size: 1.2rem;
+  white-space: nowrap;
+}
+
+.entrySummary {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  color: var(--color-neutral-300);
+  margin-top: 0.15rem;
+}
+
+.button {
+  display: block;
+  background-color: var(--color-lime-500);
+  color: var(--color-black);
+  text-align: center;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  margin-top: 1rem;
+}
+
+.button:hover {
+  background-color: var(--color-lime-400);
+  color: var(--color-black);
+}
+
+.skeletonEntryTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.3rem;
+}

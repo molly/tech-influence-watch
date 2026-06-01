@@ -13,6 +13,7 @@ export type QPQBenefit = {
 export type QPQ = {
   name: string;
   link?: string;
+  benefitSummary?: string;
   benefits: (string | QPQBenefit)[];
   contributions?: QPQContribution[];
 };

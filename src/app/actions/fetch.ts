@@ -60,6 +60,7 @@ import {
   IndividualTotals,
 } from "../types/Individuals";
 import { MapData } from "../types/MapData";
+import { QPQ } from "../types/Qpq";
 import { Sector } from "../types/Sector";
 import {
   getCommitteeIdsForSector,
@@ -124,6 +125,12 @@ export const fetchConstant = cache(
     } else {
       return null;
     }
+  },
+);
+
+export const fetchQpq = cache(
+  async (): Promise<Record<string, QPQ> | null> => {
+    return fetchConstant<Record<string, QPQ>>("qpq");
   },
 );
 
@@ -1117,6 +1124,16 @@ export const fetchTrumpBeneficiaries = cache(
       grandTotal,
       committeeNames: trumpCommitteesData?.names ?? {},
     };
+  },
+);
+
+export const fetchPipelineLastRun = cache(
+  async (): Promise<string | null> => {
+    const data = await fetchSnapshot("metadata", "pipeline");
+    if (isError(data)) {
+      return null;
+    }
+    return (data as { last_run?: string }).last_run ?? null;
   },
 );
 

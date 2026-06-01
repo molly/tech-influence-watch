@@ -171,12 +171,22 @@
 }
 
 .sectorContents {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 0.5rem 1rem;
   max-width: var(--max-width);
   margin: 0 auto;
   width: 100%;
   font-family: var(--font-serif);
   font-style: italic;
+}
+
+.lastUpdated {
+  font-family: var(--font-sans);
+  font-style: normal;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
 }
 
 .sector {

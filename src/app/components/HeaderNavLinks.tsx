@@ -8,7 +8,7 @@ import { parseSector, sectorHref } from "../utils/sector";
 import styles from "./header.module.css";
 
 type NavChild = { label: string; href: string; useSector?: boolean };
-type NavItem = { id: string; label: string; children: NavChild[] };
+type NavItem = { id: string; label: string; href?: string; children: NavChild[] };
 
 const NAV_ITEMS: NavItem[] = [
   {
@@ -116,7 +116,7 @@ export default function HeaderNavLinks() {
         <div className={styles.navLinks}>
           {NAV_ITEMS.map((item) => (
             <div key={item.id} className={styles.navItem}>
-              <a href="#">{item.label}</a>
+              {item.href ? <Link href={item.href}>{item.label}</Link> : <span>{item.label}</span>}
               <div className={styles.dropdown}>
                 {item.children.map((child) => (
                   <Link key={child.href} href={childHref(child)}>

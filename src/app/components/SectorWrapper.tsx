@@ -12,12 +12,24 @@ const SECTOR_PATHS = [
   "/2026/contributions",
   "/2026/elections",
   "/2026/expenditures",
-  "/2026/quidproquo",
   "/2026/spending",
   "/2026/states",
 ];
 
-export default function SectorWrapper() {
+function formatLastRun(isoString: string): string {
+  const date = new Date(isoString);
+  return new Intl.DateTimeFormat("en-US", {
+    timeZone: "UTC",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    timeZoneName: "short",
+  }).format(date);
+}
+
+export default function SectorWrapper({ lastRun }: { lastRun: string | null }) {
   const pathname = usePathname();
   const isExactTopLevelPath =
     /^\/2026\/(committees|companies|individuals)\/?$/.test(pathname);
@@ -30,10 +42,17 @@ export default function SectorWrapper() {
   return (
     <div className={styles.sectorWrapper}>
       <div className={styles.sectorContents}>
-        Showing:
-        <Suspense fallback={null}>
-          <SectorButtons />
-        </Suspense>
+        <span>
+          Showing:
+          <Suspense fallback={null}>
+            <SectorButtons />
+          </Suspense>
+        </span>
+        {lastRun && (
+          <span className={styles.lastUpdated}>
+            Updated {formatLastRun(lastRun)}
+          </span>
+        )}
       </div>
     </div>
   );

@@ -5,6 +5,7 @@ import React, { Suspense } from "react";
 import {
   fetchBeneficiaries,
   fetchConstant,
+  fetchQpq,
   fetchTrumpCommittees,
 } from "@/app/actions/fetch";
 import Breadcrumbs from "@/app/components/Breadcrumbs";
@@ -12,7 +13,6 @@ import ErrorText from "@/app/components/ErrorText";
 import ExternalLinkIcon from "@/app/components/ExternalLinkIcon";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import tableStyles from "@/app/components/tables.module.css";
-import { qpqData } from "@/app/data/qpq";
 import { TRUMP_CANDIDATE_ID } from "@/app/data/trump";
 import sharedStyles from "@/app/shared.module.css";
 import {
@@ -69,12 +69,14 @@ async function QuidProQuoTable() {
     committeesConstant,
     senateConstant,
     houseConstant,
+    qpqData,
   ] = await Promise.all([
     fetchBeneficiaries(),
     fetchTrumpCommittees(),
     fetchConstant<Record<string, { id: string; name: string }>>("committees"),
     fetchConstant<{ ids: string[] }>("senateCommittees"),
     fetchConstant<{ ids: string[] }>("houseCommittees"),
+    fetchQpq(),
   ]);
 
   const cryptoCommitteeIds = new Set(
@@ -94,7 +96,7 @@ async function QuidProQuoTable() {
     ...(trumpCommitteesData?.ids ?? []),
   ]);
 
-  if (isError(beneficiariesResult)) {
+  if (isError(beneficiariesResult) || !qpqData) {
     return <ErrorText subject="contribution data" />;
   }
 

@@ -3,6 +3,9 @@ import { Suspense } from "react";
 import Header from "./components/Header";
 import AllCashByCommittee from "./components/home/AllCashByCommittee";
 import AllCompanySpendingByParty from "./components/home/AllCompanySpendingByParty";
+import FeaturedTracker, {
+  FeaturedTrackerSkeleton,
+} from "./components/home/FeaturedTracker";
 import AllCompanySpendingMap from "./components/home/AllCompanySpendingMap";
 import AllExpendituresByCommittee from "./components/home/AllExpendituresByCommittee";
 import AllExpendituresByParty from "./components/home/AllExpendituresByParty";
@@ -78,6 +81,9 @@ export default async function Home({
             </SuperPACsByReceipts>
           </div>
           <div className={styles.sideColumn}>
+            <Suspense fallback={<FeaturedTrackerSkeleton />}>
+              <FeaturedTracker />
+            </Suspense>
             {sector === "all" && <TechSectorBreakdown />}
             <CompanyBubbleChart sector={sector} />
             <AllCompanySpendingByParty sector={sector} />

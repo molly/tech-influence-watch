@@ -1,0 +1,168 @@
+.page {
+  padding: 3rem 1rem;
+  max-width: var(--single-column-max-width);
+  margin: 0 auto;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 18rem 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+/* --- Filing card (left) --- */
+
+.filingCard {
+  border: 1px solid var(--money-card-border);
+  box-shadow: 6px 6px var(--color-lime-600);
+  padding: 1.5rem;
+  margin-bottom: 6px;
+  margin-right: 6px;
+  background: var(--background);
+}
+
+.errorLabel {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--main-text);
+}
+
+.errorCode {
+  font-family: var(--font-display);
+  font-size: 7rem;
+  font-weight: 900;
+  line-height: 1;
+  margin: 0.25rem 0;
+  color: var(--main-text);
+}
+
+.errorZero {
+  color: var(--color-lime-600);
+}
+
+.rule {
+  border: none;
+  border-top: 2px solid var(--main-text);
+  margin: 1rem 0;
+}
+
+.filingNote {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--secondary-text);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* --- Right content --- */
+
+.headline {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 900;
+  line-height: 1.05;
+  margin: 0 0 1rem 0;
+  color: var(--main-text);
+}
+
+.description {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--secondary-text);
+  margin: 0 0 1.5rem 0;
+}
+
+.accentLink {
+  color: var(--link-text);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--link-text-hover);
+  }
+}
+
+.backButton {
+  display: inline-block;
+  background: var(--color-lime-600);
+  color: var(--color-black);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  margin-bottom: 2rem;
+
+  &:hover {
+    background: var(--color-lime-700);
+    color: var(--color-black);
+  }
+}
+
+/* --- Direct links --- */
+
+.directLinksLabel {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--secondary-text);
+  margin: 0 0 0.5rem 0;
+}
+
+.linkGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.quickLink {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--main-text);
+  text-decoration: none;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--divider-color);
+
+  &:hover {
+    color: var(--link-text);
+  }
+}
+
+/* --- Responsive --- */
+
+@media (max-width: 640px) {
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .filingCard {
+    max-width: 16rem;
+  }
+
+  .linkGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .errorZero {
+    color: var(--color-lime-400);
+  }
+
+  .backButton {
+    background: var(--color-lime-600);
+    color: var(--color-white);
+
+    &:hover {
+      background: var(--color-lime-500);
+    }
+  }
+}

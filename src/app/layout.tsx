@@ -9,6 +9,7 @@ import {
 } from "next/font/google";
 
 import Footer from "./components/Footer";
+import SubscribeBannerWrapper from "./components/SubscribeBannerWrapper";
 import { BASE_METADATA } from "./utils/metadata";
 
 export const revalidate = 3600;
@@ -70,6 +71,7 @@ export default function RootLayout({
         className={`${sansFont.variable} ${serifFont.variable} ${displayFont.variable} ${robotoFont.variable}`}
       >
         <div className="flex1">{children}</div>
+        <SubscribeBannerWrapper />
         <Footer />
       </body>
     </html>
