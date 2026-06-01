@@ -188,8 +188,8 @@ export default async function AboutPage() {
                   issues while quietly committing to industry-friendly
                   positions. By the time voters learn who funded a campaign, the
                   election is over and the policies are already being signed
-                  into law. In fact, a recent <i>CoinDesk</i> survey found that
-                  73% of voters disapprove of government officials having crypto
+                  into law. A recent <i>CoinDesk</i> survey found that 73% of
+                  voters disapprove of government officials having crypto
                   business ties, yet 55% weren&rsquo;t aware of the
                   president&rsquo;s involvement in the industry, and only 17%
                   knew he co-founded World Liberty Financial.

@@ -1,6 +1,7 @@
 :root {
   --max-width: 2000px;
   --single-column-max-width: 1200px;
+  --about-page-max-width: 720px;
   --border-radius: 8px;
 
   --color-black: #0a0a0a;

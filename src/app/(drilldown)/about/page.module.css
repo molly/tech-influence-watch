@@ -201,6 +201,28 @@ blockquote.pullQuote {
   text-decoration: underline;
 }
 
+/* Subpage title */
+
+.subpageTitle {
+  composes: sectionTitle from "@/app/shared.module.css";
+  font-size: 3rem;
+}
+
+/* FAQ */
+.faqPage p {
+  max-width: 720px;
+}
+
+.faqQuestion {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  padding-top: 1rem;
+
+  &:not(:first-child) {
+    border-top: 1px solid var(--card-border);
+  }
+}
+
 /* Responsive */
 
 @media (max-width: 999px) {
