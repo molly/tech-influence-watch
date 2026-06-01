@@ -7,7 +7,7 @@ export const BASE_METADATA: Metadata = {
   authors: [{ name: "Molly White", url: "https://www.mollywhite.net" }],
   creator: "Molly White",
   publisher: "Citation Needed",
-  metadataBase: new URL("https://www.followthecrypto.org"),
+  metadataBase: new URL("https://influence.citationneeded.news"),
   openGraph: {
     title: "Tech Influence Watch",
     siteName: "Tech Influence Watch",
@@ -25,7 +25,7 @@ export const BASE_METADATA: Metadata = {
     creator: "@molly0xfff",
     creatorId: "545445165",
     images: {
-      url: "https://www.followthecrypto.org/twitter-image.png",
+      url: "https://influence.citationneeded.news/twitter-image.png",
       alt: "Tech Influence Watch logo",
     },
   },

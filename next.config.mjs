@@ -43,6 +43,7 @@ const nextConfig = {
     ];
   },
   output: "standalone",
+  compress: true,
 };
 
 export default nextConfig;
