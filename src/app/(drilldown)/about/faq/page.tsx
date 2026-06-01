@@ -9,7 +9,7 @@ import styles from "../page.module.css";
 
 export const metadata: Metadata = customMetadata({
   title: "FAQ",
-  description: "Frequently asked questions about Follow the Crypto.",
+  description: "Frequently asked questions about Tech Influence Watch.",
 });
 
 export default function FAQPage() {
@@ -24,7 +24,7 @@ export default function FAQPage() {
       <div className={`${sharedStyles.main} ${styles.bodyText}`}>
         <h2 className={styles.subpageTitle}>Frequently asked questions</h2>
         <div className={`single-column-page ${styles.faqPage}`}>
-          <h3 className={styles.faqQuestion} id="rename">
+          <h3 className={styles.aboutSectionHeader} id="rename">
             Why was the site renamed from &ldquo;Follow the Crypto&rdquo; to
             &ldquo;Tech Influence Watch&rdquo;?
           </h3>
@@ -70,8 +70,8 @@ export default function FAQPage() {
             only half the story. The old domain still works if you&rsquo;ve
             bookmarked it.
           </p>
-          <h3 className={styles.faqQuestion} id="classification">
-            What counts as a &rdquo;crypto&ldquo; or &rdquo;AI&ldquo; company?
+          <h3 className={styles.aboutSectionHeader} id="classification">
+            What counts as a crypto or AI company?
           </h3>
           <p>
             For crypto, this includes exchanges, stablecoin issuers, blockchain
@@ -86,7 +86,7 @@ export default function FAQPage() {
             <Link href="/2026/companies/oracle">Oracle</Link> are tracked
             because of their substantial activity in these sectors.
           </p>
-          <h3 className={styles.faqQuestion} id="criteria">
+          <h3 className={styles.aboutSectionHeader} id="criteria">
             What criteria determine which companies and individuals are
             included?
           </h3>
@@ -101,7 +101,7 @@ export default function FAQPage() {
             political campaign is included. If you think a company or individual
             is missing, please <Link href="/about/contact">get in touch</Link>.
           </p>
-          <h3 className={styles.faqQuestion} id="what-about">
+          <h3 className={styles.aboutSectionHeader} id="what-about">
             Who cares what the cryptocurrency and/or AI industries are doing
             when [oil|pharma|banking|some other industry] also spends millions
             on lobbying and politics?
@@ -127,7 +127,7 @@ export default function FAQPage() {
             </a>
             .
           </p>
-          <h3 className={styles.faqQuestion} id="blockchain">
+          <h3 className={styles.aboutSectionHeader} id="blockchain">
             Does this project use blockchain data?
           </h3>
           <p>
@@ -137,14 +137,14 @@ export default function FAQPage() {
             political spending that is not reported to the FEC&nbsp;&mdash;
             except where that spending involves committees tracked on this site.
           </p>
-          <h3 className={styles.faqQuestion} id="crypto-or-dollars">
+          <h3 className={styles.aboutSectionHeader} id="crypto-or-dollars">
             Are these people and companies donating cryptocurrency or regular
             dollars?
           </h3>
           <p>
             It&rsquo;s a mix, but anecdotally it appears to be mostly dollars.
           </p>
-          <h3 className={styles.faqQuestion} id="recent">
+          <h3 className={styles.aboutSectionHeader} id="recent">
             Why does it look like there hasn&rsquo;t been much recent spending
             activity?
           </h3>
@@ -161,7 +161,7 @@ export default function FAQPage() {
             </a>
             .
           </p>
-          <h3 className={styles.faqQuestion} id="discrepancies">
+          <h3 className={styles.aboutSectionHeader} id="discrepancies">
             Why do some numbers not seem to add up?
           </h3>
           <p>
@@ -176,9 +176,10 @@ export default function FAQPage() {
             show the most up-to-date data as possible, at the expense of
             occasionally unusual numbers.
           </p>
-          <h3 className={styles.faqQuestion} id="pacs-data">
-            What&rsquo;s going on with the list of PACs? Why aren&rsquo;t the
-            amounts belonging to each PAC displayed?
+          <h3 className={styles.aboutSectionHeader} id="pacs-data">
+            What&rsquo;s going on with the{" "}
+            <Link href="/2026/committees/ranking/super">list of PACs</Link>? Why
+            aren&rsquo;t the amounts contributed to each PAC displayed?
           </h3>
           <p>
             There are some errors in FEC data, generally where in-kind
@@ -192,10 +193,15 @@ export default function FAQPage() {
             committees, I am showing the order of PACs as reflected by the FEC,
             while acknowledging that PACs with cryptocurrency-denominated
             contributions may appear slightly too highly. To avoid propogating
-            numbers that I know are inaccurate, I no longer show the
-            FEC-reported PAC receipts in the lists of PACs.
+            numbers that I know are misleading, I no longer show the
+            FEC-reported PAC receipts in the lists of PACs. With those caveats
+            in mind, this data is still available from the{" "}
+            <a href="https://www.fec.gov/data/committees/pac-party/?cycle=2026&committee_type=O">
+              FEC
+            </a>
+            .
           </p>
-          <h3 className={styles.faqQuestion} id="individual">
+          <h3 className={styles.aboutSectionHeader} id="individual">
             Why are some contributions attributed only to
             &ldquo;Individual&rdquo;?
           </h3>
@@ -208,7 +214,7 @@ export default function FAQPage() {
             senior-level employees at these companies, I have redacted
             identifying information.
           </p>
-          <h3 className={styles.faqQuestion} id="missing-ads">
+          <h3 className={styles.aboutSectionHeader} id="missing-ads">
             Why are some political advertisements missing?
           </h3>
           <p>

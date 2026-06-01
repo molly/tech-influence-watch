@@ -748,7 +748,6 @@ export const fetchAllExpenditureTotalsByParty = cache(
   async (
     sector: Sector = "all",
   ): Promise<ExpendituresByPartySnapshot | ErrorType> => {
-    return { error: true };
     const data = await fetchSnapshot("expenditures", "by_party");
     if (isError(data)) {
       return data as ErrorType;

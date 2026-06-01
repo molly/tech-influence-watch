@@ -1,8 +1,5 @@
-.established {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 0.9rem;
-  color: var(--secondary-text);
+.aboutPage {
+  max-width: 720px;
 }
 
 .navRow {
@@ -201,6 +198,53 @@ blockquote.pullQuote {
   text-decoration: underline;
 }
 
+/* CTA block */
+
+.ctaBlock {
+  border: 1px solid var(--money-card-border);
+  box-shadow: 6px 6px var(--color-lime-600);
+  margin-bottom: 6px; /* Avoids overflow outside of bounding box */
+  margin-right: 6px;
+  padding: 1.5rem 2rem;
+  max-width: 720px;
+}
+
+.ctaLabel {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 3rem;
+  margin-bottom: 0.25rem;
+}
+
+.ctaDescription {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1rem;
+  margin: 1rem 0 2rem 0;
+  color: var(--main-text);
+}
+
+.ctaButton {
+  display: block;
+  width: 100%;
+  background: var(--color-black);
+  color: var(--color-white);
+  text-align: center;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 1rem;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.ctaButton:hover {
+  background: var(--accent-on-light);
+  color: var(--color-white);
+}
+
 /* Subpage title */
 
 .subpageTitle {
@@ -213,7 +257,7 @@ blockquote.pullQuote {
   max-width: 720px;
 }
 
-.faqQuestion {
+.aboutSectionHeader {
   font-family: var(--font-display);
   font-size: 2rem;
   padding-top: 1rem;
@@ -223,7 +267,184 @@ blockquote.pullQuote {
   }
 }
 
+/* Journalist/researcher panel */
+
+.journalistPanel {
+  display: grid;
+  grid-template-columns: 55fr 45fr;
+  background: var(--color-black);
+  color: var(--on-dark-text);
+  padding: 2.5rem;
+  gap: 3rem;
+  margin-bottom: 2.5rem;
+}
+
+.journalistLabel {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-lime-400);
+  margin-bottom: 0.75rem;
+}
+
+.journalistHeadline {
+  font-family: var(--font-display);
+  font-size: 3.5rem;
+  line-height: 1;
+  font-weight: 700;
+  color: var(--color-white);
+  margin-bottom: 1.25rem;
+}
+
+.journalistLeft p {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--on-dark-text);
+}
+
+.journalistLeft .bold {
+  color: var(--color-white);
+}
+
+.journalistCta {
+  display: inline-block;
+  background: var(--color-lime-400);
+  color: var(--color-black);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.75rem 1.25rem;
+  text-decoration: none;
+  margin-top: 0.25rem;
+}
+
+.journalistCta:hover {
+  background: var(--color-lime-300);
+  color: var(--color-black);
+  text-decoration: none;
+}
+
+.journalistFeatureList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.journalistFeatureList li {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  padding: 0.85rem 0 0.85rem 1.4rem;
+  color: var(--on-dark-text);
+  border-top: 1px solid var(--color-neutral-800);
+  position: relative;
+}
+
+.journalistFeatureList li::before {
+  content: "›";
+  position: absolute;
+  left: 0;
+  color: var(--color-lime-400);
+  font-weight: 700;
+}
+
+.journalistFeatureList .bold {
+  color: var(--color-white);
+}
+
+/* Contact cards */
+
+.contactCards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 720px;
+  margin-top: 1.5rem;
+}
+
+.contactCard {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  border: 1px solid var(--card-border);
+  padding: 1rem 1.25rem;
+  text-decoration: none;
+  color: var(--main-text);
+}
+
+.contactCard:hover {
+  border-color: var(--accent-on-light);
+  text-decoration: none;
+}
+
+.contactCardFeatured {
+  border: 2px solid var(--accent-on-light);
+}
+
+.contactIcon {
+  width: 64px;
+  height: 64px;
+  min-width: 64px;
+  background: var(--color-black);
+  color: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.contactInfo {
+  flex: 1;
+}
+
+.contactLabel {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--secondary-text);
+  margin-bottom: 0.2rem;
+}
+
+.contactTitle {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--main-text);
+}
+
+.contactDescription {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.9rem;
+  color: var(--secondary-text);
+  margin-top: 0.15rem;
+}
+
+.contactExternalArrow {
+  font-size: 1.1rem;
+  color: var(--secondary-text);
+  align-self: flex-start;
+}
+
 /* Responsive */
+
+@media (max-width: 768px) {
+  .journalistPanel {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .journalistHeadline {
+    font-size: 2.5rem;
+  }
+}
 
 @media (max-width: 999px) {
   .projectColumns {
@@ -243,5 +464,15 @@ blockquote.pullQuote {
 @media (max-width: 768px) {
   .quoteImageContainer {
     aspect-ratio: 16 / 9;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .ctaButton {
+    background: var(--accent);
+  }
+
+  .ctaButton:hover {
+    background: var(--color-lime-500);
   }
 }

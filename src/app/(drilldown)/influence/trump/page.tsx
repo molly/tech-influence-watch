@@ -26,9 +26,10 @@ import { formatCurrency } from "@/app/utils/utils";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = customMetadata({
-  title: "Crypto industry campaign contributions to President Trump",
+  title:
+    "Cryptocurrency and AI industry campaign contributions to President Trump",
   description:
-    "Crypto industry contributions to Donald Trump's campaign committees",
+    "Cryptocurrency and artificial intelligence industry contributions to Donald Trump's campaign committees",
 });
 
 function TrumpContributionsSkeleton() {
@@ -67,12 +68,15 @@ async function TrumpContributionsData() {
     return <ErrorText subject="contributions data" />;
   }
 
-  const { beneficiaries: trumpBeneficiaries, grandTotal, committeeNames: trumpCommitteeNames } =
-    trumpData as {
-      beneficiaries: Record<string, Beneficiary>;
-      grandTotal: number;
-      committeeNames: Record<string, string>;
-    };
+  const {
+    beneficiaries: trumpBeneficiaries,
+    grandTotal,
+    committeeNames: trumpCommitteeNames,
+  } = trumpData as {
+    beneficiaries: Record<string, Beneficiary>;
+    grandTotal: number;
+    committeeNames: Record<string, string>;
+  };
 
   const byDonorMap = new Map<string, { company_name: string; total: number }>();
   for (const beneficiary of Object.values(trumpBeneficiaries)) {
@@ -112,8 +116,9 @@ async function TrumpContributionsData() {
       <section className={styles.heroWithStat}>
         <div>
           <p className={sharedStyles.headerSubtitle}>
-            Crypto industry contributions to President Donald Trump&rsquo;s
-            campaign committees and affiliated organizations
+            Cryptocurrency and artificial intelligence industry contributions to
+            President Donald Trump&rsquo;s campaign committees and affiliated
+            organizations
           </p>
           <div className={sharedStyles.noteCard}>
             <span className={sharedStyles.noteLabel}>Note:</span> This page

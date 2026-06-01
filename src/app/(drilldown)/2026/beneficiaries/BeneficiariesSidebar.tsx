@@ -9,8 +9,10 @@ import Skeleton from "@/app/components/skeletons/Skeleton";
 import sharedStyles from "@/app/shared.module.css";
 import { Beneficiary } from "@/app/types/Beneficiaries";
 import { Sector } from "@/app/types/Sector";
-import { humanizeApproximateRounded } from "@/app/utils/humanize";
-import { formatCompact } from "@/app/utils/humanize";
+import {
+  formatCompact,
+  humanizeApproximateRounded,
+} from "@/app/utils/humanize";
 import { getPartyAbbreviation } from "@/app/utils/party";
 import { range } from "@/app/utils/range";
 import { humanizeSector } from "@/app/utils/sector";
@@ -202,10 +204,11 @@ export default function BeneficiariesSidebar({
           }
         />
         <p className={styles.sidebarSubtitle}>
-          Crypto and AI industry contributions to candidates&rsquo; campaigns,
-          grouped by the federal office sought. This does not include
-          contributions to PACs not affiliated with a specific candidate, such
-          as super PACs or party committees.
+          {humanizeSector(sector, { context: "industry", abbrev: true })}{" "}
+          contributions to candidates&rsquo; campaigns, grouped by the federal
+          office sought. This does not include contributions to PACs not
+          affiliated with a specific candidate, such as super PACs or party
+          committees.
         </p>
         <Suspense fallback={<HorizontalBarsSkeleton numBars={3} />}>
           <HorizontalBars

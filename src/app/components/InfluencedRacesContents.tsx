@@ -26,7 +26,7 @@ import { STATES_BY_ABBR } from "../data/states";
 import { Beneficiary } from "../types/Beneficiaries";
 import { CommitteeConstant } from "../types/Committee";
 import { Sector } from "../types/Sector";
-import { getCommitteeIdsForSector } from "../utils/sector";
+import { getCommitteeIdsForSector, humanizeSector } from "../utils/sector";
 import Candidate, { CandidateSkeleton } from "./Candidate";
 import ErrorText from "./ErrorText";
 import InformationalTooltip from "./InformationalTooltip";
@@ -79,12 +79,12 @@ function GoalOutcome({
           >
             <title>
               Mixed results (this candidate received both support and opposition
-              from crypto PACs)
+              from industry PACs)
             </title>
             <path d="M32 288c-17.7 0-32 14.3-32 32s14.3 32 32 32l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L32" />
           </svg>
         );
-        text = `Candidate both supported and opposed by crypto PACs ${verb} their race`;
+        text = `Candidate both supported and opposed by industry PACs ${verb} their race`;
       } else {
         icon = (
           <svg
@@ -97,7 +97,7 @@ function GoalOutcome({
             <title>Goal achieved</title>
           </svg>
         );
-        text = `Candidate opposed by crypto PACs ${verb} their race`;
+        text = `Candidate opposed by industry PACs ${verb} their race`;
       }
     } else {
       icon = (
@@ -110,7 +110,7 @@ function GoalOutcome({
           <title>Goal failed</title>
         </svg>
       );
-      text = `Candidate supported by crypto PACs ${verb} their race`;
+      text = `Candidate supported by industry PACs ${verb} their race`;
     }
   } else if (candidate.won && wasSupported) {
     icon = (
@@ -124,7 +124,7 @@ function GoalOutcome({
         <title>Goal achieved</title>
       </svg>
     );
-    text = `Candidate supported by crypto PACs won their race`;
+    text = `Candidate supported by industry PACs won their race`;
   } else {
     const nextRace = getUpcomingRaceForCandidate(races, candidate);
     if (!nextRace) {
@@ -137,12 +137,12 @@ function GoalOutcome({
           >
             <title>
               Mixed results (this candidate received both support and opposition
-              from crypto PACs)
+              from industry PACs)
             </title>
             <path d="M32 288c-17.7 0-32 14.3-32 32s14.3 32 32 32l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L32" />
           </svg>
         );
-        text = `Candidate both supported and opposed by crypto PACs won their race`;
+        text = `Candidate both supported and opposed by industry PACs won their race`;
       } else if (wasSupported) {
         icon = (
           <svg
@@ -155,7 +155,7 @@ function GoalOutcome({
             <title>Goal achieved</title>
           </svg>
         );
-        text = `Candidate supported by crypto PACs won their race`;
+        text = `Candidate supported by industry PACs won their race`;
       } else if (wasOpposed) {
         icon = (
           <svg
@@ -167,7 +167,7 @@ function GoalOutcome({
             <title>Goal failed</title>
           </svg>
         );
-        text = `Candidate supported by crypto PACs lost their race`;
+        text = `Candidate supported by industry PACs lost their race`;
       }
     }
   }
@@ -403,10 +403,22 @@ export default async function InfluencedRacesContents({
                 contributions
                 <InformationalTooltip>
                   <p>
-                    Contributions from cryptocurrency industry companies or
-                    associated individuals to this candidate or aligned
-                    committees, which have not gone through the crypto-focused
-                    super PACs.
+                    Contributions from{" "}
+                    {humanizeSector(sector, {
+                      context: "industry",
+                      abbrev: true,
+                      lowercase: true,
+                      or: true,
+                    })}{" "}
+                    companies or associated individuals to this candidate or
+                    aligned committees, which have not gone through the{" "}
+                    {humanizeSector(sector, {
+                      hyphen: true,
+                      abbrev: true,
+                      lowercase: true,
+                      or: true,
+                    })}
+                    focused super PACs.
                   </p>
                   <p>
                     This relies on manual classification and so represents a

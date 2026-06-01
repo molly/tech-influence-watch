@@ -54,7 +54,10 @@ const NAV_ITEMS: NavItem[] = [
   {
     id: "influence",
     label: "Influence",
-    children: [{ label: "Quid pro quo", href: "/2026/quidproquo" }],
+    children: [
+      { label: "Quid pro quo", href: "/influence/quidproquo" },
+      { label: "Contributions to Trump", href: "/influence/trump" },
+    ],
   },
   {
     id: "about",
@@ -62,8 +65,9 @@ const NAV_ITEMS: NavItem[] = [
     children: [
       { label: "About", href: "/about" },
       { label: "FAQ", href: "/about/faq" },
-      { label: "Support", href: "/about/support" },
       { label: "Contact", href: "/about/contact" },
+      { label: "Support", href: "/about/support" },
+      { label: "Colophon", href: "/about/colophon" },
     ],
   },
 ];

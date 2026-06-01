@@ -24,11 +24,18 @@ import { humanizeSector, parseSector } from "@/app/utils/sector";
 import { hydrateIndividualConstant } from "./individuals.utils";
 import IndividualsList, { IndividualsListSkeleton } from "./IndividualsList";
 
-export const metadata: Metadata = customMetadata({
-  title: "Individuals",
-  description:
-    "List of cryptocurrency-related individuals active in election spending.",
-});
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ sector?: string }>;
+}): Promise<Metadata> {
+  const { sector: rawSector } = await searchParams;
+  const sector = parseSector(rawSector);
+  return customMetadata({
+    title: "Companies",
+    description: `${humanizeSector(sector, { hyphen: true, or: true })}related individuals active in election spending.`,
+  });
+}
 
 function SubtitleSkeleton() {
   return (

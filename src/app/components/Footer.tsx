@@ -7,7 +7,7 @@ export default function Footer() {
     <footer className={styles.footer}>
       <div className={styles.footerContents}>
         <div className={styles.description}>
-          Tech Influence Watch is a project of{" "}
+          <i>Tech Influence Watch</i> is a project of{" "}
           <a href="https://www.citationneeded.news">
             <i>Citation Needed</i>
           </a>

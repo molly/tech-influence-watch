@@ -7,10 +7,10 @@ import styles from "./page.module.css";
 
 const links = [
   { href: "/about", label: "About" },
-  { href: "/about/colophon", label: "Colophon" },
   { href: "/about/faq", label: "FAQ" },
-  { href: "/about/support", label: "Support" },
   { href: "/about/contact", label: "Contact" },
+  { href: "/about/support", label: "Support" },
+  { href: "/about/colophon", label: "Colophon" },
 ];
 
 export default function AboutNav() {

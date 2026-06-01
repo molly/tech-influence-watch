@@ -28,7 +28,7 @@ import { range } from "@/app/utils/range";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = customMetadata({
-  title: "Quid Pro Quo",
+  title: "Crypto Quid Pro Quo",
   description:
     "Cryptocurrency companies are reaping the benefits of their contributions to Trump and other pro-crypto politicians.",
 });
@@ -386,7 +386,7 @@ export default function QuidProQuoPage() {
   return (
     <div className={styles.page}>
       <Breadcrumbs crumbs={["Influence", "Quid pro quo"]} />
-      <h1 className={sharedStyles.title}>Quid pro quo</h1>
+      <h1 className={sharedStyles.title}>Crypto quid pro quo</h1>
       <p className={sharedStyles.headerSubtitle}>
         Cryptocurrency companies are reaping the benefits of their contributions
         to President Trump and other pro-crypto politicians.

@@ -26,11 +26,18 @@ import {
 import listStyles from "../listStyles.module.css";
 import styles from "./page.module.css";
 
-export const metadata: Metadata = customMetadata({
-  title: "Companies",
-  description:
-    "List of cryptocurrency-related companies active in election spending.",
-});
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ sector?: string }>;
+}): Promise<Metadata> {
+  const { sector: rawSector } = await searchParams;
+  const sector = parseSector(rawSector);
+  return customMetadata({
+    title: "Companies",
+    description: `${humanizeSector(sector, { hyphen: true })}focused companies active in election spending.`,
+  });
+}
 
 type CompanyGroup = {
   id: string;
