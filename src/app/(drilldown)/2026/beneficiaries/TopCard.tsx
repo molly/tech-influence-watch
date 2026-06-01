@@ -1,7 +1,7 @@
 import MaybeLink from "@/app/components/MaybeLink";
 import Skeleton from "@/app/components/skeletons/Skeleton";
-import sharedStyles from "@/app/shared.module.css";
 import COMMITTEES from "@/app/data/committees";
+import sharedStyles from "@/app/shared.module.css";
 import { Beneficiary } from "@/app/types/Beneficiaries";
 import { humanizeApproximateRounded } from "@/app/utils/humanize";
 

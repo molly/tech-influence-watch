@@ -3,9 +3,6 @@ import { Suspense } from "react";
 import Header from "./components/Header";
 import AllCashByCommittee from "./components/home/AllCashByCommittee";
 import AllCompanySpendingByParty from "./components/home/AllCompanySpendingByParty";
-import FeaturedTracker, {
-  FeaturedTrackerSkeleton,
-} from "./components/home/FeaturedTracker";
 import AllCompanySpendingMap from "./components/home/AllCompanySpendingMap";
 import AllExpendituresByCommittee from "./components/home/AllExpendituresByCommittee";
 import AllExpendituresByParty from "./components/home/AllExpendituresByParty";
@@ -13,6 +10,9 @@ import AllRecentContributions from "./components/home/AllRecentContributions";
 import AllRecentExpenditures from "./components/home/AllRecentExpenditures";
 import CombinedMapToggle from "./components/home/CombinedMapToggle";
 import CompanyBubbleChart from "./components/home/CompanyBubbleChart";
+import FeaturedTracker, {
+  FeaturedTrackerSkeleton,
+} from "./components/home/FeaturedTracker";
 import SuperPacSpendingMapWrapper from "./components/home/SuperPacSpendingMapWrapper";
 import TechSectorBreakdown from "./components/home/TechSectorBreakdown";
 import TotalCompanySpending from "./components/home/TotalCompanySpending";

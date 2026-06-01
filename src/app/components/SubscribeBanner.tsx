@@ -36,8 +36,8 @@ export default function SubscribeBanner({
     setCookie(VISITED_COOKIE, "1", 365);
 
     if (isReturnVisit) {
-      setVisible(true);
-      return;
+      const timer = setTimeout(() => setVisible(true), 0);
+      return () => clearTimeout(timer);
     }
 
     const handleScroll = () => {

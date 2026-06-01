@@ -8,11 +8,16 @@ export default function Logo() {
       <Image
         src="/mark.svg"
         alt=""
-        width={28}
-        height={28}
+        width={52}
+        height={52}
         className={styles.logoMark}
       />
-      Tech Influence <span className={styles.logoWatch}>Watch</span>
+      <div className={styles.logoText}>
+        Tech Influence
+        <div>
+          <span className={styles.logoWatch}>Watch</span>
+        </div>
+      </div>
     </div>
   );
 }
