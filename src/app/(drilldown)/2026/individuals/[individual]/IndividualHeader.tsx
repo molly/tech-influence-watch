@@ -26,13 +26,18 @@ function IndividualHeaderSkeleton() {
   );
 }
 
-export default function IndividualHeader({
+export default async function IndividualHeader({
   individual,
   numRecipients,
 }: {
   individual: IndividualListData;
   numRecipients: number;
 }) {
+  const photoUrl = `https://storage.googleapis.com/follow-the-crypto-misc-assets/${individual.id}.webp`;
+  const hasPhoto = await fetch(photoUrl, { method: "HEAD" })
+    .then((r) => r.ok)
+    .catch(() => false);
+
   return (
     <section className={styles.header}>
       <Breadcrumbs
@@ -44,23 +49,30 @@ export default function IndividualHeader({
       />
       <div className={styles.heroWithStat}>
         <Suspense fallback={<IndividualHeaderSkeleton />}>
-          <section className={styles.imageAndName}>
-            <div className={styles.imageAndAttribution}>
-              <div className={styles.individualImageWrapper}>
-                <Image
-                  fill
-                  src={`https://storage.googleapis.com/follow-the-crypto-misc-assets/${individual.id}.webp`}
-                  alt={`${individual.name} photo`}
-                  className={styles.individualImage}
-                  sizes="10rem"
-                />
+          <section
+            className={`${styles.imageAndName} ${!hasPhoto ? styles.imageAndNameNoPhoto : ""}`}
+          >
+            {hasPhoto && (
+              <div className={styles.imageAndAttribution}>
+                <div className={styles.individualImageWrapper}>
+                  <Image
+                    fill
+                    src={photoUrl}
+                    alt={`${individual.name} photo`}
+                    className={styles.individualImage}
+                    sizes="10rem"
+                  />
+                </div>
+                {individual.photoCredit && (
+                  <a
+                    href={individual.photoCredit}
+                    className={styles.attribution}
+                  >
+                    (image attribution)
+                  </a>
+                )}
               </div>
-              {individual.photoCredit && (
-                <a href={individual.photoCredit} className={styles.attribution}>
-                  (image attribution)
-                </a>
-              )}
-            </div>
+            )}
             <div>
               <h1 className={sharedStyles.title}>{individual.name}</h1>
               <IndividualBadges individual={individual} />

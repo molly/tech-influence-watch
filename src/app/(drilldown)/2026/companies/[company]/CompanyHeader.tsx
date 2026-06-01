@@ -35,13 +35,18 @@ export function CompanyHeaderSkeleton() {
     </div>
   );
 }
-export default function CompanyHeader({
+export default async function CompanyHeader({
   company,
   companyParam,
 }: {
   company: Company;
   companyParam: string;
 }) {
+  const logoUrl = `https://storage.googleapis.com/follow-the-crypto-misc-assets/${companyParam}.webp`;
+  const hasLogo = await fetch(logoUrl, { method: "HEAD" })
+    .then((r) => r.ok)
+    .catch(() => false);
+
   return (
     <div className={sharedStyles.fullWidthHeader}>
       <section className={sharedStyles.header}>
@@ -52,16 +57,20 @@ export default function CompanyHeader({
             company.name,
           ]}
         />
-        <div className={styles.companyHeader}>
-          <div className={styles.companyLogoWrapper}>
-            <Image
-              fill
-              src={`https://storage.googleapis.com/follow-the-crypto-misc-assets/${companyParam}.webp`}
-              alt={`${company.name} logo`}
-              className={styles.companyLogoImage}
-              sizes="70px"
-            />
-          </div>
+        <div
+          className={`${styles.companyHeader} ${!hasLogo ? styles.companyHeaderNoLogo : ""}`}
+        >
+          {hasLogo && (
+            <div className={styles.companyLogoWrapper}>
+              <Image
+                fill
+                src={logoUrl}
+                alt={`${company.name} logo`}
+                className={styles.companyLogoImage}
+                sizes="70px"
+              />
+            </div>
+          )}
           <h1 className={`${sharedStyles.title} ${styles.companyName}`}>
             {company.name}
           </h1>

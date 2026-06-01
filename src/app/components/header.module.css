@@ -71,12 +71,17 @@
 
 .logo {
   composes: accent-text from "@/app/shared.module.css";
-  flex-direction: column;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
   color: var(--color-white);
-  display: block;
   font-size: 1.8rem;
   font-weight: 800;
   margin: 0.5rem 0 0.5rem 1rem;
+}
+
+.logoMark {
+  flex-shrink: 0;
 }
 
 .logoWatch {

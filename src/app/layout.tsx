@@ -2,7 +2,6 @@ import "./globals.css";
 
 import type { Metadata } from "next";
 import {
-  Barlow_Semi_Condensed,
   Big_Shoulders,
   IBM_Plex_Sans,
   Roboto,
@@ -46,6 +45,25 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/favicon-16x16.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/favicon-32x32.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/apple-touch-icon.png"
+        />
+        <link rel="manifest" href="/site.webmanifest" />
         <link rel="me" href="https://hachyderm.io/@followthecrypto" />
       </head>
       <body

@@ -9,7 +9,9 @@ import AllExpendituresByParty from "./components/home/AllExpendituresByParty";
 import AllRecentContributions from "./components/home/AllRecentContributions";
 import AllRecentExpenditures from "./components/home/AllRecentExpenditures";
 import CombinedMapToggle from "./components/home/CombinedMapToggle";
+import CompanyBubbleChart from "./components/home/CompanyBubbleChart";
 import SuperPacSpendingMapWrapper from "./components/home/SuperPacSpendingMapWrapper";
+import TechSectorBreakdown from "./components/home/TechSectorBreakdown";
 import TotalCompanySpending from "./components/home/TotalCompanySpending";
 import TotalExpenditures from "./components/home/TotalExpenditures";
 import TotalRaised from "./components/home/TotalRaised";
@@ -76,6 +78,8 @@ export default async function Home({
             </SuperPACsByReceipts>
           </div>
           <div className={styles.sideColumn}>
+            {sector === "all" && <TechSectorBreakdown />}
+            <CompanyBubbleChart sector={sector} />
             <AllCompanySpendingByParty sector={sector} />
             <AllCashByCommittee sector={sector} />
             <AllExpendituresByCommittee sector={sector} />

@@ -28,10 +28,6 @@
   stroke: var(--color-neutral-300);
 }
 
-.stateFillError {
-  fill: transparent;
-}
-
 .stateFill0 {
   fill: var(--map-background);
 }

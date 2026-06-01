@@ -18,6 +18,10 @@
   gap: 1rem;
 }
 
+.imageAndNameNoPhoto {
+  grid-template-columns: 1fr;
+}
+
 .imageAndAttribution {
   display: flex;
   flex-direction: column;

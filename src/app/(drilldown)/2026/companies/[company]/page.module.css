@@ -17,6 +17,14 @@
   column-gap: 1.5rem;
 }
 
+.companyHeaderNoLogo {
+  grid-template-areas:
+    "name"
+    "details"
+    "description";
+  grid-template-columns: 1fr;
+}
+
 .companyLogoWrapper {
   grid-area: logo;
   position: relative;
@@ -24,7 +32,8 @@
   flex-shrink: 0;
   justify-content: center;
   align-items: center;
-  aspect-ratio: 1;
+  width: 5rem;
+  height: 5rem;
   border: 1px solid var(--card-border);
   background-color: var(--logo-background);
 }
@@ -95,4 +104,24 @@
 
 .spendingByStateBarChart {
   margin-top: 0.5rem;
+}
+
+@media (max-width: 575px) {
+  .companyHeader {
+    grid-template-areas:
+      "logo name"
+      "details details"
+      "description description";
+  }
+
+  .companyHeaderNoLogo {
+    grid-template-areas:
+      "name"
+      "details"
+      "description";
+  }
+
+  .companyDetails {
+    margin-top: 1rem;
+  }
 }

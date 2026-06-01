@@ -45,10 +45,6 @@
   }
 }
 
-.titleH2 {
-  font-size: clamp(2rem, 8vw, 3rem);
-}
-
 .titleH3 {
   font-size: clamp(1rem, 6vw, 1.5rem);
 }
@@ -150,12 +146,6 @@
   align-items: center;
   gap: inherit;
   width: 100%;
-}
-
-.constrainWidth {
-  max-width: 40rem;
-  width: 100%;
-  height: 100%;
 }
 
 .highlight {
@@ -266,8 +256,6 @@
   max-width: 40rem;
 }
 
-/* Sort / filter control bar */
-
 .controls {
   display: flex;
   align-items: center;
@@ -276,61 +264,6 @@
   padding: 0.4rem 0;
   border-bottom: 1px solid var(--table-color);
   flex-wrap: wrap;
-}
-
-.controlsLeft {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-
-.controlsRight {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.controlGroup {
-  display: flex;
-}
-
-.controlBtn {
-  background: none;
-  border: 1px solid var(--card-border);
-  box-sizing: border-box;
-  margin-right: -1px;
-  padding: 0.2rem 0.5rem;
-  font-size: 0.7rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: var(--main-text);
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.controlBtn:hover {
-  background: var(--color-neutral-100);
-  color: var(--main-text);
-  text-decoration: none;
-}
-
-.controlBtnActive {
-  composes: controlBtn;
-  background: var(--color-black);
-  color: var(--color-white);
-  border-color: var(--color-black);
-}
-
-.controlBtnActive:hover {
-  background: var(--color-neutral-800);
-  color: var(--color-white);
-  text-decoration: none;
-}
-
-.sortArrow {
-  font-size: 0.4rem;
-  display: inline-block;
-  transform: translateY(-0.3em);
 }
 
 /* Inline sort controls (text-style, no button borders) */
@@ -435,20 +368,6 @@
   .sectorBadge {
     background-color: var(--color-lime-900);
     color: var(--color-lime-300);
-  }
-
-  .controlBtn:hover {
-    background: var(--color-neutral-700);
-  }
-
-  .controlBtnActive {
-    background: var(--color-neutral-200);
-    color: var(--color-black);
-  }
-
-  .controlBtnActive:hover {
-    background: var(--color-neutral-300);
-    color: var(--color-black);
   }
 
   .inlineSortOptionActive {

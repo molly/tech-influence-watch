@@ -33,7 +33,6 @@
 .superPacRow,
 .influencedTableRow,
 .oppositionSpendingRow,
-.beneficiariesRow,
 .qpqRow {
   &:not(:last-child) {
     border-bottom: 1px solid var(--table-color);

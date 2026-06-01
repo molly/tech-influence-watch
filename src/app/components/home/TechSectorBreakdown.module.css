@@ -1,0 +1,215 @@
+/* Proportional bar */
+.bigBarTrack {
+  display: flex;
+  width: 100%;
+  height: 3.5rem;
+  gap: 2px;
+  margin-bottom: 0.5rem;
+}
+
+.bigBarSegment {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.bigBarCrypto {
+  background-color: var(--color-lime-700);
+}
+
+.bigBarAi {
+  background-color: var(--color-lime-500);
+}
+
+.bigBarBoth {
+  background-color: var(--color-black);
+}
+
+.bigBarLabel {
+  display: flex;
+  flex-direction: column;
+  padding: 0 0.4rem;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.bigBarName {
+  color: #fff;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.bigBarAmount {
+  color: rgba(255, 255, 255, 0.8);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+
+/* Donor columns */
+.donorColumns {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.donorColumn {
+  min-width: 0;
+  container-type: inline-size;
+}
+
+.columnHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.25rem;
+}
+
+.columnTitle {
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.cryptoTitle {
+  color: var(--color-lime-700);
+}
+
+.aiTitle {
+  color: var(--color-lime-600);
+}
+
+.bothTitle {
+  color: var(--color-neutral-600);
+}
+
+.columnSubheader {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--secondary-text);
+  font-weight: 600;
+}
+
+.columnDivider {
+  height: 2px;
+  margin-bottom: 0.35rem;
+}
+
+.cryptoDivider {
+  background-color: var(--color-lime-700);
+}
+
+.aiDivider {
+  background-color: var(--color-lime-500);
+}
+
+.bothDivider {
+  background-color: var(--color-black);
+}
+
+/* Donor rows */
+.donorRow {
+  display: grid;
+  grid-template-columns: 1.2rem 1fr 2.5rem 2rem;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--table-color);
+  font-size: 0.75rem;
+}
+
+.donorRank {
+  color: var(--secondary-text);
+  font-size: 0.7rem;
+  text-align: center;
+}
+
+.donorName {
+  font-weight: 700;
+  font-size: 0.75rem;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.donorAmount {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.7rem;
+  text-align: right;
+  color: var(--secondary-text);
+  white-space: nowrap;
+}
+
+.donorPct {
+  font-size: 0.7rem;
+  color: var(--secondary-text);
+  text-align: right;
+}
+
+.othersLabel {
+  color: var(--secondary-text);
+  font-size: 0.75rem;
+}
+
+@container (max-width: 140px) {
+  .donorRow {
+    grid-template-columns: 1.2rem 1fr auto;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      "rank name name"
+      "rank amount pct";
+  }
+
+  .donorRank {
+    grid-area: rank;
+    align-self: start;
+  }
+
+  .donorName {
+    grid-area: name;
+  }
+
+  .othersLabel {
+    grid-column: 2 / 4;
+    grid-row: 1;
+  }
+
+  .donorAmount {
+    grid-area: amount;
+    text-align: left;
+  }
+
+  .donorPct {
+    grid-area: pct;
+    text-align: right;
+  }
+
+  .othersRow {
+    grid-template-rows: auto;
+
+    .othersLabel {
+      grid-column: 2;
+    }
+
+    .donorAmount {
+      display: none;
+    }
+
+    .donorPct {
+      grid-column: 3;
+      grid-row: 1;
+    }
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .bigBarBoth {
+    background-color: var(--color-neutral-500);
+  }
+}

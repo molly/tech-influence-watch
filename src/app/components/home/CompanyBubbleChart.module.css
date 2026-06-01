@@ -1,0 +1,95 @@
+.wrapper {
+  padding: 0.75rem 0 0;
+}
+
+.svg {
+  display: block;
+  overflow: visible;
+}
+
+.bubbleLink {
+  opacity: 0.85;
+  cursor: pointer;
+  transition: opacity 0.1s;
+
+  &:hover {
+    opacity: 1;
+    text-decoration: none;
+  }
+}
+
+.bubble {
+  cursor: pointer;
+}
+
+.bubbleLabel {
+  fill: #fff;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  pointer-events: none;
+}
+
+.bubbleAmount {
+  fill: rgba(255, 255, 255, 0.8);
+  font-family: var(--font-sans);
+  font-weight: 400;
+  pointer-events: none;
+}
+
+.cryptoCircle {
+  fill: var(--color-lime-700);
+}
+
+.aiCircle {
+  fill: var(--color-lime-500);
+}
+
+.bothCircle {
+  fill: var(--color-black);
+}
+
+@media (prefers-color-scheme: dark) {
+  .bothCircle {
+    fill: var(--color-neutral-500);
+  }
+}
+
+.legend {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 0.75rem;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.legendDot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+}
+
+.legendDotCrypto {
+  background-color: var(--color-lime-700);
+}
+
+.legendDotAi {
+  background-color: var(--color-lime-500);
+}
+
+.legendDotBoth {
+  background-color: var(--color-black);
+}
+
+@media (prefers-color-scheme: dark) {
+  .legendDotBoth {
+    background-color: var(--color-neutral-500);
+  }
+}
