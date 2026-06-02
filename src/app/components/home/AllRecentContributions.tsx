@@ -4,7 +4,6 @@ import {
   fetchAllRecentContributions,
   fetchConstant,
 } from "@/app/actions/fetch";
-import styles from "@/app/page.module.css";
 import sharedStyles from "@/app/shared.module.css";
 import { CommitteeConstant } from "@/app/types/Committee";
 import { RecentContribution } from "@/app/types/Contributions";
@@ -66,7 +65,6 @@ export default async function AllRecentContributions({
 }) {
   return (
     <RecentContributions
-      className={styles.recentContributions}
       noHeader={fullPage}
       fullPage={fullPage}
       sector={sector}

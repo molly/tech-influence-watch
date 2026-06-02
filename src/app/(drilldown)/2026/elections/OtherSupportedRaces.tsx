@@ -183,13 +183,20 @@ function CandidateRow({
   );
 }
 
-function buildPageHref(p: number, rawSector?: string) {
+function buildPageHref(
+  p: number,
+  rawSector?: string,
+  influencedPage = 1,
+) {
   const sp = new URLSearchParams();
   if (rawSector) {
     sp.set("sector", rawSector);
   }
+  if (influencedPage > 1) {
+    sp.set("influencedPage", String(influencedPage));
+  }
   if (p > 1) {
-    sp.set("electionsPage", String(p));
+    sp.set("otherRacesPage", String(p));
   }
   const query = sp.toString();
   return query ? `?${query}` : "?";
@@ -197,9 +204,11 @@ function buildPageHref(p: number, rawSector?: string) {
 
 export default async function OtherSupportedRaces({
   page,
+  influencedPage = 1,
   rawSector,
 }: {
   page: number;
+  influencedPage?: number;
   rawSector?: string;
 }) {
   const sector = parseSector(rawSector);
@@ -309,7 +318,7 @@ export default async function OtherSupportedRaces({
         itemLabel="races"
         sortLabel="total industry contributions"
         hrefs={Array.from({ length: totalPages }, (_, i) =>
-          buildPageHref(i + 1, rawSector),
+          buildPageHref(i + 1, rawSector, influencedPage),
         )}
       />
     </div>

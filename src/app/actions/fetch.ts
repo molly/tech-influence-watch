@@ -40,6 +40,7 @@ import {
   ElectionGroup,
   ElectionsByState,
   OppositionConstant,
+  RaceInsight,
 } from "../types/Elections";
 import {
   CommitteeTotalExpenditures,
@@ -848,6 +849,20 @@ export const fetchElection = cache(
     } else {
       return stateElections[shortRaceId];
     }
+  },
+);
+
+// RACE INSIGHTS --------------------------------------------------------
+// Races with notable tracked-PAC activity: cross-sector (both crypto and AI
+// spending) and/or multi-PAC (>=2 tracked PACs). Filter by is_cross_sector /
+// is_multi_pac for either view.
+export const fetchRaceInsights = cache(
+  async (): Promise<RaceInsight[] | ErrorType> => {
+    const data = await fetchSnapshot("raceInsights", "races");
+    if (isError(data)) {
+      return data as ErrorType;
+    }
+    return (data as { races: RaceInsight[] }).races;
   },
 );
 

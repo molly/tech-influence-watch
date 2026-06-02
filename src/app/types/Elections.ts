@@ -1,4 +1,5 @@
 import { Candidate, ScheduleEByCandidate } from "./FECTypes";
+import { BESector } from "./Sector";
 
 export enum Party {
   Democratic = "D",
@@ -121,6 +122,58 @@ export interface ElectionGroup {
 export interface ElectionsByState {
   [raceId: string]: ElectionGroup;
 }
+
+// A committee's support/oppose amounts toward one candidate within a race.
+export type RaceInsightCandidate = {
+  candidate: string;
+  support: number;
+  oppose: number;
+};
+
+export type RaceInsightCommittee = {
+  id: string;
+  name: string;
+  sector: BESector;
+  total: number;
+  support_total: number;
+  oppose_total: number;
+  candidates: RaceInsightCandidate[];
+};
+
+// A reference to a committee taking a position on a candidate, with the amount.
+export type RaceInsightPositionCommittee = {
+  id: string;
+  name: string;
+  sector: BESector;
+  amount: number;
+};
+
+// Per-candidate view of which PACs are supporting vs. opposing them.
+export type RaceInsightPosition = {
+  candidate: string;
+  support_total: number;
+  oppose_total: number;
+  supporting_committees: RaceInsightPositionCommittee[];
+  opposing_committees: RaceInsightPositionCommittee[];
+  contested: boolean;
+};
+
+export type AdversarialReason = "contested_candidate" | "rival_candidates";
+
+export type RaceInsight = {
+  race_id: string;
+  total: number;
+  crypto_total: number;
+  ai_total: number;
+  pac_count: number;
+  is_cross_sector: boolean;
+  is_multi_pac: boolean;
+  is_adversarial: boolean;
+  adversarial_reasons: AdversarialReason[];
+  is_coordinated: boolean;
+  candidate_positions: RaceInsightPosition[];
+  committees: RaceInsightCommittee[];
+};
 
 export interface OppositionConstant {
   benefitsCandidate?: string;

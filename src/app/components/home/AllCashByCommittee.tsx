@@ -5,7 +5,6 @@ import {
   fetchCommitteeTotalReceipts,
   fetchCompanyTotalSpending,
 } from "@/app/actions/fetch";
-import styles from "@/app/page.module.css";
 import sharedStyles from "@/app/shared.module.css";
 import {
   CommitteeConstantWithContributions,
@@ -65,14 +64,14 @@ async function AllCashByCommitteeContent({
 
 export default function AllCashByCommittee({ sector }: { sector: Sector }) {
   return (
-    <section className={styles.allCashCard}>
+    <section className={sharedStyles.section}>
       <h2 id="cash-by-committee-label" className={sharedStyles.sectionTitle}>
         PAC funds raised
         <Suspense fallback={null}>
           <CashTotal sector={sector} />
         </Suspense>
       </h2>
-      <div className={styles.subtitle}>
+      <div className={sharedStyles.subtitle}>
         All cash raised by PACs, including unspent funds from previous election
         cycles and transfers from other committees
       </div>

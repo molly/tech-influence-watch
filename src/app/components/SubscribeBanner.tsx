@@ -8,9 +8,7 @@ const DISMISSED_COOKIE = "ftc_subscribe_dismissed";
 const VISITED_COOKIE = "ftc_visited";
 
 function getCookie(name: string): string | null {
-  const match = document.cookie.match(
-    new RegExp("(^| )" + name + "=([^;]+)"),
-  );
+  const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
   return match ? match[2] : null;
 }
 
@@ -20,11 +18,7 @@ function setCookie(name: string, value: string, days: number): void {
   document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
 }
 
-export default function SubscribeBanner({
-  amount,
-}: {
-  amount: string | null;
-}) {
+export default function SubscribeBanner({ amount }: { amount: string | null }) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -67,8 +61,8 @@ export default function SubscribeBanner({
     <div className={styles.banner}>
       <p className={styles.text}>
         Crypto and AI companies have spent {amount} on this election cycle. One
-        researcher is tracking every dollar. Subscribe to{" "}
-        <em>Citation Needed</em> to support independent reporting.
+        researcher is tracking it. Subscribe to <i>Citation Needed</i> to
+        support independent reporting.
       </p>
       <a
         href="https://www.citationneeded.news/signup/"

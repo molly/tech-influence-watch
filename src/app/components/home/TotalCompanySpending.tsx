@@ -1,4 +1,7 @@
-import { fetchCompanyTotalSpending } from "@/app/actions/fetch";
+import {
+  fetchCompanyTotalSpending,
+  fetchRaceInsights,
+} from "@/app/actions/fetch";
 import sharedStyles from "@/app/shared.module.css";
 import { CompanyTotals } from "@/app/types/Companies";
 import { type Sector } from "@/app/types/Sector";
@@ -18,6 +21,8 @@ export default async function TotalCompanySpending({
   sector: Sector;
 }) {
   const companyTotalsData = await fetchCompanyTotalSpending(sector);
+  const raceInsights = await fetchRaceInsights();
+  console.log(raceInsights);
   const sectorText = humanizeSector(sector, { context: "industry" });
   if (isError(companyTotalsData)) {
     return (

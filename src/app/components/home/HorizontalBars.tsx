@@ -91,14 +91,17 @@ const getPartyLabel = (party: string): string => {
   return name.charAt(0).toUpperCase() + name.slice(1);
 };
 
+const LABEL_WIDTHS = ["7rem", "5rem", "8rem", "6rem", "4rem", "9rem"];
+const VALUE_WIDTHS = ["2.5rem", "3rem", "2rem", "2.5rem", "3rem", "2rem"];
+
 export function HorizontalBarsSkeleton({ numBars = 1 }: { numBars?: number }) {
   return (
     <ul className={styles.bars}>
       {range(numBars).map((i) => (
         <li key={`skeleton-bar-${i}`} className={styles.barRow}>
           <div className={styles.labelRow}>
-            <Skeleton randWidth={[3, 8]} />
-            <Skeleton randWidth={[1, 3]} />
+            <Skeleton width={LABEL_WIDTHS[i % LABEL_WIDTHS.length]} />
+            <Skeleton width={VALUE_WIDTHS[i % VALUE_WIDTHS.length]} />
           </div>
           <div className={styles.track} />
         </li>

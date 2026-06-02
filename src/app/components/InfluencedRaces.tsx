@@ -14,11 +14,13 @@ export default function InfluencedRaces({
   sector,
   fullPage = false,
   page = 1,
+  otherRacesPage = 1,
   rawSector,
 }: {
   sector: Sector;
   fullPage?: boolean;
   page?: number;
+  otherRacesPage?: number;
   rawSector?: string;
 }) {
   const sectorText = humanizeSector(sector, {
@@ -36,6 +38,7 @@ export default function InfluencedRaces({
           fullPage={fullPage}
           sector={sector}
           page={page}
+          otherRacesPage={otherRacesPage}
           rawSector={rawSector}
         />
       </Suspense>

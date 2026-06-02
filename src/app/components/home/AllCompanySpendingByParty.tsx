@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 
 import { fetchCompanyTotalSpending } from "@/app/actions/fetch";
-import styles from "@/app/page.module.css";
 import sharedStyles from "@/app/shared.module.css";
 import { CompanyTotals } from "@/app/types/Companies";
 import { Sector } from "@/app/types/Sector";
@@ -59,7 +58,7 @@ export default function AllCompanySpendingByParty({
     lowercase: true,
   });
   return (
-    <section className={styles.companySpendingCard}>
+    <section className={sharedStyles.section}>
       <h2
         id="company-spending-by-party-label"
         className={sharedStyles.sectionTitle}
@@ -69,7 +68,7 @@ export default function AllCompanySpendingByParty({
           <SpendingTotal sector={sector} />
         </Suspense>
       </h2>
-      <div className={styles.subtitle}>
+      <div className={sharedStyles.subtitle}>
         Contributions from {sectorText} companies and associated individuals to
         candidates and PACs
       </div>

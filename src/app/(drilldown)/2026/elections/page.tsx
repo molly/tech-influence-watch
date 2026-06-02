@@ -25,12 +25,26 @@ export async function generateMetadata({
 export default async function RacesList({
   searchParams,
 }: {
-  searchParams: Promise<{ sector?: string; electionsPage?: string }>;
+  searchParams: Promise<{
+    sector?: string;
+    influencedPage?: string;
+    otherRacesPage?: string;
+  }>;
 }) {
-  const { sector: rawSector, electionsPage: rawElectionsPage } =
-    await searchParams;
+  const {
+    sector: rawSector,
+    influencedPage: rawInfluencedPage,
+    otherRacesPage: rawOtherRacesPage,
+  } = await searchParams;
   const sector = parseSector(rawSector);
-  const electionsPage = Math.max(1, parseInt(rawElectionsPage ?? "1", 10) || 1);
+  const influencedPage = Math.max(
+    1,
+    parseInt(rawInfluencedPage ?? "1", 10) || 1,
+  );
+  const otherRacesPage = Math.max(
+    1,
+    parseInt(rawOtherRacesPage ?? "1", 10) || 1,
+  );
   return (
     <>
       <div className={sharedStyles.fullWidthHeader}>
@@ -59,10 +73,15 @@ export default async function RacesList({
           <InfluencedRaces
             sector={sector}
             fullPage={true}
-            page={electionsPage}
+            page={influencedPage}
+            otherRacesPage={otherRacesPage}
             rawSector={rawSector}
           />
-          <OtherSupportedRaces page={electionsPage} rawSector={rawSector} />
+          <OtherSupportedRaces
+            page={otherRacesPage}
+            influencedPage={influencedPage}
+            rawSector={rawSector}
+          />
         </div>
       </div>
     </>

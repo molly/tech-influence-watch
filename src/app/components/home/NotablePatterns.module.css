@@ -1,0 +1,39 @@
+.patterns {
+  display: flex;
+  flex-direction: column;
+}
+
+.pattern {
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--table-color);
+
+  &:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+}
+
+.label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--secondary-text);
+  margin-bottom: 0.3rem;
+}
+
+.headline {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9rem;
+  line-height: 1.35;
+  margin-bottom: 0.3rem;
+}
+
+.description {
+  font-family: var(--font-serif);
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: var(--secondary-text);
+  margin: 0;
+}

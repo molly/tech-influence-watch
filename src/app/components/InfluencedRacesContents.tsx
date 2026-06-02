@@ -282,13 +282,20 @@ function CandidateRow({
   );
 }
 
-function buildPageHref(p: number, rawSector?: string) {
+function buildPageHref(
+  p: number,
+  rawSector?: string,
+  otherRacesPage = 1,
+) {
   const sp = new URLSearchParams();
   if (rawSector) {
     sp.set("sector", rawSector);
   }
   if (p > 1) {
-    sp.set("electionsPage", String(p));
+    sp.set("influencedPage", String(p));
+  }
+  if (otherRacesPage > 1) {
+    sp.set("otherRacesPage", String(otherRacesPage));
   }
   const str = sp.toString();
   return str ? `?${str}` : "?";
@@ -298,11 +305,13 @@ export default async function InfluencedRacesContents({
   fullPage = false,
   sector = "all",
   page = 1,
+  otherRacesPage = 1,
   rawSector,
 }: {
   fullPage?: boolean;
   sector?: Sector;
   page?: number;
+  otherRacesPage?: number;
   rawSector?: string;
 }) {
   const fetchLimit = sector === "all" && !fullPage ? 5 : undefined;
@@ -454,7 +463,7 @@ export default async function InfluencedRacesContents({
           itemLabel="races"
           sortLabel="total super PAC spending"
           hrefs={Array.from({ length: totalPages }, (_, i) =>
-            buildPageHref(i + 1, rawSector),
+            buildPageHref(i + 1, rawSector, otherRacesPage),
           )}
         />
       )}

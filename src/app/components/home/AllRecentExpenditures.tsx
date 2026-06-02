@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 
 import { fetchAllRecentExpenditures, fetchConstant } from "@/app/actions/fetch";
-import styles from "@/app/page.module.css";
 import sharedStyles from "@/app/shared.module.css";
 import { CommitteeConstant } from "@/app/types/Committee";
 import { Expenditure } from "@/app/types/Expenditures";
@@ -60,7 +59,6 @@ export default async function AllRecentExpenditures({
 }) {
   return (
     <RecentExpenditures
-      className={styles.recentExpenditures}
       noHeader={fullPage}
       fullPage={fullPage}
       sector={sector}

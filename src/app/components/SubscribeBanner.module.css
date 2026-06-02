@@ -22,6 +22,7 @@
   background-color: var(--color-lime-950);
   color: var(--color-white);
   animation: slideUp 0.3s ease-out;
+  border-top: 2px solid var(--color-lime-500);
 }
 
 .text {

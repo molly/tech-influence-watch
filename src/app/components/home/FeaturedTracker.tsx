@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { fetchQpq } from "@/app/actions/fetch";
 import Skeleton from "@/app/components/skeletons/Skeleton";
+import sharedStyles from "@/app/shared.module.css";
 import { QPQ } from "@/app/types/Qpq";
 import { formatCompact } from "@/app/utils/humanize";
 import { range } from "@/app/utils/range";
@@ -19,30 +20,32 @@ const SKELETON_NAME_WIDTHS = ["8rem", "6rem", "9rem", "7rem"];
 
 export function FeaturedTrackerSkeleton() {
   return (
-    <div className={styles.card}>
-      <Skeleton width="7rem" />
-      <Skeleton height="3rem" width="80%" />
-      <Skeleton height="3rem" width="65%" />
-      {range(3).map((i) => (
-        <Skeleton key={i} />
-      ))}
-      <div className={styles.divider} />
-      <Skeleton height="2.5rem" width="6rem" />
-      <Skeleton width="14rem" />
-      <div className={styles.divider} />
-      <ul className={styles.entries}>
-        {SKELETON_NAME_WIDTHS.map((width, i) => (
-          <li key={i} className={styles.entry}>
-            <div className={styles.skeletonEntryTop}>
-              <Skeleton width={width} margin="0" />
-              <Skeleton width="3rem" margin="0" />
-            </div>
-            <Skeleton width="90%" />
-          </li>
+    <section className={sharedStyles.section}>
+      <div className={styles.card}>
+        <Skeleton width="7rem" />
+        <Skeleton height="3rem" width="80%" />
+        <Skeleton height="3rem" width="65%" />
+        {range(3).map((i) => (
+          <Skeleton key={i} />
         ))}
-      </ul>
-      <Skeleton height="2.75rem" />
-    </div>
+        <div className={styles.divider} />
+        <Skeleton height="2.5rem" width="6rem" />
+        <Skeleton width="14rem" />
+        <div className={styles.divider} />
+        <ul className={styles.entries}>
+          {SKELETON_NAME_WIDTHS.map((width, i) => (
+            <li key={i} className={styles.entry}>
+              <div className={styles.skeletonEntryTop}>
+                <Skeleton width={width} margin="0" />
+                <Skeleton width="3rem" margin="0" />
+              </div>
+              <Skeleton width="90%" />
+            </li>
+          ))}
+        </ul>
+        <Skeleton height="2.75rem" />
+      </div>
+    </section>
   );
 }
 
@@ -68,37 +71,39 @@ export default async function FeaturedTracker() {
   }
 
   return (
-    <div className={styles.card}>
-      <div className={styles.label}>Featured Tracker</div>
-      <h2 className={styles.title}>Quid pro quo</h2>
-      <p className={styles.subtitle}>
-        Besides their Congressional election spending, companies have poured
-        billions into Trump and his family. Enforcement cases were dropped,
-        investigations were closed, and industries were invited to write their
-        own regulations.
-      </p>
-      <div className={styles.divider} />
-      <div className={styles.total}>{formatCompact(grandTotal)}</div>
-      <div className={styles.totalLabel}>
-        given to Trump &amp; family by tracked entities
+    <section className={sharedStyles.section}>
+      <div className={styles.card}>
+        <div className={styles.label}>Featured Tracker</div>
+        <h2 className={styles.title}>Quid pro quo</h2>
+        <p className={styles.subtitle}>
+          Besides their Congressional election spending, companies have poured
+          billions into Trump and his family. Enforcement cases were dropped,
+          investigations were closed, and industries were invited to write their
+          own regulations.
+        </p>
+        <div className={styles.divider} />
+        <div className={styles.total}>{formatCompact(grandTotal)}</div>
+        <div className={styles.totalLabel}>
+          given to Trump &amp; family by tracked entities
+        </div>
+        <div className={styles.divider} />
+        <ul className={styles.entries}>
+          {featuredEntries.map((entry) => (
+            <li key={entry.name} className={styles.entry}>
+              <div className={styles.entryTop}>
+                <span className={styles.entryName}>{entry.name}</span>
+                <span className={styles.entryAmount}>
+                  {formatCompact(getEntryTotal(entry))}
+                </span>
+              </div>
+              <div className={styles.entrySummary}>{entry.benefitSummary}</div>
+            </li>
+          ))}
+        </ul>
+        <Link href="/influence/quidproquo" className={styles.button}>
+          View full tracker →
+        </Link>
       </div>
-      <div className={styles.divider} />
-      <ul className={styles.entries}>
-        {featuredEntries.map((entry) => (
-          <li key={entry.name} className={styles.entry}>
-            <div className={styles.entryTop}>
-              <span className={styles.entryName}>{entry.name}</span>
-              <span className={styles.entryAmount}>
-                {formatCompact(getEntryTotal(entry))}
-              </span>
-            </div>
-            <div className={styles.entrySummary}>{entry.benefitSummary}</div>
-          </li>
-        ))}
-      </ul>
-      <Link href="/influence/quidproquo" className={styles.button}>
-        View full tracker →
-      </Link>
-    </div>
+    </section>
   );
 }

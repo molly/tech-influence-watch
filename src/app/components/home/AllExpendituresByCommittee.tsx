@@ -5,7 +5,6 @@ import {
   fetchAllCommitteeTotalExpenditures,
   fetchConstant,
 } from "@/app/actions/fetch";
-import styles from "@/app/page.module.css";
 import sharedStyles from "@/app/shared.module.css";
 import { CommitteeConstant } from "@/app/types/Committee";
 import { Sector } from "@/app/types/Sector";
@@ -69,7 +68,7 @@ export default function AllExpendituresByCommittee({
   sector: Sector;
 }) {
   return (
-    <section className={styles.expendituresByCommitteeCard}>
+    <section className={sharedStyles.section}>
       <h2
         id="expenditures-by-committee-label"
         className={sharedStyles.sectionTitle}

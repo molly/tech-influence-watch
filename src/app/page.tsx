@@ -13,6 +13,7 @@ import CompanyBubbleChart from "./components/home/CompanyBubbleChart";
 import FeaturedTracker, {
   FeaturedTrackerSkeleton,
 } from "./components/home/FeaturedTracker";
+import NotablePatterns from "./components/home/NotablePatterns";
 import SuperPacSpendingMapWrapper from "./components/home/SuperPacSpendingMapWrapper";
 import TechSectorBreakdown from "./components/home/TechSectorBreakdown";
 import TotalCompanySpending from "./components/home/TotalCompanySpending";
@@ -79,19 +80,20 @@ export default async function Home({
             <SuperPACsByReceipts type="super" sector={sector}>
               <SuperPACsByReceiptsTableContents />
             </SuperPACsByReceipts>
+            <AllRecentExpenditures sector={sector} />
+            <AllRecentContributions sector={sector} />
           </div>
           <div className={styles.sideColumn}>
             <Suspense fallback={<FeaturedTrackerSkeleton />}>
               <FeaturedTracker />
             </Suspense>
+            {sector === "all" && <NotablePatterns />}
             {sector === "all" && <TechSectorBreakdown />}
             <CompanyBubbleChart sector={sector} />
             <AllCompanySpendingByParty sector={sector} />
             <AllCashByCommittee sector={sector} />
             <AllExpendituresByCommittee sector={sector} />
             <AllExpendituresByParty sector={sector} />
-            <AllRecentExpenditures sector={sector} />
-            <AllRecentContributions sector={sector} />
           </div>
         </div>
       </main>
