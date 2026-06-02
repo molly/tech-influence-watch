@@ -282,11 +282,7 @@ function CandidateRow({
   );
 }
 
-function buildPageHref(
-  p: number,
-  rawSector?: string,
-  otherRacesPage = 1,
-) {
+function buildPageHref(p: number, rawSector?: string, otherRacesPage = 1) {
   const sp = new URLSearchParams();
   if (rawSector) {
     sp.set("sector", rawSector);

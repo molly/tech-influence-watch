@@ -5,6 +5,11 @@
   padding: 0.5rem;
 }
 
+.mapSubtitle {
+  composes: subtitle from "@/app/shared.module.css";
+  margin-top: 0.5rem;
+}
+
 .svg {
   fill: var(--map-background);
   stroke: var(--secondary-text);

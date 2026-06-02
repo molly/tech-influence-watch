@@ -1,51 +1,34 @@
 .toggleRow {
   display: flex;
-  gap: 2rem;
   margin-bottom: 1rem;
   border-bottom: 1px solid var(--color-neutral-200);
-  font-size: 0.7rem;
 }
 
 .button {
   background: none;
   border: none;
-  border-bottom: 2px solid transparent;
+  border-bottom: 3px solid transparent;
   margin-bottom: -1px;
-  padding: 0.25rem 1rem;
-  color: var(--main-text);
-  font-size: 0.75rem;
+  padding: 0.5rem 1.5rem 0.5rem 0;
+  color: var(--secondary-text);
+  font-size: 0.9rem;
+  font-weight: 500;
   cursor: pointer;
 }
 
 .button:hover {
-  color: var(--color-neutral-600);
+  color: var(--main-text);
 }
 
 .activeButton {
   composes: button;
   border-bottom-color: var(--color-black);
+  color: var(--main-text);
   font-weight: 700;
 }
 
-.activeButton:hover {
-  color: var(--color-neutral-800);
-}
-
 @media (prefers-color-scheme: dark) {
-  .button {
-    color: var(--color-neutral-300);
-  }
-
-  .button:hover {
-    color: var(--color-neutral-100);
-  }
-
   .activeButton {
     border-bottom-color: var(--accent);
-    color: var(--main-text);
-  }
-
-  .activeButton:hover {
-    color: var(--color-neutral-100);
   }
 }

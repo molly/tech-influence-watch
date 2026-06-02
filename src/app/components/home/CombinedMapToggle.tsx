@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import sharedStyles from "@/app/shared.module.css";
+
 import styles from "./CombinedMapToggle.module.css";
 
 export default function CombinedMapToggle({
@@ -15,6 +17,9 @@ export default function CombinedMapToggle({
 
   return (
     <div>
+      <h2 id="spending-by-state" className={sharedStyles.sectionTitle}>
+        Spending by state
+      </h2>
       <div className={styles.toggleRow}>
         <button
           className={active === "company" ? styles.activeButton : styles.button}

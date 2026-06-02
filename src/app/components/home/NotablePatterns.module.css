@@ -25,14 +25,14 @@
 .headline {
   display: block;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 1rem;
   line-height: 1.35;
   margin-bottom: 0.3rem;
 }
 
 .description {
   font-family: var(--font-serif);
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   line-height: 1.55;
   color: var(--secondary-text);
   margin: 0;

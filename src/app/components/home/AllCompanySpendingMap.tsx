@@ -3,16 +3,14 @@ import Link from "next/link";
 import { fetchMapData } from "@/app/actions/fetch";
 import { generateDomain } from "@/app/components/chloroplethConstants";
 import ChloroplethMap from "@/app/components/ChloroplethMap";
+import styles from "@/app/components/chloroplethMap.module.css";
 import ErrorText from "@/app/components/ErrorText";
 import tableStyles from "@/app/components/tables.module.css";
 import { STATES_BY_ABBR } from "@/app/data/states";
-import sharedStyles from "@/app/shared.module.css";
 import { MapData } from "@/app/types/MapData";
 import { type Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
-import { humanizeSector, sectorHref } from "@/app/utils/sector";
-
-import InformationalTooltip from "../InformationalTooltip";
+import { sectorHref } from "@/app/utils/sector";
 
 function toStateValues(mapData: MapData): Record<string, number> {
   const values: Record<string, number> = {};
@@ -28,79 +26,38 @@ function toStateValues(mapData: MapData): Record<string, number> {
 export default async function AllCompanySpendingMap({
   sector,
   showLink,
-  showHeader,
+  showDisclaimer,
 }: {
   sector: Sector;
   showLink?: boolean;
-  showHeader?: boolean;
+  showDisclaimer?: boolean;
 }) {
   const data = await fetchMapData(sector);
-  const sectorText = humanizeSector(sector, {
-    abbrev: true,
-    lowercase: true,
-    hyphen: true,
-  });
   if (isError(data)) {
-    return (
-      <div>
-        {showHeader && (
-          <h2
-            id="company-spending-by-state"
-            className={sharedStyles.sectionTitle}
-          >
-            Approximate
-            <InformationalTooltip>
-              <p>
-                Some committees (particularly super PACs) spend cross-state or
-                are not associated with a specific candidate, and contributions
-                to them are omitted from this chart.
-              </p>
-              <p>
-                This relies on manual classification and so represents a
-                conservative estimate of industry spending.
-              </p>
-            </InformationalTooltip>{" "}
-            {sectorText}linked contributions to candidates by state
-          </h2>
-        )}
-        <ErrorText subject="expenditures by state" />
-      </div>
-    );
+    return <ErrorText subject="expenditures by state" />;
   }
   const mapData = data as MapData;
   return (
     <>
-      {showHeader && (
-        <h2
-          id="company-spending-by-state"
-          className={sharedStyles.sectionTitle}
-        >
-          <span>
-            Approximate
-            <InformationalTooltip>
-              <p>
-                Some committees (particularly super PACs) spend cross-state or
-                are not associated with a specific candidate, and contributions
-                to them are omitted from this chart.
-              </p>
-              <p>
-                This relies on manual classification and so represents a
-                conservative estimate of industry spending.
-              </p>
-            </InformationalTooltip>{" "}
-            {sectorText}linked contributions to candidates by state
-          </span>
-        </h2>
-      )}
       <ChloroplethMap
         domain={generateDomain(10000, 10000000)}
         stateValues={toStateValues(mapData)}
-        labelId="company-spending-by-state"
+        labelId="spending-by-state"
       />
+      {showDisclaimer && (
+        <div className={styles.mapSubtitle}>
+          <p>
+            Some committees (particularly super PACs) spend cross-state or are
+            not associated with a specific candidate, and contributions to them
+            are omitted from this chart. This relies on manual classification
+            and so represents a conservative estimate of industry spending.
+          </p>
+        </div>
+      )}
       {showLink && (
         <div className={tableStyles.viewMoreLinks}>
           <Link href={sectorHref("/2026/states", sector)}>
-            &raquo; Spending by state
+            &raquo; Full spending-by-state map
           </Link>
         </div>
       )}

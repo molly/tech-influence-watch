@@ -60,19 +60,15 @@ export default async function Home({
                 companyMap={
                   <Suspense fallback={<USMapSkeleton />}>
                     <AllCompanySpendingMap
-                      showHeader={true}
                       sector={sector}
                       showLink={true}
+                      showDisclaimer={true}
                     />
                   </Suspense>
                 }
                 superPacMap={
                   <Suspense fallback={<USMapSkeleton />}>
-                    <SuperPacSpendingMapWrapper
-                      showHeader={true}
-                      sector={sector}
-                      showLink={true}
-                    />
+                    <SuperPacSpendingMapWrapper sector={sector} showLink={true} />
                   </Suspense>
                 }
               />

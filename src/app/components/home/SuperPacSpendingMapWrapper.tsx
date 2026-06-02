@@ -3,11 +3,10 @@ import Link from "next/link";
 import { fetchMapData } from "@/app/actions/fetch";
 import tableStyles from "@/app/components/tables.module.css";
 import { STATES_BY_ABBR } from "@/app/data/states";
-import sharedStyles from "@/app/shared.module.css";
 import { MapData } from "@/app/types/MapData";
 import { type Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
-import { humanizeSector, sectorHref } from "@/app/utils/sector";
+import { sectorHref } from "@/app/utils/sector";
 
 import { generateDomain } from "../chloroplethConstants";
 import ChloroplethMap from "../ChloroplethMap";
@@ -27,46 +26,26 @@ function toStateValues(mapData: MapData): Record<string, number> {
 export default async function SuperPacSpendingMapWrapper({
   sector,
   showLink,
-  showHeader,
 }: {
   sector: Sector;
   showLink?: boolean;
-  showHeader?: boolean;
 }) {
   const data = await fetchMapData(sector);
-  const sectorText = humanizeSector(sector, {
-    context: "industry",
-    abbrev: true,
-    lowercase: true,
-  });
   if (isError(data)) {
-    return (
-      <div>
-        {showHeader && <h2>Expenditures by {sectorText} PACs by state</h2>}
-        <ErrorText subject="PAC expenditures by state" />
-      </div>
-    );
+    return <ErrorText subject="PAC expenditures by state" />;
   }
   const mapData = data as MapData;
   return (
     <>
-      {showHeader && (
-        <h2
-          id="super-pac-spending-by-state"
-          className={sharedStyles.sectionTitle}
-        >
-          Expenditures by {sectorText} PACs by state
-        </h2>
-      )}
       <ChloroplethMap
         domain={generateDomain(10000, 10000000)}
         stateValues={toStateValues(mapData)}
-        labelId="super-pac-spending-by-state"
+        labelId="spending-by-state"
       />
       {showLink && (
         <div className={tableStyles.viewMoreLinks}>
           <Link href={sectorHref("/2026/states", sector)}>
-            &raquo; Spending by state
+            &raquo; Full spending-by-state map
           </Link>
         </div>
       )}
