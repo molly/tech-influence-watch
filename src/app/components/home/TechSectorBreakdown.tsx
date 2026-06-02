@@ -106,6 +106,22 @@ function DonorColumn({
   );
 }
 
+async function SpendingTotal() {
+  const data = await fetchCompanyTotalSpending("all");
+  if (isError(data)) {
+    return null;
+  }
+  return (
+    <span className={sharedStyles.sectionTitleAmount}>
+      of{" "}
+      <span className={sharedStyles.sectionTitleAmountValue}>
+        {formatCompact((data as CompanyTotals).total)}
+      </span>{" "}
+      total
+    </span>
+  );
+}
+
 async function TechSectorBreakdownContent() {
   const [allData, companiesData] = await Promise.all([
     fetchCompanyTotalSpending("all"),
@@ -257,7 +273,12 @@ async function TechSectorBreakdownContent() {
 export default function TechSectorBreakdown() {
   return (
     <section className={`${sharedStyles.section} ${styles.industrySection}`}>
-      <h2 className={sharedStyles.sectionTitle}>Contributions by industry</h2>
+      <h2 className={sharedStyles.sectionTitle}>
+        Contributions by industry
+        <Suspense fallback={null}>
+          <SpendingTotal />
+        </Suspense>
+      </h2>
       <Suspense fallback={null}>
         <TechSectorBreakdownContent />
       </Suspense>

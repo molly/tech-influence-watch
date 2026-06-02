@@ -54,8 +54,10 @@ export default async function Home({
         </TotalsRow>
         <div className={styles.columns}>
           <div className={styles.mainColumn}>
-            <InfluencedRaces sector={sector} />
-            <div className={styles.combinedMap}>
+            <div className={styles.order1}>
+              <InfluencedRaces sector={sector} />
+            </div>
+            <div className={`${styles.combinedMap} ${styles.order6}`}>
               <CombinedMapToggle
                 companyMap={
                   <Suspense fallback={<USMapSkeleton />}>
@@ -73,23 +75,49 @@ export default async function Home({
                 }
               />
             </div>
-            <SuperPACsByReceipts type="super" sector={sector}>
-              <SuperPACsByReceiptsTableContents />
-            </SuperPACsByReceipts>
-            <AllRecentExpenditures sector={sector} />
-            <AllRecentContributions sector={sector} />
+            <div className={styles.order9}>
+              <SuperPACsByReceipts type="super" sector={sector}>
+                <SuperPACsByReceiptsTableContents />
+              </SuperPACsByReceipts>
+            </div>
+            <div className={styles.order13}>
+              <AllRecentExpenditures sector={sector} />
+            </div>
+            <div className={styles.order7}>
+              <AllRecentContributions sector={sector} />
+            </div>
           </div>
           <div className={styles.sideColumn}>
-            <Suspense fallback={<FeaturedTrackerSkeleton />}>
-              <FeaturedTracker />
-            </Suspense>
-            {sector === "all" && <NotablePatterns />}
-            {sector === "all" && <TechSectorBreakdown />}
-            <CompanyBubbleChart sector={sector} />
-            <AllCompanySpendingByParty sector={sector} />
-            <AllCashByCommittee sector={sector} />
-            <AllExpendituresByCommittee sector={sector} />
-            <AllExpendituresByParty sector={sector} />
+            <div className={styles.order2}>
+              <Suspense fallback={<FeaturedTrackerSkeleton />}>
+                <FeaturedTracker />
+              </Suspense>
+            </div>
+            {sector === "all" && (
+              <div className={styles.order12}>
+                <NotablePatterns />
+              </div>
+            )}
+            {sector === "all" && (
+              <div className={styles.order4}>
+                <TechSectorBreakdown />
+              </div>
+            )}
+            <div className={styles.order5}>
+              <CompanyBubbleChart sector={sector} />
+            </div>
+            <div className={styles.order3}>
+              <AllCompanySpendingByParty sector={sector} />
+            </div>
+            <div className={styles.order8}>
+              <AllCashByCommittee sector={sector} />
+            </div>
+            <div className={styles.order10}>
+              <AllExpendituresByCommittee sector={sector} />
+            </div>
+            <div className={styles.order11}>
+              <AllExpendituresByParty sector={sector} />
+            </div>
           </div>
         </div>
       </main>

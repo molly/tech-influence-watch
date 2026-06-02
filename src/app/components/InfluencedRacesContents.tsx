@@ -39,7 +39,10 @@ export function InfluencedRacesContentsSkeleton({
   fullPage: boolean;
 }) {
   return range(fullPage ? 20 : 5).map((i) => (
-    <div key={`influenced-race-skeleton-${i}`} className={styles.influencedRow}>
+    <div
+      key={`influenced-race-skeleton-${i}`}
+      className={styles.influencedRowSkeleton}
+    >
       <CandidateSkeleton onCard={true} />
       {[2.5, 6, 5, 5, 5, 5, 13].map((width, ind) => (
         <Skeleton

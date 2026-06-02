@@ -83,6 +83,11 @@
   gap: 0.5rem 0;
 }
 
+.influencedRowSkeleton {
+  composes: influencedRow;
+  justify-content: flex-start;
+}
+
 .influencedRowOutcome {
   margin-top: 0.5rem;
 }

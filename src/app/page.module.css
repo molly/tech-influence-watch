@@ -16,6 +16,62 @@
   composes: section from "@/app/shared.module.css";
 }
 
+/*
+ * Below the two-column breakpoint everything stacks into one column. The
+ * desired single-column sequence interleaves items from both columns, so the
+ * column wrappers become display: contents and each item is ordered explicitly.
+ */
+@media (max-width: 767px) {
+  .columns {
+    row-gap: 1rem;
+  }
+
+  .mainColumn,
+  .sideColumn {
+    display: contents;
+  }
+
+  .order1 {
+    order: 1;
+  }
+  .order2 {
+    order: 2;
+  }
+  .order3 {
+    order: 3;
+  }
+  .order4 {
+    order: 4;
+  }
+  .order5 {
+    order: 5;
+  }
+  .order6 {
+    order: 6;
+  }
+  .order7 {
+    order: 7;
+  }
+  .order8 {
+    order: 8;
+  }
+  .order9 {
+    order: 9;
+  }
+  .order10 {
+    order: 10;
+  }
+  .order11 {
+    order: 11;
+  }
+  .order12 {
+    order: 12;
+  }
+  .order13 {
+    order: 13;
+  }
+}
+
 @media (min-width: 768px) {
   .columns {
     grid-template-columns: 1fr 1fr;
