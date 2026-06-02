@@ -1,18 +1,6 @@
 /* Proportional bar */
-.bigBarTrack {
-  display: flex;
-  width: 100%;
-  height: 3.5rem;
-  gap: 2px;
+.bigBar {
   margin-bottom: 0.5rem;
-}
-
-.bigBarSegment {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  min-width: 0;
-  overflow: hidden;
 }
 
 .bigBarCrypto {
@@ -27,28 +15,40 @@
   background-color: var(--color-black);
 }
 
-.bigBarLabel {
+/* Legend below the bar */
+.barLegend {
   display: flex;
-  flex-direction: column;
-  padding: 0 0.4rem;
-  min-width: 0;
-  overflow: hidden;
+  flex-wrap: wrap;
+  gap: 0.3rem 1.25rem;
+  margin-bottom: 0.75rem;
 }
 
-.bigBarName {
-  color: #fff;
-  font-family: var(--font-sans);
+.barLegendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+}
+
+.barLegendSwatch {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+}
+
+.barLegendName {
   font-weight: 700;
-  font-size: 0.85rem;
-  white-space: nowrap;
 }
 
-.bigBarAmount {
-  color: rgba(255, 255, 255, 0.8);
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: 0.72rem;
-  white-space: nowrap;
+.barLegendValue {
+  color: var(--secondary-text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Section establishes a named container so the donor-column reflow below
+   (an unnamed @container scoped to each .donorColumn) stays independent. */
+.industrySection {
+  container: industry / inline-size;
 }
 
 /* Donor columns */
@@ -158,6 +158,12 @@
 }
 
 @container (max-width: 140px) {
+  .columnHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.15rem;
+  }
+
   .donorRow {
     grid-template-columns: 1.2rem 1fr auto;
     grid-template-rows: auto auto;
@@ -205,6 +211,19 @@
       grid-column: 3;
       grid-row: 1;
     }
+  }
+}
+
+@container industry (max-width: 450px) {
+  .barLegend {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@container industry (max-width: 400px) {
+  .donorColumns {
+    grid-template-columns: 1fr;
   }
 }
 

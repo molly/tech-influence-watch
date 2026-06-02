@@ -7,6 +7,7 @@ import { CompanyConstant, CompanyTotals } from "@/app/types/Companies";
 import { isError } from "@/app/utils/errors";
 import { formatCompact, humanizeNumber, pluralize } from "@/app/utils/humanize";
 
+import barStyles from "./HorizontalBars.module.css";
 import styles from "./TechSectorBreakdown.module.css";
 
 const TOP_N = 3;
@@ -158,6 +159,30 @@ async function TechSectorBreakdownContent() {
   const aiPct = Math.round((aiTotal / grandTotal) * 100);
   const bothPct = Math.round((bothTotal / grandTotal) * 100);
 
+  const barSegments = [
+    {
+      key: "crypto",
+      label: "Crypto",
+      total: cryptoTotal,
+      pct: cryptoPct,
+      colorClass: styles.bigBarCrypto,
+    },
+    {
+      key: "ai",
+      label: "AI",
+      total: aiTotal,
+      pct: aiPct,
+      colorClass: styles.bigBarAi,
+    },
+    {
+      key: "both",
+      label: "Both",
+      total: bothTotal,
+      pct: bothPct,
+      colorClass: styles.bigBarBoth,
+    },
+  ].filter((s) => s.total > 0);
+
   const cryptoTop = cryptoDonors.slice(0, TOP_N);
   const cryptoOthers = cryptoDonors.slice(TOP_N);
   const aiTop = aiDonors.slice(0, TOP_N);
@@ -167,50 +192,34 @@ async function TechSectorBreakdownContent() {
 
   return (
     <>
-      <div className={styles.bigBarTrack}>
-        {cryptoTotal > 0 && (
+      <div
+        className={`${barStyles.track} ${styles.bigBar}`}
+        role="img"
+        aria-label={`Industry contributions by sector: ${barSegments
+          .map((s) => `${s.label} ${formatCompact(s.total)}, ${s.pct}%`)
+          .join("; ")}`}
+      >
+        {barSegments.map((s) => (
           <div
-            className={`${styles.bigBarSegment} ${styles.bigBarCrypto}`}
-            style={{ flexGrow: cryptoTotal }}
-          >
-            <span className={styles.bigBarLabel}>
-              <span className={styles.bigBarName}>Crypto</span>
-              <span className={styles.bigBarAmount}>
-                {formatCompact(cryptoTotal)} · {cryptoPct}%
-              </span>
+            key={s.key}
+            className={`${barStyles.segment} ${s.colorClass}`}
+            style={{ flexGrow: s.total }}
+          />
+        ))}
+      </div>
+      <div className={styles.barLegend}>
+        {barSegments.map((s) => (
+          <div key={s.key} className={styles.barLegendItem}>
+            <span className={`${styles.barLegendSwatch} ${s.colorClass}`} />
+            <span className={styles.barLegendName}>{s.label}</span>
+            <span className={styles.barLegendValue}>
+              {formatCompact(s.total)} · {s.pct}%
             </span>
           </div>
-        )}
-        {aiTotal > 0 && (
-          <div
-            className={`${styles.bigBarSegment} ${styles.bigBarAi}`}
-            style={{ flexGrow: aiTotal }}
-          >
-            <span className={styles.bigBarLabel}>
-              <span className={styles.bigBarName}>AI</span>
-              <span className={styles.bigBarAmount}>
-                {formatCompact(aiTotal)} · {aiPct}%
-              </span>
-            </span>
-          </div>
-        )}
-        {bothTotal > 0 && (
-          <div
-            className={`${styles.bigBarSegment} ${styles.bigBarBoth}`}
-            style={{ flexGrow: bothTotal }}
-          >
-            <span className={styles.bigBarLabel}>
-              <span className={styles.bigBarName}>Both</span>
-              <span className={styles.bigBarAmount}>
-                {formatCompact(bothTotal)} · {bothPct}%
-              </span>
-            </span>
-          </div>
-        )}
+        ))}
       </div>
 
-
-<div className={styles.donorColumns}>
+      <div className={styles.donorColumns}>
         <DonorColumn
           title="Crypto"
           titleClass={styles.cryptoTitle}
@@ -247,7 +256,7 @@ async function TechSectorBreakdownContent() {
 
 export default function TechSectorBreakdown() {
   return (
-    <section className={sharedStyles.section}>
+    <section className={`${sharedStyles.section} ${styles.industrySection}`}>
       <h2 className={sharedStyles.sectionTitle}>Contributions by industry</h2>
       <Suspense fallback={null}>
         <TechSectorBreakdownContent />
