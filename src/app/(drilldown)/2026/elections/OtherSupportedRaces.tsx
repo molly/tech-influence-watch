@@ -6,21 +6,20 @@ import {
   fetchBeneficiaries,
   fetchBeneficiariesWithoutExpendituresOrder,
 } from "@/app/actions/fetch";
-import Candidate, { CandidateSkeleton } from "@/app/components/Candidate";
+import Candidate from "@/app/components/Candidate";
 import ErrorText from "@/app/components/ErrorText";
 import Outcome from "@/app/components/Outcome";
-import Pagination from "@/app/components/Pagination";
-import Skeleton from "@/app/components/skeletons/Skeleton";
+import PaginatedTable from "@/app/components/PaginatedTable";
 import styles from "@/app/components/tables.module.css";
 import { SINGLE_MEMBER_STATES, STATES_BY_ABBR } from "@/app/data/states";
 import sharedStyles from "@/app/shared.module.css";
 import { Beneficiary, CandidateBeneficiary } from "@/app/types/Beneficiaries";
 import { RecipientCandidateDetails } from "@/app/types/Contributions";
 import { ElectionsByState } from "@/app/types/Elections";
+import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
 import { getRaceName } from "@/app/utils/races";
-import { range } from "@/app/utils/range";
-import { humanizeSector, parseSector } from "@/app/utils/sector";
+import { humanizeSector } from "@/app/utils/sector";
 import { titlecaseLastFirst } from "@/app/utils/titlecase";
 import { formatCurrency } from "@/app/utils/utils";
 
@@ -69,22 +68,6 @@ function getElectionCandidate(
     );
   }
   return electionCandidate;
-}
-
-function OtherRacesContentsSkeleton() {
-  return range(20).map((i) => (
-    <div key={`influenced-race-skeleton-${i}`} className={styles.influencedRow}>
-      <CandidateSkeleton onCard={true} />
-      {[2.5, 6, 5, 13].map((width, ind) => (
-        <Skeleton
-          key={`skeleton-${ind}`}
-          onCard={true}
-          width={`${width}rem`}
-          className={`${sharedStyles.noMarginBottomHalfLeft} ${styles.skeletonExtra}`}
-        />
-      ))}
-    </div>
-  ));
 }
 
 function CandidateRow({
@@ -183,35 +166,11 @@ function CandidateRow({
   );
 }
 
-function buildPageHref(
-  p: number,
-  rawSector?: string,
-  influencedPage = 1,
-) {
-  const sp = new URLSearchParams();
-  if (rawSector) {
-    sp.set("sector", rawSector);
-  }
-  if (influencedPage > 1) {
-    sp.set("influencedPage", String(influencedPage));
-  }
-  if (p > 1) {
-    sp.set("otherRacesPage", String(p));
-  }
-  const query = sp.toString();
-  return query ? `?${query}` : "?";
-}
-
 export default async function OtherSupportedRaces({
-  page,
-  influencedPage = 1,
-  rawSector,
+  sector,
 }: {
-  page: number;
-  influencedPage?: number;
-  rawSector?: string;
+  sector: Sector;
 }) {
-  const sector = parseSector(rawSector);
   const [beneficiariesData, beneficiariesOrder, electionsData] =
     await Promise.all([
       fetchBeneficiaries(sector),
@@ -252,11 +211,31 @@ export default async function OtherSupportedRaces({
         .isRunningThisCycle,
   );
 
-  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
-  const clampedPage = Math.min(page, Math.max(1, totalPages));
-  const paginated = filtered.slice(
-    (clampedPage - 1) * PAGE_SIZE,
-    clampedPage * PAGE_SIZE,
+  const rowNodes = filtered.map((id) => {
+    const beneficiary = beneficiaries[id] as CandidateBeneficiary;
+    const state = beneficiary.candidate_details.state;
+    return (
+      <CandidateRow
+        key={id}
+        beneficiary={beneficiary}
+        stateElections={elections[state]}
+        id={id}
+      />
+    );
+  });
+
+  const header = (
+    <thead className={styles.inheritBorderRadius}>
+      <tr className={styles.influencedTableHeader}>
+        <th className="text-cell">Candidate</th>
+        <th className="center-cell">State</th>
+        <th className="center-cell">Office</th>
+        <th className="number-cell small-cell">
+          Total industry contributions
+        </th>
+        <th className="long-text-cell">Outcome</th>
+      </tr>
+    </thead>
   );
 
   return (
@@ -281,46 +260,25 @@ export default async function OtherSupportedRaces({
           committee.
         </p>
       </div>
-      <Suspense fallback={<OtherRacesContentsSkeleton />}>
-        <table className={styles.influencedTable}>
-          <thead className={styles.inheritBorderRadius}>
-            <tr className={styles.influencedTableHeader}>
-              <th className="text-cell">Candidate</th>
-              <th className="center-cell">State</th>
-              <th className="center-cell">Office</th>
-              <th className="number-cell small-cell">
-                Total industry contributions
-              </th>
-              <th className="long-text-cell">Outcome</th>
-            </tr>
-          </thead>
-          <tbody className={styles.inheritBorderRadius}>
-            {paginated.map((id) => {
-              const beneficiary = beneficiaries[id] as CandidateBeneficiary;
-              const state = beneficiary.candidate_details.state;
-              return (
-                <CandidateRow
-                  key={id}
-                  beneficiary={beneficiary}
-                  stateElections={elections[state]}
-                  id={id}
-                />
-              );
-            })}
-          </tbody>
-        </table>
+      <Suspense
+        fallback={
+          <table className={styles.influencedTable}>
+            {header}
+            <tbody className={styles.inheritBorderRadius}>
+              {rowNodes.slice(0, PAGE_SIZE)}
+            </tbody>
+          </table>
+        }
+      >
+        <PaginatedTable
+          header={header}
+          rows={rowNodes}
+          pageSize={PAGE_SIZE}
+          pageParam="otherRacesPage"
+          itemLabel="races"
+          sortLabel="total industry contributions"
+        />
       </Suspense>
-      <Pagination
-        page={clampedPage}
-        totalPages={totalPages}
-        totalItems={filtered.length}
-        pageSize={PAGE_SIZE}
-        itemLabel="races"
-        sortLabel="total industry contributions"
-        hrefs={Array.from({ length: totalPages }, (_, i) =>
-          buildPageHref(i + 1, rawSector, influencedPage),
-        )}
-      />
     </div>
   );
 }

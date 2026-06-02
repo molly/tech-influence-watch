@@ -1,0 +1,115 @@
+.wrapper {
+  margin: 1.5rem 0 2rem;
+}
+
+.legend {
+  display: flex;
+  flex-direction: row;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.legendItem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.8rem;
+  color: var(--secondary-text);
+}
+
+.legendSwatchTracked {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+  background: var(--color-lime-500);
+}
+
+.legendSwatchOther {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+  background: var(--color-neutral-400);
+}
+
+.svgHorizontal {
+  width: 100%;
+  height: auto;
+}
+
+.svgVertical {
+  display: none;
+  width: 100%;
+  height: auto;
+}
+
+.colHeader {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 11px;
+  fill: var(--secondary-text);
+}
+
+.nodeName {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  fill: var(--main-text);
+}
+
+.nodeAmount {
+  font-weight: 700;
+  font-size: 12px;
+  fill: var(--main-text);
+}
+
+.nodeNameMuted {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  fill: var(--secondary-text);
+}
+
+.nodeAmountMuted {
+  font-weight: 700;
+  font-size: 12px;
+  fill: var(--secondary-text);
+}
+
+.nodeCaption {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 10px;
+  fill: var(--secondary-text);
+}
+
+.flowAmount {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  fill: var(--main-text);
+}
+
+.ribbonAmount {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 700;
+  fill: var(--main-text);
+}
+
+@media (max-width: 600px) {
+  .legend {
+    gap: 0.5rem;
+    flex-direction: column;
+  }
+
+  .svgHorizontal {
+    display: none;
+  }
+
+  .svgVertical {
+    display: block;
+  }
+}

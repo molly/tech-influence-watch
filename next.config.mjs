@@ -40,6 +40,15 @@ const nextConfig = {
         destination: "/2026/committees/ranking/all",
         permanent: false,
       },
+      // "all" is the canonical (unprefixed) sector — strip an explicit /all/
+      // prefix so it never serves duplicate content.
+      {
+        source: "/2026/all/:path*",
+        destination: "/2026/:path*",
+        permanent: false,
+      },
+      // Old ?sector=crypto|ai query URLs are converted to path-based URLs in
+      // middleware (which can drop the query and avoid a redirect loop).
     ];
   },
   output: "standalone",

@@ -65,7 +65,6 @@ function OthersRow({
 
 function DonorColumn({
   title,
-  titleClass,
   dividerClass,
   donors,
   othersCount,
@@ -73,7 +72,6 @@ function DonorColumn({
   sectorTotal,
 }: {
   title: string;
-  titleClass: string;
   dividerClass: string;
   donors: DonorEntry[];
   othersCount: number;
@@ -83,8 +81,7 @@ function DonorColumn({
   return (
     <div className={styles.donorColumn}>
       <div className={styles.columnHeader}>
-        <span className={`${styles.columnTitle} ${titleClass}`}>{title}</span>
-        <span className={styles.columnSubheader}>Top Donors</span>
+        <span className={styles.columnTitle}>{title}</span>
       </div>
       <div className={`${styles.columnDivider} ${dividerClass}`} />
       {donors.map((donor, i) => (
@@ -238,7 +235,6 @@ async function TechSectorBreakdownContent() {
       <div className={styles.donorColumns}>
         <DonorColumn
           title="Crypto"
-          titleClass={styles.cryptoTitle}
           dividerClass={styles.cryptoDivider}
           donors={cryptoTop}
           othersCount={cryptoOthers.length}
@@ -247,7 +243,6 @@ async function TechSectorBreakdownContent() {
         />
         <DonorColumn
           title="AI"
-          titleClass={styles.aiTitle}
           dividerClass={styles.aiDivider}
           donors={aiTop}
           othersCount={aiOthers.length}
@@ -257,7 +252,6 @@ async function TechSectorBreakdownContent() {
         {bothTotal > 0 && (
           <DonorColumn
             title="Both"
-            titleClass={styles.bothTitle}
             dividerClass={styles.bothDivider}
             donors={bothTop}
             othersCount={bothOthers.length}

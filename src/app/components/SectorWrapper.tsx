@@ -7,13 +7,12 @@ import styles from "./header.module.css";
 import SectorButtons from "./SectorButtons";
 
 const SECTOR_PATHS = [
-  "/",
-  "/2026/beneficiaries",
-  "/2026/contributions",
-  "/2026/elections",
-  "/2026/expenditures",
-  "/2026/spending",
-  "/2026/states",
+  "beneficiaries",
+  "contributions",
+  "elections",
+  "expenditures",
+  "spending",
+  "states",
 ];
 
 function formatLastRun(isoString: string, compact: boolean): string {
@@ -23,9 +22,7 @@ function formatLastRun(isoString: string, compact: boolean): string {
     day: "numeric",
     hour: "numeric",
     minute: "2-digit",
-    ...(compact
-      ? {}
-      : { year: "numeric", timeZoneName: "short" }),
+    ...(compact ? {} : { year: "numeric", timeZoneName: "short" }),
   }).format(date);
 }
 
@@ -47,10 +44,14 @@ export default function SectorWrapper({ lastRun }: { lastRun: string | null }) {
     }
   }, [lastRun]);
   const isExactTopLevelPath =
-    /^\/2026\/(committees|companies|individuals)\/?$/.test(pathname);
+    /^\/2026\/((ai|crypto)\/)?(committees|companies|individuals)\/?$/.test(
+      pathname,
+    );
   const showSector =
     isExactTopLevelPath ||
-    SECTOR_PATHS.some((p) => pathname === p || pathname.startsWith(p + "/"));
+    SECTOR_PATHS.some((p) =>
+      new RegExp(`^/2026/((ai|crypto)/)?${p}/?`).test(pathname),
+    );
   if (!showSector) {
     return null;
   }

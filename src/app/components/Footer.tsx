@@ -1,11 +1,26 @@
 import Link from "next/link";
 
 import styles from "./footer.module.css";
+import { NAV_ITEMS } from "./navItems";
 
 export default function Footer() {
   return (
     <footer className={styles.footer}>
       <div className={styles.footerContents}>
+        <nav className={styles.sitemap} aria-label="Site navigation">
+          {NAV_ITEMS.map((item) => (
+            <div key={item.id} className={styles.sitemapSection}>
+              <span className={styles.sitemapHeading}>{item.label}</span>
+              <ul className={styles.sitemapLinks}>
+                {item.children.map((child) => (
+                  <li key={child.href}>
+                    <Link href={child.href}>{child.label}</Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </nav>
         <div className={styles.description}>
           <i>Tech Influence Watch</i> is a project of{" "}
           <a href="https://www.citationneeded.news">

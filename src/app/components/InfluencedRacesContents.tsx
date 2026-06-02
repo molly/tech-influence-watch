@@ -1,6 +1,7 @@
 import Link from "next/link";
+import { Suspense } from "react";
 
-import Pagination from "./Pagination";
+import PaginatedTable from "./PaginatedTable";
 
 const PAGE_SIZE = 20;
 
@@ -285,33 +286,12 @@ function CandidateRow({
   );
 }
 
-function buildPageHref(p: number, rawSector?: string, otherRacesPage = 1) {
-  const sp = new URLSearchParams();
-  if (rawSector) {
-    sp.set("sector", rawSector);
-  }
-  if (p > 1) {
-    sp.set("influencedPage", String(p));
-  }
-  if (otherRacesPage > 1) {
-    sp.set("otherRacesPage", String(otherRacesPage));
-  }
-  const str = sp.toString();
-  return str ? `?${str}` : "?";
-}
-
 export default async function InfluencedRacesContents({
   fullPage = false,
   sector = "all",
-  page = 1,
-  otherRacesPage = 1,
-  rawSector,
 }: {
   fullPage?: boolean;
   sector?: Sector;
-  page?: number;
-  otherRacesPage?: number;
-  rawSector?: string;
 }) {
   const fetchLimit = sector === "all" && !fullPage ? 5 : undefined;
   const [expenditureData, raceData, beneficiariesData, committeeData] =
@@ -374,12 +354,7 @@ export default async function InfluencedRacesContents({
     displayCandidates = candidates;
   }
 
-  const totalPages = fullPage ? Math.ceil(rows.length / PAGE_SIZE) : 1;
-  const displayRows = fullPage
-    ? rows.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
-    : rows;
-
-  const contents = displayRows.map((candidateName) => {
+  const rowNodes = rows.map((candidateName) => {
     const candidate = displayCandidates[candidateName];
     const beneficiary =
       beneficiaries && candidate.candidate_id
@@ -395,77 +370,92 @@ export default async function InfluencedRacesContents({
     );
   });
 
-  return (
-    <>
-      <table className={styles.influencedTable}>
-        <thead className={styles.inheritBorderRadius}>
-          <tr className={styles.influencedTableHeader}>
-            <th className="text-cell">Candidate</th>
-            <th className="center-cell">State</th>
-            <th className="center-cell small-cell">Office</th>
-            <th className="number-cell">Support</th>
-            <th className="number-cell">Oppose</th>
-            <th className="small-cell center-cell">
-              Direct{" "}
-              <span className="no-wrap">
-                contributions
-                <InformationalTooltip>
-                  <p>
-                    Contributions from{" "}
-                    {humanizeSector(sector, {
-                      context: "industry",
-                      abbrev: true,
-                      lowercase: true,
-                      or: true,
-                    })}{" "}
-                    companies or associated individuals to this candidate or
-                    aligned committees, which have not gone through the{" "}
-                    {humanizeSector(sector, {
-                      hyphen: true,
-                      abbrev: true,
-                      lowercase: true,
-                      or: true,
-                    })}
-                    focused super PACs.
-                  </p>
-                  <p>
-                    This relies on manual classification and so represents a
-                    conservative estimate of industry spending.
-                  </p>
-                </InformationalTooltip>
+  const header = (
+    <thead className={styles.inheritBorderRadius}>
+      <tr className={styles.influencedTableHeader}>
+        <th className="text-cell">Candidate</th>
+        <th className="center-cell">State</th>
+        <th className="center-cell small-cell">Office</th>
+        <th className="number-cell">Support</th>
+        <th className="number-cell">Oppose</th>
+        <th className="small-cell center-cell">
+          Direct{" "}
+          <span className="no-wrap">
+            contributions
+            <InformationalTooltip>
+              <p>
+                Contributions from{" "}
+                {humanizeSector(sector, {
+                  context: "industry",
+                  abbrev: true,
+                  lowercase: true,
+                  or: true,
+                })}{" "}
+                companies or associated individuals to this candidate or
+                aligned committees, which have not gone through the{" "}
+                {humanizeSector(sector, {
+                  hyphen: true,
+                  abbrev: true,
+                  lowercase: true,
+                  or: true,
+                })}
+                focused super PACs.
+              </p>
+              <p>
+                This relies on manual classification and so represents a
+                conservative estimate of industry spending.
+              </p>
+            </InformationalTooltip>
+          </span>
+        </th>
+        <th className="small-cell center-cell">
+          Goal{" "}
+          <span className="no-wrap">
+            achieved?
+            <InformationalTooltip>
+              <span>
+                The PACs&rsquo; goal is considered to have been achieved if a
+                candidate they supported won their election, or if a candidate
+                they opposed lost.
               </span>
-            </th>
-            <th className="small-cell center-cell">
-              Goal{" "}
-              <span className="no-wrap">
-                achieved?
-                <InformationalTooltip>
-                  <span>
-                    The PACs&rsquo; goal is considered to have been achieved if
-                    a candidate they supported won their election, or if a
-                    candidate they opposed lost.
-                  </span>
-                </InformationalTooltip>
-              </span>
-            </th>
-            <th className="long-text-cell">Outcome</th>
-          </tr>
-        </thead>
-        <tbody className={styles.inheritBorderRadius}>{contents}</tbody>
-      </table>
-      {fullPage && (
-        <Pagination
-          page={page}
-          totalPages={totalPages}
-          totalItems={rows.length}
+            </InformationalTooltip>
+          </span>
+        </th>
+        <th className="long-text-cell">Outcome</th>
+      </tr>
+    </thead>
+  );
+
+  if (fullPage) {
+    // PaginatedTable reads useSearchParams (client-only), so the statically
+    // rendered fallback is the default first page.
+    return (
+      <Suspense
+        fallback={
+          <table className={styles.influencedTable}>
+            {header}
+            <tbody className={styles.inheritBorderRadius}>
+              {rowNodes.slice(0, PAGE_SIZE)}
+            </tbody>
+          </table>
+        }
+      >
+        <PaginatedTable
+          header={header}
+          rows={rowNodes}
           pageSize={PAGE_SIZE}
+          pageParam="influencedPage"
           itemLabel="races"
           sortLabel="total super PAC spending"
-          hrefs={Array.from({ length: totalPages }, (_, i) =>
-            buildPageHref(i + 1, rawSector, otherRacesPage),
-          )}
         />
-      )}
-    </>
+      </Suspense>
+    );
+  }
+
+  return (
+    <table className={styles.influencedTable}>
+      {header}
+      <tbody className={styles.inheritBorderRadius}>{rowNodes}</tbody>
+    </table>
   );
 }

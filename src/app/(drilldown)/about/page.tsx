@@ -118,7 +118,7 @@ export default async function AboutPage() {
                   deregulatory legislation that would benefit these industries
                   and, by extension, his own holdings. Since then, we&rsquo;ve
                   seen{" "}
-                  <Link href="/influence/quidproquo">
+                  <Link href="/analysis/quidproquo">
                     at least 21 enforcement actions or investigations against
                     crypto companies dropped or paused
                   </Link>
@@ -127,7 +127,7 @@ export default async function AboutPage() {
                   with Trump loyalists who gutted the agencies&rsquo; regulatory
                   capacity. Congress, shaped by hundreds of millions in industry
                   spending, has refused to address his blatant{" "}
-                  <Link href="/influence/quidproquo">
+                  <Link href="/analysis/quidproquo">
                     crypto-related corruption
                   </Link>{" "}
                   or provide meaningful oversight.

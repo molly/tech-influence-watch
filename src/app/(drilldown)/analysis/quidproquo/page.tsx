@@ -387,7 +387,7 @@ async function QuidProQuoTable() {
 export default function QuidProQuoPage() {
   return (
     <div className={styles.page}>
-      <Breadcrumbs crumbs={["Influence", "Quid pro quo"]} />
+      <Breadcrumbs crumbs={["Analysis", "Quid pro quo"]} />
       <h1 className={sharedStyles.title}>Crypto quid pro quo</h1>
       <p className={sharedStyles.headerSubtitle}>
         Cryptocurrency companies are reaping the benefits of their contributions
@@ -398,7 +398,7 @@ export default function QuidProQuoPage() {
         contributions and business arrangements between cryptocurrency companies
         and President Trump, and favorable regulatory outcomes that followed.
         For a focused view of campaign contributions to Trump, see the{" "}
-        <Link href="/influence/trump" className="bold">
+        <Link href="/analysis/trump" className="bold">
           Trump campaign contributions tracker
         </Link>
         .

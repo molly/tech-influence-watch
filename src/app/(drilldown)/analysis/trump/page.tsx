@@ -126,7 +126,7 @@ async function TrumpContributionsData() {
             partnerships and other financial arrangements&nbsp;&ndash; such as
             World Liberty Financial and the $TRUMP memecoin&nbsp;&ndash; are
             tracked separately on the{" "}
-            <Link href="/influence/quidproquo" className="bold">
+            <Link href="/analysis/quidproquo" className="bold">
               quid pro quo
             </Link>{" "}
             page.
@@ -220,7 +220,7 @@ export default function TrumpContributionsPage() {
     <>
       <div className={sharedStyles.fullWidthHeader}>
         <section className={sharedStyles.header}>
-          <Breadcrumbs crumbs={["Influence", "Donald Trump"]} />
+          <Breadcrumbs crumbs={["Analysis", "Donald Trump"]} />
           <h1 className={sharedStyles.title}>Contributions to Donald Trump</h1>
         </section>
       </div>

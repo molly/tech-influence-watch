@@ -97,7 +97,7 @@ export default function Colophon() {
               Entities are added manually as they appear in FEC data or are
               identified through reporting. If you believe a company or
               individual is missing, please{" "}
-              <a href="/about/contact">get in touch</a> or{" "}
+              <Link href="/about/contact">get in touch</Link> or{" "}
               <a href="https://github.com/molly/follow-the-crypto/pulls">
                 open a GitHub issue
               </a>
@@ -193,7 +193,7 @@ export default function Colophon() {
               publications, attribution to <em>Tech Influence Watch</em> is
               appreciated but not required. If you find an error in something
               you&rsquo;ve published based on this data, please{" "}
-              <a href="/about/contact">let me know</a> so it can be corrected at
+              <Link href="/about/contact">let me know</Link> so it can be corrected at
               the source.
             </p>
             <h3 className={styles.aboutSectionHeader} id="further-reading">

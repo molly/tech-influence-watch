@@ -87,6 +87,12 @@ export default function AllCashByCommitteeChart({
                       {committee.sector}
                     </span>
                   )}
+                  {committee.network && (
+                    <span className={styles.networkLabel}>
+                      {" "}
+                      {committee.network} network
+                    </span>
+                  )}
                 </span>
                 <span className={styles.value}>
                   {formatCompact(barTotal)}

@@ -1,8 +1,9 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import { type Sector } from "@/app/types/Sector";
+import { sectorFromPathname, setSectorOnPathname } from "@/app/utils/sector";
 
 import styles from "./header.module.css";
 
@@ -14,20 +15,11 @@ const SECTORS: { label: string; value: Sector }[] = [
 
 export default function SectorButtons() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const rawSector = searchParams.get("sector");
-  const sector: Sector =
-    rawSector === "crypto" || rawSector === "ai" ? rawSector : "all";
+  const pathname = usePathname();
+  const sector = sectorFromPathname(pathname);
 
   function handleSelect(value: Sector) {
-    const params = new URLSearchParams(searchParams.toString());
-    if (value === "all") {
-      params.delete("sector");
-    } else {
-      params.set("sector", value);
-    }
-    const query = params.toString();
-    router.push(query ? `?${query}` : "?");
+    router.push(setSectorOnPathname(pathname, value));
   }
 
   return (

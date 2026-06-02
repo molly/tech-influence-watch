@@ -52,10 +52,16 @@ export type Company = CompanyConstant & {
 export type CompanyTotalByCompany = {
   by_party: Record<string, number>;
   total: number;
+  // Portion of `total` that went to committees the site tracks
+  // (recipients present in constants/committees).
+  to_tracked: number;
 };
 
 export type CompanyTotals = {
   total: number;
+  // Portion of `total` that went to committees the site tracks
+  // (recipients present in constants/committees).
+  to_tracked: number;
   by_party: Record<string, number>;
   by_company: Record<string, CompanyTotalByCompany>;
 };

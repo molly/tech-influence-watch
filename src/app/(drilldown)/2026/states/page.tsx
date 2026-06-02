@@ -1,93 +1,11 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 
-import Breadcrumbs from "@/app/components/Breadcrumbs";
-import AllCompanySpendingMap from "@/app/components/home/AllCompanySpendingMap";
-import SuperPacSpendingMapWrapper from "@/app/components/home/SuperPacSpendingMapWrapper";
-import USMapSkeleton from "@/app/components/skeletons/USMapSkeleton";
-import sharedStyles from "@/app/shared.module.css";
-import { Sector } from "@/app/types/Sector";
-import { customMetadata } from "@/app/utils/metadata";
-import { humanizeSector, parseSector } from "@/app/utils/sector";
+import StatesView, { statesMetadata } from "./StatesView";
 
-import styles from "./page.module.css";
-import StateExpenditures, {
-  StateExpendituresSkeleton,
-} from "./StateExpenditures";
-import StateNonPacExpenditures from "./StateNonPacExpenditures";
-import StatesStatsRow, { StatesStatsRowSkeleton } from "./StatesStatsRow";
-
-export async function generateMetadata({
-  searchParams,
-}: {
-  searchParams: Promise<{ sector?: string }>;
-}): Promise<Metadata> {
-  const { sector: rawSector } = await searchParams;
-  const sector = parseSector(rawSector);
-  return customMetadata({
-    title: `Spending by State`,
-    description: `States in which  ${humanizeSector(sector, { hyphen: true, lowercase: true })}focused political action committees have been spending to influence 2026 elections.`,
-  });
+export function generateMetadata(): Metadata {
+  return statesMetadata("all");
 }
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: Promise<{ sector?: string }>;
-}) {
-  const { sector: rawSector } = await searchParams;
-  const sector: Sector = parseSector(rawSector);
-
-  return (
-    <>
-      <div className={sharedStyles.fullWidthHeader}>
-        <section className={sharedStyles.header}>
-          <Breadcrumbs crumbs={["Elections", "By state"]} />
-          <h1 className={sharedStyles.title}>Elections by state</h1>
-          <p className={styles.headerSubtitle}>
-            Where {humanizeSector(sector, { lowercase: true })} super PAC money
-            is going, and where companies and executives are contributing
-            directly to federal candidates.
-          </p>
-        </section>
-      </div>
-      <div className={`${sharedStyles.main}`}>
-        <Suspense fallback={<StatesStatsRowSkeleton />}>
-          <StatesStatsRow sector={sector} />
-        </Suspense>
-        <h2 className={sharedStyles.sectionTitle}>
-          {humanizeSector(sector)} PAC spending by state
-        </h2>
-        <section className={styles.section}>
-          <div className={styles.mapContainer}>
-            <Suspense fallback={<USMapSkeleton />}>
-              <SuperPacSpendingMapWrapper sector={sector} />
-            </Suspense>
-          </div>
-          <section className={styles.statesTableCard}>
-            <Suspense fallback={<StateExpendituresSkeleton />}>
-              <StateExpenditures sector={sector} />
-            </Suspense>
-          </section>
-        </section>
-        <h2 className={sharedStyles.sectionTitle}>
-          Direct{" "}
-          {humanizeSector(sector, { lowercase: true, context: "industry" })}{" "}
-          spending by state
-        </h2>
-        <section className={styles.section}>
-          <div className={styles.mapContainer}>
-            <Suspense fallback={<USMapSkeleton />}>
-              <AllCompanySpendingMap sector={sector} />
-            </Suspense>
-          </div>
-          <section className={styles.statesTableCard}>
-            <Suspense fallback={<StateExpendituresSkeleton />}>
-              <StateNonPacExpenditures sector={sector} />
-            </Suspense>
-          </section>
-        </section>
-      </div>
-    </>
-  );
+export default function StatesPage() {
+  return <StatesView sector="all" />;
 }

@@ -13,15 +13,9 @@ import InfluencedRacesContents, {
 export default function InfluencedRaces({
   sector,
   fullPage = false,
-  page = 1,
-  otherRacesPage = 1,
-  rawSector,
 }: {
   sector: Sector;
   fullPage?: boolean;
-  page?: number;
-  otherRacesPage?: number;
-  rawSector?: string;
 }) {
   const sectorText = humanizeSector(sector, {
     context: "industry",
@@ -34,13 +28,7 @@ export default function InfluencedRaces({
         className={sharedStyles.sectionTitle}
       >{`${fullPage ? "R" : "Top r"}aces influenced by ${sectorText} super PAC money`}</h2>
       <Suspense fallback={<InfluencedRacesContentsSkeleton fullPage={fullPage} />}>
-        <InfluencedRacesContents
-          fullPage={fullPage}
-          sector={sector}
-          page={page}
-          otherRacesPage={otherRacesPage}
-          rawSector={rawSector}
-        />
+        <InfluencedRacesContents fullPage={fullPage} sector={sector} />
       </Suspense>
       {!fullPage && (
         <div className={styles.viewMoreLinks}>

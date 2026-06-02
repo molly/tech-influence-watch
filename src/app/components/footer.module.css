@@ -21,6 +21,39 @@
   margin: 0;
 }
 
+.sitemap {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-neutral-200);
+}
+
+.sitemapSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sitemapHeading {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--secondary-text);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.sitemapLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.85rem;
+}
+
 .links {
   display: flex;
   align-items: center;
@@ -39,5 +72,9 @@
   .footer {
     border-top-color: var(--color-neutral-700);
     background-color: var(--color-black);
+  }
+
+  .sitemap {
+    border-bottom-color: var(--color-neutral-700);
   }
 }

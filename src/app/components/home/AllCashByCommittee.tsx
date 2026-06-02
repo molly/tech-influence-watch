@@ -3,14 +3,12 @@ import { Suspense } from "react";
 import {
   fetchCommitteesWithContributions,
   fetchCommitteeTotalReceipts,
-  fetchCompanyTotalSpending,
 } from "@/app/actions/fetch";
 import sharedStyles from "@/app/shared.module.css";
 import {
   CommitteeConstantWithContributions,
   CommitteeTotalsSnapshot,
 } from "@/app/types/Committee";
-import { CompanyTotals } from "@/app/types/Companies";
 import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
 import { formatCompact } from "@/app/utils/humanize";
@@ -24,11 +22,13 @@ async function CashTotal({ sector }: { sector: Sector }) {
   if (isError(data)) {
     return null;
   }
+  const totals = data as CommitteeTotalsSnapshot;
+  const total = (totals.net_receipts ?? totals.receipts) + totals.cash_on_hand;
   return (
     <span className={sharedStyles.sectionTitleAmount}>
       of{" "}
       <span className={sharedStyles.sectionTitleAmountValue}>
-        {formatCompact((data as CommitteeTotalsSnapshot).receipts)}
+        {formatCompact(total)}
       </span>{" "}
       total
     </span>

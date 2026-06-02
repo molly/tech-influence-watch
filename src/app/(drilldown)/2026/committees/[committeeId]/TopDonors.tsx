@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 import { fetchCommitteeDonors } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import Skeleton from "@/app/components/skeletons/Skeleton";
@@ -12,6 +14,7 @@ import { range } from "@/app/utils/range";
 import Contribution from "./Contribution";
 import ContributionsGroup from "./ContributionsGroup";
 import styles from "./page.module.css";
+import TopDonorsView from "./TopDonorsView";
 
 export function TopDonorsSkeleton() {
   return [6, 2, 6, 3].map((items, ind) => (
@@ -70,10 +73,8 @@ function ByDate({ donors }: { donors: Contributions }) {
 
 export default async function TopDonors({
   committeeId,
-  sort,
 }: {
   committeeId: string;
-  sort?: string;
 }) {
   const donorData = await fetchCommitteeDonors(committeeId);
 
@@ -94,8 +95,15 @@ export default async function TopDonors({
   }
 
   const donors = donorData as Contributions;
-  if (sort === "date") {
-    return <ByDate donors={donors} />;
-  }
-  return <ByDonor donors={donors} />;
+  // useSearchParams (inside TopDonorsView) forces a client render, so the
+  // Suspense fallback is what gets statically rendered — make it the default
+  // (by-donor) view so the donor list is present in the static HTML.
+  return (
+    <Suspense fallback={<ByDonor donors={donors} />}>
+      <TopDonorsView
+        byDonor={<ByDonor donors={donors} />}
+        byDate={<ByDate donors={donors} />}
+      />
+    </Suspense>
+  );
 }

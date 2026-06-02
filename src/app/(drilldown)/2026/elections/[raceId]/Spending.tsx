@@ -415,8 +415,17 @@ export default function Spending({
           >
             <rect width={HATCH_SIZE / 2} height={HATCH_SIZE} fill="#0f172a" />
           </pattern>
-          <pattern id="dots" width={2} height={2} patternUnits="userSpaceOnUse">
-            <circle cx={1} cy={1} r={0.6} fill="#0f172a" />
+          <pattern
+            id="dots"
+            width={5}
+            height={5}
+            patternUnits="userSpaceOnUse"
+          >
+            <path
+              d="M0,0 L5,5 M5,0 L0,5"
+              stroke="#0f172a"
+              strokeWidth={0.75}
+            />
           </pattern>
         </defs>
         {x.ticks(5).map((value, ind) => {

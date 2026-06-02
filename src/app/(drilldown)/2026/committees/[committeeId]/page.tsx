@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-import Link from "next/link";
 import { Suspense } from "react";
 
 import { fetchCommitteeDetails } from "@/app/actions/fetch";
@@ -25,6 +24,13 @@ import CommitteeRaised from "./CommitteeRaised";
 import CommitteeRecentExpenditures from "./CommitteeRecentExpenditures";
 import styles from "./page.module.css";
 import TopDonors, { TopDonorsSkeleton } from "./TopDonors";
+import TopDonorsSortControl, {
+  TopDonorsSortLinks,
+} from "./TopDonorsSortControl";
+
+export function generateStaticParams() {
+  return Object.keys(COMMITTEES).map((committeeId) => ({ committeeId }));
+}
 
 async function CommitteeExpendituresBottomSections({
   committeeId,
@@ -67,13 +73,10 @@ export async function generateMetadata({
 
 export default async function CommitteePage({
   params,
-  searchParams,
 }: {
   params: Promise<{ committeeId: string }>;
-  searchParams: Promise<{ sort?: string }>;
 }) {
   const { committeeId } = await params;
-  const { sort } = await searchParams;
 
   return (
     <>
@@ -97,44 +100,11 @@ export default async function CommitteePage({
             <div className={styles.donorSectionHeaderGroup}>
               <h2 className={styles.donorSectionHeader}>Top donors</h2>
             </div>
-            <div className={sharedStyles.inlineSortControls}>
-              <span className={sharedStyles.inlineSortLabel}>Sort by</span>
-              <Link
-                href="?"
-                className={
-                  sort !== "date"
-                    ? sharedStyles.inlineSortOptionActive
-                    : sharedStyles.inlineSortOption
-                }
-              >
-                Amount
-                {sort !== "date" && (
-                  <>
-                    {" "}
-                    <span className={sharedStyles.inlineSortArrow}>↓</span>
-                  </>
-                )}
-              </Link>
-              <span className={sharedStyles.inlineSortSeparator}>·</span>
-              <Link
-                href="?sort=date"
-                className={
-                  sort === "date"
-                    ? sharedStyles.inlineSortOptionActive
-                    : sharedStyles.inlineSortOption
-                }
-              >
-                Date
-                {sort === "date" && (
-                  <>
-                    {" "}
-                    <span className={sharedStyles.inlineSortArrow}>↓</span>
-                  </>
-                )}
-              </Link>
-            </div>
+            <Suspense fallback={<TopDonorsSortLinks isDate={false} />}>
+              <TopDonorsSortControl />
+            </Suspense>
             <Suspense fallback={<TopDonorsSkeleton />}>
-              <TopDonors committeeId={committeeId} sort={sort} />
+              <TopDonors committeeId={committeeId} />
             </Suspense>
           </section>
           <div className={styles.rightColumn}>

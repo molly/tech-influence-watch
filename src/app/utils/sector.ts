@@ -61,12 +61,108 @@ export function parseSector(value: string | undefined): Sector {
   return "all";
 }
 
+// The sector lives in the URL path: "all" has no prefix (clean URLs), while
+// "crypto" and "ai" get a prefix segment right after the year. Drilldown pages
+// become /2026/crypto/companies; the homepage becomes /crypto and /ai.
+const PREFIXED_SECTORS: Sector[] = ["crypto", "ai"];
+
+function isPrefixedSector(value: string | undefined): value is "crypto" | "ai" {
+  return value === "crypto" || value === "ai";
+}
+
+/**
+ * Insert the sector into a canonical ("all") path. Used by links that already
+ * know their destination, e.g. sectorHref("/2026/companies", "crypto").
+ */
 export function sectorHref(path: string, sector: Sector): string {
   if (sector === "all") {
     return path;
   }
-  return `${path}?sector=${sector}`;
+  if (path === "/") {
+    return `/${sector}`;
+  }
+  if (path === "/2026" || path.startsWith("/2026/")) {
+    return `/2026/${sector}${path.slice("/2026".length)}`;
+  }
+  return path;
 }
+
+/**
+ * Read the active sector out of the current pathname.
+ */
+export function sectorFromPathname(pathname: string): Sector {
+  const segments = pathname.split("/").filter(Boolean);
+  if (segments.length === 1 && isPrefixedSector(segments[0])) {
+    return segments[0];
+  }
+  if (segments[0] === "2026" && isPrefixedSector(segments[1])) {
+    return segments[1];
+  }
+  return "all";
+}
+
+/**
+ * Pages whose content is sector-aware. Detail pages for a single company,
+ * individual, or committee ignore the sector, so the toggle should not try to
+ * build a prefixed URL for them.
+ */
+export function isSectorAwarePath(canonicalPath: string): boolean {
+  if (canonicalPath === "/") {
+    return true;
+  }
+  const exact = [
+    "/2026/companies",
+    "/2026/individuals",
+    "/2026/committees",
+    "/2026/contributions",
+    "/2026/spending",
+    "/2026/expenditures",
+    "/2026/beneficiaries",
+    "/2026/states",
+    "/2026/elections",
+  ];
+  if (exact.includes(canonicalPath)) {
+    return true;
+  }
+  // State and race detail pages do vary by sector.
+  return (
+    canonicalPath.startsWith("/2026/states/") ||
+    canonicalPath.startsWith("/2026/elections/")
+  );
+}
+
+/**
+ * Strip any sector prefix from a pathname, returning its canonical ("all")
+ * form so it can be compared or re-prefixed.
+ */
+export function canonicalPathname(pathname: string): string {
+  const segments = pathname.split("/").filter(Boolean);
+  if (segments.length >= 1 && isPrefixedSector(segments[0])) {
+    // Homepage sector variant: /crypto -> /
+    return "/" + segments.slice(1).join("/");
+  }
+  if (segments[0] === "2026" && isPrefixedSector(segments[1])) {
+    segments.splice(1, 1);
+  }
+  return "/" + segments.join("/");
+}
+
+/**
+ * Switch the current pathname to a different sector for the sector toggle. On
+ * pages that aren't sector-aware, fall back to that sector's homepage rather
+ * than fabricating a route that doesn't exist.
+ */
+export function setSectorOnPathname(pathname: string, sector: Sector): string {
+  const canonical = canonicalPathname(pathname);
+  if (!isSectorAwarePath(canonical)) {
+    return sector === "all" ? "/" : `/${sector}`;
+  }
+  return sectorHref(canonical, sector);
+}
+
+export const SECTOR_STATIC_PARAMS = PREFIXED_SECTORS.map((sector) => ({
+  sector,
+}));
 
 /**
  * Backend sector "tech" means the entity spans all sectors and should appear

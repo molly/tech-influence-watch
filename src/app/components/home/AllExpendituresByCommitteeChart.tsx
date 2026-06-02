@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import sharedStyles from "@/app/shared.module.css";
 import { CommitteeConstant } from "@/app/types/Committee";
 import { Sector } from "@/app/types/Sector";
@@ -36,17 +38,25 @@ export default function SpendingByCommittee({
         return (
           <li key={id} className={styles.barRow}>
             <div className={styles.labelRow}>
-              <a
-                href={`/2026/committees/${id}`}
-                className={`${styles.label} secondaryLink`}
-              >
-                {name}
+              <span>
+                <Link
+                  href={`/2026/committees/${id}`}
+                  className={`${styles.label} secondaryLink`}
+                >
+                  {name}
+                </Link>
                 {sector === "all" && committeeConstants[id]?.sector && (
                   <span className={sharedStyles.sectorBadge}>
                     {committeeConstants[id].sector}
                   </span>
                 )}
-              </a>
+                {committeeConstants[id]?.network && (
+                  <span className={styles.networkLabel}>
+                    {" "}
+                    {committeeConstants[id].network} network
+                  </span>
+                )}
+              </span>
               <span className={styles.value}>
                 {formatCompact(spending)}
                 <span className={styles.pct}> ({Math.round(pct)}%)</span>

@@ -102,6 +102,7 @@ async function CompanyBubbleChartContent({ sector }: { sector: Sector }) {
             d.name.length <= maxChars
               ? d.name
               : d.name.slice(0, maxChars) + "…";
+          const darkText = d.companySector === "ai";
           return (
             <Link
               key={d.id}
@@ -123,7 +124,7 @@ async function CompanyBubbleChartContent({ sector }: { sector: Sector }) {
                   textAnchor="middle"
                   dominantBaseline="middle"
                   fontSize={fontSize}
-                  className={styles.bubbleLabel}
+                  className={`${styles.bubbleLabel} ${darkText ? styles.bubbleLabelDark : ""}`}
                   pointerEvents="none"
                 >
                   {label}
@@ -136,7 +137,7 @@ async function CompanyBubbleChartContent({ sector }: { sector: Sector }) {
                   textAnchor="middle"
                   dominantBaseline="middle"
                   fontSize={fontSize * 0.85}
-                  className={styles.bubbleAmount}
+                  className={`${styles.bubbleAmount} ${darkText ? styles.bubbleAmountDark : ""}`}
                   pointerEvents="none"
                 >
                   {formatCompact(d.total)}

@@ -57,7 +57,7 @@ export default async function CommitteeDetailsSection({
 
     if (committee.committee_type_full) {
       parts.push(
-        <span className={styles.committeeDetail}>
+        <span className={styles.committeeDetail} key="committee-type">
           {committee.committee_type_full}
         </span>,
       );
@@ -65,7 +65,7 @@ export default async function CommitteeDetailsSection({
 
     if (committee.designation_full) {
       parts.push(
-        <span className={styles.committeeDetail}>
+        <span className={styles.committeeDetail} key="designation">
           {committee.designation_full}
         </span>,
       );
@@ -87,7 +87,7 @@ export default async function CommitteeDetailsSection({
 
     if (committee.first_f1_date) {
       parts.push(
-        <span className={styles.committeeDetail}>
+        <span className={styles.committeeDetail} key="first-f1-date">
           Registered {formatDateFromString(committee.first_f1_date)}
         </span>,
       );

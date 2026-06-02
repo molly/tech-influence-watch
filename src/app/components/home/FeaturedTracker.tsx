@@ -4,7 +4,7 @@ import { fetchQpq } from "@/app/actions/fetch";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import sharedStyles from "@/app/shared.module.css";
 import { QPQ } from "@/app/types/Qpq";
-import { formatCompact } from "@/app/utils/humanize";
+import { formatCompact, humanizeRoundedCurrency } from "@/app/utils/humanize";
 import { range } from "@/app/utils/range";
 
 import styles from "./FeaturedTracker.module.css";
@@ -82,9 +82,11 @@ export default async function FeaturedTracker() {
           own regulations.
         </p>
         <div className={styles.divider} />
-        <div className={styles.total}>{formatCompact(grandTotal)}</div>
+        <div className={styles.total}>
+          {humanizeRoundedCurrency(grandTotal, true, 1)}+
+        </div>
         <div className={styles.totalLabel}>
-          given to Trump &amp; family by tracked entities
+          to Trump &amp; family by tracked entities
         </div>
         <div className={styles.divider} />
         <ul className={styles.entries}>
@@ -100,7 +102,7 @@ export default async function FeaturedTracker() {
             </li>
           ))}
         </ul>
-        <Link href="/influence/quidproquo" className={styles.button}>
+        <Link href="/analysis/quidproquo" className={styles.button}>
           View full tracker →
         </Link>
       </div>

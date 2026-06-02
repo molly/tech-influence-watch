@@ -295,7 +295,10 @@ export default async function RaceCard({
     <>
       {orderedRaces.map(async (raceId) => {
         const shortId = raceId.split("-").slice(1).join("-");
-        const influenced = Object.values(elections[shortId].candidates)
+        // A race can have expenditure data without a matching election entry
+        // (e.g. sparse sector/state combos), so guard against a missing entry.
+        const election = elections[shortId];
+        const influenced = Object.values(election?.candidates ?? {})
           .filter(
             (c: CandidateSummary) =>
               getSupportTotal(c, sector) > 0 || getOpposeTotal(c, sector) > 0,
@@ -306,7 +309,7 @@ export default async function RaceCard({
               getOpposeTotal(b, sector) -
               (getSupportTotal(a, sector) + getOpposeTotal(a, sector)),
           );
-        const otherOnlyInfluenced = Object.values(elections[shortId].candidates)
+        const otherOnlyInfluenced = Object.values(election?.candidates ?? {})
           .filter(
             (c: CandidateSummary) =>
               c.has_non_pac_support &&
@@ -362,7 +365,7 @@ export default async function RaceCard({
               )}
             </h3>
             {influenced.map((candidate) => {
-              const committeeNames = Object.keys(elections[shortId].spending)
+              const committeeNames = Object.keys(election.spending)
                 .filter(
                   (cid) =>
                     sector === "all" ||
@@ -386,7 +389,7 @@ export default async function RaceCard({
                   candidate={candidate}
                   committeeNames={committeeNames}
                   beneficiary={beneficiary}
-                  races={elections[shortId].races}
+                  races={election.races}
                   sector={sector}
                 />
               );
@@ -396,7 +399,7 @@ export default async function RaceCard({
                 key={candidate.candidate_id}
                 candidate={candidate}
                 beneficiary={beneficiaries[candidate.candidate_id!]}
-                races={elections[shortId].races}
+                races={election.races}
                 sector={sector}
               />
             ))}

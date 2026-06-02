@@ -34,9 +34,13 @@ export async function generateMetadata({
   params: Promise<{ company: string }>;
 }): Promise<Metadata> {
   const { company } = await params;
-  const companyName = formatCompanyName(
-    titlecase(company.replaceAll("-", " ")),
-  );
+  const companyData = await fetchCompany(company);
+  let companyName;
+  if (isError(companyData)) {
+    companyName = formatCompanyName(titlecase(company.replaceAll("-", " ")));
+  } else {
+    companyName = (companyData as Company).name;
+  }
   return customMetadata({
     title: companyName,
     description: `Election spending by ${companyName} and related individuals.`,

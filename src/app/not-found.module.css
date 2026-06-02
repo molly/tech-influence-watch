@@ -8,8 +8,7 @@
   display: grid;
   grid-template-columns: 18rem 1fr;
   gap: 4rem;
-  align-items: center;
-}
+  align-items: flex-start;
 
 /* --- Filing card (left) --- */
 
@@ -38,24 +37,6 @@
   line-height: 1;
   margin: 0.25rem 0;
   color: var(--main-text);
-}
-
-.errorZero {
-  color: var(--color-lime-600);
-}
-
-.rule {
-  border: none;
-  border-top: 2px solid var(--main-text);
-  margin: 1rem 0;
-}
-
-.filingNote {
-  font-family: var(--font-serif);
-  font-style: italic;
-  color: var(--secondary-text);
-  font-size: 0.95rem;
-  margin: 0;
 }
 
 /* --- Right content --- */
@@ -90,7 +71,7 @@
 .backButton {
   display: inline-block;
   background: var(--color-lime-600);
-  color: var(--color-black);
+  color: var(--color-white);
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 1rem;
@@ -100,7 +81,8 @@
 
   &:hover {
     background: var(--color-lime-700);
-    color: var(--color-black);
+    color: var(--color-white);
+    text-decoration: none;
   }
 }
 

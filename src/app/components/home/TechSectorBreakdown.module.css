@@ -8,7 +8,7 @@
 }
 
 .bigBarAi {
-  background-color: var(--color-lime-500);
+  background-color: var(--color-lime-400);
 }
 
 .bigBarBoth {
@@ -75,18 +75,6 @@
   font-size: 0.8rem;
 }
 
-.cryptoTitle {
-  color: var(--color-lime-700);
-}
-
-.aiTitle {
-  color: var(--color-lime-600);
-}
-
-.bothTitle {
-  color: var(--color-neutral-600);
-}
-
 .columnSubheader {
   font-size: 0.65rem;
   text-transform: uppercase;
@@ -105,7 +93,7 @@
 }
 
 .aiDivider {
-  background-color: var(--color-lime-500);
+  background-color: var(--color-lime-400);
 }
 
 .bothDivider {
