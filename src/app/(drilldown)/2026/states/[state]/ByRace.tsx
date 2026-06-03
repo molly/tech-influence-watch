@@ -36,7 +36,7 @@ import {
   sortRaces,
 } from "@/app/utils/races";
 import { range } from "@/app/utils/range";
-import { matchesSector } from "@/app/utils/sector";
+import { matchesSector, sectorHref } from "@/app/utils/sector";
 import { formatCurrency } from "@/app/utils/utils";
 
 import styles from "./page.module.css";
@@ -327,7 +327,7 @@ export default async function RaceCard({
         return (
           <div key={raceId} className={styles.cardSection}>
             <h3 className={styles.sectionTitle}>
-              <Link href={`/2026/elections/${raceId}`}>
+              <Link href={sectorHref(`/2026/elections/${raceId}`, sector)}>
                 {getRaceName(raceId)}
               </Link>
               {(expenditures.by_race[raceId]?.total ||

@@ -2,7 +2,9 @@
 
 .header {
   width: 100%;
-  margin-bottom: 1rem;
+  background-color: var(--color-black);
+  border-top: 1px solid var(--color-neutral-800);
+  border-bottom: 1px solid var(--color-neutral-800);
 }
 
 .headerGrid {
@@ -25,16 +27,16 @@
   font-family: var(--font-serif);
   font-style: italic;
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--color-neutral-400);
   margin-bottom: 1rem;
 }
 
 .crumbs a {
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--color-neutral-400);
 }
 
 .crumbs a:hover {
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--color-neutral-200);
   text-decoration: none;
 }
 
@@ -66,7 +68,7 @@
   font-weight: 700;
   padding: 0.25rem 0.5rem;
   color: var(--color-white);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--color-neutral-700);
 }
 
 .chipNetwork {
@@ -77,7 +79,7 @@
 .lede {
   font-size: 0.97rem;
   line-height: 1.58;
-  color: rgba(255, 255, 255, 0.72);
+  color: var(--color-neutral-200);
   max-width: 42ch;
   margin: 0;
 }
@@ -236,7 +238,7 @@
 
 .statCell {
   padding: 1.25rem 1.5rem 1.375rem;
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: 1px solid var(--color-neutral-800);
 }
 
 .statCell:last-child {
@@ -247,7 +249,7 @@
   font-family: var(--font-serif);
   font-style: italic;
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--color-neutral-400);
   margin-bottom: 0.5rem;
 }
 
@@ -263,12 +265,12 @@
 .statSub {
   margin-top: 0.625rem;
   font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--color-neutral-400);
   line-height: 1.5;
 }
 
 .statSub strong {
-  color: rgba(255, 255, 255, 0.82);
+  color: var(--color-neutral-200);
   font-weight: 600;
 }
 
@@ -318,9 +320,8 @@
 }
 
 .donorTotal {
-  font-family: var(--font-display);
   font-weight: 800;
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
@@ -335,10 +336,8 @@
 }
 
 .giftDate {
-  font-family: var(--font-serif);
-  font-style: italic;
   color: var(--main-text);
-  font-size: 0.82rem;
+  font-size: 0.8rem;
 }
 
 .giftAmt {
@@ -384,7 +383,6 @@
 }
 
 .donorRowAmt {
-  font-family: var(--font-display);
   font-weight: 700;
   font-size: 0.95rem;
   text-align: right;
@@ -444,8 +442,6 @@
 
 .ccGiven strong {
   font-weight: 600;
-  font-family: var(--font-display);
-  font-size: 0.95rem;
   font-variant-numeric: tabular-nums;
 }
 
@@ -480,7 +476,7 @@
 
   .statCell {
     border-right: 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid var(--color-neutral-800);
   }
 
   .statCell:last-child {

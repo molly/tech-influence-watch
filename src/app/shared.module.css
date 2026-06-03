@@ -15,6 +15,15 @@
   margin-top: 1rem;
 }
 
+/* Pages whose first child is a full-bleed band meant to sit flush against the
+   site header opt out of the gap by marking that child with .flushTop. */
+.mainWithHeader:has(> .flushTop) {
+  margin-top: 0;
+}
+
+.flushTop {
+}
+
 .accent-text {
   color: var(--main-text);
   font-family: var(--font-display);

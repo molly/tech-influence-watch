@@ -23,9 +23,10 @@ export default function NetworkByCandidate({ data }: { data: NetworkData }) {
   const items: HorizontalBarItem[] = top.map((target) => {
     const partyLetter = target.party ? target.party[0] : "";
     const location = `${target.stateName} ${target.raceName}`.trim();
-    const subtitle = [location, target.committees.join(", ")]
-      .filter(Boolean)
-      .join(" · ");
+    const committees = target.committees.length
+      ? `via ${target.committees.join(", ")}`
+      : "";
+    const subtitle = [location, committees].filter(Boolean).join(" · ");
     return {
       key: target.key,
       label: `${target.prefix} ${target.name}${partyLetter ? ` (${partyLetter})` : ""}`,

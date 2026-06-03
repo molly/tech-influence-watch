@@ -3,10 +3,12 @@
 import * as d3 from "d3";
 import { FeatureCollection, GeoJsonProperties, Geometry } from "geojson";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useMemo, useState } from "react";
 import * as topojson from "topojson-client";
 import { Objects, Topology } from "topojson-specification";
 
+import { sectorFromPathname, sectorHref } from "@/app/utils/sector";
 import { formatCurrency } from "@/app/utils/utils";
 
 import { getFillClassNames } from "./chloroplethConstants";
@@ -34,6 +36,7 @@ export default function ChloroplethMap({
   ariaLabel?: string;
   labelId?: string;
 }) {
+  const sector = sectorFromPathname(usePathname());
   const [activeState, setActiveState] = useState<string | null>(null);
   const activeStateValue = useMemo(() => {
     return activeState ? stateValues[activeState] : undefined;
@@ -82,7 +85,10 @@ export default function ChloroplethMap({
           }
           return (
             <Link
-              href={`/2026/states/${stateFullName.toLowerCase().replace(" ", "-")}`}
+              href={sectorHref(
+                `/2026/states/${stateFullName.toLowerCase().replace(" ", "-")}`,
+                sector,
+              )}
               key={d.id}
               onMouseEnter={() => setActiveState(stateFullName)}
               onMouseLeave={() => setActiveState(null)}

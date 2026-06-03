@@ -13,6 +13,7 @@ import { isError } from "@/app/utils/errors";
 import { getFullPartyName } from "@/app/utils/party";
 import { getRaceName } from "@/app/utils/races";
 import { range } from "@/app/utils/range";
+import { sectorHref } from "@/app/utils/sector";
 import { formatCurrency } from "@/app/utils/utils";
 
 import styles from "./page.module.css";
@@ -127,7 +128,7 @@ export default async function OppositionSpending({
             </td>
             <td className="text-cell">{candidate.common_name}</td>
             <td className="text-cell">
-              <Link href={`/2026/elections/${race}`}>
+              <Link href={sectorHref(`/2026/elections/${race}`, sector)}>
                 {`${STATES_BY_ABBR[candidate.state]} ${getRaceName(race)}`}
               </Link>
             </td>

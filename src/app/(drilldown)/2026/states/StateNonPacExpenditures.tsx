@@ -11,6 +11,7 @@ import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
 import { getRaceName } from "@/app/utils/races";
 import { range } from "@/app/utils/range";
+import { sectorHref } from "@/app/utils/sector";
 import { formatCurrency } from "@/app/utils/utils";
 
 import styles from "./page.module.css";
@@ -77,7 +78,10 @@ export default async function StateNonPacExpenditures({
                   label: stateName,
                   labelNode: (
                     <Link
-                      href={`/2026/states/${stateName.toLowerCase().replace(" ", "-")}`}
+                      href={sectorHref(
+                        `/2026/states/${stateName.toLowerCase().replace(" ", "-")}`,
+                        sector,
+                      )}
                     >
                       {stateName}
                     </Link>
@@ -91,7 +95,7 @@ export default async function StateNonPacExpenditures({
             <div className={styles.raceRows}>
               {raceOrder.map((fullRaceId) => (
                 <div key={fullRaceId} className={styles.raceRow}>
-                  <Link href={`/2026/elections/${fullRaceId}`}>
+                  <Link href={sectorHref(`/2026/elections/${fullRaceId}`, sector)}>
                     {getRaceName(fullRaceId)}
                   </Link>
                   <span className={styles.raceAmount}>

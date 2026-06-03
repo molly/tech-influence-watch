@@ -39,7 +39,9 @@ function DonorGroup({ donor }: { donor: MergedDonor }) {
               <span className={styles.giftAmt}>
                 {formatCurrency(gift.amount, true)}
               </span>
-              {gift.note && <span className={styles.giftNote}>{gift.note}</span>}
+              {gift.note && (
+                <span className={styles.giftNote}>{gift.note}</span>
+              )}
             </Fragment>
           );
         })}
@@ -72,22 +74,9 @@ export default function NetworkTopDonors({ data }: { data: NetworkData }) {
   const rows = donors.slice(GROUP_COUNT, GROUP_COUNT + FLAT_LIMIT);
   const shown = groups.length + rows.length;
 
-  const donorTotal = donors.reduce((sum, donor) => sum + donor.total, 0);
-  const topShare =
-    donorTotal > 0
-      ? groups.reduce((sum, donor) => sum + donor.total, 0) / donorTotal
-      : 0;
-
   return (
     <section>
-      <h2 className={sharedStyles.sectionTitle}>
-        Top donors
-        <span className={sharedStyles.sectionTitleAmount}>
-          {groups.length > 0
-            ? `Top ${groups.length} give ${Math.round(topShare * 100)}%`
-            : "Combined across the network"}
-        </span>
-      </h2>
+      <h2 className={sharedStyles.sectionTitle}>Top donors</h2>
       {groups.map((donor) => (
         <DonorGroup key={donor.key} donor={donor} />
       ))}

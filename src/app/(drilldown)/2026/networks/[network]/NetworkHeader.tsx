@@ -143,7 +143,7 @@ export default function NetworkHeader({ data }: { data: NetworkData }) {
   ].filter(Boolean);
 
   return (
-    <div className={styles.header}>
+    <div className={`${styles.header} ${sharedStyles.flushTop}`}>
       <div className={styles.headerGrid}>
         <div className={styles.headerLeft}>
           <nav className={styles.crumbs} aria-label="Breadcrumb">

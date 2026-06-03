@@ -9,6 +9,7 @@ import {
   humanizeExpenditureDescription,
 } from "@/app/utils/expenditures";
 import { range } from "@/app/utils/range";
+import { sectorHref } from "@/app/utils/sector";
 import {
   sentenceCase,
   titlecaseIndividualName,
@@ -153,7 +154,10 @@ function ExpenditureRow({
             {expenditure.candidate_office_state && (
               <span className={`${styles.expenditureRace} no-wrap`}>
                 <Link
-                  href={`/2026/elections/${getRaceId(expenditure, true)}`}
+                  href={sectorHref(
+                    `/2026/elections/${getRaceId(expenditure, true)}`,
+                    sector ?? "all",
+                  )}
                 >{`${STATES_BY_ABBR[expenditure.candidate_office_state]} ${getRaceName(
                   getRaceId(expenditure),
                 )}`}</Link>

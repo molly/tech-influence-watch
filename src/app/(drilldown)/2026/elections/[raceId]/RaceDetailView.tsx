@@ -10,7 +10,7 @@ import { Sector } from "@/app/types/Sector";
 import { customMetadata } from "@/app/utils/metadata";
 import { getRaceName } from "@/app/utils/races";
 import { range } from "@/app/utils/range";
-import { humanizeSector } from "@/app/utils/sector";
+import { humanizeSector, sectorHref } from "@/app/utils/sector";
 
 import Ads from "./Ads";
 import CommitteeSpending from "./CommitteeSpending";
@@ -70,8 +70,11 @@ export default async function RaceDetailView({
         <section className={sharedStyles.header}>
           <Breadcrumbs
             crumbs={[
-              { name: "Elections", href: "/2026/elections" },
-              { name: fullStateName, href: `/2026/states/${stateSlug}` },
+              { name: "Elections", href: sectorHref("/2026/elections", sector) },
+              {
+                name: fullStateName,
+                href: sectorHref(`/2026/states/${stateSlug}`, sector),
+              },
               getRaceName(raceId),
             ]}
           />

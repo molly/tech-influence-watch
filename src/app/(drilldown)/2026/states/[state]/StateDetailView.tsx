@@ -17,7 +17,7 @@ import {
   pluralize,
 } from "@/app/utils/humanize";
 import { customMetadata } from "@/app/utils/metadata";
-import { humanizeSector } from "@/app/utils/sector";
+import { humanizeSector, sectorHref } from "@/app/utils/sector";
 import { titlecase } from "@/app/utils/titlecase";
 
 import ByCommittee, { CommitteeCardContentsSkeleton } from "./ByCommittee";
@@ -117,7 +117,7 @@ export default async function StateDetailView({
           <Breadcrumbs
             crumbs={[
               "Elections",
-              { name: "By state", href: "/2026/states" },
+              { name: "By state", href: sectorHref("/2026/states", sector) },
               titlecasedState,
             ]}
           />

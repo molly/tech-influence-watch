@@ -22,7 +22,7 @@ import type { CompanyConstant } from "@/app/types/Companies";
 import { ExpendituresByPartySnapshot } from "@/app/types/Expenditures";
 import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
-import { formatCompact, pluralize } from "@/app/utils/humanize";
+import { formatCompact, humanizeNumber, pluralize } from "@/app/utils/humanize";
 import { customMetadata } from "@/app/utils/metadata";
 import { humanizeSector, matchesSector } from "@/app/utils/sector";
 
@@ -164,7 +164,9 @@ function mergeAffiliatedOrgs(
       role: org.role ?? existing?.role,
     });
   }
-  return Array.from(orgsById.values());
+  let orgs = Array.from(orgsById.values());
+  orgs.sort((a, b) => a.name.localeCompare(b.name));
+  return orgs;
 }
 
 export function networksMetadata(sector: Sector): Metadata {
@@ -347,8 +349,8 @@ export default async function NetworksView({
                                 ? (network.memberNotes?.[member.id] ?? null)
                                 : null);
                             const typeLabel = [
-                              isLead ? "Lead PAC" : null,
                               pacTypeLabel(member),
+                              isLead ? "Lead PAC" : null,
                               isLead ? null : partisan,
                             ]
                               .filter(Boolean)
@@ -397,11 +399,6 @@ export default async function NetworksView({
                                   .filter(Boolean)
                                   .join(" · ")}
                               </span>
-                              <span
-                                className={`${styles.miAmt} ${styles.miAmtUndisclosed}`}
-                              >
-                                Undisclosed
-                              </span>
                             </div>
                           ))}
                         </>
@@ -415,17 +412,17 @@ export default async function NetworksView({
                         <MoneyCard
                           amount={formatCompact(raised)}
                           topText="Combined raised"
-                          bottomText={`Across ${pluralize(members.length, "member PAC", { includeValue: true })}`}
+                          bottomText={`across ${members.length > 10 ? members.length : humanizeNumber(members.length)} ${pluralize(members.length, "member PAC")}`}
                         />
                         <MoneyCard
                           amount={formatCompact(spent)}
                           topText="Total spent"
-                          bottomText="In independent expenditures"
+                          bottomText="in independent expenditures"
                         />
                         <MoneyCard
                           amount={formatCompact(remaining)}
                           topText="Remaining"
-                          bottomText="Available this cycle"
+                          bottomText="available this cycle"
                         />
                       </div>
 

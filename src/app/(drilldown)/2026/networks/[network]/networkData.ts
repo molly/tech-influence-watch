@@ -24,7 +24,10 @@ import type {
 import { getDonorDetails } from "@/app/utils/donorDetails";
 import { isError } from "@/app/utils/errors";
 import { getRaceName } from "@/app/utils/races";
-import { titlecaseCompany, titlecaseIndividualName } from "@/app/utils/titlecase";
+import {
+  titlecaseCompany,
+  titlecaseIndividualName,
+} from "@/app/utils/titlecase";
 
 export type NetworkRole = "parent" | "dem" | "rep";
 
@@ -102,7 +105,6 @@ export interface NetworkData {
   candidates: CandidateTarget[];
   raceCount: number;
   expenditureCount: number;
-  opposeDemShare: number | null;
 }
 
 const PARTY_KEYS: (keyof ExpendituresByPartySnapshot)[] = [
@@ -380,8 +382,7 @@ export async function getNetworkData(
         ? href.startsWith("/2026/individuals/")
         : group.contributions.every(
             (c) =>
-              !!c.contributor_last_name &&
-              c.contributor_name === group.company,
+              !!c.contributor_last_name && c.contributor_name === group.company,
           );
 
       let name = titlecaseCompany(group.company || "");
@@ -583,9 +584,6 @@ export async function getNetworkData(
     candidates.map((target) => `${target.state}-${target.raceId}`),
   ).size;
 
-  const opposeDemShare =
-    byParty && spent > 0 ? byParty.dem_oppose / spent : null;
-
   const memberNotesById: Record<string, string | undefined> = {};
   for (const member of members) {
     memberNotesById[member.id] = network.memberNotes?.[member.id];
@@ -606,6 +604,5 @@ export async function getNetworkData(
     candidates,
     raceCount,
     expenditureCount,
-    opposeDemShare,
   };
 }

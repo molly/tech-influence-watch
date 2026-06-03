@@ -38,8 +38,7 @@ export async function generateMetadata({
 }
 
 function StatBand({ data }: { data: NetworkData }) {
-  const { members, raised, spent, cashOnHand, expenditureCount, opposeDemShare } =
-    data;
+  const { members, raised, spent, cashOnHand, expenditureCount } = data;
 
   const raisedBreakdown = members
     .filter((member) => member.total_contributed > 0)
@@ -51,10 +50,6 @@ function StatBand({ data }: { data: NetworkData }) {
         {member.name}
       </span>
     ));
-
-  const leadMember =
-    members.find((member) => member.id === data.network.leadCommitteeId) ??
-    members[0];
 
   return (
     <div className={styles.statBand}>
@@ -71,27 +66,18 @@ function StatBand({ data }: { data: NetworkData }) {
           <div className={styles.statValue}>{formatCompact(spent)}</div>
           {expenditureCount > 0 && (
             <div className={styles.statSub}>
-              Across{" "}
+              across{" "}
               <strong>
                 {pluralize(expenditureCount, "independent expenditure", {
                   includeValue: true,
                 })}
               </strong>
-              .
-              {opposeDemShare != null &&
-                ` ${Math.round(opposeDemShare * 100)}% opposing Democratic candidates.`}
             </div>
           )}
         </div>
         <div className={styles.statCell}>
           <div className={styles.statKey}>Cash remaining</div>
           <div className={styles.statValue}>{formatCompact(cashOnHand)}</div>
-          {leadMember && (
-            <div className={styles.statSub}>
-              Primarily held by <strong>{leadMember.name}</strong>, available for
-              the 2026 cycle.
-            </div>
-          )}
         </div>
       </div>
     </div>
@@ -117,7 +103,9 @@ function RelatedCompanies({ data }: { data: NetworkData }) {
             <div className={styles.ccName}>
               <Link href={company.href}>{company.name}</Link>
             </div>
-            {company.role && <div className={styles.ccRole}>{company.role}</div>}
+            {company.role && (
+              <div className={styles.ccRole}>{company.role}</div>
+            )}
             <div className={styles.ccGiven}>
               Given <strong>{formatCompact(company.total)}</strong> to the
               network

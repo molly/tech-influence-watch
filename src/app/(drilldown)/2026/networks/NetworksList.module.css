@@ -46,7 +46,7 @@
 }
 
 .netDesc {
-  font-family: var(--font-sans);
+  font-family: var(--font-serif);
   font-size: 0.95rem;
   line-height: 1.6;
   color: var(--main-text);
