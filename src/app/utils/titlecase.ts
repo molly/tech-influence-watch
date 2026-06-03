@@ -22,7 +22,7 @@ export function titlecaseCompany(str: string): string {
     return "OpenAI";
   }
   titlecased = titlecased.replace(
-    /\b([A-Z]|AH|TJ|GP|SV|LLC|DRW|DBA|CMT|RRE|USA|HBAR|BTC|CFG|PAC|AI)\b/gi,
+    /\b([A-Z]|AH|TJ|GP|SV|LL(C|P)|DRW|DBA|CMT|RRE|USA|HBAR|BTC|CFG|PAC|AI|HRTG|GV|MVLA|PBC)\b/gi,
     function (txt) {
       return txt.toUpperCase();
     },
@@ -54,7 +54,7 @@ export function titlecaseCommittee(
   }
   let titlecased = titlecase(str);
   titlecased = titlecased.replace(
-    /\b(SMP|LCV|AF(C|P)|UDP|PAC|RSLC|NEA|I{1,3}|DNC|D(C|S)CC|NR(S|C)C|FF|HMP|SFA|SEIU|COPE|AB|ACLU|BA|NY22|DBA|CHC|JD|GSD|JFC|NC|CA|GLCF|SAG|RJC|MA[HG]A|PA|CFG|SLF|CVA|DGA|RA?GA|EDF)\b/gi,
+    /\b(SMP|LCV|AF(C|P)|UDP|PAC|RSLC|NEA|I{1,3}|DNC|D(C|S)CC|NR(S|C)C|FF|HMP|SFA|SEIU|COPE|AB|ACLU|BA|NY22|DBA|CHC|JD|GSD|JFC|NC|CA|GLCF|SAG|RJC|MA[HG]A|PA|CFG|SLF|CVA|DGA|RA?GA|EDF|PBC|LLC)\b/gi,
     function (txt) {
       return txt.toUpperCase();
     },

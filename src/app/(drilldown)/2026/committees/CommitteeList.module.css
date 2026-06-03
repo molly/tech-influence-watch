@@ -19,10 +19,16 @@
 }
 
 .columnHeaders {
+  --amount-cols: 4;
   display: grid;
-  grid-template-columns: 1fr repeat(4, 7rem);
+  grid-template-columns: 1fr repeat(var(--amount-cols), 7rem);
   gap: 0.75rem;
   margin-bottom: 0.25rem;
+}
+
+.columnHeadersFundsOnly {
+  composes: columnHeaders;
+  --amount-cols: 1;
 }
 
 .columnHeaders > * {
@@ -90,11 +96,17 @@
 }
 
 .committeeRow {
+  --amount-cols: 4;
   display: grid;
-  grid-template-columns: 1fr repeat(4, 7rem);
+  grid-template-columns: 1fr repeat(var(--amount-cols), 7rem);
   align-items: center;
   gap: 0.75rem;
   padding: 0.4rem 0;
+}
+
+.committeeRowFundsOnly {
+  composes: committeeRow;
+  --amount-cols: 1;
 }
 
 .committeeRowIndented {
@@ -163,12 +175,12 @@
 
 @media (max-width: 900px) {
   .committeeRow {
-    grid-template-columns: 1fr repeat(4, 6rem);
+    grid-template-columns: 1fr repeat(var(--amount-cols), 6rem);
     gap: 0.2rem 0.5rem;
   }
 
   .columnHeaders {
-    grid-template-columns: 1fr repeat(4, 6rem);
+    grid-template-columns: 1fr repeat(var(--amount-cols), 6rem);
   }
 }
 

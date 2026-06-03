@@ -168,6 +168,46 @@
   }
 }
 
+.committeeTransfersList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.committeeTransfersRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.committeeTransfersLabelRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-weight: 600;
+}
+
+.committeeTransfersLabel {
+  color: var(--main-text);
+  font-size: 0.8rem;
+}
+
+.committeeTransfersValue {
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.committeeTransfersSubtitle {
+  font-size: 0.8rem;
+  color: var(--secondary-text);
+  font-weight: 400;
+}
+
 .committeeDisbursementsListItem {
   display: flex;
   justify-content: space-between;

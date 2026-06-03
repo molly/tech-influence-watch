@@ -92,20 +92,26 @@ function CommitteeRow({
   indented = false,
   prominentTotal = false,
   transferredOut = 0,
+  fundsOnly = false,
 }: {
   committee: CommitteeConstantWithContributions;
   sector?: Sector;
   indented?: boolean;
   prominentTotal?: boolean;
   transferredOut?: number;
+  fundsOnly?: boolean;
 }) {
   const spent = committee.independent_expenditures || 0;
   const fundsThisCycle = committee.total;
   const remaining = Math.max(0, committee.total - transferredOut - spent);
+  const rowClass = [
+    fundsOnly ? styles.committeeRowFundsOnly : styles.committeeRow,
+    indented ? styles.committeeRowIndented : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
   return (
-    <div
-      className={`${styles.committeeRow}${indented ? ` ${styles.committeeRowIndented}` : ""}`}
-    >
+    <div className={rowClass}>
       <div className={styles.committeeName} title={committee.name}>
         <span className={styles.committeeNameText}>
           <Link href={`/2026/committees/${committee.id}`}>
@@ -120,29 +126,35 @@ function CommitteeRow({
         <span className={styles.amountFundsLabel}>Funds this cycle </span>$
         {humanizeApproximateRounded(fundsThisCycle, 1)}
       </div>
-      <div
-        className={
-          transferredOut > 0
-            ? styles.amountTransferred
-            : styles.transferredPlaceholder
-        }
-      >
-        <span className={styles.amountTransferredLabel}>Transferred out </span>
-        {transferredOut > 0
-          ? `$${humanizeApproximateRounded(transferredOut, 1)}`
-          : "—"}
-      </div>
-      <div
-        className={spent > 0 ? styles.amountSpent : styles.amountPlaceholder}
-      >
-        <span className={styles.amountSpentLabel}>Spent </span>
-        {spent > 0 ? `$${humanizeApproximateRounded(spent, 1)}` : "—"}
-        {spent > fundsThisCycle && <sup title={FOOTNOTE}>†</sup>}
-      </div>
-      <div className={styles.amountRaised}>
-        <span className={styles.amountRaisedLabel}>Remaining </span>$
-        {humanizeApproximateRounded(remaining, 1)}
-      </div>
+      {!fundsOnly && (
+        <>
+          <div
+            className={
+              transferredOut > 0
+                ? styles.amountTransferred
+                : styles.transferredPlaceholder
+            }
+          >
+            <span className={styles.amountTransferredLabel}>
+              Transferred out{" "}
+            </span>
+            {transferredOut > 0
+              ? `$${humanizeApproximateRounded(transferredOut, 1)}`
+              : "—"}
+          </div>
+          <div
+            className={spent > 0 ? styles.amountSpent : styles.amountPlaceholder}
+          >
+            <span className={styles.amountSpentLabel}>Spent </span>
+            {spent > 0 ? `$${humanizeApproximateRounded(spent, 1)}` : "—"}
+            {spent > fundsThisCycle && <sup title={FOOTNOTE}>†</sup>}
+          </div>
+          <div className={styles.amountRaised}>
+            <span className={styles.amountRaisedLabel}>Remaining </span>$
+            {humanizeApproximateRounded(remaining, 1)}
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -152,11 +164,13 @@ function CommitteeGroup({
   committees,
   sector = "all",
   transferEdges = [],
+  fundsOnly = false,
 }: {
   title: string;
   committees: CommitteeConstantWithContributions[];
   sector?: Sector;
   transferEdges?: TransferEdge[];
+  fundsOnly?: boolean;
 }) {
   if (committees.length === 0) {
     return null;
@@ -179,6 +193,7 @@ function CommitteeGroup({
     0,
   );
   const totalRemaining = Math.max(0, totalPooled - totalSpent);
+  const totalFunds = committees.reduce((sum, c) => sum + c.total, 0);
 
   // Split into network subgroups and standalone committees
   const networkMap = new Map<string, CommitteeConstantWithContributions[]>();
@@ -226,27 +241,49 @@ function CommitteeGroup({
     <div className={styles.committeeGroup}>
       <h3 className={listStyles.groupHeadingSpaceBetween}>
         <span className={listStyles.groupHeadingSubGroup}>{title}</span>
-        <span className={sharedStyles.sectionTitleAmount}>
-          <span className={sharedStyles.sectionTitleAmountValue}>
-            {committees.length}
-          </span>{" "}
-          {committees.length === 1 ? "committee has" : "committees have"} spent{" "}
-          <span className={sharedStyles.sectionTitleAmountValue}>
-            {humanizeRoundedCurrency(totalSpent, true)}
-          </span>{" "}
-          and {committees.length === 1 ? "has" : "have"}{" "}
-          <span className={sharedStyles.sectionTitleAmountValue}>
-            {humanizeRoundedCurrency(totalRemaining, true)}
-          </span>{" "}
-          remaining
-        </span>
+        {fundsOnly ? (
+          <span className={sharedStyles.sectionTitleAmount}>
+            <span className={sharedStyles.sectionTitleAmountValue}>
+              {committees.length}
+            </span>{" "}
+            {committees.length === 1 ? "committee" : "committees"} with{" "}
+            <span className={sharedStyles.sectionTitleAmountValue}>
+              {humanizeRoundedCurrency(totalFunds, true)}
+            </span>{" "}
+            this cycle
+          </span>
+        ) : (
+          <span className={sharedStyles.sectionTitleAmount}>
+            <span className={sharedStyles.sectionTitleAmountValue}>
+              {committees.length}
+            </span>{" "}
+            {committees.length === 1 ? "committee has" : "committees have"}{" "}
+            spent{" "}
+            <span className={sharedStyles.sectionTitleAmountValue}>
+              {humanizeRoundedCurrency(totalSpent, true)}
+            </span>{" "}
+            and {committees.length === 1 ? "has" : "have"}{" "}
+            <span className={sharedStyles.sectionTitleAmountValue}>
+              {humanizeRoundedCurrency(totalRemaining, true)}
+            </span>{" "}
+            remaining
+          </span>
+        )}
       </h3>
-      <div className={styles.columnHeaders}>
+      <div
+        className={
+          fundsOnly ? styles.columnHeadersFundsOnly : styles.columnHeaders
+        }
+      >
         <div className={styles.columnHeaderLabel}>Committee</div>
         <div className={styles.columnHeaderLabelRight}>Funds this cycle</div>
-        <div className={styles.columnHeaderLabelRight}>Transferred out</div>
-        <div className={styles.columnHeaderLabelRight}>Spent</div>
-        <div className={styles.columnHeaderLabelRight}>Remaining</div>
+        {!fundsOnly && (
+          <>
+            <div className={styles.columnHeaderLabelRight}>Transferred out</div>
+            <div className={styles.columnHeaderLabelRight}>Spent</div>
+            <div className={styles.columnHeaderLabelRight}>Remaining</div>
+          </>
+        )}
       </div>
       {slots.map((slot) => {
         if (slot.kind === "network") {
@@ -282,6 +319,7 @@ function CommitteeGroup({
                   sector={sector}
                   indented
                   transferredOut={sentOutById.get(committee.id) ?? 0}
+                  fundsOnly={fundsOnly}
                 />
               ))}
             </div>
@@ -294,6 +332,7 @@ function CommitteeGroup({
             sector={sector}
             prominentTotal
             transferredOut={sentOutById.get(slot.committee.id) ?? 0}
+            fundsOnly={fundsOnly}
           />
         );
       })}
@@ -371,6 +410,7 @@ export default async function CommitteesView({ sector }: { sector: Sector }) {
                 title={PAC_GROUP_LABELS[group]}
                 committees={grouped[group]}
                 sector={sector}
+                fundsOnly={group !== "super" && group !== "hybrid"}
                 transferEdges={
                   transferData !== null && !isError(transferData)
                     ? (transferData as TransferEdge[])

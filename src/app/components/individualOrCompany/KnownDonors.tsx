@@ -2,8 +2,7 @@ import Link from "next/link";
 
 import sharedStyles from "@/app/shared.module.css";
 import { KnownDonor } from "@/app/types/Companies";
-import { humanizeRoundedCurrency } from "@/app/utils/humanize";
-import { pluralize } from "@/app/utils/humanize";
+import { humanizeRoundedCurrency, pluralize } from "@/app/utils/humanize";
 import { formatDateFromString } from "@/app/utils/utils";
 
 import styles from "./KnownDonors.module.css";
@@ -39,12 +38,14 @@ export default function KnownDonors({
       <h2 className={sharedStyles.sectionTitle}>
         <span>Reported donors</span>
         <span className={sharedStyles.sectionTitleAmount}>
-          {pluralize(sorted.length, "reported gift", { includeValue: true })}
+          {pluralize(sorted.length, "reported contribution", {
+            includeValue: true,
+          })}
         </span>
       </h2>
       <p className={styles.note}>
-        {orgName} does not disclose its donors in FEC filings. These
-        contributions have been reported publicly.
+        {orgName} does not disclose its donors. These contributions have been
+        reported publicly.
       </p>
       <ul className={styles.list}>
         {sorted.map((donor, index) => (

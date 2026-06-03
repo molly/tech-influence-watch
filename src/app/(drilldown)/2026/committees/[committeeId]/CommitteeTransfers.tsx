@@ -6,13 +6,12 @@ import {
   fetchConstant,
   fetchNonCandidateCommittees,
 } from "@/app/actions/fetch";
-import {
-  HorizontalBarItem,
-  HorizontalBars,
-} from "@/app/components/home/HorizontalBars";
 import CommitteeDetails from "@/app/components/individualOrCompany/CommitteeDetails";
 import sharedStyles from "@/app/shared.module.css";
-import { CommitteeConstant, CommitteeDetails as CommitteeDetailsType } from "@/app/types/Committee";
+import {
+  CommitteeConstant,
+  CommitteeDetails as CommitteeDetailsType,
+} from "@/app/types/Committee";
 import { RecipientDetails } from "@/app/types/Contributions";
 import { isError } from "@/app/utils/errors";
 import { formatCompact } from "@/app/utils/humanize";
@@ -26,13 +25,17 @@ export default async function CommitteeTransfers({
 }: {
   committeeId: string;
 }) {
-  const [committeeData, committeeConstantData, recipientData, nonCandidateCommittees] =
-    await Promise.all([
-      fetchCommitteeDetails(committeeId),
-      fetchConstant<Record<string, CommitteeConstant>>("committees"),
-      fetchAllRecipients(),
-      fetchNonCandidateCommittees(),
-    ]);
+  const [
+    committeeData,
+    committeeConstantData,
+    recipientData,
+    nonCandidateCommittees,
+  ] = await Promise.all([
+    fetchCommitteeDetails(committeeId),
+    fetchConstant<Record<string, CommitteeConstant>>("committees"),
+    fetchAllRecipients(),
+    fetchNonCandidateCommittees(),
+  ]);
 
   if (isError(committeeData)) {
     return null;
@@ -63,7 +66,7 @@ export default async function CommitteeTransfers({
     0,
   );
 
-  const items: HorizontalBarItem[] = sortedRecipientIds.map((recipientId) => {
+  const items = sortedRecipientIds.map((recipientId) => {
     const constant = committeeConstants[recipientId];
     const name = constant
       ? constant.name
@@ -71,19 +74,22 @@ export default async function CommitteeTransfers({
     const recipient = recipients[recipientId];
     return {
       key: recipientId,
-      label: name,
       labelNode: constant ? (
-        <Link href={`/2026/committees/${recipientId}`} className="secondaryLink">
+        <Link
+          href={`/2026/committees/${recipientId}`}
+          className="secondaryLink"
+        >
           {name}
         </Link>
-      ) : undefined,
+      ) : (
+        name
+      ),
       subtitle: recipient ? (
         <CommitteeDetails
           recipient={recipient}
           nonCandidateCommittees={nonCandidateCommittees}
         />
       ) : undefined,
-      value: transfers[recipientId].total,
       displayValue: formatCurrency(transfers[recipientId].total, true),
     };
   });
@@ -93,11 +99,10 @@ export default async function CommitteeTransfers({
   return (
     <>
       <h2 className={`${sharedStyles.sectionTitle} ${styles.sectionTitleRow}`}>
-        By committee
+        Transfers to other committees
         <span>
           <span className={styles.sectionTitleCount}>
-            {recipientCount}{" "}
-            {recipientCount === 1 ? "committee" : "committees"}
+            {recipientCount} {recipientCount === 1 ? "committee" : "committees"}
           </span>
           <span className={sharedStyles.sectionTitleAmount}>
             <span className={sharedStyles.sectionTitleAmountValue}>
@@ -107,7 +112,25 @@ export default async function CommitteeTransfers({
           </span>
         </span>
       </h2>
-      <HorizontalBars items={items} max={totalTransferred} showPct />
+      <ul className={styles.committeeTransfersList}>
+        {items.map((item) => (
+          <li key={item.key} className={styles.committeeTransfersRow}>
+            <div className={styles.committeeTransfersLabelRow}>
+              <span className={styles.committeeTransfersLabel}>
+                {item.labelNode}
+              </span>
+              <span className={styles.committeeTransfersValue}>
+                {item.displayValue}
+              </span>
+            </div>
+            {item.subtitle && (
+              <div className={styles.committeeTransfersSubtitle}>
+                {item.subtitle}
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
     </>
   );
 }
