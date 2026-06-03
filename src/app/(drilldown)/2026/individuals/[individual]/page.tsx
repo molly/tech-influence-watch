@@ -36,6 +36,17 @@ import IndividualHeader from "./IndividualHeader";
 import styles from "./page.module.css";
 import RelatedIndividuals from "./RelatedIndividuals";
 
+export const dynamicParams = false;
+
+export async function generateStaticParams() {
+  const data =
+    await fetchConstant<Record<string, IndividualConstant>>("individuals");
+  if (isError(data) || !data) {
+    return [];
+  }
+  return Object.keys(data).map((individual) => ({ individual }));
+}
+
 export async function generateMetadata({
   params,
 }: {

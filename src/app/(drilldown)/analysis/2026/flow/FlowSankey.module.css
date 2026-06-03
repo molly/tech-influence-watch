@@ -99,6 +99,10 @@
   fill: var(--main-text);
 }
 
+.explanation {
+  font-family: var(--font-serif);
+}
+
 @media (max-width: 600px) {
   .legend {
     gap: 0.5rem;

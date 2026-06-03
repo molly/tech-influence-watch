@@ -1,10 +1,18 @@
 "use client";
 
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
 import { useEffect, useMemo, useState } from "react";
 
 import { db } from "@/app/lib/db";
-import { RecipientDetails } from "@/app/types/Contributions";
+import {
+  AllCommitteesSummary,
+  CommitteeDetails,
+} from "@/app/types/Committee";
+import {
+  RecentContribution,
+  RecipientDetails,
+} from "@/app/types/Contributions";
+import { isSuperOrHybridPac } from "@/app/utils/committees";
 
 import styles from "../../admin.module.css";
 
@@ -82,6 +90,38 @@ function entryToAffiliation(entry: CommitteeEntry): Affiliation | null {
   }
 }
 
+// A committee is considered complete (and so not flagged for attention) if it
+// has FEC-linked candidate or sponsor candidate IDs, or it has any of a
+// description, a party, candidate IDs, or sponsor candidate IDs set in the
+// constants.
+function isCommitteeComplete(
+  committeeId: string,
+  fecLinkedIds: Set<string>,
+  entryMap: Map<string, CommitteeEntry>,
+): boolean {
+  if (fecLinkedIds.has(committeeId)) {
+    return true;
+  }
+  const entry = entryMap.get(committeeId);
+  if (!entry) {
+    return false;
+  }
+  if (entry.description.trim()) {
+    return true;
+  }
+  if (!entry.hasAffiliation) {
+    return false;
+  }
+  switch (entry.affiliationType) {
+    case "party":
+      return true;
+    case "candidate_ids":
+      return !!entry.candidateIds.trim();
+    case "sponsor_candidate_ids":
+      return !!entry.sponsorCandidateIds.trim();
+  }
+}
+
 export default function ConstantsEditor() {
   const [loadingState, setLoadingState] = useState("loading");
   const [entries, setEntries] = useState<CommitteeEntry[]>([]);
@@ -94,14 +134,25 @@ export default function ConstantsEditor() {
     (async () => {
       try {
         const shardIds = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-        const [committeesSnap, affiliationsSnap, ...recipientShards] =
-          await Promise.all([
-            getDoc(doc(db, "constants", "allCommittees")),
-            getDoc(doc(db, "constants", "committeeAffiliations")),
-            ...shardIds.map((d) =>
-              getDoc(doc(db, "allRecipients", `recipients_${d}`)),
-            ),
-          ]);
+        const [
+          committeesSnap,
+          affiliationsSnap,
+          allPacsSnap,
+          superPacsSnap,
+          recentSnap,
+          committeeDocs,
+          ...recipientShards
+        ] = await Promise.all([
+          getDoc(doc(db, "constants", "allCommittees")),
+          getDoc(doc(db, "constants", "committeeAffiliations")),
+          getDoc(doc(db, "allCommittees", "allPacs")),
+          getDoc(doc(db, "allCommittees", "superPacs")),
+          getDoc(doc(db, "contributions", "recent")),
+          getDocs(collection(db, "committees")),
+          ...shardIds.map((d) =>
+            getDoc(doc(db, "allRecipients", `recipients_${d}`)),
+          ),
+        ]);
 
         const descriptions: Record<string, string> = committeesSnap.exists()
           ? (committeesSnap.data() as Record<string, string>)
@@ -111,57 +162,124 @@ export default function ConstantsEditor() {
             ? (affiliationsSnap.data() as Record<string, Affiliation>)
             : {};
 
-        const allIds = new Set([
-          ...Object.keys(descriptions),
-          ...Object.keys(affiliations),
-        ]);
+        // Collect every committee that is named anywhere on the site, along
+        // with a display name, plus the set of committees that have
+        // FEC-linked candidate or sponsor candidate IDs (which exempts them
+        // from needing metadata).
+        const names: Record<string, string> = {};
+        const fecLinkedIds = new Set<string>();
 
+        const addName = (
+          id: string | null | undefined,
+          name?: string | null,
+        ) => {
+          if (!id) {
+            return;
+          }
+          const cleaned = (name ?? "").trim();
+          if (!names[id] || names[id] === id) {
+            names[id] = cleaned || id;
+          }
+        };
+        const addFecIds = (
+          id: string | null | undefined,
+          candidateIds?: string[] | null,
+          sponsorCandidateIds?: string[] | null,
+        ) => {
+          if (!id) {
+            return;
+          }
+          if (candidateIds?.length || sponsorCandidateIds?.length) {
+            fecLinkedIds.add(id);
+          }
+        };
+
+        // Recipients in company/individual/committee drilldown pages
         const recipients: Record<string, RecipientDetails> = {};
         for (const shard of recipientShards) {
           if (shard.exists()) {
-            Object.assign(recipients, shard.data() as Record<string, RecipientDetails>);
+            Object.assign(
+              recipients,
+              shard.data() as Record<string, RecipientDetails>,
+            );
           }
         }
-        const names: Record<string, string> = {};
         for (const [id, details] of Object.entries(recipients)) {
-          names[id] = details.committee_name ?? id;
+          addName(id, details.committee_name);
+          addFecIds(id, details.candidate_ids, details.sponsor_candidate_ids);
         }
-        const entryList = [...allIds]
+
+        // Rankings lists (all PACs and super PACs by receipts)
+        for (const snap of [allPacsSnap, superPacsSnap]) {
+          if (!snap.exists()) {
+            continue;
+          }
+          const summaries = (snap.data().by_receipts ??
+            []) as AllCommitteesSummary[];
+          for (const summary of summaries) {
+            addName(summary.committee_id, summary.committee_name);
+          }
+        }
+
+        // Recent contributions list (across all sectors)
+        if (recentSnap.exists()) {
+          const recentData = recentSnap.data() as Record<
+            string,
+            { all?: RecentContribution[] }
+          >;
+          for (const sectorData of Object.values(recentData)) {
+            for (const contribution of sectorData?.all ?? []) {
+              addName(contribution.committee_id, contribution.committee_name);
+              addFecIds(
+                contribution.committee_id,
+                contribution.candidate_ids,
+                contribution.sponsor_candidate_ids,
+              );
+            }
+          }
+        }
+
+        // Transfer recipients in committee pages for non-super/hybrid PACs
+        for (const committeeDoc of committeeDocs.docs) {
+          const committee = committeeDoc.data() as CommitteeDetails;
+          addFecIds(
+            committeeDoc.id,
+            committee.candidate_ids,
+            committee.sponsor_candidate_ids,
+          );
+          if (isSuperOrHybridPac(committee.committee_type)) {
+            continue;
+          }
+          const transfers = committee.disbursements_by_committee ?? {};
+          for (const [recipientId, group] of Object.entries(transfers)) {
+            addName(recipientId, group.recipient_name);
+          }
+        }
+
+        // Build editable entries for every committee with existing metadata
+        // plus every committee named anywhere, so each can be filled in.
+        const entryIds = new Set([
+          ...Object.keys(descriptions),
+          ...Object.keys(affiliations),
+          ...Object.keys(names),
+        ]);
+        const entryList = [...entryIds]
           .sort((a, b) => a.localeCompare(b))
           .map((id) =>
             buildEntry(id, descriptions[id] ?? "", affiliations[id] ?? null),
           );
-        for (const id of Object.keys(recipients)) {
-          if (!allIds.has(id)) {
-            entryList.push(buildEntry(id, "", null));
-          }
-        }
-        entryList.sort((a, b) => a.committeeId.localeCompare(b.committeeId));
         setEntries(entryList);
 
-        const initialEntryMap = new Map(entryList.map((e) => [e.committeeId, e]));
+        const initialEntryMap = new Map(
+          entryList.map((e) => [e.committeeId, e]),
+        );
         setIncompleteCommittees(
-          Object.entries(names).filter(([id]) => {
-            const recipient = recipients[id];
-            if (recipient?.candidate_ids?.length) {
-              return false;
-            }
-            if (recipient?.sponsor_candidate_ids?.length) {
-              return false;
-            }
-            const entry = initialEntryMap.get(id);
-            if (!entry) {
-              return true;
-            }
-            const hasDescription = !!entry.description.trim();
-            const hasCandidateIds =
-              entry.affiliationType === "candidate_ids" &&
-              !!entry.candidateIds.trim();
-            const hasSponsorCandidateIds =
-              entry.affiliationType === "sponsor_candidate_ids" &&
-              !!entry.sponsorCandidateIds.trim();
-            return !hasDescription && !hasCandidateIds && !hasSponsorCandidateIds;
-          }),
+          Object.entries(names)
+            .filter(
+              ([id]) =>
+                !isCommitteeComplete(id, fecLinkedIds, initialEntryMap),
+            )
+            .sort((a, b) => a[1].localeCompare(b[1])),
         );
 
         setLoadingState("loaded");
@@ -247,8 +365,9 @@ export default function ConstantsEditor() {
             Needs attention ({incompleteCommittees.length})
           </h2>
           <p className={styles.marginBottom05}>
-            These committees have received contributions but are missing a
-            description, candidate IDs, and sponsor candidate IDs:
+            These committees are named somewhere on the site but have no
+            FEC-linked candidate IDs and no description, party, candidate IDs,
+            or sponsor candidate IDs set in the constants:
           </p>
           <table className={styles.constantsTable}>
             <thead>

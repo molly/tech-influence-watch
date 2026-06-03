@@ -3,6 +3,9 @@ import prettierConfig from "eslint-config-prettier";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
 
 const config = [
+  {
+    ignores: ["designs/**"],
+  },
   ...nextConfig,
   prettierConfig,
   {

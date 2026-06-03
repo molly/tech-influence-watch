@@ -15,6 +15,12 @@ import { titlecase } from "@/app/utils/titlecase";
 
 import PacList from "./PacList";
 
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return [{ type: "super" }, { type: "all" }];
+}
+
 export async function generateMetadata({
   params,
 }: {

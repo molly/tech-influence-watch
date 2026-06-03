@@ -273,6 +273,33 @@
   cursor: pointer;
 }
 
+.buttonUnredactLarge {
+  padding: 8px 16px;
+  background-color: var(--admin-info);
+  color: var(--color-white);
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.buttonUnredactLarge:disabled {
+  cursor: not-allowed;
+}
+
+.buttonUnredactSmall {
+  padding: 6px 12px;
+  font-size: 0.85em;
+  background-color: var(--admin-info);
+  color: var(--color-white);
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.buttonUnredactSmall:disabled {
+  cursor: not-allowed;
+}
+
 /* Save state messages */
 .saveSuccessMsg {
   margin-top: 5px;

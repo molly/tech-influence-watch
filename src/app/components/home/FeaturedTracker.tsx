@@ -81,7 +81,6 @@ export default async function FeaturedTracker() {
           investigations were closed, and industries were invited to write their
           own regulations.
         </p>
-        <div className={styles.divider} />
         <div className={styles.total}>
           {humanizeRoundedCurrency(grandTotal, true, 1)}+
         </div>

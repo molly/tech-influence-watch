@@ -18,6 +18,7 @@ import styles from "./page.module.css";
 const CHART_WIDTH = 300;
 const GRIDLINE_WIDTH = 0.5;
 const HATCH_SIZE = 2;
+const AI_HATCH_SIZE = 3;
 const MARGIN_RIGHT = 20;
 const LEGEND_Y = 5;
 const LEGEND_HEIGHT = 30;
@@ -417,12 +418,12 @@ export default function Spending({
           </pattern>
           <pattern
             id="dots"
-            width={5}
-            height={5}
+            width={AI_HATCH_SIZE}
+            height={AI_HATCH_SIZE}
             patternUnits="userSpaceOnUse"
           >
             <path
-              d="M0,0 L5,5 M5,0 L0,5"
+              d={`M0,0 L${AI_HATCH_SIZE},${AI_HATCH_SIZE} M${AI_HATCH_SIZE},0 L0,${AI_HATCH_SIZE}`}
               stroke="#0f172a"
               strokeWidth={0.75}
             />

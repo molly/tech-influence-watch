@@ -9,7 +9,7 @@ export interface HorizontalBarItem {
   key: string;
   label: string;
   labelNode?: React.ReactNode;
-  subtitle?: string;
+  subtitle?: React.ReactNode;
   value: number;
   displayValue?: string;
   ariaLabel?: string;

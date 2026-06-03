@@ -97,6 +97,17 @@ type ContributionWithGroup = Contribution & {
   _contribIndex: number;
 };
 
+// Subset of a raw (pre-redaction) transaction stored in the rawContributions
+// collection, used to restore the original contributor name when unredacting.
+type RawTransaction = {
+  transaction_id?: string;
+  contributor_first_name?: string;
+  contributor_middle_name?: string;
+  contributor_last_name?: string;
+  contributor_suffix?: string;
+  contributor_name?: string;
+};
+
 function getUniqueKey(contribution: ContributionWithGroup): string {
   return `${getContributionId(contribution)}_${contribution._groupIndex}_${contribution._contribIndex}`;
 }
@@ -127,6 +138,13 @@ export default function ContributionReviewPage() {
   const [bulkOmitState, setBulkOmitState] = useState<
     "idle" | "pending" | "success" | "error"
   >("idle");
+  // Lazily-loaded map of transaction_id -> raw transaction for the selected
+  // committee, used to recover original names when unredacting. Cleared when
+  // the committee changes.
+  const [rawTransactions, setRawTransactions] = useState<Record<
+    string,
+    RawTransaction
+  > | null>(null);
 
   // Count unreviewed contributions for a committee's data
   function countUnreviewed(data: Contributions): {
@@ -173,8 +191,9 @@ export default function ContributionReviewPage() {
 
   // Load contributions when committee is selected
   useEffect(() => {
+    setRawTransactions(null);  
     if (!selectedCommitteeId) {
-      setContributions(null); // eslint-disable-line react-hooks/set-state-in-effect
+      setContributions(null);  
       return;
     }
 
@@ -264,6 +283,126 @@ export default function ContributionReviewPage() {
       }, 2000);
     } catch (error) {
       console.error("Error updating contribution:", error);
+      setSaveStates({ ...saveStates, [uniqueKey]: "error" });
+
+      setTimeout(() => {
+        setSaveStates((prev) => {
+          const updated = { ...prev };
+          delete updated[uniqueKey];
+          return updated;
+        });
+      }, 3000);
+    }
+  };
+
+  // Restore a redacted single contribution's original name from the raw FEC
+  // data and mark it verified. Marking it verified is what makes the change
+  // stick: the pipeline preserves verified contributions verbatim and skips
+  // re-redacting them on its next run. Only single contributions can be
+  // unredacted — rollups carry no transaction_id back to the raw transactions.
+  const unredactContribution = async (contribution: ContributionWithGroup) => {
+    if (!selectedCommitteeId || !contributions) return;
+    if (isRollup(contribution)) return;
+
+    const transactionId = (contribution as SingleContribution).transaction_id;
+    if (!transactionId) return;
+
+    const uniqueKey = getUniqueKey(contribution);
+    const contributionId = getContributionId(contribution);
+    setSaveStates({ ...saveStates, [uniqueKey]: "pending" });
+
+    try {
+      // Load and cache the committee's raw transactions on first use.
+      let rawMap = rawTransactions;
+      if (!rawMap) {
+        const rawSnapshot = await getDoc(
+          doc(db, "rawContributions", selectedCommitteeId),
+        );
+        if (!rawSnapshot.exists()) {
+          throw new Error("No raw contributions found for this committee");
+        }
+        const rawData = rawSnapshot.data() as { transactions?: RawTransaction[] };
+        rawMap = {};
+        for (const txn of rawData.transactions || []) {
+          if (txn.transaction_id) {
+            rawMap[txn.transaction_id] = txn;
+          }
+        }
+        setRawTransactions(rawMap);
+      }
+
+      const rawTxn = rawMap[transactionId];
+      if (!rawTxn) {
+        throw new Error("Original contribution not found in raw data");
+      }
+
+      const restoredNames = {
+        contributor_first_name: rawTxn.contributor_first_name || "",
+        contributor_middle_name: rawTxn.contributor_middle_name || "",
+        contributor_last_name: rawTxn.contributor_last_name || "",
+        contributor_suffix: rawTxn.contributor_suffix || "",
+        contributor_name: rawTxn.contributor_name || "",
+      };
+
+      const manualReview: ManualReview = {
+        reviewed: true,
+        status: "verified",
+        reviewed_at: new Date().toISOString(),
+      };
+
+      const applyUnredact = <T extends Contribution>(c: T): T => ({
+        ...c,
+        ...restoredNames,
+        redacted: false,
+        manualReview,
+      });
+
+      const updatedContributions = { ...contributions };
+
+      // Update in by_date by ID (denormalized view, ID-based is fine here)
+      updatedContributions.by_date = updatedContributions.by_date.map((c) =>
+        getContributionId(c) === contributionId ? applyUnredact(c) : c,
+      );
+
+      // Update in groups by index to handle duplicate IDs
+      updatedContributions.groups = updatedContributions.groups.map(
+        (group, gi) => ({
+          ...group,
+          contributions: group.contributions.map((c, ci) =>
+            gi === contribution._groupIndex && ci === contribution._contribIndex
+              ? applyUnredact(c)
+              : c,
+          ),
+        }),
+      );
+
+      const docRef = doc(db, "contributions", selectedCommitteeId);
+      await updateDoc(docRef, updatedContributions);
+
+      setContributions(updatedContributions);
+      if (!contribution.manualReview && selectedCommitteeId) {
+        setReviewCounts((prev) => ({
+          ...prev,
+          [selectedCommitteeId]: {
+            total: prev[selectedCommitteeId]?.total || 0,
+            unreviewed: Math.max(
+              0,
+              (prev[selectedCommitteeId]?.unreviewed || 0) - 1,
+            ),
+          },
+        }));
+      }
+      setSaveStates({ ...saveStates, [uniqueKey]: "success" });
+
+      setTimeout(() => {
+        setSaveStates((prev) => {
+          const updated = { ...prev };
+          delete updated[uniqueKey];
+          return updated;
+        });
+      }, 2000);
+    } catch (error) {
+      console.error("Error unredacting contribution:", error);
       setSaveStates({ ...saveStates, [uniqueKey]: "error" });
 
       setTimeout(() => {
@@ -413,6 +552,10 @@ export default function ContributionReviewPage() {
     const saveState = saveStates[contributionId];
     const rollup = isRollup(contribution);
     const single = !rollup ? (contribution as SingleContribution) : null;
+    // Only single contributions can be unredacted: their transaction_id maps
+    // back to a raw transaction that still has the original name. Rollups lost
+    // that link during aggregation.
+    const canUnredact = !!contribution.redacted && !!single?.transaction_id;
 
     // Build full name from components
     const fullName = contribution.redacted
@@ -627,6 +770,15 @@ export default function ContributionReviewPage() {
               >
                 Mark as Omit
               </button>
+              {canUnredact && (
+                <button
+                  onClick={() => unredactContribution(contribution)}
+                  disabled={saveState === "pending"}
+                  className={styles.buttonUnredactLarge}
+                >
+                  Unredact
+                </button>
+              )}
               <button
                 onClick={() => {
                   setEditingContribution(null);
@@ -666,6 +818,15 @@ export default function ContributionReviewPage() {
             >
               Edit / Add Note
             </button>
+            {canUnredact && (
+              <button
+                onClick={() => unredactContribution(contribution)}
+                disabled={saveState === "pending"}
+                className={styles.buttonUnredactSmall}
+              >
+                Unredact
+              </button>
+            )}
           </div>
         )}
 

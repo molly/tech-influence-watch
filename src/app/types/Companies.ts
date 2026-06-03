@@ -10,6 +10,26 @@ export enum CompanyCategory {
   tech = "tech",
 }
 
+// A publicly-reported contribution RECEIVED by this org. Used for dark-money
+// groups (501(c)(4)s) that don't disclose donors in FEC filings but whose
+// funding has surfaced through reporting. Hand-curated in the company constant;
+// always shown with a "reported" treatment and a source citation.
+export interface KnownDonor {
+  // Display name of the donor, e.g. "Anthropic"
+  name: string;
+  // Slug of the donor if it's a tracked company/individual, for linking
+  id?: string;
+  // Whether `id` points at a company or an individual page (defaults company)
+  idType?: "company" | "individual";
+  amount: number;
+  // ISO date of the gift, when known
+  date?: string;
+  // Short citation label for where this was reported, e.g. "The New York Times"
+  source?: string;
+  // URL backing the citation
+  sourceUrl?: string;
+}
+
 export interface CompanyConstant {
   name: string;
   os_id: string;
@@ -19,6 +39,15 @@ export interface CompanyConstant {
   aliases?: string[];
   category: CompanyCategory[];
   sector?: BESector;
+  // Tax-exempt classification, e.g. "501(c)(4)", "501(c)(3)"
+  type?: string;
+  // Name of the PAC network this org is affiliated with; matches the `key`
+  // of a NetworkConstant in data/networks.ts
+  network?: string;
+  // Position within its network: "parent" (lead org), or the "dem"/"rep" arm
+  role?: "parent" | "dem" | "rep";
+  // Publicly-reported donors to this org (for non-disclosing dark-money groups)
+  knownDonors?: KnownDonor[];
 }
 
 export interface CompanyOpenSecrets {

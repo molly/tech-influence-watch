@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Suspense } from "react";
 
 import Header from "./components/Header";
@@ -45,6 +46,14 @@ export default async function HomeView({ sector }: { sector: Sector }) {
             <TotalExpenditures sector={sector} />
           </Suspense>
         </TotalsRow>
+        <span className={sharedStyles.subtitle}>
+          These three figures aren&rsquo;t additive&nbsp;&mdash; they show the
+          same money at three different stages, as it flows from donors to PACs
+          to elections.{" "}
+          <span className={styles.flowLink}>
+            <Link href="/flow">&raquo; Follow the money flow</Link>
+          </span>
+        </span>
         <div className={styles.columns}>
           <div className={styles.mainColumn}>
             <div className={styles.order1}>
@@ -63,7 +72,10 @@ export default async function HomeView({ sector }: { sector: Sector }) {
                 }
                 superPacMap={
                   <Suspense fallback={<USMapSkeleton />}>
-                    <SuperPacSpendingMapWrapper sector={sector} showLink={true} />
+                    <SuperPacSpendingMapWrapper
+                      sector={sector}
+                      showLink={true}
+                    />
                   </Suspense>
                 }
               />

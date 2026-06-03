@@ -13,5 +13,5 @@ export function humanizeExpenditureDescription(description?: string) {
     return "";
   }
   const trimmed = description.replace(/^ie-([a-z, ]+)-/i, "");
-  return sentenceCase(trimmed);
+  return sentenceCase(trimmed).replace(/\btv\b/gi, "TV");
 }

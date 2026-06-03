@@ -9,6 +9,7 @@ import {
 } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import Skeleton from "@/app/components/skeletons/Skeleton";
+import { NETWORKS } from "@/app/data/networks";
 import sharedStyles from "@/app/shared.module.css";
 import type {
   CommitteeConstantWithContributions,
@@ -29,6 +30,11 @@ import listStyles from "../listStyles.module.css";
 import CommitteeHeader from "./CommitteeHeader";
 import styles from "./CommitteeList.module.css";
 import SankeyDiagram from "./SankeyDiagram";
+
+// network key (committee.network) -> network page slug
+const NETWORK_SLUGS = new Map(
+  NETWORKS.map((network) => [network.key, network.id]),
+);
 
 export function committeesMetadata(sector: Sector): Metadata {
   return customMetadata({
@@ -250,11 +256,18 @@ function CommitteeGroup({
                 slot.members.some((c) => c.sector === "ai")
               ? "tech"
               : slot.members.find((c) => c.sector)?.sector;
+          const networkSlug = NETWORK_SLUGS.get(slot.name);
           return (
             <div key={slot.name} className={styles.networkGroup}>
               <div className={styles.networkLabel}>
                 <span className={styles.networkLabelName}>
-                  {slot.name} network
+                  {networkSlug ? (
+                    <Link href={`/2026/networks/${networkSlug}`}>
+                      {slot.name} network
+                    </Link>
+                  ) : (
+                    `${slot.name} network`
+                  )}
                 </span>
                 {networkSector && sector === "all" && (
                   <span className={sharedStyles.sectorBadge}>

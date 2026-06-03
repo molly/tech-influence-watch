@@ -31,6 +31,7 @@ const COMMITTEES: Record<string, string> = {
   C00916114: "Leading the Future",
   C00916692: "American Mission",
   C00918722: "Blockchain Leadership Fund",
+  C00922229: "Abundant Future",
   C00923417: "Think Big",
   C00928374: "Jobs and Democracy PAC",
   C00928390: "Defending Our Values",

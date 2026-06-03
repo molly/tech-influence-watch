@@ -90,6 +90,16 @@ export function isSingleSponsorCandidateCommittee(recipient: RecipientDetails) {
   return false;
 }
 
+// Super PACs (O) and hybrid PACs (V = nonqualified, W = qualified) are the
+// committee types permitted to make independent expenditures.
+export function isSuperOrHybridPac(
+  committeeType: string | null | undefined,
+): boolean {
+  return (
+    committeeType === "O" || committeeType === "V" || committeeType === "W"
+  );
+}
+
 export function getDesignation(designation_full: string | undefined) {
   if (!designation_full || designation_full === "Unauthorized") {
     return null;

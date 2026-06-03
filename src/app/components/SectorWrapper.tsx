@@ -44,7 +44,7 @@ export default function SectorWrapper({ lastRun }: { lastRun: string | null }) {
     }
   }, [lastRun]);
   const isExactTopLevelPath =
-    /^\/2026\/((ai|crypto)\/)?(committees|companies|individuals)\/?$/.test(
+    /^\/2026\/((ai|crypto)\/)?(committees|companies|individuals|networks)\/?$/.test(
       pathname,
     );
   const showSector =

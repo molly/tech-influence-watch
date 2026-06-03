@@ -8,6 +8,8 @@ export type CommitteeConstant = {
   description?: TrustedHTML;
   claimedCommitted?: number;
   network?: string;
+  // Position within its network: "parent" (lead org), or the "dem"/"rep" arm
+  role?: "parent" | "dem" | "rep";
   sector?: BESector;
 };
 
@@ -40,6 +42,7 @@ export type DisbursementsByCommittee = {
 export type CommitteeDetails = CommitteeConstant & {
   by_party?: ExpendituresByPartySnapshot;
   disbursements_by_committee: DisbursementsByCommittee;
+  transfers_by_party?: Record<string, number>;
 } & Pick<
     CommitteeDetail,
     | "affiliated_committee_name"

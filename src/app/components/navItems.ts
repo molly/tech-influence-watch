@@ -12,6 +12,7 @@ export const NAV_ITEMS: NavItem[] = [
     label: "Spending",
     children: [
       { label: "By committees", href: "/2026/committees", useSector: true },
+      { label: "By networks", href: "/2026/networks", useSector: true },
       { label: "By companies", href: "/2026/companies", useSector: true },
       { label: "By individuals", href: "/2026/individuals", useSector: true },
       { label: "By beneficiary", href: "/2026/beneficiaries", useSector: true },
@@ -53,7 +54,6 @@ export const NAV_ITEMS: NavItem[] = [
     children: [
       { label: "Quid pro quo", href: "/analysis/quidproquo" },
       { label: "Contributions to Trump", href: "/analysis/trump" },
-      { label: "How the money flows", href: "/analysis/2026/flow" },
     ],
   },
   {

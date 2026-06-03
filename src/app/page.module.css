@@ -16,6 +16,11 @@
   composes: section from "@/app/shared.module.css";
 }
 
+.flowLink {
+  font-family: var(--font-sans);
+  font-style: normal;
+}
+
 /*
  * Below the two-column breakpoint everything stacks into one column. The
  * desired single-column sequence interleaves items from both columns, so the

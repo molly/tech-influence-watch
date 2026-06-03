@@ -415,6 +415,10 @@
     display: none;
   }
 
+  .logoAndNav {
+    align-items: center;
+  }
+
   .hamburger {
     display: flex;
   }

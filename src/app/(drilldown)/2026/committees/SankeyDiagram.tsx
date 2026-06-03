@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import sharedStyles from "@/app/shared.module.css";
 import type {
   CommitteeConstantWithContributions,
@@ -788,10 +790,9 @@ export default function SankeyDiagram({
             {humanizeNumber(senderList.length)} committee
             {senderList.length > 1 && "s"}&nbsp;&mdash;{" "}
             {humanizeList(senderList)}
-            &nbsp;&mdash; passed money to affiliated PACs. Each
-            committee&rsquo;s <span className="italic">
-              funds this cycle
-            </span>{" "}
+            &nbsp;&mdash; passed money to affiliated PACs{" "}
+            <Link href="/2026/networks">in their networks</Link>. Each
+            committee&rsquo;s <span className="italic">funds this cycle</span>{" "}
             combines direct contributions, cash on hand from last cycle, and any
             transfers received from other tracked PACs.
           </p>

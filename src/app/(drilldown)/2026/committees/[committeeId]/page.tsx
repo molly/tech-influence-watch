@@ -3,11 +3,11 @@ import { Suspense } from "react";
 
 import { fetchCommitteeDetails } from "@/app/actions/fetch";
 import { MoneyCardSkeleton } from "@/app/components/MoneyCard";
-import { SpendingByPartySkeleton } from "@/app/components/SpendingByPartyWithOpposition";
 import TotalsRow from "@/app/components/TotalsRow";
 import COMMITTEES from "@/app/data/committees";
 import sharedStyles from "@/app/shared.module.css";
 import { CommitteeDetails } from "@/app/types/Committee";
+import { isSuperOrHybridPac } from "@/app/utils/committees";
 import { isError } from "@/app/utils/errors";
 import { customMetadata } from "@/app/utils/metadata";
 
@@ -22,6 +22,8 @@ import CommitteeExpendituresByParty, {
 import CommitteeExpendituresTotal from "./CommitteeExpendituresTotal";
 import CommitteeRaised from "./CommitteeRaised";
 import CommitteeRecentExpenditures from "./CommitteeRecentExpenditures";
+import CommitteeTransfers from "./CommitteeTransfers";
+import CommitteeTransfersByParty from "./CommitteeTransfersByParty";
 import styles from "./page.module.css";
 import TopDonors, { TopDonorsSkeleton } from "./TopDonors";
 import TopDonorsSortControl, {
@@ -53,6 +55,45 @@ async function CommitteeExpendituresBottomSections({
         </Suspense>
       </section>
       <CommitteeRecentExpenditures committeeId={committeeId} />
+    </>
+  );
+}
+
+async function CommitteeRightColumn({ committeeId }: { committeeId: string }) {
+  const committeeData = await fetchCommitteeDetails(committeeId);
+  if (isError(committeeData)) {
+    return null;
+  }
+  const committee = committeeData as CommitteeDetails;
+
+  // Only committees that can make independent expenditures (super PACs and
+  // hybrid PACs) get the expenditures breakdown. For everyone else, their
+  // transfers to other committees are the more meaningful activity.
+  if (!isSuperOrHybridPac(committee.committee_type)) {
+    return (
+      <>
+        {committee.transfers_by_party && (
+          <section className={sharedStyles.section}>
+            <CommitteeTransfersByParty committeeId={committeeId} />
+          </section>
+        )}
+        <section className={sharedStyles.section}>
+          <CommitteeTransfers committeeId={committeeId} />
+        </section>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <section className={sharedStyles.section}>
+        <Suspense fallback={<CommitteeExpendituresByPartySkeleton />}>
+          <CommitteeExpendituresByParty committeeId={committeeId} />
+        </Suspense>
+      </section>
+      <Suspense>
+        <CommitteeExpendituresBottomSections committeeId={committeeId} />
+      </Suspense>
     </>
   );
 }
@@ -108,13 +149,14 @@ export default async function CommitteePage({
             </Suspense>
           </section>
           <div className={styles.rightColumn}>
-            <section className={sharedStyles.section}>
-              <Suspense fallback={<CommitteeExpendituresByPartySkeleton />}>
-                <CommitteeExpendituresByParty committeeId={committeeId} />
-              </Suspense>
-            </section>
-            <Suspense>
-              <CommitteeExpendituresBottomSections committeeId={committeeId} />
+            <Suspense
+              fallback={
+                <section className={sharedStyles.section}>
+                  <CommitteeExpendituresByPartySkeleton />
+                </section>
+              }
+            >
+              <CommitteeRightColumn committeeId={committeeId} />
             </Suspense>
           </div>
         </div>

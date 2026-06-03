@@ -62,6 +62,15 @@
   color: var(--main-text);
 }
 
+.networkLabelName a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.networkLabelName a:hover {
+  color: var(--accent-on-light);
+}
+
 .networkDescription {
   font-family: var(--font-serif);
   font-style: italic;

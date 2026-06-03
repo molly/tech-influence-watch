@@ -98,6 +98,12 @@
   font-size: 1.5rem;
 }
 
+.contributionRowEmpty {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--secondary-text);
+}
+
 .spendingWrapper {
   composes: constrainedWrapper from "@/app/shared.module.css";
 }

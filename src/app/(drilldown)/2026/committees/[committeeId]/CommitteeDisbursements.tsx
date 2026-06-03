@@ -1,7 +1,6 @@
 import Link from "next/link";
 
-import { fetchConstant } from "@/app/actions/fetch";
-import { fetchCommitteeDetails } from "@/app/actions/fetch";
+import { fetchCommitteeDetails, fetchConstant } from "@/app/actions/fetch";
 import MoneyCard from "@/app/components/MoneyCard";
 import { CommitteeConstant, CommitteeDetails } from "@/app/types/Committee";
 import { isError } from "@/app/utils/errors";
@@ -67,7 +66,7 @@ export default async function CommitteeDisbursements({
       <span>to {renderCommitteeName(sortedRecipientCommitteeIds[0])}</span>
     ) : (
       <>
-        {sortedRecipientCommitteeIds.map((recipientCommitteeId) => (
+        {sortedRecipientCommitteeIds.slice(0, 3).map((recipientCommitteeId) => (
           <li
             key={recipientCommitteeId}
             className={styles.committeeDisbursementsListItem}
@@ -82,6 +81,13 @@ export default async function CommitteeDisbursements({
             </span>
           </li>
         ))}
+        {sortedRecipientCommitteeIds.length > 3 && (
+          <li className={styles.committeeDisbursementsListItem}>
+            <span className="italic secondary">
+              and {sortedRecipientCommitteeIds.length - 3} more
+            </span>
+          </li>
+        )}
       </>
     );
 

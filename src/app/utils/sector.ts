@@ -114,6 +114,7 @@ export function isSectorAwarePath(canonicalPath: string): boolean {
     "/2026/companies",
     "/2026/individuals",
     "/2026/committees",
+    "/2026/networks",
     "/2026/contributions",
     "/2026/spending",
     "/2026/expenditures",

@@ -14,17 +14,14 @@ import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
 import { humanizeRoundedCurrency } from "@/app/utils/humanize";
 import { customMetadata } from "@/app/utils/metadata";
-import { humanizeSector } from "@/app/utils/sector";
 
 import FlowSankey from "./FlowSankey";
+import styles from "./FlowSankey.module.css";
 
 export function flowMetadata(): Metadata {
   return customMetadata({
-    title: "How the money flows",
-    description: `How ${humanizeSector("all", {
-      lowercase: true,
-      abbrev: true,
-    })} money moves from companies and individuals through super PACs to candidates in the 2026 election cycle`,
+    title: "Money flow",
+    description: `How cryptocurrency and AI money moves from companies and individuals through super PACs to candidates in the 2026 election cycle`,
   });
 }
 
@@ -38,14 +35,12 @@ export default async function FlowView() {
 
   return (
     <div className={sharedStyles.main}>
-      <Breadcrumbs crumbs={["Analysis", "How the money flows"]} />
-      <h1 className={sharedStyles.title}>How the money flows</h1>
+      <Breadcrumbs crumbs={["Money flow"]} />
+      <h1 className={sharedStyles.title}>Money flow</h1>
       <p className={sharedStyles.headerSubtitle}>
-        Money from{" "}
-        {humanizeSector(sector, { lowercase: true, abbrev: true })} companies
-        and individuals can reach candidates two ways: through the super PACs the
-        site tracks, or directly. This diagram traces what we can follow — and
-        where the trail goes cold.
+        Money from cryptocurrency and artificial intelligence companies and
+        associated individuals can reach candidates two ways: through the super
+        PACs the site tracks, or directly.
       </p>
       {isError(companyData) ||
       isError(receiptsData) ||
@@ -84,7 +79,7 @@ function FlowContents({
         receipts={receipts}
         expenditures={expenditures}
       />
-      <p>
+      <p className={styles.explanation}>
         Tracked companies and individuals put{" "}
         <span className={sharedStyles.sectionTitleAmountValue}>
           {humanizeRoundedCurrency(total, true, 1)}
@@ -92,27 +87,24 @@ function FlowContents({
         into the 2026 cycle. Of that,{" "}
         {humanizeRoundedCurrency(toTracked, true, 1)} went to the super PACs the
         site tracks. The other{" "}
-        {humanizeRoundedCurrency(directAndOther, true, 1)} left those sources but
-        is harder to follow. Some of it goes straight to candidates as direct
-        contributions; the rest goes to party committees or to other super PACs
-        that may still be sitting on it. There&rsquo;s no way to tell how much
-        landed where.
+        {humanizeRoundedCurrency(directAndOther, true, 1)} left those sources
+        but is harder to follow. Some of it goes straight to candidates as
+        direct contributions; the rest goes to party committees or to other
+        super PACs that may still be sitting on it.
       </p>
-      <p>
+      <p className={styles.explanation}>
         Those super PACs took in{" "}
         <span className={sharedStyles.sectionTitleAmountValue}>
           {humanizeRoundedCurrency(receipts, true, 1)}
         </span>{" "}
-        in total, including money from contributors the site does not track. So
-        far they have spent{" "}
+        in total, mostly from individuals and companies this site tracks in
+        detail. So far they have spent{" "}
         <span className={sharedStyles.sectionTitleAmountValue}>
           {humanizeRoundedCurrency(expenditures, true, 1)}
         </span>{" "}
         directly supporting or opposing candidates, holding the rest for later
-        in the cycle. Candidates also receive an unknown share of the direct
-        contributions above, so they have taken in more than{" "}
-        {humanizeRoundedCurrency(expenditures, true, 1)} — there&rsquo;s just no
-        way to put an exact figure on it.
+        in the cycle. Candidates also receive some share of the direct
+        contributions above.
       </p>
     </>
   );

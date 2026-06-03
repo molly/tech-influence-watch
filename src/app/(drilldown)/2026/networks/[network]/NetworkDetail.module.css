@@ -1,0 +1,493 @@
+/* ── Split header ────────────────────────────────────────────────── */
+
+.header {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.headerGrid {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  align-items: stretch;
+}
+
+.headerLeft {
+  background: var(--color-black);
+  color: var(--color-white);
+  padding: 1.75rem 2rem 2.25rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.crumbs {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 1rem;
+}
+
+.crumbs a {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.crumbs a:hover {
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+}
+
+.crumbSep {
+  margin: 0 0.4rem;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(3.5rem, 7vw, 6.5rem);
+  line-height: 0.85;
+  letter-spacing: -0.01em;
+  color: var(--color-white);
+  margin: 0 0 1.125rem;
+}
+
+.chips {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 1.375rem;
+}
+
+.chip {
+  font-family: var(--font-sans);
+  font-size: 0.625rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 0.25rem 0.5rem;
+  color: var(--color-white);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.chipNetwork {
+  background: var(--color-lime-700);
+  border-color: transparent;
+}
+
+.lede {
+  font-size: 0.97rem;
+  line-height: 1.58;
+  color: rgba(255, 255, 255, 0.72);
+  max-width: 42ch;
+  margin: 0;
+}
+
+.lede :global(a) {
+  color: var(--color-lime-300);
+}
+
+.lede :global(a:hover) {
+  color: var(--color-white);
+  text-decoration: none;
+}
+
+/* right panel */
+.headerRight {
+  background: var(--card-background);
+  border-left: 1px solid var(--card-border);
+  padding: 1.5rem 1.75rem 1.625rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.membersLabel {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--secondary-text);
+  margin-bottom: 0.75rem;
+}
+
+.membersSection + .membersSection {
+  margin-top: 0.875rem;
+}
+
+.membersSectionLabel {
+  font-family: var(--font-sans);
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--tertiary-text);
+  margin-bottom: 0.5rem;
+}
+
+.pacCard {
+  position: relative;
+  background: var(--background);
+  border: 1px solid var(--card-border);
+  padding: 0.9rem 1.125rem 1rem;
+  margin-bottom: 0.625rem;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  row-gap: 0.3rem;
+  column-gap: 1.25rem;
+}
+
+.pacCard:last-child {
+  margin-bottom: 0;
+}
+
+.pacCard::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--accent-on-light);
+}
+
+.pacCardOrg {
+  background: var(--card-background);
+}
+
+.pacCardOrg::before {
+  background: var(--tertiary-text);
+}
+
+.pacName {
+  align-self: center;
+  font-weight: 700;
+  font-size: 0.97rem;
+}
+
+.pacName a {
+  color: var(--main-text);
+}
+
+.pacName a:hover {
+  color: var(--accent-on-light);
+}
+
+.pacFinancials {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.125rem;
+}
+
+.pacRaised {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.5rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.pacCardOrg .pacRaised {
+  color: var(--secondary-text);
+}
+
+.pacRaisedLabel {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.72rem;
+  color: var(--secondary-text);
+}
+
+.pacType {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.78rem;
+  color: var(--secondary-text);
+}
+
+.pacDesc {
+  grid-column: 1 / -1;
+  font-size: 0.84rem;
+  color: var(--main-text);
+  line-height: 1.5;
+  border-top: 1px solid var(--hair-color);
+  padding-top: 0.625rem;
+  margin-top: 0.3rem;
+}
+
+.pacDesc :global(a) {
+  color: var(--accent-on-light);
+}
+
+/* ── Stat band ───────────────────────────────────────────────────── */
+
+.statBand {
+  width: 100%;
+  margin-bottom: 1rem;
+  background: var(--color-black);
+}
+
+.statBandInner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.statCell {
+  padding: 1.25rem 1.5rem 1.375rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.statCell:last-child {
+  border-right: 0;
+}
+
+.statKey {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 0.5rem;
+}
+
+.statValue {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(2.25rem, 4vw, 3.125rem);
+  line-height: 0.88;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-white);
+}
+
+.statSub {
+  margin-top: 0.625rem;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.5;
+}
+
+.statSub strong {
+  color: rgba(255, 255, 255, 0.82);
+  font-weight: 600;
+}
+
+/* ── Body ────────────────────────────────────────────────────────── */
+
+.body {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  column-gap: 3.5rem;
+  align-items: start;
+}
+
+.leftCol,
+.rightCol {
+  min-width: 0;
+}
+
+.sectionSpacer {
+  margin-top: 2rem;
+}
+
+/* ── Donors ──────────────────────────────────────────────────────── */
+
+.donorGroup {
+  padding: 0.95rem 0;
+  border-bottom: 1px solid var(--hair-color);
+}
+
+.donorHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.donorName {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.donorName a {
+  color: var(--main-text);
+}
+
+.donorName a:hover {
+  color: var(--accent-on-light);
+}
+
+.donorTotal {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.2rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.gifts {
+  margin-top: 0.5rem;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  row-gap: 0.25rem;
+  column-gap: 1.25rem;
+  font-size: 0.85rem;
+}
+
+.giftDate {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--main-text);
+  font-size: 0.82rem;
+}
+
+.giftAmt {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  font-weight: 500;
+}
+
+.giftNote {
+  grid-column: 1 / -1;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.75rem;
+  color: var(--secondary-text);
+  margin-top: -0.125rem;
+}
+
+.donorRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--hair-color);
+  font-size: 0.85rem;
+  gap: 1rem;
+}
+
+.donorRowName {
+  font-weight: 500;
+}
+
+.donorRowName a {
+  color: var(--main-text);
+}
+
+.donorRowName a:hover {
+  color: var(--accent-on-light);
+}
+
+.donorRole {
+  color: var(--secondary-text);
+  font-weight: 400;
+}
+
+.donorRowAmt {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.allLink {
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--secondary-text);
+  font-family: var(--font-serif);
+  font-style: italic;
+}
+
+/* ── Related companies ───────────────────────────────────────────── */
+
+.companyGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.625rem;
+  margin-top: 0.75rem;
+}
+
+.companyCard {
+  border: 1px solid var(--card-border);
+  padding: 0.75rem 0.875rem;
+  background: var(--card-background);
+}
+
+.ccName {
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 0.125rem;
+}
+
+.ccName a {
+  color: var(--main-text);
+}
+
+.ccName a:hover {
+  color: var(--accent-on-light);
+}
+
+.ccRole {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.78rem;
+  color: var(--secondary-text);
+  margin-bottom: 0.45rem;
+}
+
+.ccGiven {
+  font-size: 0.82rem;
+  color: var(--main-text);
+}
+
+.ccGiven strong {
+  font-weight: 600;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Spending sub-blocks ─────────────────────────────────────────── */
+
+.barGroup {
+  margin-top: 0.75rem;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────── */
+
+@media (max-width: 1000px) {
+  .body {
+    grid-template-columns: 1fr;
+    row-gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .headerGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .headerRight {
+    border-left: 0;
+    border-top: 1px solid var(--card-border);
+  }
+
+  .statBandInner {
+    grid-template-columns: 1fr;
+  }
+
+  .statCell {
+    border-right: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .statCell:last-child {
+    border-bottom: 0;
+  }
+
+  .companyGrid {
+    grid-template-columns: 1fr;
+  }
+}

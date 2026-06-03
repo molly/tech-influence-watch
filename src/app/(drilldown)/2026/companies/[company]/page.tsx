@@ -1,7 +1,11 @@
 import { Metadata } from "next";
 import { Suspense } from "react";
 
-import { fetchCompany, fetchNonCandidateCommittees } from "@/app/actions/fetch";
+import {
+  fetchCompany,
+  fetchConstant,
+  fetchNonCandidateCommittees,
+} from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import {
   HorizontalBarsSkeleton,
@@ -10,11 +14,12 @@ import {
 import ContributionsGroup, {
   ContributionsGroupSkeleton,
 } from "@/app/components/individualOrCompany/ContributionsGroup";
+import KnownDonors from "@/app/components/individualOrCompany/KnownDonors";
 import SpendingScope from "@/app/components/individualOrCompany/SpendingScope";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import USMapSkeleton from "@/app/components/skeletons/USMapSkeleton";
 import sharedStyles from "@/app/shared.module.css";
-import { Company } from "@/app/types/Companies";
+import { Company, CompanyConstant } from "@/app/types/Companies";
 import { IndividualOrCompanyContributionGroup } from "@/app/types/Contributions";
 import { classifyGroup } from "@/app/utils/committees";
 import { isError } from "@/app/utils/errors";
@@ -27,6 +32,17 @@ import { titlecase } from "@/app/utils/titlecase";
 import CompanyHeader, { CompanyHeaderSkeleton } from "./CompanyHeader";
 import CompanySpendingMap from "./CompanySpendingMap";
 import styles from "./page.module.css";
+
+export const dynamicParams = false;
+
+export async function generateStaticParams() {
+  const data =
+    await fetchConstant<Record<string, CompanyConstant>>("companies");
+  if (isError(data) || !data) {
+    return [];
+  }
+  return Object.keys(data).map((company) => ({ company }));
+}
 
 export async function generateMetadata({
   params,
@@ -81,10 +97,12 @@ export default async function CompanyPage({
   params: Promise<{ company: string }>;
 }) {
   const { company: companyParam } = await params;
-  const [companyData, nonCandidateCommittees] = await Promise.all([
-    fetchCompany(companyParam),
-    fetchNonCandidateCommittees(),
-  ]);
+  const [companyData, nonCandidateCommittees, companiesConst] =
+    await Promise.all([
+      fetchCompany(companyParam),
+      fetchNonCandidateCommittees(),
+      fetchConstant<Record<string, CompanyConstant>>("companies"),
+    ]);
   if (isError(companyData)) {
     return (
       <div className={sharedStyles.main}>
@@ -93,6 +111,9 @@ export default async function CompanyPage({
     );
   }
   const company = companyData as Company;
+  // Reported donors live on the curated company constant (dark-money orgs that
+  // don't disclose donors in FEC data), not on the regenerated company doc.
+  const knownDonors = companiesConst?.[companyParam]?.knownDonors ?? [];
 
   // Filter out omitted contributions and recompute group totals
   const visibleContributions = (company.contributions ?? [])
@@ -137,7 +158,11 @@ export default async function CompanyPage({
         <CompanyHeader company={company} companyParam={companyParam} />
       </Suspense>
       <div className={`${sharedStyles.main} ${sharedStyles.columns}`}>
-        <Suspense fallback={<ContributionsSectionSkeleton />}>
+        <div className={sharedStyles.mainColumn}>
+          {knownDonors.length > 0 && (
+            <KnownDonors donors={knownDonors} orgName={company.name} />
+          )}
+          <Suspense fallback={<ContributionsSectionSkeleton />}>
           <section className={styles.contributionSection}>
             <h2 className={sharedStyles.sectionTitle}>
               <span>Contributions</span>
@@ -171,12 +196,13 @@ export default async function CompanyPage({
                 },
               )
             ) : (
-              <div className={`secondary ${styles.contributionRow}`}>
+              <div className={styles.contributionRowEmpty}>
                 No contributions yet.
               </div>
             )}
           </section>
-        </Suspense>
+          </Suspense>
+        </div>
         <div
           className={`${sharedStyles.sideColumn} ${sharedStyles.constrainedColumn}`}
         >
@@ -189,54 +215,61 @@ export default async function CompanyPage({
             />
           </Suspense>
           <Suspense fallback={<ContributionsByPartySkeleton />}>
-            <section className={sharedStyles.section}>
-              <h2 className={sharedStyles.sectionTitle} id="spending-by-party">
-                <span>Contributions by party</span>
-                <span className={sharedStyles.sectionTitleAmount}>
-                  of{" "}
-                  <span className={sharedStyles.sectionTitleAmountValue}>
-                    ${humanizeApproximateRounded(companyTotal, 1)}
+            {visibleContributions.length > 0 && (
+              <section className={sharedStyles.section}>
+                <h2
+                  className={sharedStyles.sectionTitle}
+                  id="spending-by-party"
+                >
+                  <span>Contributions by party</span>
+                  <span className={sharedStyles.sectionTitleAmount}>
+                    of{" "}
+                    <span className={sharedStyles.sectionTitleAmountValue}>
+                      ${humanizeApproximateRounded(companyTotal, 1)}
+                    </span>
                   </span>
-                </span>
-              </h2>
-              {company.party_summary && (
-                <HorizontalPartyBars
-                  partySummary={company.party_summary}
-                  max={Object.values(company.party_summary).reduce(
-                    (a, b) => a + b,
-                    0,
-                  )}
-                />
-              )}
-            </section>
+                </h2>
+                {company.party_summary && (
+                  <HorizontalPartyBars
+                    partySummary={company.party_summary}
+                    max={Object.values(company.party_summary).reduce(
+                      (a, b) => a + b,
+                      0,
+                    )}
+                  />
+                )}
+              </section>
+            )}
           </Suspense>
-          <section className={sharedStyles.section}>
-            <h2
-              className={sharedStyles.sectionTitle}
-              id="company-spending-by-state"
-            >
-              <span>Spending by state</span>
-              <Suspense fallback={<Skeleton width="10rem" />}>
-                <span className={sharedStyles.sectionTitleAmount}>
-                  of{" "}
-                  <span className={sharedStyles.sectionTitleAmountValue}>
-                    ${humanizeApproximateRounded(candidateTotal, 1)}
-                  </span>{" "}
-                  directly benefitting candidates
-                </span>
+          {visibleContributions.length > 0 && (
+            <section className={sharedStyles.section}>
+              <h2
+                className={sharedStyles.sectionTitle}
+                id="company-spending-by-state"
+              >
+                <span>Spending by state</span>
+                <Suspense fallback={<Skeleton width="10rem" />}>
+                  <span className={sharedStyles.sectionTitleAmount}>
+                    of{" "}
+                    <span className={sharedStyles.sectionTitleAmountValue}>
+                      ${humanizeApproximateRounded(candidateTotal, 1)}
+                    </span>{" "}
+                    directly benefitting candidates
+                  </span>
+                </Suspense>
+              </h2>
+              <div className={sharedStyles.subtitle}>
+                Approximate. Some committee spending is cross-state or not tied
+                to a specific candidate, and is omitted here.
+              </div>
+              <Suspense fallback={<USMapSkeleton />}>
+                <CompanySpendingMap
+                  companyId={companyParam}
+                  labelId="company-spending-by-state"
+                />
               </Suspense>
-            </h2>
-            <div className={sharedStyles.subtitle}>
-              Approximate. Some committee spending is cross-state or not tied to
-              a specific candidate, and is omitted here.
-            </div>
-            <Suspense fallback={<USMapSkeleton />}>
-              <CompanySpendingMap
-                companyId={companyParam}
-                labelId="company-spending-by-state"
-              />
-            </Suspense>
-          </section>
+            </section>
+          )}
         </div>
       </div>
     </>

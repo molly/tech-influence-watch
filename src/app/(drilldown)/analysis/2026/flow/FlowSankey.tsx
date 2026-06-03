@@ -272,9 +272,7 @@ export default function FlowSankey({
           fill="var(--color-lime-500)"
           opacity={0.2}
         >
-          <title>
-            The rest goes to party committees or other super PACs
-          </title>
+          <title>The rest goes to party committees or other super PACs</title>
         </path>
         {/* Other contributors → super PACs */}
         {otherContrib > 0 && (
@@ -315,11 +313,19 @@ export default function FlowSankey({
         </path>
         <text
           x={(COL_MID_X + NODE_W + COL_RIGHT_X) / 2}
-          y={(pacY + candExpH / 2 + candidatesY + candExpH / 2) / 2}
+          y={(pacY + candExpH / 2 + candidatesY + candExpH / 2) / 2 - 5}
           textAnchor="middle"
           className={styles.ribbonAmount}
         >
           {money(expenditures)}
+        </text>
+        <text
+          x={(COL_MID_X + NODE_W + COL_RIGHT_X) / 2}
+          y={(pacY + candExpH / 2 + candidatesY + candExpH / 2) / 2 + 9}
+          textAnchor="middle"
+          className={styles.nodeCaption}
+        >
+          independent expenditures
         </text>
 
         {/* Companies node */}
@@ -546,9 +552,7 @@ export default function FlowSankey({
           fill="var(--color-lime-500)"
           opacity={0.2}
         >
-          <title>
-            The rest goes to party committees or other super PACs
-          </title>
+          <title>The rest goes to party committees or other super PACs</title>
         </path>
         {/* Other contributors → super PACs */}
         {otherContrib > 0 && (
@@ -589,11 +593,19 @@ export default function FlowSankey({
         </path>
         <text
           x={pacXV + candExpWV / 2}
-          y={(ROW_MID_Y_V + ROW_H_V + ROW_BOT_Y_V) / 2}
+          y={(ROW_MID_Y_V + ROW_H_V + ROW_BOT_Y_V) / 2 - 5}
           textAnchor="middle"
           className={styles.ribbonAmount}
         >
           {money(expenditures)}
+        </text>
+        <text
+          x={pacXV + candExpWV / 2}
+          y={(ROW_MID_Y_V + ROW_H_V + ROW_BOT_Y_V) / 2 + 9}
+          textAnchor="middle"
+          className={styles.nodeCaption}
+        >
+          independent expenditures
         </text>
 
         {/* Top row: companies node */}
