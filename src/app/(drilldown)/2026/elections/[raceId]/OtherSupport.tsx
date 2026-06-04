@@ -4,6 +4,7 @@ import {
   fetchBeneficiaries,
   fetchConstant,
   fetchElection,
+  fetchStateElections,
 } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import sharedStyles from "@/app/shared.module.css";
@@ -12,10 +13,11 @@ import {
   BeneficiaryContribution,
   CompanyContributionGroup,
 } from "@/app/types/Beneficiaries";
-import { ElectionGroup } from "@/app/types/Elections";
+import { ElectionGroup, ElectionsByState } from "@/app/types/Elections";
 import { Sector } from "@/app/types/Sector";
 import { is4xx, isError } from "@/app/utils/errors";
 import { humanizeList, humanizeNumber, pluralize } from "@/app/utils/humanize";
+import { getDeclinedElsewhereCandidateIds } from "@/app/utils/races";
 import { humanizeSector } from "@/app/utils/sector";
 import {
   titlecaseCommittee,
@@ -322,10 +324,21 @@ export default async function OtherSupport({
     lowercase: true,
     or: true,
   });
-  const [electionData, beneficiaryData, individualAliases] = await Promise.all([
+  const raceIdSplit = raceId.split("-");
+  const stateAbbr = raceIdSplit[0];
+  const shortRaceId = raceIdSplit.slice(1).join("-");
+  const [
+    electionData,
+    beneficiaryData,
+    individualAliases,
+    stateElectionsData,
+    candidateAliasesData,
+  ] = await Promise.all([
     fetchElection(raceId),
     fetchBeneficiaries(sector),
     fetchConstant<Record<string, string>>("individualAliases"),
+    fetchStateElections(stateAbbr),
+    fetchConstant<Record<string, string>>("candidateAliases"),
   ]);
   if (isError(electionData) || isError(beneficiaryData)) {
     if (is4xx(electionData) || is4xx(beneficiaryData)) {
@@ -341,12 +354,23 @@ export default async function OtherSupport({
   const election = electionData as ElectionGroup;
   const beneficiaries = beneficiaryData as Record<string, Beneficiary>;
 
+  // Candidates who declined here but run elsewhere have their direct
+  // contributions attributed to the race they're actually in, so exclude them.
+  const suppressedCandidateIds = isError(stateElectionsData)
+    ? new Set<string>()
+    : getDeclinedElsewhereCandidateIds(
+        stateElectionsData as ElectionsByState,
+        shortRaceId,
+        (candidateAliasesData ?? {}) as Record<string, string>,
+      );
+
   const supportedCandidates = Object.values(election.candidates)
     .filter(
       (c) =>
         c.has_non_pac_support &&
         c.candidate_id &&
-        c.candidate_id in beneficiaries,
+        c.candidate_id in beneficiaries &&
+        !suppressedCandidateIds.has(c.candidate_id),
     )
     .sort((a, b) => {
       const aTotal = beneficiaries[a.candidate_id!].total;

@@ -1,6 +1,11 @@
 import { CandidateSummary, Race } from "@/app/types/Elections";
 import { ExpenditureCandidateSummary } from "@/app/types/Expenditures";
-import { getSubraceName, getUpcomingRaceForCandidate } from "@/app/utils/races";
+import {
+  getMostRecentRace,
+  getMostRecentRaceResult,
+  getSubraceName,
+  getUpcomingRaceForCandidate,
+} from "@/app/utils/races";
 import { sentenceCase } from "@/app/utils/titlecase";
 import { formatDateFromString, isUpcomingDate } from "@/app/utils/utils";
 
@@ -33,6 +38,11 @@ export default function Outcome({
   } else {
     const nextRace = getUpcomingRaceForCandidate(races, candidate);
     if (nextRace) {
+      if (!nextRace.date) {
+        // No date scheduled yet for this upcoming race — just say the candidate
+        // is running in it, rather than a dangling "... on ." with an empty date.
+        return `${inSentence ? " is r" : "R"}unning in the ${getSubraceName(nextRace)}`;
+      }
       if (isUpcomingDate(nextRace.date, { inclusive: true })) {
         if (inSentence) {
           return (
@@ -63,8 +73,29 @@ export default function Outcome({
           </>
         );
       }
-    } else {
+    } else if (getMostRecentRaceResult(races, candidate) === true) {
       return `${inSentence ? " w" : "W"}on the general election`;
+    } else {
+      // The candidate's most recent race has happened but has no recorded
+      // result for them yet (e.g. an uncalled co-winner in a multi-winner
+      // primary), so we can't say they won.
+      const mostRecentRace = getMostRecentRace(races, candidate);
+      if (mostRecentRace) {
+        if (!mostRecentRace.date) {
+          // No date on record for this race — say the candidate is running in
+          // it rather than showing a dangling "... on ." with an empty date.
+          return `${inSentence ? " is r" : "R"}unning in the ${getSubraceName(mostRecentRace)}`;
+        }
+        return (
+          <>
+            {`${inSentence ? " is a" : "A"}waiting results from the ${getSubraceName(mostRecentRace)} on `}
+            <span className="no-wrap">
+              {formatDateFromString(mostRecentRace.date)}
+            </span>
+          </>
+        );
+      }
+      return `${inSentence ? " is a" : "A"}waiting results`;
     }
   }
   return null;

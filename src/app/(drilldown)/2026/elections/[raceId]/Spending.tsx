@@ -201,11 +201,13 @@ export default function Spending({
   labelId,
   sector,
   beneficiaries,
+  suppressedCandidateIds,
 }: {
   election: ElectionGroup;
   labelId: string;
   sector: Sector;
   beneficiaries?: Record<string, Beneficiary>;
+  suppressedCandidateIds?: Set<string>;
 }) {
   const [hovered, setHovered] = useState<SpendingHoverState | null>(null);
   const shouldUseXLFont = useBreakpoint(500);
@@ -246,7 +248,16 @@ export default function Spending({
         if (!summary) {
           return candidateData;
         }
-        candidateData.raised = summary.raised_total || 0;
+        // A candidate who declined here but runs elsewhere has their raised
+        // total and direct/super-PAC contributions attributed to the race they
+        // are actually in, so don't show that money under this race.
+        const isSuppressed = Boolean(
+          summary.candidate_id &&
+            suppressedCandidateIds?.has(summary.candidate_id),
+        );
+        if (!isSuppressed) {
+          candidateData.raised = summary.raised_total || 0;
+        }
         candidateData.crypto_support = summary.crypto_support_total || 0;
         candidateData.crypto_oppose = summary.crypto_oppose_total || 0;
         candidateData.ai_support = summary.ai_support_total || 0;
@@ -258,7 +269,7 @@ export default function Spending({
             summary.outside_spending.oppose_total || 0;
         }
         const candidateId = summary.candidate_id;
-        if (candidateId && beneficiaries?.[candidateId]) {
+        if (!isSuppressed && candidateId && beneficiaries?.[candidateId]) {
           const beneficiary = beneficiaries[candidateId];
           for (const companyGroup of beneficiary.contributions) {
             const groupSector = companyGroup.sector;
@@ -294,7 +305,13 @@ export default function Spending({
         }
         return candidateData;
       }),
-    [candidateNames, election.candidates, beneficiaries, sector],
+    [
+      candidateNames,
+      election.candidates,
+      beneficiaries,
+      sector,
+      suppressedCandidateIds,
+    ],
   );
 
   const xDomain = useMemo(

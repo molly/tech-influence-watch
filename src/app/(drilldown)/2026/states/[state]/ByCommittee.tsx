@@ -10,8 +10,8 @@ import { CommitteeConstant } from "@/app/types/Committee";
 import { PopulatedStateExpenditures } from "@/app/types/Expenditures";
 import { Sector } from "@/app/types/Sector";
 import { is4xx, isError } from "@/app/utils/errors";
-import { humanizeList } from "@/app/utils/humanize";
-import { getRaceName, sortRaces } from "@/app/utils/races";
+import { pluralize } from "@/app/utils/humanize";
+import { humanizeActiveRaces } from "@/app/utils/races";
 import { formatCurrency } from "@/app/utils/utils";
 
 export function CommitteeCardContentsSkeleton() {
@@ -69,17 +69,15 @@ export default async function CommitteeCard({
           raceIdSet.add(`${stateAbbr}-S`);
         } else if (exp.candidate_office === "H") {
           const district = exp.candidate_office_district;
-          raceIdSet.add(district ? `${stateAbbr}-H-${district}` : `${stateAbbr}-H`);
+          raceIdSet.add(
+            district ? `${stateAbbr}-H-${district}` : `${stateAbbr}-H`,
+          );
         }
       }
 
-      const raceNames = Array.from(raceIdSet)
-        .sort(sortRaces)
-        .map((raceId) => getRaceName(raceId));
-
       const subtitle =
-        raceNames.length > 0
-          ? `Active in ${humanizeList(raceNames)}`
+        raceIdSet.size > 0
+          ? `Active in the ${humanizeActiveRaces(Array.from(raceIdSet))} ${pluralize(raceIdSet.size, "race")}`
           : undefined;
 
       return {

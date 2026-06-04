@@ -1,5 +1,6 @@
 import {
   fetchBeneficiariesForRace,
+  fetchConstant,
   fetchStateElections,
 } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
@@ -7,6 +8,7 @@ import { Beneficiary } from "@/app/types/Beneficiaries";
 import { ElectionsByState } from "@/app/types/Elections";
 import { Sector } from "@/app/types/Sector";
 import { is4xx, isError } from "@/app/utils/errors";
+import { getDeclinedElsewhereCandidateIds } from "@/app/utils/races";
 import { humanizeSector } from "@/app/utils/sector";
 
 import styles from "./page.module.css";
@@ -28,10 +30,12 @@ export default async function SpendingCard({
     or: true,
   });
 
-  const [electionsData, beneficiariesData] = await Promise.all([
-    fetchStateElections(stateAbbr),
-    fetchBeneficiariesForRace(raceId),
-  ]);
+  const [electionsData, beneficiariesData, candidateAliasesData] =
+    await Promise.all([
+      fetchStateElections(stateAbbr),
+      fetchBeneficiariesForRace(raceId),
+      fetchConstant<Record<string, string>>("candidateAliases"),
+    ]);
   if (
     isError(electionsData) ||
     !(shortRaceId in (electionsData as ElectionsByState))
@@ -62,12 +66,21 @@ export default async function SpendingCard({
     ? {}
     : (beneficiariesData as Record<string, Beneficiary>);
 
+  // Candidates who declined here but run elsewhere: their direct contributions
+  // and fundraising belong to the race they're actually in, not this one.
+  const suppressedCandidateIds = getDeclinedElsewhereCandidateIds(
+    elections,
+    shortRaceId,
+    (candidateAliasesData ?? {}) as Record<string, string>,
+  );
+
   return (
     <Spending
       election={elections[shortRaceId]}
       labelId="spending-label"
       sector={sector}
       beneficiaries={beneficiaries}
+      suppressedCandidateIds={suppressedCandidateIds}
     />
   );
 }

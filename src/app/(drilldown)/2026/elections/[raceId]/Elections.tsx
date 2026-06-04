@@ -151,6 +151,7 @@ export default async function Elections({
       electionData={elections[shortRaceId]}
       expenditures={expenditures ? expenditures.by_race[raceId] : null}
       upcomingRaces={upcomingRaces}
+      state={stateAbbr}
     />
   ));
 }

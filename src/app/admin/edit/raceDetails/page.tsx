@@ -8,6 +8,7 @@ import { db } from "@/app/lib/db";
 import { Party, RaceType } from "@/app/types/Elections";
 
 import styles from "../../admin.module.css";
+import { markRaceSummariesStale } from "./invalidatePipeline";
 
 interface CandidateFormData {
   name: string;
@@ -19,6 +20,7 @@ interface CandidateFormData {
   withdrew?: boolean;
   withdrewRaceType?: string;
   withdrewRaceParty?: Party;
+  won?: boolean;
 }
 
 interface RaceFormData {
@@ -46,6 +48,7 @@ function shardDocName(state: string, raceId: string): string {
 export default function RaceDetailsEditor() {
   const [selectedState, setSelectedState] = useState<string>("");
   const [raceId, setRaceId] = useState<string>("");
+  const [isCustomRaceId, setIsCustomRaceId] = useState<boolean>(false);
   const [existingRaceIds, setExistingRaceIds] = useState<string[]>([]);
   const [existingManualRaces, setExistingManualRaces] = useState<RaceFormData[]>([]);
   const [editingIndex, setEditingIndex] = useState<number | null>(null); // null = adding new, number = editing existing
@@ -97,6 +100,41 @@ export default function RaceDetailsEditor() {
       ...raceForm,
       candidates: updatedCandidates,
     });
+  };
+
+  // Set a candidate's result: won (won: true), lost (won: false), or undecided
+  // (won field removed). A race can have multiple winners (top-two primaries,
+  // races that advance to a runoff), and those winners may be called at
+  // different times. So marking a candidate as won does not force every other
+  // candidate to lost — it only defaults the candidates who are still undecided
+  // to lost. Candidates already set to won or lost are left untouched, which
+  // lets you mark one called winner while leaving an as-yet-uncalled co-winner
+  // undecided (set them back to undecided after marking the first winner).
+  const setCandidateResult = (
+    index: number,
+    result: "won" | "lost" | "undecided",
+  ) => {
+    const wonValue =
+      result === "won" ? true : result === "lost" ? false : undefined;
+    let updated = raceForm.candidates.map((c, i) => {
+      if (i !== index) {
+        return c;
+      }
+      if (wonValue === undefined) {
+        const { won: _won, ...rest } = c;
+        return rest as CandidateFormData;
+      }
+      return { ...c, won: wonValue };
+    });
+    if (wonValue === true) {
+      updated = updated.map((c, i) => {
+        if (i === index || c.won !== undefined) {
+          return c;
+        }
+        return { ...c, won: false };
+      });
+    }
+    setRaceForm({ ...raceForm, candidates: updated });
   };
 
   const fetchExistingRaces = async (state: string) => {
@@ -160,6 +198,7 @@ export default function RaceDetailsEditor() {
         withdrew: c.withdrew,
         withdrewRaceType: c.withdrew_race?.type || "",
         withdrewRaceParty: c.withdrew_race?.party,
+        won: c.won,
       })),
     });
   };
@@ -229,6 +268,11 @@ export default function RaceDetailsEditor() {
             candidateData.declineReason = candidate.declineReason;
           }
 
+          // Only include won if explicitly set
+          if (candidate.won !== undefined) {
+            candidateData.won = candidate.won;
+          }
+
           // Only include withdrew if true
           if (candidate.withdrew) {
             candidateData.withdrew = true;
@@ -274,7 +318,17 @@ export default function RaceDetailsEditor() {
       }
       raceGroup.manualRacesUpdated = Date.now(); // eslint-disable-line react-hooks/purity
 
+      // Note: we deliberately do not touch raceGroup.candidates here. The
+      // candidate "won" flags saved above are the source of truth; the backend
+      // (race_summary.py) derives each candidate's defeated/defeated_race from
+      // them once the race is reviewed/merged into `races`, and it rewrites the
+      // whole candidates map on every run. Writing defeated state here would be
+      // redundant and would get overwritten.
       await setDoc(docRef, { [raceId]: raceGroup }, { merge: true });
+
+      // The roster changed, so the backend's race summaries (spending totals,
+      // expenditure subraces) are now stale. Force summarize_races to re-run.
+      await markRaceSummariesStale();
 
       setSaveState("success");
 
@@ -318,6 +372,7 @@ export default function RaceDetailsEditor() {
               const state = e.target.value;
               setSelectedState(state);
               setRaceId("");
+              setIsCustomRaceId(false);
               resetForm();
               setExistingManualRaces([]);
               if (state) {
@@ -348,14 +403,20 @@ export default function RaceDetailsEditor() {
                 <select
                   id="race-id"
                   className={`${styles.editorSelect} ${styles.minWidth200}`}
-                  value={raceId}
+                  value={isCustomRaceId ? "__custom" : raceId}
                   onChange={(e) => {
                     const newRaceId = e.target.value;
-                    setRaceId(newRaceId);
                     resetForm();
                     setExistingManualRaces([]);
-                    if (newRaceId && newRaceId !== "__custom") {
-                      fetchManualRacesForRaceId(selectedState, newRaceId);
+                    if (newRaceId === "__custom") {
+                      setIsCustomRaceId(true);
+                      setRaceId("");
+                    } else {
+                      setIsCustomRaceId(false);
+                      setRaceId(newRaceId);
+                      if (newRaceId) {
+                        fetchManualRacesForRaceId(selectedState, newRaceId);
+                      }
                     }
                   }}
                 >
@@ -367,11 +428,12 @@ export default function RaceDetailsEditor() {
                     </option>
                   ))}
                 </select>
-                {raceId === "__custom" && (
+                {isCustomRaceId && (
                   <input
                     type="text"
                     className={`${styles.editorInput} ${styles.minWidth150}`}
                     placeholder="e.g., H-01, S, P"
+                    value={raceId}
                     onChange={(e) => setRaceId(e.target.value)}
                     autoFocus
                   />
@@ -416,7 +478,14 @@ export default function RaceDetailsEditor() {
                 id="race-type"
                 className={styles.editorSelect}
                 value={raceForm.type}
-                onChange={(e) => setRaceForm({ ...raceForm, type: e.target.value })}
+                onChange={(e) => {
+                  const nextType = e.target.value;
+                  const nextForm: RaceFormData = { ...raceForm, type: nextType };
+                  if (nextType === RaceType.General && editingIndex === null && raceForm.date === "") {
+                    nextForm.date = "2026-11-03";
+                  }
+                  setRaceForm(nextForm);
+                }}
               >
                 <option value="">Select type</option>
                 <option value={RaceType.General}>General</option>
@@ -460,6 +529,12 @@ export default function RaceDetailsEditor() {
             </div>
 
             <h3>Candidates</h3>
+            <small className={styles.helpText}>
+              Marking a candidate as won defaults any still-undecided candidates
+              to lost. For a multi-winner race where only one winner has been
+              called, mark that winner, then set any uncalled co-winners back to
+              undecided.
+            </small>
 
             {raceForm.candidates.map((candidate, index) => (
               <div key={index} className={styles.candidateCard}>
@@ -578,6 +653,47 @@ export default function RaceDetailsEditor() {
                     )}
                   </label>
                 </div>
+
+                {/* Result */}
+                <div className={styles.editorInputGroup}>
+                  <label htmlFor={`candidate-result-${index}-undecided`}>Result</label>
+                  <div className={styles.resultOptions}>
+                    {(["undecided", "won", "lost"] as const).map((result) => {
+                      const current =
+                        candidate.won === true
+                          ? "won"
+                          : candidate.won === false
+                            ? "lost"
+                            : "undecided";
+                      const labelClass =
+                        result === "won"
+                          ? styles.colorGreen
+                          : result === "lost"
+                            ? styles.colorRed
+                            : undefined;
+                      return (
+                        <label
+                          key={result}
+                          htmlFor={`candidate-result-${index}-${result}`}
+                          className={labelClass}
+                        >
+                          <input
+                            type="radio"
+                            id={`candidate-result-${index}-${result}`}
+                            name={`candidate-result-${index}`}
+                            checked={current === result}
+                            onChange={() => setCandidateResult(index, result)}
+                          />
+                          {result === "undecided"
+                            ? "Undecided"
+                            : result === "won"
+                              ? "Won"
+                              : "Lost"}
+                        </label>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
             ))}
 
@@ -588,7 +704,7 @@ export default function RaceDetailsEditor() {
             <div>
               <button
                 onClick={saveRace}
-                disabled={saveState === "pending" || !raceId || raceId === "__custom" || !raceForm.type || raceForm.candidates.length === 0}
+                disabled={saveState === "pending" || !raceId || !raceForm.type || raceForm.candidates.length === 0}
                 className={styles.primaryButton}
               >
                 {saveState === "pending" ? "Saving..." : editingIndex !== null ? "Update Race" : "Save Race"}

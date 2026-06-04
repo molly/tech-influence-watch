@@ -30,6 +30,7 @@ import {
 } from "@/app/utils/humanize";
 import { getFirstLastName } from "@/app/utils/names";
 import {
+  getDeclinedElsewhereCandidateIds,
   getRaceName,
   getSubraceName,
   getUpcomingRaceForCandidate,
@@ -253,13 +254,19 @@ export default async function RaceCard({
   stateAbbr: string;
   sector: Sector;
 }) {
-  const [expendituresData, electionData, committeeData, beneficiariesData] =
-    await Promise.all([
-      fetchStateExpenditures(stateAbbr, sector),
-      fetchStateElections(stateAbbr),
-      fetchConstant("committees"),
-      fetchBeneficiaries(sector),
-    ]);
+  const [
+    expendituresData,
+    electionData,
+    committeeData,
+    beneficiariesData,
+    candidateAliasesData,
+  ] = await Promise.all([
+    fetchStateExpenditures(stateAbbr, sector),
+    fetchStateElections(stateAbbr),
+    fetchConstant("committees"),
+    fetchBeneficiaries(sector),
+    fetchConstant<Record<string, string>>("candidateAliases"),
+  ]);
 
   if (isError(electionData) || isError(expendituresData)) {
     if (is4xx(electionData) || is4xx(expendituresData)) {
@@ -278,6 +285,10 @@ export default async function RaceCard({
   const beneficiaries = (
     isError(beneficiariesData) ? {} : beneficiariesData
   ) as Record<string, Beneficiary>;
+  const candidateAliases = (candidateAliasesData ?? {}) as Record<
+    string,
+    string
+  >;
 
   // Include all races with any spending (super PAC or other industry support)
   const allRaceIds = new Set(Object.keys(expenditures.by_race));
@@ -298,6 +309,13 @@ export default async function RaceCard({
         // A race can have expenditure data without a matching election entry
         // (e.g. sparse sector/state combos), so guard against a missing entry.
         const election = elections[shortId];
+        // Candidates who declined here but run elsewhere have their direct
+        // contributions attributed to the race they're actually in.
+        const suppressedCandidateIds = getDeclinedElsewhereCandidateIds(
+          elections,
+          shortId,
+          candidateAliases,
+        );
         const influenced = Object.values(election?.candidates ?? {})
           .filter(
             (c: CandidateSummary) =>
@@ -316,13 +334,27 @@ export default async function RaceCard({
               getSupportTotal(c, sector) === 0 &&
               getOpposeTotal(c, sector) === 0 &&
               c.candidate_id &&
-              beneficiaries[c.candidate_id],
+              beneficiaries[c.candidate_id] &&
+              !suppressedCandidateIds.has(c.candidate_id),
           )
           .sort(
             (a, b) =>
               (beneficiaries[b.candidate_id!]?.total ?? 0) -
               (beneficiaries[a.candidate_id!]?.total ?? 0),
           );
+
+        // Skip a race whose only reason for being tracked was a candidate who
+        // declined here but runs elsewhere (now suppressed): with no PAC
+        // expenditures, no support/oppose, and no remaining direct-contribution
+        // candidates, there is nothing to show.
+        const hasPacSpending = Boolean(expenditures.by_race[raceId]?.total);
+        if (
+          influenced.length === 0 &&
+          otherOnlyInfluenced.length === 0 &&
+          !hasPacSpending
+        ) {
+          return null;
+        }
 
         return (
           <div key={raceId} className={styles.cardSection}>
@@ -372,15 +404,23 @@ export default async function RaceCard({
                     matchesSector(COMMITTEES[cid]?.sector, sector),
                 )
                 .map((cid) => (
-                  <CommitteeLink
-                    key={cid}
-                    className="unstyled"
-                    committeeId={cid}
-                    committeeName={COMMITTEES ? COMMITTEES[cid].name : cid}
-                  />
+                  <span key={cid}>
+                    <CommitteeLink
+                      className="unstyled"
+                      committeeId={cid}
+                      committeeName={COMMITTEES ? COMMITTEES[cid].name : cid}
+                    />
+                    {sector === "all" && COMMITTEES[cid]?.sector && (
+                      <span className={sharedStyles.sectorBadge}>
+                        {COMMITTEES[cid].sector}
+                      </span>
+                    )}
+                  </span>
                 ));
               const beneficiary =
-                candidate.has_non_pac_support && candidate.candidate_id
+                candidate.has_non_pac_support &&
+                candidate.candidate_id &&
+                !suppressedCandidateIds.has(candidate.candidate_id)
                   ? beneficiaries[candidate.candidate_id]
                   : undefined;
               return (

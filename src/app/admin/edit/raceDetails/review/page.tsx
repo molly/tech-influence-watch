@@ -8,6 +8,7 @@ import { db } from "@/app/lib/db";
 import { ElectionsByState, Race } from "@/app/types/Elections";
 
 import styles from "../../../admin.module.css";
+import { markRaceSummariesStale } from "../invalidatePipeline";
 
 interface RaceConflict {
   state: string;
@@ -15,6 +16,7 @@ interface RaceConflict {
   manualRaces: Race[];
   scrapedRaces: Race[];
   currentRaces: Race[];
+  dataSource?: "manual" | "scraped" | "merged";
 }
 
 interface ConflictGroup {
@@ -106,6 +108,7 @@ export default function RaceReviewPage() {
               manualRaces,
               scrapedRaces,
               currentRaces,
+              dataSource: raceGroup.dataSource,
             });
           }
         });
@@ -181,13 +184,19 @@ export default function RaceReviewPage() {
     setSaveState("pending");
     try {
       let newRaces: Race[] = [];
+      // Records which source the reviewed races came from. "keep_current" leaves
+      // the existing mark untouched, so it stays undefined here and is omitted
+      // from the update below.
+      let dataSource: "manual" | "scraped" | "merged" | undefined;
 
       switch (action) {
         case "use_manual":
           newRaces = conflict.manualRaces;
+          dataSource = "manual";
           break;
         case "use_scraped":
           newRaces = conflict.scrapedRaces;
+          dataSource = "scraped";
           break;
         case "use_both":
           // Combine both, removing duplicates based on race key
@@ -199,6 +208,7 @@ export default function RaceReviewPage() {
             raceMap.set(generateRaceKey(race), race);
           });
           newRaces = Array.from(raceMap.values());
+          dataSource = "merged";
           break;
         case "keep_current":
           newRaces = conflict.currentRaces;
@@ -206,10 +216,18 @@ export default function RaceReviewPage() {
       }
 
       const docRef = doc(db, "raceDetails", shardDocName(conflict.state, conflict.raceId));
-      await updateDoc(docRef, {
+      const updates: Record<string, unknown> = {
         [`${conflict.raceId}.races`]: newRaces,
         [`${conflict.raceId}.lastReviewed`]: Date.now(),
-      });
+      };
+      if (dataSource !== undefined) {
+        updates[`${conflict.raceId}.dataSource`] = dataSource;
+      }
+      await updateDoc(docRef, updates);
+
+      // The reviewed roster (`races`) is what summarize_races reads, so its
+      // outputs are now stale. Force the summary task to re-run.
+      await markRaceSummariesStale();
 
       setSaveState("success");
       setTimeout(() => setSaveState("idle"), 2000);
@@ -222,6 +240,23 @@ export default function RaceReviewPage() {
       setSaveState("error");
       setTimeout(() => setSaveState("idle"), 3000);
     }
+  };
+
+  const dataSourceBadge = (dataSource?: "manual" | "scraped" | "merged") => {
+    if (!dataSource) {
+      return null;
+    }
+    const variantClass =
+      dataSource === "manual"
+        ? styles.dataSourceManual
+        : dataSource === "merged"
+          ? styles.dataSourceMerged
+          : styles.dataSourceScraped;
+    return (
+      <span className={`${styles.dataSourceBadge} ${variantClass}`}>
+        {dataSource}
+      </span>
+    );
   };
 
   const formatRace = (race: Race): string => {
@@ -476,6 +511,7 @@ export default function RaceReviewPage() {
               >
                 <h3 className={styles.conflictTitle}>
                   {STATES_BY_ABBR[conflict.state]} - {conflict.raceId}
+                  {dataSourceBadge(conflict.dataSource)}
                 </h3>
                 <p className={styles.conflictSubtitle}>
                   Manual: {conflict.manualRaces.length} race

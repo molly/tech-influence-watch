@@ -109,3 +109,16 @@ export const STATES_BY_FULL: Record<string, string> = {
 };
 
 export const SINGLE_MEMBER_STATES = ["AK", "DE", "ND", "SD", "VI", "VT", "WY"];
+
+// States that run a single non-partisan primary from which a fixed number of
+// candidates advance to the general, regardless of party. Used to show
+// placeholders for advancing slots that haven't been called yet. California and
+// Washington use a top-two primary; Alaska uses a top-four primary. Louisiana
+// is intentionally excluded: it uses a majority-vote system (everyone on the
+// November ballot, top two to a December runoff only if no one clears 50%),
+// which isn't a "top-N advances from a primary" model.
+export const NONPARTISAN_PRIMARY_ADVANCERS: Record<string, number> = {
+  CA: 2,
+  WA: 2,
+  AK: 4,
+};

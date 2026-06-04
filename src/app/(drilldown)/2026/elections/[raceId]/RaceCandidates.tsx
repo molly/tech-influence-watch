@@ -11,6 +11,7 @@ import { humanizeList } from "@/app/utils/humanize";
 import { getSubraceName } from "@/app/utils/races";
 import { humanizeSector } from "@/app/utils/sector";
 
+import { ResultNote } from "./CandidateResult";
 import styles from "./page.module.css";
 
 function NoSpendingCell({
@@ -18,6 +19,7 @@ function NoSpendingCell({
   isRaceUpcoming,
   hasSpendingInOtherRaces,
   intermediateRaces,
+  nonPartisanPlaceholders = 0,
   sector,
   hasSameRaceOtherPartySpending,
 }: {
@@ -25,6 +27,7 @@ function NoSpendingCell({
   isRaceUpcoming: boolean;
   hasSpendingInOtherRaces: CandidateSummary[];
   intermediateRaces?: Race[];
+  nonPartisanPlaceholders?: number;
   sector: Sector;
   hasSameRaceOtherPartySpending?: boolean;
 }) {
@@ -34,7 +37,9 @@ function NoSpendingCell({
     or: true,
   });
   const rowSpan =
-    candidates.length + (intermediateRaces ? intermediateRaces.length : 0);
+    candidates.length +
+    (intermediateRaces ? intermediateRaces.length : 0) +
+    nonPartisanPlaceholders;
   if (hasSameRaceOtherPartySpending) {
     return (
       <td className={styles.noSpendingCell} rowSpan={rowSpan}>
@@ -74,6 +79,7 @@ export default function RaceCandidates({
   isRaceUpcoming,
   presumptiveCandidateNames,
   intermediateRaces,
+  nonPartisanPlaceholders = 0,
   sector,
   hasSameRaceOtherPartySpending,
 }: {
@@ -84,6 +90,7 @@ export default function RaceCandidates({
   isRaceUpcoming: boolean;
   presumptiveCandidateNames: Set<string>;
   intermediateRaces?: Race[];
+  nonPartisanPlaceholders?: number;
   sector: Sector;
   hasSameRaceOtherPartySpending?: boolean;
 }) {
@@ -105,7 +112,8 @@ export default function RaceCandidates({
           }
           const isLastRow =
             ind === candidates.length - 1 &&
-            (!intermediateRaces || intermediateRaces.length == 0);
+            (!intermediateRaces || intermediateRaces.length == 0) &&
+            nonPartisanPlaceholders === 0;
           return (
             <tr key={candidate.name}>
               <td
@@ -118,6 +126,7 @@ export default function RaceCandidates({
                   writeIn={candidate.writeIn}
                   presumptive={isPresumptive}
                   noMargins={true}
+                  extraText={<ResultNote candidate={candidate} />}
                 />
               </td>
               {ind === 0 && (
@@ -126,6 +135,7 @@ export default function RaceCandidates({
                   isRaceUpcoming={isRaceUpcoming}
                   hasSpendingInOtherRaces={hasSpendingInOtherRaces}
                   intermediateRaces={intermediateRaces}
+                  nonPartisanPlaceholders={nonPartisanPlaceholders}
                   sector={sector}
                   hasSameRaceOtherPartySpending={hasSameRaceOtherPartySpending}
                 />
@@ -149,6 +159,15 @@ export default function RaceCandidates({
               </tr>
             );
           })}
+        {Array.from({ length: nonPartisanPlaceholders }).map((_, ind) => (
+          <tr key={`nonpartisan-winner-${ind}`}>
+            <td
+              className={`${styles.candidateCell} ${ind < nonPartisanPlaceholders - 1 ? styles.candidateRow : ""}`}
+            >
+              <UnknownCandidate name="Primary winner" noMargins={true} />
+            </td>
+          </tr>
+        ))}
       </tbody>
     </table>
   );

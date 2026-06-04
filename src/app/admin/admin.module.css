@@ -554,6 +554,32 @@
   color: var(--secondary-text);
 }
 
+.dataSourceBadge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 0.7em;
+  font-weight: bold;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+.dataSourceManual {
+  background-color: var(--admin-info-bg);
+  color: var(--admin-info-text);
+}
+
+.dataSourceScraped {
+  background-color: var(--admin-note-bg);
+  color: var(--secondary-text);
+}
+
+.dataSourceMerged {
+  background-color: var(--admin-purple-bg);
+  color: var(--admin-purple-text);
+}
+
 /* === Race Details Editor (raceDetails/page) === */
 
 .raceIdRow {
@@ -629,6 +655,21 @@
 
 .colorRed {
   color: var(--admin-error);
+}
+
+.colorGreen {
+  color: var(--admin-success);
+}
+
+.resultOptions {
+  display: flex;
+  gap: 1rem;
+}
+
+.resultOptions label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
 }
 
 .withdrewNote {

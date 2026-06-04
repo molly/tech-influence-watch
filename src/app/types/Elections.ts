@@ -112,6 +112,7 @@ export interface ElectionGroup {
   manualRaces?: Race[]; // Races added via admin UI
   scrapedRaces?: Race[]; // Races from Python scraper
   lastReviewed?: number; // Timestamp when races were last reviewed
+  dataSource?: "manual" | "scraped" | "merged"; // Which source the reviewed races came from
   manualRacesUpdated?: number; // Timestamp when manualRaces were last updated
   scrapedRacesUpdated?: number; // Timestamp when scrapedRaces were last updated
   candidates: Record<string, CandidateSummary>;

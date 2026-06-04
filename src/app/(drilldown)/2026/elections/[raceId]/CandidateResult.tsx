@@ -4,7 +4,7 @@ import { formatCurrency } from "@/app/utils/utils";
 
 import styles from "./page.module.css";
 
-function ResultNote({ candidate }: { candidate: RaceCandidate }) {
+export function ResultNote({ candidate }: { candidate: RaceCandidate }) {
   if (!candidate.declined && !candidate.withdrew) {
     return null;
   }

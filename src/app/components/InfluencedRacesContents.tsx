@@ -19,7 +19,11 @@ import {
   ExpendituresByCandidate,
 } from "@/app/types/Expenditures";
 import { isError } from "@/app/utils/errors";
-import { getRaceName, getUpcomingRaceForCandidate } from "@/app/utils/races";
+import {
+  getMostRecentRaceResult,
+  getRaceName,
+  getUpcomingRaceForCandidate,
+} from "@/app/utils/races";
 import { range } from "@/app/utils/range";
 import { formatCurrency } from "@/app/utils/utils";
 
@@ -131,7 +135,10 @@ function GoalOutcome({
     text = `Candidate supported by industry PACs won their race`;
   } else {
     const nextRace = getUpcomingRaceForCandidate(races, candidate);
-    if (!nextRace) {
+    // Only treat a finished candidate as a winner if their most recent race
+    // actually recorded a win; an uncalled result (e.g. a not-yet-called
+    // co-winner in a multi-winner primary) shows no goal outcome yet.
+    if (!nextRace && getMostRecentRaceResult(races, candidate) === true) {
       if (wasSupported && wasOpposed) {
         icon = (
           <svg

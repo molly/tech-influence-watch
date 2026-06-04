@@ -1,3 +1,4 @@
+import { NONPARTISAN_PRIMARY_ADVANCERS } from "@/app/data/states";
 import sharedStyles from "@/app/shared.module.css";
 import { ElectionGroup, Party, Race, RaceType } from "@/app/types/Elections";
 import { PopulatedRaceExpenditureGroup } from "@/app/types/Expenditures";
@@ -41,6 +42,7 @@ export default function RaceSummary({
   electionData,
   expenditures,
   upcomingRaces,
+  state,
 }: {
   sector: Sector;
   sectorCommitteeIds: Set<string> | null;
@@ -48,6 +50,7 @@ export default function RaceSummary({
   electionData: ElectionGroup;
   expenditures: PopulatedRaceExpenditureGroup | null;
   upcomingRaces: Race[];
+  state: string;
 }) {
   const raceType = race.type;
 
@@ -145,7 +148,18 @@ export default function RaceSummary({
   }
 
   let intermediateRaces;
-  if (upcomingRaces.length > 1) {
+  let nonPartisanPlaceholders = 0;
+  const nonPartisanAdvancers = NONPARTISAN_PRIMARY_ADVANCERS[state];
+  if (nonPartisanAdvancers && race.type === RaceType.General && isRaceUpcoming) {
+    // Top-two / top-four states run a single non-partisan primary that advances
+    // a fixed number of candidates to the general regardless of party. Fill the
+    // general out to that number with non-partisan placeholders for advancing
+    // slots whose winner hasn't been called yet.
+    nonPartisanPlaceholders = Math.max(
+      0,
+      nonPartisanAdvancers - candidates.length,
+    );
+  } else if (upcomingRaces.length > 1) {
     if (race.type === "general") {
       const generalCandidateParties = new Set<Party>(
         race.candidates
@@ -183,6 +197,7 @@ export default function RaceSummary({
           isRaceUpcoming={isRaceUpcoming}
           presumptiveCandidateNames={presumptiveCandidateNames}
           intermediateRaces={intermediateRaces}
+          nonPartisanPlaceholders={nonPartisanPlaceholders}
           sector={sector}
           hasSameRaceOtherPartySpending={hasSameRaceOtherPartySpending}
         />
