@@ -87,7 +87,7 @@ function getCandidateDisplay(
   const race_link = details.race_link;
   let race_id: string | undefined;
   if (race_link) {
-    race_id = race_link.replace("/elections/", "").toUpperCase();
+    race_id = race_link.replace("/2026/elections/", "").toUpperCase();
   } else if (details.state && details.office) {
     const parts = [details.state, details.office];
     if (details.district && details.district !== "00") {
@@ -185,7 +185,7 @@ function ContributionRow({
           {candidate.race_id && (
             <span className={styles.committeeDetail}>
               {candidate.race_link ? (
-                <Link href={`/2026${candidate.race_link}`}>
+                <Link href={candidate.race_link}>
                   {state && `${STATES_BY_ABBR[state]} `}
                   {getRaceName(candidate.race_id)}
                 </Link>
@@ -205,7 +205,7 @@ function ContributionRow({
                 {" ("}
                 {STATES_BY_ABBR[sponsorCandidate.race_id.split("-")[0]]}{" "}
                 {sponsorCandidate.race_link ? (
-                  <MaybeLink href={`/2026${sponsorCandidate.race_link}`}>
+                  <MaybeLink href={sponsorCandidate.race_link}>
                     {getRaceName(sponsorCandidate.race_id)}
                   </MaybeLink>
                 ) : (

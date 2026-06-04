@@ -97,9 +97,7 @@ function CandidateRow({
   const name = titlecaseLastFirst(beneficiary.candidate_details.name);
   const description = getCandidateDescription(beneficiary);
 
-  const raceHref = beneficiary.candidate_details.race_link
-    ? `/2026${beneficiary.candidate_details.race_link}`
-    : undefined;
+  const raceHref = beneficiary.candidate_details.race_link;
 
   return (
     <tr className={styles.beneficiaryRow}>

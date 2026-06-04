@@ -17,7 +17,6 @@ const nextConfig = {
       "elections",
       "expenditures",
       "individuals",
-      "quidproquo",
       "states",
     ];
     const _2026routes = routes.flatMap((route) => [
@@ -48,6 +47,34 @@ const nextConfig = {
       },
       // Old ?sector=crypto|ai query URLs are converted to path-based URLs in
       // middleware (which can drop the query and avoid a redirect loop).
+      //
+      // Relocated routes (permanent — these are genuine moves). Spending became
+      // an explainer; quid pro quo moved out of the cycle into /analysis.
+      {
+        source: "/spending",
+        destination: "/2026/explainers/spending",
+        permanent: true,
+      },
+      {
+        source: "/2026/spending",
+        destination: "/2026/explainers/spending",
+        permanent: true,
+      },
+      {
+        source: "/quidproquo",
+        destination: "/analysis/quidproquo",
+        permanent: true,
+      },
+      {
+        source: "/quidproquo/:path*",
+        destination: "/analysis/quidproquo",
+        permanent: true,
+      },
+      {
+        source: "/2026/quidproquo",
+        destination: "/analysis/quidproquo",
+        permanent: true,
+      },
     ];
   },
   output: "standalone",

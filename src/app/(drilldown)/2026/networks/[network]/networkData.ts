@@ -39,6 +39,9 @@ export interface NetworkAffiliatedOrgResolved {
   type?: string;
   href?: string;
   role?: NetworkRole;
+  // Short network-context blurb, sourced from the company constant's
+  // description (or a hardcoded org's own description).
+  description?: TrustedHTML;
   // Publicly-reported funding for non-disclosing orgs (sum of knownDonors), with
   // the reporting donor names, when any exist.
   reportedTotal?: number;
@@ -93,7 +96,6 @@ export interface CandidateTarget {
 export interface NetworkData {
   network: NetworkConstant;
   members: NetworkMember[];
-  memberNotesById: Record<string, string | undefined>;
   affiliatedOrgs: NetworkAffiliatedOrgResolved[];
   raised: number;
   spent: number;
@@ -118,13 +120,9 @@ const PARTY_KEYS: (keyof ExpendituresByPartySnapshot)[] = [
   "oppose_benefit_unk",
 ];
 
-// True if the committee leads its network. Falls back to the network's
-// leadCommitteeId when no explicit role is set on the committee.
-function isParent(committee: NetworkMember, leadCommitteeId: string): boolean {
-  if (committee.role) {
-    return committee.role === "parent";
-  }
-  return committee.id === leadCommitteeId;
+// True if the committee leads its network.
+function isParent(committee: NetworkMember): boolean {
+  return committee.role === "parent";
 }
 
 function sumByParty(
@@ -151,25 +149,6 @@ function sumByParty(
     }
   }
   return hasAny ? total : null;
-}
-
-// Backend stores donor-group links without the year segment, e.g.
-// "/companies/coinbase"; the live routes are nested under /2026.
-function toAppHref(link?: string): string | undefined {
-  if (!link) {
-    return undefined;
-  }
-  if (link.startsWith("/2026/")) {
-    return link;
-  }
-  if (
-    link.startsWith("/companies/") ||
-    link.startsWith("/committees/") ||
-    link.startsWith("/individuals/")
-  ) {
-    return `/2026${link}`;
-  }
-  return link;
 }
 
 // Donor groups that carry no meaningful identity. Mirrors the OMITTED filter
@@ -270,8 +249,8 @@ export async function getNetworkData(
   const members = committees
     .filter((committee) => committee.network === network.key)
     .sort((a, b) => {
-      const aParent = isParent(a, network.leadCommitteeId);
-      const bParent = isParent(b, network.leadCommitteeId);
+      const aParent = isParent(a);
+      const bParent = isParent(b);
       if (aParent !== bParent) {
         return aParent ? -1 : 1;
       }
@@ -296,6 +275,7 @@ export async function getNetworkData(
       type: company.type ?? existing?.type,
       href: `/2026/companies/${id}`,
       role: company.role ?? existing?.role,
+      description: company.description || existing?.description,
       reportedTotal: knownDonors.length
         ? knownDonors.reduce((sum, donor) => sum + donor.amount, 0)
         : undefined,
@@ -365,7 +345,7 @@ export async function getNetworkData(
       if (isOmittedGroup(group) || group.total <= 0) {
         continue;
       }
-      const href = toAppHref(group.link);
+      const href = group.link;
       if (href && memberCommitteeHrefs.has(href)) {
         continue;
       }
@@ -584,15 +564,9 @@ export async function getNetworkData(
     candidates.map((target) => `${target.state}-${target.raceId}`),
   ).size;
 
-  const memberNotesById: Record<string, string | undefined> = {};
-  for (const member of members) {
-    memberNotesById[member.id] = network.memberNotes?.[member.id];
-  }
-
   return {
     network,
     members,
-    memberNotesById,
     affiliatedOrgs,
     raised,
     spent,

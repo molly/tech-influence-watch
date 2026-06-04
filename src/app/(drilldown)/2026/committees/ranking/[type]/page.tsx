@@ -76,7 +76,7 @@ export default async function PACRankingPage({
           <Breadcrumbs
             crumbs={[
               "Spending",
-              { name: "Committees", href: "/committees" },
+              { name: "Committees", href: "/2026/committees" },
               "Ranking",
               type === "super" ? "Super PACs" : "All PACS",
             ]}

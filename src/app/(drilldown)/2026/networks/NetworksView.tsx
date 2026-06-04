@@ -55,16 +55,11 @@ function pacTypeLabel(committee: CommitteeConstantWithContributions): string {
 
 type NetworkRole = "parent" | "dem" | "rep";
 
-// True if the committee leads its network. Falls back to the network's
-// leadCommitteeId when no explicit role is set on the committee.
+// True if the committee leads its network.
 function isParent(
   committee: CommitteeConstantWithContributions,
-  leadCommitteeId: string,
 ): boolean {
-  if (committee.role) {
-    return committee.role === "parent";
-  }
-  return committee.id === leadCommitteeId;
+  return committee.role === "parent";
 }
 
 // Display label for the partisan arm of a network member.
@@ -125,11 +120,13 @@ function NetworksHeader() {
         />
         <h1 className={sharedStyles.title}>Networks</h1>
         <p className={sharedStyles.headerSubtitle}>
-          Several PACs in this tracker operate as coordinated networks: a lead
-          committee raises and distributes funds to affiliated PACs and, in some
-          cases, to dark money groups tracked here as companies. These networks
-          were identified from FEC filings, transfer records, and public
-          reporting.
+          Some entities in this tracker operate as part of coordinated networks:
+          clusters of political committees&nbsp;&mdash; and, in some cases,
+          affiliated dark money groups&nbsp;&mdash; that share operatives,
+          donors, and goals, shuffling funds among themselves in a way that
+          obscures the original source before routing them to dedicated partisan
+          committees. These networks were identified from FEC filings, transfer
+          records, and public reporting.
         </p>
       </section>
     </div>
@@ -175,7 +172,7 @@ export function networksMetadata(sector: Sector): Metadata {
     description: `Coordinated ${humanizeSector(sector, {
       context: "industry",
       lowercase: true,
-    })} PAC networks, in which a lead committee raises and distributes funds to affiliated PACs and dark money groups.`,
+    })} PAC networks, in which a lead committee or organization raises and distributes funds to affiliated PACs.`,
   });
 }
 
@@ -232,8 +229,8 @@ export default async function NetworksView({
     const members = committees
       .filter((committee) => committee.network === network.key)
       .sort((a, b) => {
-        const aParent = isParent(a, network.leadCommitteeId);
-        const bParent = isParent(b, network.leadCommitteeId);
+        const aParent = isParent(a);
+        const bParent = isParent(b);
         if (aParent !== bParent) {
           return aParent ? -1 : 1;
         }
@@ -336,18 +333,8 @@ export default async function NetworksView({
                         <>
                           <div className={listStyles.subhead}>PACs</div>
                           {members.map((member) => {
-                            const isLead = isParent(
-                              member,
-                              network.leadCommitteeId,
-                            );
-                            // role drives the partisan arm; fall back to memberNotes
-                            // (which also covers non-partisan notes like "Bipartisan")
-                            // when no role is set on the committee.
-                            const partisan =
-                              partisanLabel(member.role) ??
-                              (member.role == null
-                                ? (network.memberNotes?.[member.id] ?? null)
-                                : null);
+                            const isLead = isParent(member);
+                            const partisan = partisanLabel(member.role);
                             const typeLabel = [
                               pacTypeLabel(member),
                               isLead ? "Lead PAC" : null,

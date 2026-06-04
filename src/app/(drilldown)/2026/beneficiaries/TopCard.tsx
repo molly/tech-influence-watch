@@ -55,8 +55,8 @@ export default function TopCard({
   const description = getDescription(beneficiary);
   const isTracked = isCryptoTracked(id, beneficiary);
   const raceHref =
-    beneficiary.type === "candidate" && beneficiary.candidate_details.race_link
-      ? `/2026${beneficiary.candidate_details.race_link}`
+    beneficiary.type === "candidate"
+      ? beneficiary.candidate_details.race_link
       : undefined;
   const committeeHref =
     id in COMMITTEES ? `/2026/committees/${id}` : undefined;

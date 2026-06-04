@@ -91,9 +91,7 @@ function TopCandidateRow({
     ] ?? "";
   const name = titlecaseLastFirst(beneficiary.candidate_details.name);
   const race = getCompactRace(beneficiary.candidate_details);
-  const raceHref = beneficiary.candidate_details.race_link
-    ? `/2026${beneficiary.candidate_details.race_link}`
-    : undefined;
+  const raceHref = beneficiary.candidate_details.race_link;
 
   return (
     <div className={styles.sidebarCandidateRow}>

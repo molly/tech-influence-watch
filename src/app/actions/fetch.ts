@@ -319,15 +319,34 @@ export const fetchCommitteeDetails = cache(
     fetchSnapshot("committees", committeeId),
 );
 
-// Fetch inter-committee transfer graph for tracked committees
+// Fetch the inter-committee transfer graph.
+//
+// Transfers are reported twice to the FEC: by the sender (Schedule B, stored on
+// the committee doc as disbursements_by_committee) and by the recipient
+// (Schedule A, stored on the recipient's contributions doc as donor groups
+// linking back to /committees/{senderId}). Neither is complete on its own:
+//   - The recipient's report is the most current/complete for transfers between
+//     committees we track, but it can't see transfers to committees we don't.
+//   - The sender's report is the only source for transfers to untracked
+//     committees (e.g. corporate PACs giving to individual candidate campaigns),
+//     but it lags for super-PAC transfers the sender hasn't filed yet.
+// So we take a per-recipient hybrid: prefer the recipient's Schedule A figure
+// when the recipient is one we track (falling back to the sender's figure if the
+// recipient hasn't logged it), and use the sender's Schedule B figure for
+// untracked recipients.
 export const fetchCommitteeTransferGraph = cache(
   async (sector: Sector = "all"): Promise<TransferEdge[] | ErrorType> => {
-    const [contributionsData, committeeConstants] = await Promise.all([
-      fetchCollection("contributions"),
-      fetchConstant<Record<string, CommitteeConstant>>("committees"),
-    ]);
+    const [contributionsData, committeesData, committeeConstants] =
+      await Promise.all([
+        fetchCollection("contributions"),
+        fetchCollection("committees"),
+        fetchConstant<Record<string, CommitteeConstant>>("committees"),
+      ]);
     if (isError(contributionsData)) {
       return contributionsData as ErrorType;
+    }
+    if (isError(committeesData)) {
+      return committeesData as ErrorType;
     }
     if (!committeeConstants) {
       return {
@@ -335,7 +354,11 @@ export const fetchCommitteeTransferGraph = cache(
         message: "Committee constants not found",
       } as ErrorType;
     }
-    const trackedIds = new Set(
+
+    // Every committee we track (used to decide Schedule A vs Schedule B per edge).
+    const allTrackedIds = new Set(Object.keys(committeeConstants));
+    // Committees in the requested sector (used to scope which senders to return).
+    const sectorTrackedIds = new Set(
       Object.entries(committeeConstants)
         .filter(
           ([, c]) =>
@@ -343,64 +366,79 @@ export const fetchCommitteeTransferGraph = cache(
         )
         .map(([id]) => id),
     );
-    const docs = contributionsData as DocumentData[];
 
-    type EdgeAccum = {
-      fromId: string;
-      toId: string;
-      amount: number;
-      seen: Set<string>;
-    };
-    const edgeMap = new Map<string, EdgeAccum>();
-
-    for (const docSnap of docs) {
+    // Schedule A: recipient-reported transfers, keyed "fromId→toId" (toId tracked).
+    const scheduleA = new Map<string, number>();
+    for (const docSnap of contributionsData as DocumentData[]) {
       const toId = docSnap.id as string;
-      if (!trackedIds.has(toId)) {
+      if (!allTrackedIds.has(toId)) {
         continue;
       }
       const data = docSnap.data() as Contributions;
-      if (!data.by_date) {
+      if (!data.groups) {
         continue;
       }
-      for (const entry of data.by_date) {
-        if (!entry.link) {
-          continue;
-        }
-        const match = entry.link.match(/^\/committees\/([^/]+)$/);
+      for (const group of data.groups) {
+        const match = (group.link ?? "").match(/^\/committees\/([^/]+)$/);
         if (!match) {
           continue;
         }
         const fromId = match[1];
-        if (!trackedIds.has(fromId) || fromId === toId) {
+        if (fromId === toId) {
           continue;
         }
-        const edgeKey = `${fromId}→${toId}`;
-        if (!edgeMap.has(edgeKey)) {
-          edgeMap.set(edgeKey, { fromId, toId, amount: 0, seen: new Set() });
+        const key = `${fromId}→${toId}`;
+        scheduleA.set(key, (scheduleA.get(key) ?? 0) + (group.total ?? 0));
+      }
+    }
+
+    // Schedule B: sender-reported disbursements, keyed "fromId→toId" (any toId).
+    const scheduleB = new Map<string, number>();
+    const recipientNames = new Map<string, string>();
+    for (const docSnap of committeesData as DocumentData[]) {
+      const fromId = docSnap.id as string;
+      const disbursements = (docSnap.data() as CommitteeDetails)
+        .disbursements_by_committee;
+      if (!disbursements) {
+        continue;
+      }
+      for (const [toId, group] of Object.entries(disbursements)) {
+        if (fromId === toId) {
+          continue;
         }
-        const edge = edgeMap.get(edgeKey)!;
-        const txId = entry.transaction_id;
-        if (txId) {
-          if (edge.seen.has(txId)) {
-            continue;
-          }
-          edge.seen.add(txId);
-        }
-        edge.amount += entry.contribution_receipt_amount ?? 0;
+        const key = `${fromId}→${toId}`;
+        scheduleB.set(key, (scheduleB.get(key) ?? 0) + (group.total ?? 0));
+        recipientNames.set(toId, group.recipient_name);
       }
     }
 
     const edges: TransferEdge[] = [];
-    for (const { fromId, toId, amount } of edgeMap.values()) {
-      if (amount > 0) {
-        edges.push({
-          fromId,
-          fromName: committeeConstants[fromId]?.name ?? fromId,
-          toId,
-          toName: committeeConstants[toId]?.name ?? toId,
-          amount,
-        });
+    for (const key of new Set([...scheduleA.keys(), ...scheduleB.keys()])) {
+      const [fromId, toId] = key.split("→");
+      // Only return transfers sent by committees in the requested sector.
+      if (!sectorTrackedIds.has(fromId)) {
+        continue;
       }
+      const toTracked = allTrackedIds.has(toId);
+      // For a tracked recipient, mirror the prior behavior of keeping the graph
+      // within the sector (untracked recipients are always included).
+      if (toTracked && !sectorTrackedIds.has(toId)) {
+        continue;
+      }
+      const a = scheduleA.get(key) ?? 0;
+      const b = scheduleB.get(key) ?? 0;
+      const amount = toTracked ? (a > 0 ? a : b) : b;
+      if (amount <= 0) {
+        continue;
+      }
+      edges.push({
+        fromId,
+        fromName: committeeConstants[fromId]?.name ?? fromId,
+        toId,
+        toName:
+          committeeConstants[toId]?.name ?? recipientNames.get(toId) ?? toId,
+        amount,
+      });
     }
     return edges;
   },

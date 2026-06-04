@@ -1,8 +1,11 @@
 import Link from "next/link";
 
-import { fetchCommitteeDetails, fetchConstant } from "@/app/actions/fetch";
+import {
+  fetchCommitteeTransferGraph,
+  fetchConstant,
+} from "@/app/actions/fetch";
 import MoneyCard from "@/app/components/MoneyCard";
-import { CommitteeConstant, CommitteeDetails } from "@/app/types/Committee";
+import { CommitteeConstant, TransferEdge } from "@/app/types/Committee";
 import { isError } from "@/app/utils/errors";
 import { titlecaseCommittee } from "@/app/utils/titlecase";
 import { formatCurrency } from "@/app/utils/utils";
@@ -14,77 +17,56 @@ export default async function CommitteeDisbursements({
 }: {
   committeeId: string;
 }) {
-  const [committeeData, committeeConstantData] = await Promise.all([
-    fetchCommitteeDetails(committeeId),
+  const [transferData, committeeConstantData] = await Promise.all([
+    fetchCommitteeTransferGraph("all"),
     fetchConstant<Record<string, CommitteeConstant>>("committees"),
   ]);
 
-  if (isError(committeeData)) {
+  if (isError(transferData)) {
     return null;
   }
 
-  const committee = committeeData as CommitteeDetails;
+  const transfers = (transferData as TransferEdge[])
+    .filter((edge) => edge.fromId === committeeId)
+    .sort((a, b) => b.amount - a.amount);
 
-  if (
-    !committee.disbursements_by_committee ||
-    !Object.keys(committee.disbursements_by_committee).length
-  ) {
+  if (!transfers.length) {
     return null;
   }
 
   const committeeConstants = committeeConstantData || {};
 
-  const recipientCommitteeIds = Object.keys(
-    committee.disbursements_by_committee,
+  const totalDisbursements = transfers.reduce(
+    (sum, edge) => sum + edge.amount,
+    0,
   );
-  const sortedRecipientCommitteeIds = recipientCommitteeIds.sort((a, b) => {
-    return (
-      committee.disbursements_by_committee[b].total -
-      committee.disbursements_by_committee[a].total
-    );
-  });
-  const totalDisbursements = Object.values(
-    committee.disbursements_by_committee,
-  ).reduce((sum, disbursement) => sum + disbursement.total, 0);
 
-  function renderCommitteeName(committeeId: string) {
-    if (committeeConstants[committeeId]) {
+  function renderCommitteeName(edge: TransferEdge) {
+    if (committeeConstants[edge.toId]) {
       return (
-        <Link href={`/2026/committees/${committeeId}`}>
-          {committeeConstants[committeeId].name}
+        <Link href={`/2026/committees/${edge.toId}`}>
+          {committeeConstants[edge.toId].name}
         </Link>
       );
-    } else {
-      return titlecaseCommittee(
-        committee.disbursements_by_committee[committeeId].recipient_name,
-      );
     }
+    return titlecaseCommittee(edge.toName);
   }
 
   const bottomText =
-    sortedRecipientCommitteeIds.length === 1 ? (
-      <span>to {renderCommitteeName(sortedRecipientCommitteeIds[0])}</span>
+    transfers.length === 1 ? (
+      <span>to {renderCommitteeName(transfers[0])}</span>
     ) : (
       <>
-        {sortedRecipientCommitteeIds.slice(0, 3).map((recipientCommitteeId) => (
-          <li
-            key={recipientCommitteeId}
-            className={styles.committeeDisbursementsListItem}
-          >
-            <span>{renderCommitteeName(recipientCommitteeId)}</span>
-            <span>
-              {formatCurrency(
-                committee.disbursements_by_committee[recipientCommitteeId]
-                  .total,
-                true,
-              )}
-            </span>
+        {transfers.slice(0, 3).map((edge) => (
+          <li key={edge.toId} className={styles.committeeDisbursementsListItem}>
+            <span>{renderCommitteeName(edge)}</span>
+            <span>{formatCurrency(edge.amount, true)}</span>
           </li>
         ))}
-        {sortedRecipientCommitteeIds.length > 3 && (
+        {transfers.length > 3 && (
           <li className={styles.committeeDisbursementsListItem}>
             <span className="italic secondary">
-              and {sortedRecipientCommitteeIds.length - 3} more
+              and {transfers.length - 3} more
             </span>
           </li>
         )}

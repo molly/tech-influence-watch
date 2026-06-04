@@ -4,6 +4,7 @@ import Link from "next/link";
 import Breadcrumbs from "@/app/components/Breadcrumbs";
 import { CompanyBadges } from "@/app/components/individualOrCompany/Badges";
 import Skeleton from "@/app/components/skeletons/Skeleton";
+import { NETWORKS } from "@/app/data/networks";
 import sharedStyles from "@/app/shared.module.css";
 import { Company } from "@/app/types/Companies";
 
@@ -46,6 +47,10 @@ export default async function CompanyHeader({
   const hasLogo = await fetch(logoUrl, { method: "HEAD" })
     .then((r) => r.ok)
     .catch(() => false);
+
+  const network = company.network
+    ? NETWORKS.find((n) => n.key === company.network)
+    : undefined;
 
   return (
     <div className={sharedStyles.fullWidthHeader}>
@@ -94,6 +99,19 @@ export default async function CompanyHeader({
                     </li>
                   ))}
                 </ul>
+              </>
+            )}
+            {network && (
+              <>
+                {(company.country ||
+                  company.relatedIndividuals.length > 0) && <span> · </span>}
+                <span>Part of the </span>
+                <Link
+                  className="unstyled"
+                  href={`/2026/networks/${network.id}`}
+                >
+                  {network.name} network
+                </Link>
               </>
             )}
           </div>

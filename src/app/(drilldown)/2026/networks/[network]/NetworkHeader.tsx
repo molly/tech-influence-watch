@@ -41,11 +41,8 @@ function orgRoleLabel(role: NetworkRole | undefined): string | null {
   return partisanLabel(role);
 }
 
-function isParent(member: NetworkMember, leadCommitteeId: string): boolean {
-  if (member.role) {
-    return member.role === "parent";
-  }
-  return member.id === leadCommitteeId;
+function isParent(member: NetworkMember): boolean {
+  return member.role === "parent";
 }
 
 function PacCard({
@@ -125,6 +122,12 @@ function OrgCard({ org }: { org: NetworkAffiliatedOrgResolved }) {
         )}
       </div>
       {typeLabel && <div className={styles.pacType}>{typeLabel}</div>}
+      {org.description && (
+        <div
+          className={styles.pacDesc}
+          dangerouslySetInnerHTML={{ __html: org.description }}
+        ></div>
+      )}
     </div>
   );
 }
@@ -181,12 +184,8 @@ export default function NetworkHeader({ data }: { data: NetworkData }) {
             <div className={styles.membersSection}>
               <div className={styles.membersSectionLabel}>PACs</div>
               {members.map((member) => {
-                const isLead = isParent(member, network.leadCommitteeId);
-                const partisan =
-                  partisanLabel(member.role) ??
-                  (member.role == null
-                    ? data.memberNotesById[member.id] ?? null
-                    : null);
+                const isLead = isParent(member);
+                const partisan = partisanLabel(member.role);
                 return (
                   <PacCard
                     key={member.id}

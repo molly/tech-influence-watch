@@ -3,6 +3,7 @@ import Link from "next/link";
 import {
   fetchAllRecipients,
   fetchCommitteeDetails,
+  fetchCommitteeTransferGraph,
   fetchConstant,
   fetchNonCandidateCommittees,
 } from "@/app/actions/fetch";
@@ -11,6 +12,7 @@ import sharedStyles from "@/app/shared.module.css";
 import {
   CommitteeConstant,
   CommitteeDetails as CommitteeDetailsType,
+  TransferEdge,
 } from "@/app/types/Committee";
 import { RecipientDetails } from "@/app/types/Contributions";
 import { isError } from "@/app/utils/errors";
@@ -27,11 +29,13 @@ export default async function CommitteeTransfers({
 }) {
   const [
     committeeData,
+    transferData,
     committeeConstantData,
     recipientData,
     nonCandidateCommittees,
   ] = await Promise.all([
     fetchCommitteeDetails(committeeId),
+    fetchCommitteeTransferGraph("all"),
     fetchConstant<Record<string, CommitteeConstant>>("committees"),
     fetchAllRecipients(),
     fetchNonCandidateCommittees(),
@@ -42,9 +46,17 @@ export default async function CommitteeTransfers({
   }
 
   const committee = committeeData as CommitteeDetailsType;
-  const transfers = committee.disbursements_by_committee;
 
-  if (!transfers || !Object.keys(transfers).length) {
+  // Derive this committee's outgoing transfers from the recipient-reported
+  // transfer graph (Schedule A) so the totals here reconcile with the
+  // committees index and each recipient's "transferred from" figure.
+  const transfers = isError(transferData)
+    ? []
+    : (transferData as TransferEdge[])
+        .filter((edge) => edge.fromId === committeeId)
+        .sort((a, b) => b.amount - a.amount);
+
+  if (!transfers.length) {
     return (
       <>
         <h2 className={sharedStyles.sectionTitle}>By committee</h2>
@@ -58,19 +70,15 @@ export default async function CommitteeTransfers({
     ? {}
     : (recipientData as Record<string, RecipientDetails>);
 
-  const sortedRecipientIds = Object.keys(transfers).sort(
-    (a, b) => transfers[b].total - transfers[a].total,
-  );
-  const totalTransferred = sortedRecipientIds.reduce(
-    (sum, id) => sum + transfers[id].total,
+  const totalTransferred = transfers.reduce(
+    (sum, edge) => sum + edge.amount,
     0,
   );
 
-  const items = sortedRecipientIds.map((recipientId) => {
+  const items = transfers.map((edge) => {
+    const recipientId = edge.toId;
     const constant = committeeConstants[recipientId];
-    const name = constant
-      ? constant.name
-      : titlecaseCommittee(transfers[recipientId].recipient_name);
+    const name = constant ? constant.name : titlecaseCommittee(edge.toName);
     const recipient = recipients[recipientId];
     return {
       key: recipientId,
@@ -90,11 +98,11 @@ export default async function CommitteeTransfers({
           nonCandidateCommittees={nonCandidateCommittees}
         />
       ) : undefined,
-      displayValue: formatCurrency(transfers[recipientId].total, true),
+      displayValue: formatCurrency(edge.amount, true),
     };
   });
 
-  const recipientCount = sortedRecipientIds.length;
+  const recipientCount = transfers.length;
 
   return (
     <>

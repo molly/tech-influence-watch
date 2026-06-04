@@ -123,8 +123,8 @@ async function TrumpContributionsData() {
           <div className={sharedStyles.noteCard}>
             <span className={sharedStyles.noteLabel}>Note:</span> This page
             tracks direct, FEC-reported campaign contributions only. Business
-            partnerships and other financial arrangements&nbsp;&ndash; such as
-            World Liberty Financial and the $TRUMP memecoin&nbsp;&ndash; are
+            partnerships and other financial arrangements&nbsp;&mdash; such as
+            World Liberty Financial and the $TRUMP memecoin&nbsp;&mdash; are
             tracked separately on the{" "}
             <Link href="/analysis/quidproquo" className="bold">
               quid pro quo

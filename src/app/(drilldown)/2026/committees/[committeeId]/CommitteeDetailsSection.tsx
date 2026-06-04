@@ -1,9 +1,11 @@
+import Link from "next/link";
 import React from "react";
 
 import { fetchCommitteeDetails } from "@/app/actions/fetch";
 import Breadcrumbs from "@/app/components/Breadcrumbs";
 import ErrorText from "@/app/components/ErrorText";
 import Skeleton from "@/app/components/skeletons/Skeleton";
+import { NETWORKS } from "@/app/data/networks";
 import sharedStyles from "@/app/shared.module.css";
 import { CommitteeDetails } from "@/app/types/Committee";
 import { is4xx, isError } from "@/app/utils/errors";
@@ -16,7 +18,7 @@ export function CommitteeDetailsSkeleton() {
     <div className={sharedStyles.fullWidthHeaderNoBorder}>
       <section className={sharedStyles.header}>
         <Breadcrumbs
-          crumbs={["Spending", { name: "Committees", href: "/committees" }]}
+          crumbs={["Spending", { name: "Committees", href: "/2026/committees" }]}
         />
         <Skeleton height="5rem" width="15rem" />
         <Skeleton width="min(45rem, 100%)" margin="1rem 0" />
@@ -93,6 +95,20 @@ export default async function CommitteeDetailsSection({
       );
     }
 
+    const network = committee.network
+      ? NETWORKS.find((n) => n.key === committee.network)
+      : undefined;
+    if (network) {
+      parts.push(
+        <span className={styles.committeeDetail} key="network">
+          Part of the{" "}
+          <Link className="unstyled" href={`/2026/networks/${network.id}`}>
+            {network.name} network
+          </Link>
+        </span>,
+      );
+    }
+
     return parts;
   };
 
@@ -102,7 +118,7 @@ export default async function CommitteeDetailsSection({
         <Breadcrumbs
           crumbs={[
             "Spending",
-            { name: "Committees", href: "/committees" },
+            { name: "Committees", href: "/2026/committees" },
             committee.name,
           ]}
         />
