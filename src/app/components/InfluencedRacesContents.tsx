@@ -72,11 +72,17 @@ function GoalOutcome({
 }) {
   const wasOpposed = candidate.oppose_total > 0;
   const wasSupported = candidate.support_total > 0;
+  const nextRace = getUpcomingRaceForCandidate(races, candidate);
+  // The summary's `defeated` flag isn't reliably maintained (the pipeline
+  // doesn't sync it from manual race edits), so also treat a recorded loss in
+  // the most recent finished race as a loss.
+  const lostByResult =
+    !nextRace && getMostRecentRaceResult(races, candidate) === false;
   let icon = null;
   let text = null;
 
-  if (candidate.defeated || candidate.withdrew) {
-    const verb = candidate.defeated ? "lost" : "withdrew from";
+  if (candidate.defeated || lostByResult || candidate.withdrew) {
+    const verb = candidate.defeated || lostByResult ? "lost" : "withdrew from";
     if (wasOpposed) {
       if (wasSupported) {
         icon = (
@@ -134,7 +140,6 @@ function GoalOutcome({
     );
     text = `Candidate supported by industry PACs won their race`;
   } else {
-    const nextRace = getUpcomingRaceForCandidate(races, candidate);
     // Only treat a finished candidate as a winner if their most recent race
     // actually recorded a win; an uncalled result (e.g. a not-yet-called
     // co-winner in a multi-winner primary) shows no goal outcome yet.

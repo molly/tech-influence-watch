@@ -73,13 +73,28 @@ export default function Outcome({
           </>
         );
       }
-    } else if (getMostRecentRaceResult(races, candidate) === true) {
-      return `${inSentence ? " w" : "W"}on the general election`;
     } else {
+      const mostRecentResult = getMostRecentRaceResult(races, candidate);
+      const mostRecentRace = getMostRecentRace(races, candidate);
+      if (mostRecentResult === true && mostRecentRace) {
+        // Name the race they actually won — it isn't necessarily the general
+        // (e.g. a primary winner with no general race in the data yet).
+        return `${inSentence ? " w" : "W"}on the ${getSubraceName(mostRecentRace)}`;
+      }
+      if (mostRecentResult === false && mostRecentRace) {
+        // Their most recent race recorded a loss. The summary's `defeated` flag
+        // isn't reliably maintained (the pipeline doesn't sync it from manual
+        // race edits), so derive the result from the race itself here.
+        return (
+          <>
+            {`${inSentence ? " was d" : "D"}efeated in the `}
+            {getSubraceName(mostRecentRace)}
+          </>
+        );
+      }
       // The candidate's most recent race has happened but has no recorded
       // result for them yet (e.g. an uncalled co-winner in a multi-winner
-      // primary), so we can't say they won.
-      const mostRecentRace = getMostRecentRace(races, candidate);
+      // primary), so we can't say they won or lost.
       if (mostRecentRace) {
         if (!mostRecentRace.date) {
           // No date on record for this race — say the candidate is running in
