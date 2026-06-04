@@ -51,7 +51,9 @@ export default async function HomeView({ sector }: { sector: Sector }) {
           same money at three different stages, as it flows from donors to PACs
           to elections.{" "}
           <span className={styles.flowLink}>
-            <Link href="/flow">&raquo; Follow the money flow</Link>
+            <Link href="/2026/explainers/flow">
+              &raquo; Follow the money flow
+            </Link>
           </span>
         </span>
         <div className={styles.columns}>

@@ -1,3 +1,7 @@
+.section {
+  margin-top: 2rem;
+}
+
 .card {
   background-color: var(--color-lime-950);
   padding: 1.5rem;
@@ -125,4 +129,10 @@
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 0.3rem;
+}
+
+@media (max-width: 768px) {
+  .section {
+    margin-top: 1rem;
+  }
 }

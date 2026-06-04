@@ -50,9 +50,9 @@ export type CandidateSummary = {
   crypto_oppose_total?: number;
   ai_oppose_total?: number;
   races: RaceType[];
-  defeated?: boolean;
-  won: boolean;
-  defeated_race?: RaceType;
+  // Win/loss is derived from per-race `RaceCandidate.won` (see isDefeated /
+  // getMostRecentRaceResult in utils/races), not stored on the summary — the
+  // backend's summary-level defeated/won flags lag manual race edits.
   withdrew?: boolean;
   withdrew_race?: RaceType;
   declined?: boolean;

@@ -82,7 +82,7 @@ export default function AllExpendituresByParty({ sector }: { sector: Sector }) {
         />
       </Suspense>
       <div className={styles.linkRow}>
-        <Link href={sectorHref("/2026/spending", sector)}>
+        <Link href={sectorHref("/2026/explainers/spending", sector)}>
           &raquo; More details
         </Link>
       </div>

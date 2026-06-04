@@ -21,19 +21,7 @@ export default function Outcome({
   if (candidate.declined) {
     return `${inSentence ? " d" : "D"}eclined to run${candidate.declinedReason ? ` (${candidate.declinedReason})` : ""}`;
   }
-  if (candidate.defeated) {
-    const defeatedRace = races.find(
-      (r) =>
-        r.type === candidate.defeated_race &&
-        r.candidates.some((c) => c.name === candidate.common_name),
-    );
-    return (
-      <>
-        {`${inSentence ? " was d" : "D"}efeated in the `}
-        {getSubraceName(defeatedRace)}
-      </>
-    );
-  } else if (candidate.withdrew) {
+  if (candidate.withdrew) {
     return `${inSentence ? " w" : "W"}ithdrew from the election`;
   } else {
     const nextRace = getUpcomingRaceForCandidate(races, candidate);

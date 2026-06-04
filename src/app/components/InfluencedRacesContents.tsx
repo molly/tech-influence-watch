@@ -73,16 +73,19 @@ function GoalOutcome({
   const wasOpposed = candidate.oppose_total > 0;
   const wasSupported = candidate.support_total > 0;
   const nextRace = getUpcomingRaceForCandidate(races, candidate);
-  // The summary's `defeated` flag isn't reliably maintained (the pipeline
-  // doesn't sync it from manual race edits), so also treat a recorded loss in
-  // the most recent finished race as a loss.
-  const lostByResult =
-    !nextRace && getMostRecentRaceResult(races, candidate) === false;
+  // Derive win/loss from the recorded race result rather than the summary's
+  // `defeated`/`won` flags, which the pipeline doesn't keep in sync with manual
+  // race edits. An uncalled most-recent race leaves both false (no goal shown).
+  const result = nextRace
+    ? undefined
+    : getMostRecentRaceResult(races, candidate);
+  const lost = result === false;
+  const won = result === true;
   let icon = null;
   let text = null;
 
-  if (candidate.defeated || lostByResult || candidate.withdrew) {
-    const verb = candidate.defeated || lostByResult ? "lost" : "withdrew from";
+  if (lost || candidate.withdrew) {
+    const verb = lost ? "lost" : "withdrew from";
     if (wasOpposed) {
       if (wasSupported) {
         icon = (
@@ -126,65 +129,47 @@ function GoalOutcome({
       );
       text = `Candidate supported by industry PACs ${verb} their race`;
     }
-  } else if (candidate.won && wasSupported) {
-    icon = (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 448 512"
-        className={`${sharedStyles.goalAccomplished} ${explanatoryText ? sharedStyles.goalInline : ""}`}
-        role="image"
-      >
-        <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
-        <title>Goal achieved</title>
-      </svg>
-    );
-    text = `Candidate supported by industry PACs won their race`;
-  } else {
-    // Only treat a finished candidate as a winner if their most recent race
-    // actually recorded a win; an uncalled result (e.g. a not-yet-called
-    // co-winner in a multi-winner primary) shows no goal outcome yet.
-    if (!nextRace && getMostRecentRaceResult(races, candidate) === true) {
-      if (wasSupported && wasOpposed) {
-        icon = (
-          <svg
-            className={`${sharedStyles.goalMixed} ${explanatoryText ? sharedStyles.goalInline : ""}`}
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 448 512"
-          >
-            <title>
-              Mixed results (this candidate received both support and opposition
-              from industry PACs)
-            </title>
-            <path d="M32 288c-17.7 0-32 14.3-32 32s14.3 32 32 32l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L32" />
-          </svg>
-        );
-        text = `Candidate both supported and opposed by industry PACs won their race`;
-      } else if (wasSupported) {
-        icon = (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 448 512"
-            className={`${sharedStyles.goalAccomplished} ${explanatoryText ? sharedStyles.goalInline : ""}`}
-            role="image"
-          >
-            <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
-            <title>Goal achieved</title>
-          </svg>
-        );
-        text = `Candidate supported by industry PACs won their race`;
-      } else if (wasOpposed) {
-        icon = (
-          <svg
-            className={`${sharedStyles.goalFailed} ${explanatoryText ? sharedStyles.goalInline : ""}`}
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 384 512"
-          >
-            <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
-            <title>Goal failed</title>
-          </svg>
-        );
-        text = `Candidate supported by industry PACs lost their race`;
-      }
+  } else if (won) {
+    if (wasSupported && wasOpposed) {
+      icon = (
+        <svg
+          className={`${sharedStyles.goalMixed} ${explanatoryText ? sharedStyles.goalInline : ""}`}
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 448 512"
+        >
+          <title>
+            Mixed results (this candidate received both support and opposition
+            from industry PACs)
+          </title>
+          <path d="M32 288c-17.7 0-32 14.3-32 32s14.3 32 32 32l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L32" />
+        </svg>
+      );
+      text = `Candidate both supported and opposed by industry PACs won their race`;
+    } else if (wasSupported) {
+      icon = (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 448 512"
+          className={`${sharedStyles.goalAccomplished} ${explanatoryText ? sharedStyles.goalInline : ""}`}
+          role="image"
+        >
+          <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
+          <title>Goal achieved</title>
+        </svg>
+      );
+      text = `Candidate supported by industry PACs won their race`;
+    } else if (wasOpposed) {
+      icon = (
+        <svg
+          className={`${sharedStyles.goalFailed} ${explanatoryText ? sharedStyles.goalInline : ""}`}
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 384 512"
+        >
+          <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
+          <title>Goal failed</title>
+        </svg>
+      );
+      text = `Candidate supported by industry PACs lost their race`;
     }
   }
 

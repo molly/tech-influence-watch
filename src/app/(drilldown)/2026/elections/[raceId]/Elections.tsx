@@ -142,16 +142,28 @@ export default async function Elections({
 
   const upcomingRaces = sortedRaces.filter((r) => isUpcomingRace(r));
 
-  return sortedRaces.map((race) => (
-    <RaceSummary
-      key={`${shortRaceId}-${race.type}${race.party ? `-${race.party}` : ""}`}
-      sector={sector}
-      sectorCommitteeIds={sectorCommitteeIds}
-      race={race}
-      electionData={elections[shortRaceId]}
-      expenditures={expenditures ? expenditures.by_race[raceId] : null}
-      upcomingRaces={upcomingRaces}
-      state={stateAbbr}
-    />
-  ));
+  return (
+    <>
+      <span className={styles.electionSubtitle}>
+        Spending by{" "}
+        {humanizeSector(sector, {
+          hyphen: true,
+          lowercase: true,
+        })}
+        focused PACs
+      </span>
+      {sortedRaces.map((race) => (
+        <RaceSummary
+          key={`${shortRaceId}-${race.type}${race.party ? `-${race.party}` : ""}`}
+          sector={sector}
+          sectorCommitteeIds={sectorCommitteeIds}
+          race={race}
+          electionData={elections[shortRaceId]}
+          expenditures={expenditures ? expenditures.by_race[raceId] : null}
+          upcomingRaces={upcomingRaces}
+          state={stateAbbr}
+        />
+      ))}
+    </>
+  );
 }

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Suspense } from "react";
+import { ReactElement, Suspense } from "react";
 
 import {
   fetchAllStateElections,
@@ -15,7 +15,7 @@ import { SINGLE_MEMBER_STATES, STATES_BY_ABBR } from "@/app/data/states";
 import sharedStyles from "@/app/shared.module.css";
 import { Beneficiary, CandidateBeneficiary } from "@/app/types/Beneficiaries";
 import { RecipientCandidateDetails } from "@/app/types/Contributions";
-import { ElectionsByState } from "@/app/types/Elections";
+import { CandidateSummary, ElectionsByState } from "@/app/types/Elections";
 import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
 import { getRaceName } from "@/app/utils/races";
@@ -70,37 +70,65 @@ function getElectionCandidate(
   return electionCandidate;
 }
 
+interface ResolvedRace {
+  raceId: string;
+  shortRaceId: string;
+  electionCandidate?: CandidateSummary;
+}
+
+// Resolve a beneficiary to the scraped race its row will link to, preferring
+// the regular race and falling back to a special election. Returns null when
+// no scraped race data exists for the candidate, so the row can be dropped
+// instead of rendering a link to a race page that doesn't exist.
+function resolveRace(
+  candidateDetails: RecipientCandidateDetails,
+  candidateId: string,
+  stateElections?: ElectionsByState,
+): ResolvedRace | null {
+  if (!stateElections) {
+    return null;
+  }
+  const raceId = getRaceId(candidateDetails);
+  const shortRaceId = getShortRaceId(candidateDetails);
+  if (shortRaceId in stateElections) {
+    return {
+      raceId,
+      shortRaceId,
+      electionCandidate: getElectionCandidate(
+        shortRaceId,
+        candidateId,
+        stateElections,
+      ),
+    };
+  }
+  const specialShortRaceId = `${shortRaceId}-special`;
+  if (specialShortRaceId in stateElections) {
+    return {
+      raceId: `${raceId}-special`,
+      shortRaceId: specialShortRaceId,
+      electionCandidate: getElectionCandidate(
+        specialShortRaceId,
+        candidateId,
+        stateElections,
+      ),
+    };
+  }
+  return null;
+}
+
 function CandidateRow({
   beneficiary,
   stateElections,
+  race,
   id,
 }: {
   beneficiary: CandidateBeneficiary;
   stateElections?: ElectionsByState;
+  race: ResolvedRace;
   id: string;
 }) {
   const candidateDetails = beneficiary.candidate_details;
-  let raceId = getRaceId(candidateDetails);
-  let shortRaceId = getShortRaceId(candidateDetails);
-  let electionCandidate = getElectionCandidate(shortRaceId, id, stateElections);
-
-  // Try special election if candidate not found in regular election.
-  // Only switch to the special-election identifiers if the candidate is
-  // actually found there; otherwise keep the regular race so the name and
-  // link remain correct even when candidate details are missing.
-  if (!electionCandidate) {
-    const specialShortRaceId = `${shortRaceId}-special`;
-    const specialElectionCandidate = getElectionCandidate(
-      specialShortRaceId,
-      id,
-      stateElections,
-    );
-    if (specialElectionCandidate) {
-      raceId = `${raceId}-special`;
-      shortRaceId = specialShortRaceId;
-      electionCandidate = specialElectionCandidate;
-    }
-  }
+  const { raceId, shortRaceId, electionCandidate } = race;
 
   const raceHref = `/2026/elections/${raceId === "P" ? "president" : raceId}`;
   const raceName = getRaceName(raceId);
@@ -204,25 +232,34 @@ export default async function OtherSupportedRaces({
   const beneficiaries = beneficiariesData as Record<string, Beneficiary>;
   const order = beneficiariesOrder as string[];
 
-  const filtered = order.filter(
-    (id) =>
-      !id.startsWith("C") &&
-      (beneficiaries[id] as CandidateBeneficiary).candidate_details
-        .isRunningThisCycle,
-  );
-
-  const rowNodes = filtered.map((id) => {
-    const beneficiary = beneficiaries[id] as CandidateBeneficiary;
-    const state = beneficiary.candidate_details.state;
-    return (
-      <CandidateRow
-        key={id}
-        beneficiary={beneficiary}
-        stateElections={elections[state]}
-        id={id}
-      />
-    );
-  });
+  const rowNodes = order
+    .filter(
+      (id) =>
+        !id.startsWith("C") &&
+        (beneficiaries[id] as CandidateBeneficiary).candidate_details
+          .isRunningThisCycle,
+    )
+    .map((id) => {
+      const beneficiary = beneficiaries[id] as CandidateBeneficiary;
+      const state = beneficiary.candidate_details.state;
+      const stateElections = elections[state];
+      // Drop candidates whose race wasn't scraped — linking to them would
+      // produce a broken link to a race page that doesn't exist.
+      const race = resolveRace(beneficiary.candidate_details, id, stateElections);
+      if (!race) {
+        return null;
+      }
+      return (
+        <CandidateRow
+          key={id}
+          beneficiary={beneficiary}
+          stateElections={stateElections}
+          race={race}
+          id={id}
+        />
+      );
+    })
+    .filter((row): row is ReactElement => row !== null);
 
   const header = (
     <thead className={styles.inheritBorderRadius}>

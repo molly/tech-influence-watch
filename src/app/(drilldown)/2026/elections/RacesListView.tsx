@@ -9,6 +9,7 @@ import { customMetadata } from "@/app/utils/metadata";
 import { humanizeSector } from "@/app/utils/sector";
 
 import OtherSupportedRaces from "./OtherSupportedRaces";
+import RacesMethodology from "./RacesMethodology";
 
 export function racesListMetadata(sector: Sector): Metadata {
   return customMetadata({
@@ -45,6 +46,7 @@ export default async function RacesListView({ sector }: { sector: Sector }) {
         <div className="single-column-page">
           <InfluencedRaces sector={sector} fullPage={true} />
           <OtherSupportedRaces sector={sector} />
+          <RacesMethodology />
         </div>
       </div>
     </>

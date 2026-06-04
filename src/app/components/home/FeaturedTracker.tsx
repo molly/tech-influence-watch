@@ -2,7 +2,6 @@ import Link from "next/link";
 
 import { fetchQpq } from "@/app/actions/fetch";
 import Skeleton from "@/app/components/skeletons/Skeleton";
-import sharedStyles from "@/app/shared.module.css";
 import { QPQ } from "@/app/types/Qpq";
 import { formatCompact, humanizeRoundedCurrency } from "@/app/utils/humanize";
 import { range } from "@/app/utils/range";
@@ -20,7 +19,7 @@ const SKELETON_NAME_WIDTHS = ["8rem", "6rem", "9rem", "7rem"];
 
 export function FeaturedTrackerSkeleton() {
   return (
-    <section className={sharedStyles.section}>
+    <section className={styles.section}>
       <div className={styles.card}>
         <Skeleton width="7rem" />
         <Skeleton height="3rem" width="80%" />
@@ -71,7 +70,7 @@ export default async function FeaturedTracker() {
   }
 
   return (
-    <section className={sharedStyles.section}>
+    <section className={styles.section}>
       <div className={styles.card}>
         <div className={styles.label}>Featured Tracker</div>
         <h2 className={styles.title}>Quid pro quo</h2>

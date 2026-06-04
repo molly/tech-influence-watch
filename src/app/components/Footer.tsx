@@ -34,6 +34,7 @@ export default function Footer() {
         <div className={styles.links}>
           <Link href="/about">About this project</Link>
           <Link href="/about/support">Support this work</Link>
+          <Link href="/2024">2024 election archive</Link>
         </div>
         <div className={styles.copyright}>
           &copy; {new Date().getFullYear()} <i>Tech Influence Watch</i>.{" "}

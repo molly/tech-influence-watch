@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 
 import { parseSector, SECTOR_STATIC_PARAMS } from "@/app/utils/sector";
 
-import SpendingView, { spendingMetadata } from "../../spending/SpendingView";
+import SpendingView, {
+  spendingMetadata,
+} from "../../../explainers/spending/SpendingView";
 
 export const dynamicParams = false;
 

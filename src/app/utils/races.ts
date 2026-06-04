@@ -310,3 +310,17 @@ export const getMostRecentRaceResult = (
   );
   return entry?.won;
 };
+
+// Whether the candidate lost their race, derived from the recorded race result
+// rather than the summary's `defeated` flag (which the pipeline doesn't keep in
+// sync with manual race edits). A candidate with an upcoming race isn't defeated,
+// and an uncalled most-recent race (no recorded result) isn't a loss yet.
+export const isDefeated = (
+  races: Race[],
+  candidate: CandidateSummary | ExpenditureCandidateSummary,
+): boolean => {
+  if (getUpcomingRaceForCandidate(races, candidate)) {
+    return false;
+  }
+  return getMostRecentRaceResult(races, candidate) === false;
+};

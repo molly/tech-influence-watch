@@ -12,7 +12,7 @@ import Footer from "./components/Footer";
 import SubscribeBannerWrapper from "./components/SubscribeBannerWrapper";
 import { BASE_METADATA } from "./utils/metadata";
 
-export const revalidate = 3600;
+export const revalidate = 86400;
 const sansFont = IBM_Plex_Sans({
   subsets: ["latin"],
   variable: "--font-sans",

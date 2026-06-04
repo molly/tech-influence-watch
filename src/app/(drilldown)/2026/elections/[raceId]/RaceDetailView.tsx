@@ -57,12 +57,10 @@ export default async function RaceDetailView({
 }) {
   const raceIdSplit = raceId.split("-");
   const raceName = getRaceName(raceId);
-  const stateAbbr = raceIdSplit[0];
-  const stateSlug = STATES_BY_ABBR[stateAbbr]
-    .replaceAll(" ", "-")
-    .toLowerCase();
-  const fullStateName = STATES_BY_ABBR[stateAbbr];
   const isPres = raceId.toUpperCase() === "PRESIDENT";
+  const stateAbbr = raceIdSplit[0];
+  const fullStateName = isPres ? undefined : STATES_BY_ABBR[stateAbbr];
+  const stateSlug = fullStateName?.replaceAll(" ", "-").toLowerCase();
 
   return (
     <>
@@ -70,29 +68,30 @@ export default async function RaceDetailView({
         <section className={sharedStyles.header}>
           <Breadcrumbs
             crumbs={[
-              { name: "Elections", href: sectorHref("/2026/elections", sector) },
               {
-                name: fullStateName,
-                href: sectorHref(`/2026/states/${stateSlug}`, sector),
+                name: "Elections",
+                href: sectorHref("/2026/elections", sector),
               },
+              ...(isPres || !fullStateName
+                ? []
+                : [
+                    {
+                      name: fullStateName,
+                      href: sectorHref(`/2026/states/${stateSlug}`, sector),
+                    },
+                  ]),
               getRaceName(raceId),
             ]}
           />
           <h1 className={sharedStyles.title}>
-            {isPres ? "" : `${fullStateName} ${raceName} election`}
+            {isPres
+              ? "Presidential election"
+              : `${fullStateName} ${raceName} election`}
           </h1>
         </section>
       </div>
       <div className={styles.columns}>
         <div className={styles.electionsColumn}>
-          <span className={styles.electionSubtitle}>
-            Spending by{" "}
-            {humanizeSector(sector, {
-              hyphen: true,
-              lowercase: true,
-            })}
-            focused PACs
-          </span>
           <Suspense fallback={<ElectionsSkeleton />}>
             <Elections raceId={raceId} sector={sector} />
           </Suspense>

@@ -126,7 +126,10 @@ export default async function OppositionSpending({
             <td className="number-cell">
               {formatCurrency(candidate.oppose_total, true)}
             </td>
-            <td className="text-cell">{candidate.common_name}</td>
+            <td className="text-cell">
+              {candidate.common_name}
+              {candidate.party ? ` (${candidate.party})` : ""}
+            </td>
             <td className="text-cell">
               <Link href={sectorHref(`/2026/elections/${race}`, sector)}>
                 {`${STATES_BY_ABBR[candidate.state]} ${getRaceName(race)}`}

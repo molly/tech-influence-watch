@@ -18,7 +18,6 @@ const nextConfig = {
       "expenditures",
       "individuals",
       "quidproquo",
-      "spending",
       "states",
     ];
     const _2026routes = routes.flatMap((route) => [

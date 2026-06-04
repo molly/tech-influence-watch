@@ -34,6 +34,7 @@ import {
   getRaceName,
   getSubraceName,
   getUpcomingRaceForCandidate,
+  isDefeated,
   sortRaces,
 } from "@/app/utils/races";
 import { range } from "@/app/utils/range";
@@ -192,7 +193,7 @@ function Influenced({
       <div className={styles.candidateResultWithImage}>
         <Candidate
           candidateSummary={candidate}
-          defeated={candidate.defeated}
+          defeated={isDefeated(races, candidate)}
           imageOnly={true}
         />
         {candidate.common_name}
@@ -220,7 +221,7 @@ function OtherOnlyInfluenced({
       <div className={styles.candidateResultWithImage}>
         <Candidate
           candidateSummary={candidate}
-          defeated={candidate.defeated}
+          defeated={isDefeated(races, candidate)}
           imageOnly={true}
         />
         {candidate.common_name}
