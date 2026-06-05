@@ -1,0 +1,2701 @@
+{
+  "min_amount": 100000,
+  "grand_total": 502530645.97,
+  "donor_count": 94,
+  "committee_names": {
+    "C00892471": "MAGA Inc.",
+    "C00828541": "Never Surrender, Inc.",
+    "C00762591": "Save America",
+    "C00873893": "Trump National Committee JFC",
+    "C00879510": "America PAC",
+    "C00894162": "Trump Vance Inaugural Committee"
+  },
+  "donors": [
+    {
+      "id": "elon-musk",
+      "label": "Elon Musk",
+      "sector": "tech",
+      "total": 305416225.9,
+      "donor_names": [
+        "MUSK, ELON",
+        "UNITED STATES OF AMERICA INC",
+        "X CORP"
+      ],
+      "contributions": [
+        {
+          "amount": 40495178.0,
+          "date": "2024-11-25",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "UNITED STATES OF AMERICA INC"
+        },
+        {
+          "amount": 30000000.0,
+          "date": "2024-09-05",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "MUSK, ELON"
+        },
+        {
+          "amount": 27072484.0,
+          "date": "2025-06-30",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "UNITED STATES OF AMERICA INC"
+        },
+        {
+          "amount": 25000000.0,
+          "date": "2024-10-31",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "MUSK, ELON"
+        },
+        {
+          "amount": 25000000.0,
+          "date": "2024-10-25",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "MUSK, ELON"
+        },
+        {
+          "amount": 25000000.0,
+          "date": "2024-10-18",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "MUSK, ELON"
+        },
+        {
+          "amount": 15000000.0,
+          "date": "2024-08-20",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "MUSK, ELON"
+        },
+        {
+          "amount": 14700000.0,
+          "date": "2024-10-15",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "MUSK, ELON"
+        },
+        {
+          "amount": 11215136.0,
+          "date": "2024-12-31",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "UNITED STATES OF AMERICA INC"
+        },
+        {
+          "amount": 11000000.0,
+          "date": "2024-10-04",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "MUSK, ELON"
+        },
+        {
+          "amount": 10000000.0,
+          "date": "2024-10-09",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "MUSK, ELON"
+        },
+        {
+          "amount": 7900000.0,
+          "date": "2024-10-11",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "MUSK, ELON"
+        },
+        {
+          "amount": 7500000.0,
+          "date": "2024-08-06",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "MUSK, ELON"
+        },
+        {
+          "amount": 7500000.0,
+          "date": "2024-08-05",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "MUSK, ELON"
+        },
+        {
+          "amount": 5500000.0,
+          "date": "2025-03-19",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "MUSK, ELON"
+        },
+        {
+          "amount": 5000000.0,
+          "date": "2025-06-27",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "MUSK, ELON"
+        },
+        {
+          "amount": 5000000.0,
+          "date": "2024-07-10",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "MUSK, ELON"
+        },
+        {
+          "amount": 5000000.0,
+          "date": "2024-07-03",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "MUSK, ELON"
+        },
+        {
+          "amount": 4950000.0,
+          "date": "2024-07-18",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "MUSK, ELON"
+        },
+        {
+          "amount": 4200000.0,
+          "date": "2025-02-18",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "MUSK, ELON"
+        },
+        {
+          "amount": 4000000.0,
+          "date": "2025-02-28",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "MUSK, ELON"
+        },
+        {
+          "amount": 4000000.0,
+          "date": "2024-11-12",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "MUSK, ELON"
+        },
+        {
+          "amount": 3250000.0,
+          "date": "2025-04-11",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "MUSK, ELON"
+        },
+        {
+          "amount": 1250418.0,
+          "date": "2025-12-31",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "UNITED STATES OF AMERICA INC"
+        },
+        {
+          "amount": 1000000.0,
+          "date": "2025-03-25",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "MUSK, ELON"
+        },
+        {
+          "amount": 1000000.0,
+          "date": "2026-03-27",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "MUSK, ELON"
+        },
+        {
+          "amount": 1000000.0,
+          "date": "2025-01-15",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": "IN-KIND: ADVERTISING",
+          "donor": "X CORP"
+        },
+        {
+          "amount": 750000.0,
+          "date": "2025-12-15",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "MUSK, ELON"
+        },
+        {
+          "amount": 473233.65,
+          "date": "2025-12-31",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "UNITED STATES OF AMERICA INC"
+        },
+        {
+          "amount": 400000.0,
+          "date": "2025-08-06",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "MUSK, ELON"
+        },
+        {
+          "amount": 347996.0,
+          "date": "2026-03-31",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "UNITED STATES OF AMERICA INC"
+        },
+        {
+          "amount": 293451.76,
+          "date": "2026-03-31",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "UNITED STATES OF AMERICA INC"
+        },
+        {
+          "amount": 273791.99,
+          "date": "2025-06-30",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "UNITED STATES OF AMERICA INC"
+        },
+        {
+          "amount": 232500.0,
+          "date": "2024-11-25",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "UNITED STATES OF AMERICA INC"
+        },
+        {
+          "amount": 112036.5,
+          "date": "2024-11-25",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "MUSK, ELON"
+        }
+      ]
+    },
+    {
+      "id": "crypto-com",
+      "label": "Crypto.com",
+      "sector": "crypto",
+      "total": 36000000.0,
+      "donor_names": [
+        "FORIS DAX, INC."
+      ],
+      "contributions": [
+        {
+          "amount": 10000000.0,
+          "date": "2025-02-14",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "FORIS DAX, INC."
+        },
+        {
+          "amount": 10000000.0,
+          "date": "2025-10-22",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "FORIS DAX, INC."
+        },
+        {
+          "amount": 10000000.0,
+          "date": "2025-09-12",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "FORIS DAX, INC."
+        },
+        {
+          "amount": 5000000.0,
+          "date": "2026-01-23",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "FORIS DAX, INC."
+        },
+        {
+          "amount": 1000000.0,
+          "date": "2024-12-16",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "FORIS DAX, INC."
+        }
+      ]
+    },
+    {
+      "id": "openai",
+      "label": "OpenAI",
+      "sector": "ai",
+      "total": 25000000.0,
+      "donor_names": [
+        "BROCKMAN, GREG",
+        "BROCKMAN, ANNA"
+      ],
+      "contributions": [
+        {
+          "amount": 12500000.0,
+          "date": "2025-09-12",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "BROCKMAN, GREG"
+        },
+        {
+          "amount": 12500000.0,
+          "date": "2025-09-12",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "BROCKMAN, ANNA"
+        }
+      ]
+    },
+    {
+      "id": "jeff-yass",
+      "label": "Jeff Yass",
+      "sector": "crypto",
+      "total": 16000000.0,
+      "donor_names": [
+        "YASS, JEFF"
+      ],
+      "contributions": [
+        {
+          "amount": 15000000.0,
+          "date": "2025-03-06",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "YASS, JEFF"
+        },
+        {
+          "amount": 1000000.0,
+          "date": "2025-01-17",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "YASS, JEFF"
+        }
+      ]
+    },
+    {
+      "id": "andreessen-horowitz",
+      "label": "Andreessen Horowitz",
+      "sector": "tech",
+      "total": 12000000.0,
+      "donor_names": [
+        "A16Z CAPITAL MANAGEMENT LLC",
+        "HOROWITZ, BENJAMIN",
+        "ANDREESSEN, MARC L"
+      ],
+      "contributions": [
+        {
+          "amount": 6000000.0,
+          "date": "2026-03-10",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "A16Z CAPITAL MANAGEMENT LLC"
+        },
+        {
+          "amount": 2500000.0,
+          "date": "2025-03-31",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "HOROWITZ, BENJAMIN"
+        },
+        {
+          "amount": 2500000.0,
+          "date": "2025-03-31",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "ANDREESSEN, MARC L"
+        },
+        {
+          "amount": 500000.0,
+          "date": "2025-02-04",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "HOROWITZ, BENJAMIN"
+        },
+        {
+          "amount": 500000.0,
+          "date": "2025-02-03",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "ANDREESSEN, MARC L"
+        }
+      ]
+    },
+    {
+      "id": "intercontinental-exchange",
+      "label": "Intercontinental Exchange",
+      "sector": "crypto",
+      "total": 6000000.0,
+      "donor_names": [
+        "SPRECHER, JEFFREY C",
+        "SPRECHER, JEFFREY"
+      ],
+      "contributions": [
+        {
+          "amount": 5000000.0,
+          "date": "2025-06-25",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "SPRECHER, JEFFREY C"
+        },
+        {
+          "amount": 1000000.0,
+          "date": "2024-12-23",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "SPRECHER, JEFFREY"
+        }
+      ]
+    },
+    {
+      "id": "tools-for-humanity",
+      "label": "Tools for Humanity",
+      "sector": "tech",
+      "total": 5000000.0,
+      "donor_names": [
+        "TOOLS FOR HUMANITY CORPORATION"
+      ],
+      "contributions": [
+        {
+          "amount": 5000000.0,
+          "date": "2025-01-14",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "TOOLS FOR HUMANITY CORPORATION"
+        }
+      ]
+    },
+    {
+      "id": "blockchain-com",
+      "label": "Blockchain.com",
+      "sector": "crypto",
+      "total": 5000000.0,
+      "donor_names": [
+        "BLOCKCHAIN.COM, INC."
+      ],
+      "contributions": [
+        {
+          "amount": 5000000.0,
+          "date": "2025-02-28",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "BLOCKCHAIN.COM, INC."
+        }
+      ]
+    },
+    {
+      "id": "ripple",
+      "label": "Ripple",
+      "sector": "crypto",
+      "total": 4889345.33,
+      "donor_names": [
+        "RIPPLE LABS, INC."
+      ],
+      "contributions": [
+        {
+          "amount": 4889345.33,
+          "date": "2025-01-02",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "RIPPLE LABS, INC."
+        }
+      ]
+    },
+    {
+      "id": "gemini",
+      "label": "Gemini",
+      "sector": "crypto",
+      "total": 4401027.17,
+      "donor_names": [
+        "GEMINI TRUST COMPANY"
+      ],
+      "contributions": [
+        {
+          "amount": 1500000.0,
+          "date": "2025-04-25",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "GEMINI TRUST COMPANY"
+        },
+        {
+          "amount": 1499985.0,
+          "date": "2025-10-21",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "GEMINI TRUST COMPANY"
+        },
+        {
+          "amount": 999699.11,
+          "date": "2025-01-17",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "GEMINI TRUST COMPANY"
+        },
+        {
+          "amount": 401343.06,
+          "date": "2025-01-30",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "GEMINI TRUST COMPANY"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Shift4",
+      "sector": "crypto",
+      "total": 4000000.0,
+      "donor_names": [
+        "ISAACMAN, JARED T",
+        "ISAACMAN, JARED"
+      ],
+      "contributions": [
+        {
+          "amount": 2000000.0,
+          "date": "2024-11-27",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "ISAACMAN, JARED"
+        },
+        {
+          "amount": 1000000.0,
+          "date": "2025-06-30",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "ISAACMAN, JARED T"
+        },
+        {
+          "amount": 1000000.0,
+          "date": "2025-09-15",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "ISAACMAN, JARED T"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Chase Zimmerman",
+      "sector": "crypto",
+      "total": 3499985.0,
+      "donor_names": [
+        "ZIMMERMAN, CHASE"
+      ],
+      "contributions": [
+        {
+          "amount": 1500000.0,
+          "date": "2025-04-25",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "ZIMMERMAN, CHASE"
+        },
+        {
+          "amount": 1499985.0,
+          "date": "2025-10-21",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "ZIMMERMAN, CHASE"
+        },
+        {
+          "amount": 500000.0,
+          "date": "2025-01-09",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "ZIMMERMAN, CHASE"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Chain Bridge Bank",
+      "sector": "crypto",
+      "total": 3199034.73,
+      "donor_names": [
+        "CHAIN BRIDGE BANK NA"
+      ],
+      "contributions": [
+        {
+          "amount": 458324.16,
+          "date": "2024-07-31",
+          "committee_id": "C00828541",
+          "committee_name": "Never Surrender, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "CHAIN BRIDGE BANK NA"
+        },
+        {
+          "amount": 435803.61,
+          "date": "2024-08-13",
+          "committee_id": "C00828541",
+          "committee_name": "Never Surrender, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "CHAIN BRIDGE BANK NA"
+        },
+        {
+          "amount": 318267.77,
+          "date": "2024-09-30",
+          "committee_id": "C00828541",
+          "committee_name": "Never Surrender, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "CHAIN BRIDGE BANK NA"
+        },
+        {
+          "amount": 245052.56,
+          "date": "2024-06-28",
+          "committee_id": "C00828541",
+          "committee_name": "Never Surrender, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "CHAIN BRIDGE BANK NA"
+        },
+        {
+          "amount": 196251.39,
+          "date": "2024-05-31",
+          "committee_id": "C00828541",
+          "committee_name": "Never Surrender, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "CHAIN BRIDGE BANK NA"
+        },
+        {
+          "amount": 146135.42,
+          "date": "2025-10-31",
+          "committee_id": "C00828541",
+          "committee_name": "Never Surrender, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "CHAIN BRIDGE BANK NA"
+        },
+        {
+          "amount": 137836.12,
+          "date": "2025-11-30",
+          "committee_id": "C00828541",
+          "committee_name": "Never Surrender, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "CHAIN BRIDGE BANK NA"
+        },
+        {
+          "amount": 137335.76,
+          "date": "2025-12-31",
+          "committee_id": "C00828541",
+          "committee_name": "Never Surrender, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "CHAIN BRIDGE BANK NA"
+        },
+        {
+          "amount": 136777.74,
+          "date": "2025-09-30",
+          "committee_id": "C00828541",
+          "committee_name": "Never Surrender, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "CHAIN BRIDGE BANK NA"
+        },
+        {
+          "amount": 134746.8,
+          "date": "2025-08-31",
+          "committee_id": "C00828541",
+          "committee_name": "Never Surrender, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "CHAIN BRIDGE BANK NA"
+        },
+        {
+          "amount": 134717.75,
+          "date": "2025-07-31",
+          "committee_id": "C00828541",
+          "committee_name": "Never Surrender, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "CHAIN BRIDGE BANK NA"
+        },
+        {
+          "amount": 133665.81,
+          "date": "2026-01-31",
+          "committee_id": "C00828541",
+          "committee_name": "Never Surrender, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "CHAIN BRIDGE BANK NA"
+        },
+        {
+          "amount": 133347.28,
+          "date": "2026-03-31",
+          "committee_id": "C00828541",
+          "committee_name": "Never Surrender, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "CHAIN BRIDGE BANK NA"
+        },
+        {
+          "amount": 120605.06,
+          "date": "2026-02-28",
+          "committee_id": "C00828541",
+          "committee_name": "Never Surrender, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "CHAIN BRIDGE BANK NA"
+        },
+        {
+          "amount": 117268.84,
+          "date": "2025-06-30",
+          "committee_id": "C00828541",
+          "committee_name": "Never Surrender, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "CHAIN BRIDGE BANK NA"
+        },
+        {
+          "amount": 109566.76,
+          "date": "2024-10-31",
+          "committee_id": "C00828541",
+          "committee_name": "Never Surrender, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "CHAIN BRIDGE BANK NA"
+        },
+        {
+          "amount": 103331.9,
+          "date": "2025-05-31",
+          "committee_id": "C00828541",
+          "committee_name": "Never Surrender, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "CHAIN BRIDGE BANK NA"
+        }
+      ]
+    },
+    {
+      "id": "ondo-finance",
+      "label": "Ondo Finance",
+      "sector": "crypto",
+      "total": 3100000.0,
+      "donor_names": [
+        "ONDO FINANCE INC.",
+        "ONDO FINANCE, INC."
+      ],
+      "contributions": [
+        {
+          "amount": 2000000.0,
+          "date": "2025-02-27",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "ONDO FINANCE INC."
+        },
+        {
+          "amount": 1000000.0,
+          "date": "2025-01-07",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "ONDO FINANCE, INC."
+        },
+        {
+          "amount": 100000.0,
+          "date": "2025-01-16",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "ONDO FINANCE INC."
+        }
+      ]
+    },
+    {
+      "id": "paradigm",
+      "label": "Paradigm",
+      "sector": "crypto",
+      "total": 2200000.0,
+      "donor_names": [
+        "PARADIGM OPERATIONS LP"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2025-04-04",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "PARADIGM OPERATIONS LP"
+        },
+        {
+          "amount": 1000000.0,
+          "date": "2024-12-03",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "PARADIGM OPERATIONS LP"
+        },
+        {
+          "amount": 200000.0,
+          "date": "2025-01-13",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "PARADIGM OPERATIONS LP"
+        }
+      ]
+    },
+    {
+      "id": "robinhood",
+      "label": "Robinhood",
+      "sector": null,
+      "total": 2000000.0,
+      "donor_names": [
+        "ROBINHOOD MARKETS, INC."
+      ],
+      "contributions": [
+        {
+          "amount": 2000000.0,
+          "date": "2024-12-16",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "ROBINHOOD MARKETS, INC."
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Valor Equity Partners",
+      "sector": "tech",
+      "total": 2000000.0,
+      "donor_names": [
+        "GRACIAS, ANTONIO J",
+        "GRACIAS, ANTONIO"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2025-01-13",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "GRACIAS, ANTONIO J"
+        },
+        {
+          "amount": 1000000.0,
+          "date": "2024-06-28",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "GRACIAS, ANTONIO"
+        }
+      ]
+    },
+    {
+      "id": "palantir",
+      "label": "Palantir",
+      "sector": "ai",
+      "total": 2000000.0,
+      "donor_names": [
+        "KARP, ALEXANDER C",
+        "KARP, ALEXANDER"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2024-12-12",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "KARP, ALEXANDER C"
+        },
+        {
+          "amount": 1000000.0,
+          "date": "2024-12-17",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "KARP, ALEXANDER"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Kenneth Howery",
+      "sector": "tech",
+      "total": 2000000.0,
+      "donor_names": [
+        "HOWERY, KENNETH",
+        "HOWERY, KEN"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2024-12-09",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "HOWERY, KEN"
+        },
+        {
+          "amount": 250000.0,
+          "date": "2024-06-25",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "HOWERY, KENNETH"
+        },
+        {
+          "amount": 250000.0,
+          "date": "2024-06-24",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "HOWERY, KENNETH"
+        },
+        {
+          "amount": 250000.0,
+          "date": "2024-06-21",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "HOWERY, KENNETH"
+        },
+        {
+          "amount": 250000.0,
+          "date": "2024-06-20",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "HOWERY, KENNETH"
+        }
+      ]
+    },
+    {
+      "id": "amazon",
+      "label": "Amazon",
+      "sector": "tech",
+      "total": 1888893.52,
+      "donor_names": [
+        "AMAZON"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2024-12-23",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "AMAZON"
+        },
+        {
+          "amount": 888893.52,
+          "date": "2025-01-20",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": "IN-KIND: DIGITAL SERVICES & ADVERTISING",
+          "donor": "AMAZON"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Andy Beal",
+      "sector": "crypto",
+      "total": 1550000.0,
+      "donor_names": [
+        "BEAL, ANDY"
+      ],
+      "contributions": [
+        {
+          "amount": 1550000.0,
+          "date": "2024-11-20",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "BEAL, ANDY"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Sequoia Capital",
+      "sector": "tech",
+      "total": 1500000.0,
+      "donor_names": [
+        "LEONE, DOUGLAS",
+        "MAGUIRE, SHAUN"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2024-06-14",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "LEONE, DOUGLAS"
+        },
+        {
+          "amount": 500000.0,
+          "date": "2024-06-18",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "MAGUIRE, SHAUN"
+        }
+      ]
+    },
+    {
+      "id": "input-output-global",
+      "label": "Input Output Global",
+      "sector": "crypto",
+      "total": 1250000.0,
+      "donor_names": [
+        "INPUT OUTPUT GLOBAL INC."
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2025-01-31",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "INPUT OUTPUT GLOBAL INC."
+        },
+        {
+          "amount": 250000.0,
+          "date": "2025-01-08",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "INPUT OUTPUT GLOBAL INC."
+        }
+      ]
+    },
+    {
+      "id": "cantor-fitzgerald",
+      "label": "Cantor Fitzgerald",
+      "sector": "crypto",
+      "total": 1047000.0,
+      "donor_names": [
+        "CANTOR FITZGERALD AND CO"
+      ],
+      "contributions": [
+        {
+          "amount": 1047000.0,
+          "date": "2024-12-23",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "CANTOR FITZGERALD AND CO"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "TWG Global",
+      "sector": "tech",
+      "total": 1000000.0,
+      "donor_names": [
+        "TULL, THOMAS"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2025-01-09",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "TULL, THOMAS"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Stake",
+      "sector": "crypto",
+      "total": 1000000.0,
+      "donor_names": [
+        "TEHRANI, BIJAN"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2025-02-25",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "TEHRANI, BIJAN"
+        }
+      ]
+    },
+    {
+      "id": "solios",
+      "label": "Solios",
+      "sector": "crypto",
+      "total": 1000000.0,
+      "donor_names": [
+        "SOLIOS INC"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2025-01-14",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "SOLIOS INC"
+        }
+      ]
+    },
+    {
+      "id": "strategy",
+      "label": "Strategy (formerly MicroStrategy)",
+      "sector": "crypto",
+      "total": 1000000.0,
+      "donor_names": [
+        "MICROSTRATEGY INC"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2025-01-13",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "MICROSTRATEGY INC"
+        }
+      ]
+    },
+    {
+      "id": "mara-holdings",
+      "label": "MARA Holdings",
+      "sector": "crypto",
+      "total": 1000000.0,
+      "donor_names": [
+        "MARATHON DIGITAL HOLDINGS INC"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2025-01-06",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "MARATHON DIGITAL HOLDINGS INC"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Exodus Movement",
+      "sector": "crypto",
+      "total": 1000000.0,
+      "donor_names": [
+        "EXODUS MOVEMENT INC"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2025-01-13",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "EXODUS MOVEMENT INC"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Timothy Draper",
+      "sector": "tech",
+      "total": 1000000.0,
+      "donor_names": [
+        "DRAPER, TIMOTHY"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2025-04-02",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "DRAPER, TIMOTHY"
+        }
+      ]
+    },
+    {
+      "id": "bitgo",
+      "label": "BitGo",
+      "sector": "crypto",
+      "total": 1000000.0,
+      "donor_names": [
+        "BITGO INC"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2025-01-09",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "BITGO INC"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Ava Labs",
+      "sector": "crypto",
+      "total": 1000000.0,
+      "donor_names": [
+        "AVA LABS INC"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2025-04-02",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "AVA LABS INC"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "AMD",
+      "sector": "ai",
+      "total": 1000000.0,
+      "donor_names": [
+        "ADVANCED MICRO DEVICES INC."
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2025-01-14",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "ADVANCED MICRO DEVICES INC."
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Noosheen Hashemi",
+      "sector": "ai",
+      "total": 1000000.0,
+      "donor_names": [
+        "HASHEMI, NOOSHEEN"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2025-10-28",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "HASHEMI, NOOSHEEN"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Ziad Ghandour",
+      "sector": "ai",
+      "total": 1000000.0,
+      "donor_names": [
+        "GHANDOUR, ZIAD"
+      ],
+      "contributions": [
+        {
+          "amount": 800000.0,
+          "date": "2024-12-18",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "GHANDOUR, ZIAD"
+        },
+        {
+          "amount": 200000.0,
+          "date": "2024-12-18",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "GHANDOUR, ZIAD"
+        }
+      ]
+    },
+    {
+      "id": "lonsdale-enterprises",
+      "label": "Lonsdale Enterprises",
+      "sector": "ai",
+      "total": 1000000.0,
+      "donor_names": [
+        "LONSDALE ENTERPRISES INC."
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2024-06-07",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "LONSDALE ENTERPRISES INC."
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Adobe",
+      "sector": "ai",
+      "total": 1000000.0,
+      "donor_names": [
+        "ADOBE, INC."
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2025-01-06",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "ADOBE, INC."
+        }
+      ]
+    },
+    {
+      "id": "sam-altman",
+      "label": "Sam Altman",
+      "sector": "ai",
+      "total": 1000000.0,
+      "donor_names": [
+        "ALTMAN, SAMUEL"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2024-12-13",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "ALTMAN, SAMUEL"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Blackrock",
+      "sector": "crypto",
+      "total": 1000000.0,
+      "donor_names": [
+        "BLACKROCK FINANCIAL MANAGEMENT INC"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2024-12-31",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "BLACKROCK FINANCIAL MANAGEMENT INC"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Blackstone",
+      "sector": "ai",
+      "total": 1000000.0,
+      "donor_names": [
+        "BLACKSTONE INC"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2025-04-02",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "BLACKSTONE INC"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Broadcom",
+      "sector": "ai",
+      "total": 1000000.0,
+      "donor_names": [
+        "BROADCOM, INC"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2024-12-16",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "BROADCOM, INC"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "C3.AI",
+      "sector": "ai",
+      "total": 1000000.0,
+      "donor_names": [
+        "C3.AI, INC."
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2024-12-05",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "C3.AI, INC."
+        }
+      ]
+    },
+    {
+      "id": "circle",
+      "label": "Circle",
+      "sector": "crypto",
+      "total": 1000000.0,
+      "donor_names": [
+        "CIRCLE INTERNET GROUP, INC."
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2025-01-08",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "CIRCLE INTERNET GROUP, INC."
+        }
+      ]
+    },
+    {
+      "id": "coinbase",
+      "label": "Coinbase",
+      "sector": "crypto",
+      "total": 1000000.0,
+      "donor_names": [
+        "COINBASE, INC."
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2024-12-03",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "COINBASE, INC."
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Apple",
+      "sector": "ai",
+      "total": 1000000.0,
+      "donor_names": [
+        "COOK, TIMOTHY"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2025-01-03",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "COOK, TIMOTHY"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Coupang",
+      "sector": "ai",
+      "total": 1000000.0,
+      "donor_names": [
+        "COUPANG, INC."
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2024-12-16",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "COUPANG, INC."
+        }
+      ]
+    },
+    {
+      "id": "fred-ehrsam",
+      "label": "Fred Ehrsam",
+      "sector": "crypto",
+      "total": 1000000.0,
+      "donor_names": [
+        "EHRSAM, FREDERICK"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2025-01-07",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "EHRSAM, FREDERICK"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Freedom Holding",
+      "sector": "tech",
+      "total": 1000000.0,
+      "donor_names": [
+        "FREEDOM HOLDING CORP"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2025-01-10",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": "REFUNDED 01/21/2025",
+          "donor": "FREEDOM HOLDING CORP"
+        }
+      ]
+    },
+    {
+      "id": "galaxy-digital",
+      "label": "Galaxy Digital",
+      "sector": "crypto",
+      "total": 1000000.0,
+      "donor_names": [
+        "GALAXY DIGITAL SERVICES LLC"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2024-12-18",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "GALAXY DIGITAL SERVICES LLC"
+        }
+      ]
+    },
+    {
+      "id": "google",
+      "label": "Google",
+      "sector": "ai",
+      "total": 1000000.0,
+      "donor_names": [
+        "GOOGLE"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2025-01-06",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "GOOGLE"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Intuit",
+      "sector": "ai",
+      "total": 1000000.0,
+      "donor_names": [
+        "INTUIT INCORPORATED"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2024-12-20",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "INTUIT INCORPORATED"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Kohlberg Kavas Roberts",
+      "sector": "tech",
+      "total": 1000000.0,
+      "donor_names": [
+        "KOHLBERG KRAVIS ROBERTS CO LP"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2025-01-07",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "KOHLBERG KRAVIS ROBERTS CO LP"
+        }
+      ]
+    },
+    {
+      "id": "meta",
+      "label": "Meta",
+      "sector": "ai",
+      "total": 1000000.0,
+      "donor_names": [
+        "META"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2024-12-30",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "META"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Micron Technology",
+      "sector": "ai",
+      "total": 1000000.0,
+      "donor_names": [
+        "MICRON TECHNOLOGY INC."
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2025-01-08",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "MICRON TECHNOLOGY INC."
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "NVIDIA",
+      "sector": "ai",
+      "total": 1000000.0,
+      "donor_names": [
+        "NVIDIA CORPORATION"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2025-01-13",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "NVIDIA CORPORATION"
+        }
+      ]
+    },
+    {
+      "id": "kraken",
+      "label": "Kraken",
+      "sector": "crypto",
+      "total": 1000000.0,
+      "donor_names": [
+        "PAYWARD INC"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2024-12-04",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "PAYWARD INC"
+        }
+      ]
+    },
+    {
+      "id": "perplexity",
+      "label": "Perplexity",
+      "sector": "ai",
+      "total": 1000000.0,
+      "donor_names": [
+        "PERPLEXITY AI, INC."
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2024-12-13",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "PERPLEXITY AI, INC."
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Qualcomm",
+      "sector": "ai",
+      "total": 1000000.0,
+      "donor_names": [
+        "QUALCOMM INCORPORATED"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2025-01-03",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "QUALCOMM INCORPORATED"
+        }
+      ]
+    },
+    {
+      "id": "keith-rabois",
+      "label": "Keith Rabois",
+      "sector": "tech",
+      "total": 1000000.0,
+      "donor_names": [
+        "RABOIS, KEITH"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2024-11-19",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "RABOIS, KEITH"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Trousdale Ventures",
+      "sector": "ai",
+      "total": 1000000.0,
+      "donor_names": [
+        "SAROFIM, PHILLIP"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2025-01-08",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "SAROFIM, PHILLIP"
+        }
+      ]
+    },
+    {
+      "id": "solana-labs",
+      "label": "Solana Labs",
+      "sector": "crypto",
+      "total": 1000000.0,
+      "donor_names": [
+        "SOLANA LABS, INC."
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2025-01-08",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "SOLANA LABS, INC."
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Veeam Software",
+      "sector": "ai",
+      "total": 1000000.0,
+      "donor_names": [
+        "VEEAM SOFTWARE CORPORATION"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2025-01-03",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "VEEAM SOFTWARE CORPORATION"
+        }
+      ]
+    },
+    {
+      "id": "gala-games",
+      "label": "Gala Games",
+      "sector": "crypto",
+      "total": 999903.0,
+      "donor_names": [
+        "BLOCKCHAIN GAME PARTNERS INC",
+        "SCHIERMEYER, ERIC"
+      ],
+      "contributions": [
+        {
+          "amount": 598559.94,
+          "date": "2025-02-26",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "BLOCKCHAIN GAME PARTNERS INC"
+        },
+        {
+          "amount": 401343.06,
+          "date": "2025-01-30",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "SCHIERMEYER, ERIC"
+        }
+      ]
+    },
+    {
+      "id": "paxos",
+      "label": "Paxos",
+      "sector": "crypto",
+      "total": 988426.85,
+      "donor_names": [
+        "CASCARILLA, CHARLES"
+      ],
+      "contributions": [
+        {
+          "amount": 988426.85,
+          "date": "2025-01-08",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "CASCARILLA, CHARLES"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Stonepeak",
+      "sector": "ai",
+      "total": 926300.0,
+      "donor_names": [
+        "DORRELL, MICHAEL"
+      ],
+      "contributions": [
+        {
+          "amount": 926300.0,
+          "date": "2024-11-20",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "DORRELL, MICHAEL"
+        }
+      ]
+    },
+    {
+      "id": "tyler-winklevoss",
+      "label": "Tyler Winklevoss",
+      "sector": "crypto",
+      "total": 764272.13,
+      "donor_names": [
+        "WINKLEVOSS, TYLER"
+      ],
+      "contributions": [
+        {
+          "amount": 514272.13,
+          "date": "2025-01-17",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "WINKLEVOSS, TYLER"
+        },
+        {
+          "amount": 250000.0,
+          "date": "2024-06-21",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "WINKLEVOSS, TYLER"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "HBAR Inc.",
+      "sector": "crypto",
+      "total": 750000.0,
+      "donor_names": [
+        "HBAR INC"
+      ],
+      "contributions": [
+        {
+          "amount": 750000.0,
+          "date": "2025-01-14",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "HBAR INC"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "IBM",
+      "sector": "ai",
+      "total": 750000.0,
+      "donor_names": [
+        "IBM CORPORATION"
+      ],
+      "contributions": [
+        {
+          "amount": 750000.0,
+          "date": "2025-01-15",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "IBM CORPORATION"
+        }
+      ]
+    },
+    {
+      "id": "microsoft",
+      "label": "Microsoft",
+      "sector": "ai",
+      "total": 750000.0,
+      "donor_names": [
+        "MICROSOFT CORPORATION"
+      ],
+      "contributions": [
+        {
+          "amount": 500000.0,
+          "date": "2025-01-13",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "MICROSOFT CORPORATION"
+        },
+        {
+          "amount": 250000.0,
+          "date": "2025-01-28",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "MICROSOFT CORPORATION"
+        }
+      ]
+    },
+    {
+      "id": "cameron-winklevoss",
+      "label": "Cameron Winklevoss",
+      "sector": "crypto",
+      "total": 749504.78,
+      "donor_names": [
+        "WINKLEVOSS, CAMERON"
+      ],
+      "contributions": [
+        {
+          "amount": 499504.78,
+          "date": "2025-01-17",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "WINKLEVOSS, CAMERON"
+        },
+        {
+          "amount": 250000.0,
+          "date": "2024-06-21",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "WINKLEVOSS, CAMERON"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Axon Enterprise",
+      "sector": "ai",
+      "total": 500000.0,
+      "donor_names": [
+        "AXON ENTERPRISE INC."
+      ],
+      "contributions": [
+        {
+          "amount": 500000.0,
+          "date": "2025-01-13",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "AXON ENTERPRISE INC."
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Jane Street Capital",
+      "sector": "crypto",
+      "total": 500000.0,
+      "donor_names": [
+        "GRANIERI, ROBERT"
+      ],
+      "contributions": [
+        {
+          "amount": 500000.0,
+          "date": "2025-01-08",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "GRANIERI, ROBERT"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Robert Mercerte",
+      "sector": "tech",
+      "total": 500000.0,
+      "donor_names": [
+        "MERCER, ROBERT"
+      ],
+      "contributions": [
+        {
+          "amount": 500000.0,
+          "date": "2024-12-16",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "MERCER, ROBERT"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Triller Group",
+      "sector": "ai",
+      "total": 500000.0,
+      "donor_names": [
+        "TRILLER GROUP INC"
+      ],
+      "contributions": [
+        {
+          "amount": 500000.0,
+          "date": "2025-01-15",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "TRILLER GROUP INC"
+        }
+      ]
+    },
+    {
+      "id": "multicoin-capital",
+      "label": "Multicoin Capital",
+      "sector": "crypto",
+      "total": 450000.0,
+      "donor_names": [
+        "SAMANI, PYAHM"
+      ],
+      "contributions": [
+        {
+          "amount": 250000.0,
+          "date": "2024-12-19",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "SAMANI, PYAHM"
+        },
+        {
+          "amount": 200000.0,
+          "date": "2025-01-07",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "SAMANI, PYAHM"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Samsung",
+      "sector": "tech",
+      "total": 315000.0,
+      "donor_names": [
+        "SAMSUNG ELECTRONICS AMERICA"
+      ],
+      "contributions": [
+        {
+          "amount": 315000.0,
+          "date": "2025-01-13",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": "IN-KIND CONTRIBUTION: EQUIPMENT EXPENSE",
+          "donor": "SAMSUNG ELECTRONICS AMERICA"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Swirlds",
+      "sector": "crypto",
+      "total": 250000.0,
+      "donor_names": [
+        "SWIRLDS INC"
+      ],
+      "contributions": [
+        {
+          "amount": 250000.0,
+          "date": "2025-01-14",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "SWIRLDS INC"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Benjamin Harburg",
+      "sector": "tech",
+      "total": 250000.0,
+      "donor_names": [
+        "HARBURG, BENJAMIN"
+      ],
+      "contributions": [
+        {
+          "amount": 250000.0,
+          "date": "2025-01-02",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "HARBURG, BENJAMIN"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "CloudHQ",
+      "sector": "ai",
+      "total": 250000.0,
+      "donor_names": [
+        "CLOUDHQ LLC"
+      ],
+      "contributions": [
+        {
+          "amount": 250000.0,
+          "date": "2025-01-07",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "CLOUDHQ LLC"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Hewlett Packard",
+      "sector": "ai",
+      "total": 250000.0,
+      "donor_names": [
+        "HEWLETT PACKARD ENTERPRISE COMPANY"
+      ],
+      "contributions": [
+        {
+          "amount": 250000.0,
+          "date": "2025-01-23",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "HEWLETT PACKARD ENTERPRISE COMPANY"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Nicole McGraw",
+      "sector": "crypto",
+      "total": 250000.0,
+      "donor_names": [
+        "MCGRAW, NICOLE"
+      ],
+      "contributions": [
+        {
+          "amount": 250000.0,
+          "date": "2024-12-13",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "MCGRAW, NICOLE"
+        }
+      ]
+    },
+    {
+      "id": "paypal",
+      "label": "PayPal",
+      "sector": "crypto",
+      "total": 250000.0,
+      "donor_names": [
+        "PAYPAL, INC"
+      ],
+      "contributions": [
+        {
+          "amount": 250000.0,
+          "date": "2024-12-27",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "PAYPAL, INC"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Jai Saboo",
+      "sector": "ai",
+      "total": 250000.0,
+      "donor_names": [
+        "SABOO, JAI"
+      ],
+      "contributions": [
+        {
+          "amount": 250000.0,
+          "date": "2025-01-13",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "SABOO, JAI"
+        }
+      ]
+    },
+    {
+      "id": "hayden-adams",
+      "label": "Hayden Adams",
+      "sector": "crypto",
+      "total": 245727.56,
+      "donor_names": [
+        "ADAMS, HAYDEN"
+      ],
+      "contributions": [
+        {
+          "amount": 245727.56,
+          "date": "2025-01-09",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "ADAMS, HAYDEN"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Zeta Global",
+      "sector": "ai",
+      "total": 200000.0,
+      "donor_names": [
+        "ZETA GLOBAL CORPORATION"
+      ],
+      "contributions": [
+        {
+          "amount": 200000.0,
+          "date": "2024-12-31",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "ZETA GLOBAL CORPORATION"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "SAP",
+      "sector": "ai",
+      "total": 200000.0,
+      "donor_names": [
+        "SAP AMERICA, INC.",
+        "SAP NATIONAL SECURITY SERVICES, INC. (SAP NS2)"
+      ],
+      "contributions": [
+        {
+          "amount": 100000.0,
+          "date": "2025-01-07",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "SAP AMERICA, INC."
+        },
+        {
+          "amount": 100000.0,
+          "date": "2024-12-31",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "SAP NATIONAL SECURITY SERVICES, INC. (SAP NS2)"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Joshua Pack",
+      "sector": "crypto",
+      "total": 125000.0,
+      "donor_names": [
+        "PACK, JOSHUA"
+      ],
+      "contributions": [
+        {
+          "amount": 125000.0,
+          "date": "2025-01-11",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "PACK, JOSHUA"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Scale AI",
+      "sector": null,
+      "total": 125000.0,
+      "donor_names": [
+        "SCALE AI"
+      ],
+      "contributions": [
+        {
+          "amount": 125000.0,
+          "date": "2025-01-10",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "SCALE AI"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Jito Labs",
+      "sector": "crypto",
+      "total": 100000.0,
+      "donor_names": [
+        "JITO LABS INC"
+      ],
+      "contributions": [
+        {
+          "amount": 100000.0,
+          "date": "2025-01-15",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "JITO LABS INC"
+        }
+      ]
+    },
+    {
+      "id": "crypto",
+      "label": "Consensys",
+      "sector": "crypto",
+      "total": 100000.0,
+      "donor_names": [
+        "CONSENSYS SOFTWARE INC."
+      ],
+      "contributions": [
+        {
+          "amount": 100000.0,
+          "date": "2025-01-16",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "CONSENSYS SOFTWARE INC."
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Socure",
+      "sector": "ai",
+      "total": 100000.0,
+      "donor_names": [
+        "SOCURE"
+      ],
+      "contributions": [
+        {
+          "amount": 100000.0,
+          "date": "2024-12-13",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "SOCURE"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Capital Group",
+      "sector": "crypto",
+      "total": 100000.0,
+      "donor_names": [
+        "THE CAPITAL GROUP COMPANIES INC,"
+      ],
+      "contributions": [
+        {
+          "amount": 100000.0,
+          "date": "2025-01-13",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "THE CAPITAL GROUP COMPANIES INC,"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Yuga Labs",
+      "sector": "crypto",
+      "total": 100000.0,
+      "donor_names": [
+        "YUGA LABS INC."
+      ],
+      "contributions": [
+        {
+          "amount": 100000.0,
+          "date": "2024-12-20",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "YUGA LABS INC."
+        }
+      ]
+    }
+  ]
+}

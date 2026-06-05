@@ -1,0 +1,83 @@
+.heroWithStat {
+  composes: heroWithStat from "@/app/shared.module.css";
+  margin-bottom: 2rem;
+}
+
+.untrackedTag {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.05rem 0.3rem;
+  font-family: var(--font-sans);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--secondary-text);
+  border: 1px solid var(--card-border);
+  border-radius: var(--border-radius);
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.committeeTable,
+.contributionsTable {
+  width: 100%;
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+  border-collapse: collapse;
+}
+
+.committeeTable tr td:first-child,
+.contributionsTable tr :first-child {
+  padding-left: 0;
+}
+
+.committeeTable tr td:nth-child(2),
+.contributionsTable tr :last-child {
+  padding-right: 0;
+}
+
+.committeeRow:not(:last-child) {
+  border-bottom: 1px solid var(--table-color);
+}
+
+.tableNote {
+  color: var(--secondary-text);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.contributionsTable th {
+  text-align: left;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--secondary-text);
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.contributionsTable td {
+  padding: 0.4rem 0.5rem;
+  vertical-align: top;
+}
+
+.contributionsTable tbody tr:not(:last-child) td {
+  border-bottom: 1px solid var(--table-color);
+}
+
+.dateCell {
+  color: var(--secondary-text);
+  white-space: nowrap;
+}
+
+.inKind {
+  color: var(--tertiary-text);
+  font-size: 0.8rem;
+}
+
+@media (max-width: 768px) {
+  .contributionsTable {
+    font-size: 0.8rem;
+  }
+}
