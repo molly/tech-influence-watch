@@ -15,6 +15,9 @@ import ContributionsGroup, {
   ContributionsGroupSkeleton,
 } from "@/app/components/individualOrCompany/ContributionsGroup";
 import KnownDonors from "@/app/components/individualOrCompany/KnownDonors";
+import ReportedContributions, {
+  ReportedContribution,
+} from "@/app/components/individualOrCompany/ReportedContributions";
 import SpendingScope from "@/app/components/individualOrCompany/SpendingScope";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import USMapSkeleton from "@/app/components/skeletons/USMapSkeleton";
@@ -115,6 +118,27 @@ export default async function CompanyPage({
   // don't disclose donors in FEC data), not on the regenerated company doc.
   const knownDonors = companiesConst?.[companyParam]?.knownDonors ?? [];
 
+  // Inverse of knownDonors: reported gifts FROM this company. Scan every org's
+  // curated donor list for entries that point back at this company, so a gift
+  // surfaces as the donor's spending too (kept separate from FEC contributions).
+  const reportedContributions: ReportedContribution[] = Object.entries(
+    companiesConst ?? {},
+  ).flatMap(([recipientId, recipientConst]) =>
+    (recipientConst.knownDonors ?? [])
+      .filter(
+        (donor) =>
+          donor.id === companyParam && (donor.idType ?? "company") === "company",
+      )
+      .map((donor) => ({
+        recipientId,
+        recipientName: recipientConst.name,
+        amount: donor.amount,
+        date: donor.date,
+        source: donor.source,
+        sourceUrl: donor.sourceUrl,
+      })),
+  );
+
   // Filter out omitted contributions and recompute group totals
   const visibleContributions = (company.contributions ?? [])
     .map((group) => {
@@ -202,6 +226,12 @@ export default async function CompanyPage({
             )}
           </section>
           </Suspense>
+          {reportedContributions.length > 0 && (
+            <ReportedContributions
+              contributions={reportedContributions}
+              donorName={company.name}
+            />
+          )}
         </div>
         <div
           className={`${sharedStyles.sideColumn} ${sharedStyles.constrainedColumn}`}
@@ -212,6 +242,10 @@ export default async function CompanyPage({
               superPacGroups={superPacGroups}
               partyGroups={partyGroups}
               candidateGroups={candidateGroups}
+              darkMoneyTotal={reportedContributions.reduce(
+                (sum, c) => sum + c.amount,
+                0,
+              )}
             />
           </Suspense>
           <Suspense fallback={<ContributionsByPartySkeleton />}>

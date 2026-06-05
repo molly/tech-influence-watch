@@ -34,16 +34,16 @@
 
 .name a {
   color: var(--main-text);
+  text-decoration: underline;
 }
 
 .name a:hover {
-  color: var(--accent-on-light);
+  color: var(--main-text);
 }
 
 .amount {
-  font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
   align-self: center;

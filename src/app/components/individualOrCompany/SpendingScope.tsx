@@ -13,17 +13,22 @@ export default function CompanySpendingBreakdown({
   superPacGroups,
   partyGroups,
   candidateGroups,
+  darkMoneyTotal = 0,
   hasMap = true,
 }: {
   name: string;
   superPacGroups: IndividualOrCompanyContributionGroup[];
   partyGroups: IndividualOrCompanyContributionGroup[];
   candidateGroups: IndividualOrCompanyContributionGroup[];
+  // Reported gifts to non-disclosing dark-money groups (FROM this org). Not in
+  // FEC data, so passed in separately; omitted on pages without reported gifts.
+  darkMoneyTotal?: number;
   hasMap?: boolean;
 }) {
   const superPacTotal = superPacGroups.reduce((sum, g) => sum + g.total, 0);
   const partyTotal = partyGroups.reduce((sum, g) => sum + g.total, 0);
   const candidateTotal = candidateGroups.reduce((sum, g) => sum + g.total, 0);
+  const hasDarkMoney = darkMoneyTotal > 0;
 
   const topNonPartisanSuperPac = superPacGroups
     .filter(
@@ -33,7 +38,7 @@ export default function CompanySpendingBreakdown({
         g.recipient.party === "U",
     )
     .sort((a, b) => b.total - a.total)[0];
-  const total = superPacTotal + partyTotal + candidateTotal;
+  const total = superPacTotal + partyTotal + candidateTotal + darkMoneyTotal;
 
   if (superPacTotal === 0) {
     return null;
@@ -42,6 +47,7 @@ export default function CompanySpendingBreakdown({
   const superPacPct = (superPacTotal / total) * 100;
   const partyPct = (partyTotal / total) * 100;
   const candidatePct = (candidateTotal / total) * 100;
+  const darkMoneyPct = (darkMoneyTotal / total) * 100;
 
   return (
     <section
@@ -53,7 +59,7 @@ export default function CompanySpendingBreakdown({
       <div
         className={styles.breakdownBar}
         role="img"
-        aria-label={`${name} spending breakdown: ${Math.round(superPacPct)}% Super PACs, ${Math.round(partyPct)}% Party committees, ${Math.round(candidatePct)}% benefitting specific candidates`}
+        aria-label={`${name} spending breakdown: ${Math.round(superPacPct)}% Super PACs, ${Math.round(partyPct)}% Party committees, ${Math.round(candidatePct)}% benefitting specific candidates${hasDarkMoney ? `, ${Math.round(darkMoneyPct)}% dark-money groups` : ""}`}
       >
         {superPacTotal > 0 && (
           <div
@@ -73,8 +79,16 @@ export default function CompanySpendingBreakdown({
             style={{ width: `${candidatePct}%` }}
           />
         )}
+        {hasDarkMoney && (
+          <div
+            className={`${styles.breakdownBarSegment} ${styles.darkMoneyBarSegment}`}
+            style={{ width: `${darkMoneyPct}%` }}
+          />
+        )}
       </div>
-      <div className={styles.breakdownColumns}>
+      <div
+        className={`${styles.breakdownColumns} ${hasDarkMoney ? styles.breakdownColumnsFour : ""}`}
+      >
         <div className={`${styles.breakdownColumn} ${styles.superPacColumn}`}>
           <p className={styles.breakdownLabel}>to super PACs</p>
           <p className={styles.breakdownAmount}>
@@ -104,6 +118,17 @@ export default function CompanySpendingBreakdown({
             {parseFloat(candidatePct.toFixed(1))}%
           </p>
         </div>
+        {hasDarkMoney && (
+          <div className={`${styles.breakdownColumn} ${styles.darkMoneyColumn}`}>
+            <p className={styles.breakdownLabel}>to dark-money groups</p>
+            <p className={styles.breakdownAmount}>
+              ${humanizeApproximateRounded(darkMoneyTotal, 1)}
+            </p>
+            <p className={styles.breakdownDetails}>
+              {parseFloat(darkMoneyPct.toFixed(1))}%
+            </p>
+          </div>
+        )}
       </div>
       {superPacTotal > 0 && (
         <div className={styles.breakdownNote}>

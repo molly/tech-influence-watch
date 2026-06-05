@@ -74,7 +74,7 @@ export default async function BeneficiariesView({
     <>
       <BeneficiariesHeader
         sector={sector}
-        totalSpending={companyTotals.total}
+        totalSpending={companyTotals.fec_total}
         numBeneficiaries={allOrder.length}
       />
       <div className={`${sharedStyles.main} ${sharedStyles.columns}`}>
@@ -145,7 +145,7 @@ export default async function BeneficiariesView({
           sector={sector}
           beneficiaries={beneficiaries}
           allOrder={allOrder}
-          max={companyTotals.total}
+          max={companyTotals.fec_total}
         />
       </div>
     </>

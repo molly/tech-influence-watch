@@ -379,7 +379,10 @@ export const fetchCommitteeTransferGraph = cache(
         continue;
       }
       for (const group of data.groups) {
-        const match = (group.link ?? "").match(/^\/committees\/([^/]+)$/);
+        // Tolerate both the /2026-prefixed link format and the older bare form.
+        const match = (group.link ?? "").match(
+          /^(?:\/2026)?\/committees\/([^/]+)$/,
+        );
         if (!match) {
           continue;
         }

@@ -87,7 +87,11 @@ function getCandidateDisplay(
   const race_link = details.race_link;
   let race_id: string | undefined;
   if (race_link) {
-    race_id = race_link.replace("/2026/elections/", "").toUpperCase();
+    // The race id is the last path segment, regardless of the link's prefix
+    // (e.g. "/2026/elections/IA-H-01" or "/elections/IA-H-01"). Stripping a
+    // hardcoded prefix breaks if the stored format drifts, leaving the prefix
+    // in race_id and making the state lookup resolve to undefined.
+    race_id = race_link.split("/").filter(Boolean).pop()?.toUpperCase();
   } else if (details.state && details.office) {
     const parts = [details.state, details.office];
     if (details.district && details.district !== "00") {

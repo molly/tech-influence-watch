@@ -20,7 +20,7 @@ async function SpendingTotal({ sector }: { sector: Sector }) {
     <span className={sharedStyles.sectionTitleAmount}>
       of{" "}
       <span className={sharedStyles.sectionTitleAmountValue}>
-        {formatCompact((data as CompanyTotals).total)}
+        {formatCompact((data as CompanyTotals).fec_total)}
       </span>{" "}
       total
     </span>
@@ -44,7 +44,10 @@ async function AllCompanySpendingByPartyContent({
     UNK,
     OTH: Object.values(rest).reduce((acc, amt) => acc + amt, 0),
   };
-  return <HorizontalPartyBars partySummary={partySummary} max={summary.total} />;
+  // FEC-only: party bars sum to `fec_total` (reported dark money has no party).
+  return (
+    <HorizontalPartyBars partySummary={partySummary} max={summary.fec_total} />
+  );
 }
 
 export default function AllCompanySpendingByParty({

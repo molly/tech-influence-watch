@@ -20,9 +20,15 @@
 
 .netTitleRow {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 0.75rem;
   margin-bottom: 0.5rem;
+}
+
+/* The Badges component wraps its badge in a div with a list-context bottom
+   margin; reset it so the badge centers cleanly against the title. */
+.netTitleRow > div {
+  margin-bottom: 0;
 }
 
 .netTitle {

@@ -80,15 +80,31 @@ export type Company = CompanyConstant & {
 
 export type CompanyTotalByCompany = {
   by_party: Record<string, number>;
+  // Full political spending: `fec_total` + `reported`. Use for headline/ranking
+  // figures. NOTE: summing this across companies can double-count dark-money
+  // pass-through, since a reported recipient may also appear via its own FEC
+  // outbound — acceptable for "money each company put in", not for net flow.
   total: number;
-  // Portion of `total` that went to committees the site tracks
+  // FEC-verified spending only; `by_party` reconciles to this. Use for
+  // destination-specific breakdowns (party, flow, beneficiaries) where reported
+  // dark-money gifts have no place.
+  fec_total: number;
+  // Hand-curated dark-money gifts reported publicly (see KnownDonor).
+  reported: number;
+  // Portion of `fec_total` that went to committees the site tracks
   // (recipients present in constants/committees).
   to_tracked: number;
 };
 
 export type CompanyTotals = {
+  // Full political spending summed across companies: `fec_total` + `reported`.
   total: number;
-  // Portion of `total` that went to committees the site tracks
+  // FEC-verified spending only, summed across companies. Use this for
+  // destination-specific breakdowns (party, flow, beneficiaries).
+  fec_total: number;
+  // Reported dark-money gifts summed across companies.
+  reported: number;
+  // Portion of `fec_total` that went to committees the site tracks
   // (recipients present in constants/committees).
   to_tracked: number;
   by_party: Record<string, number>;

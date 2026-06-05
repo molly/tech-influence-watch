@@ -196,8 +196,10 @@ function Influenced({
           defeated={isDefeated(races, candidate)}
           imageOnly={true}
         />
-        {candidate.common_name}
-        <Outcome candidate={candidate} races={races} inSentence={true} />.
+        <span>
+          {candidate.common_name}
+          <Outcome candidate={candidate} races={races} inSentence={true} />.
+        </span>
       </div>
     </div>
   );
@@ -224,8 +226,10 @@ function OtherOnlyInfluenced({
           defeated={isDefeated(races, candidate)}
           imageOnly={true}
         />
-        {candidate.common_name}
-        <Outcome candidate={candidate} races={races} inSentence={true} />.
+        <span>
+          {candidate.common_name}
+          <Outcome candidate={candidate} races={races} inSentence={true} />.
+        </span>
       </div>
     </div>
   );

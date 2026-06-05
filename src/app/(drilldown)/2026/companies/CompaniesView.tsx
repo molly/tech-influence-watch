@@ -196,13 +196,13 @@ export default async function CompaniesView({ sector }: { sector: Sector }) {
             <Suspense fallback={<SubtitleSkeleton />}>
               <p className={sharedStyles.headerSubtitle}>
                 <span className="bold">{companyCount}</span>
-                {` tracked ${humanizeSector(sector, { hyphen: true, lowercase: true })}related companies have contributed to candidates and political action committees this cycle.`}
+                {` tracked ${humanizeSector(sector, { hyphen: true, lowercase: true })}related companies have contributed to candidates, committees, and other political groups this cycle.`}
               </p>
             </Suspense>
             <Suspense fallback={<MoneyCardSkeleton />}>
               {hasTotals && (
                 <MoneyCard
-                  topText="Total contributed to candidates & PACs"
+                  topText="Total political contributions"
                   amount={humanizeRoundedCurrency(grandTotal, true)}
                   bottomText={`by ${companyCount} tracked ${humanizeSector(sector, { lowercase: true, abbrev: true })} companies`}
                 />

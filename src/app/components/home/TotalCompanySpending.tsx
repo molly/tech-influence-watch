@@ -36,7 +36,7 @@ export default async function TotalCompanySpending({
       bottomText={`from tracked ${sectorText.toLowerCase()} companies and individuals`}
       tooltip={
         <InformationalTooltip>
-          {`This figure includes direct contributions to candidates and committees from ${sectorText.toLowerCase()} companies and individuals, as well as contributions from these entities to the PACs tracked on this site. It is based on manual classification and may not capture all industry-related spending — treat it as a conservative estimate.`}
+          {`This figure includes direct contributions to candidates and committees from ${sectorText.toLowerCase()} companies and individuals, contributions from these entities to the PACs tracked on this site, and publicly-reported gifts to non-disclosing groups that don't appear in FEC filings. It is based on manual classification and may not capture all industry-related spending — treat it as a conservative estimate.`}
         </InformationalTooltip>
       }
       className={className}

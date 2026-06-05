@@ -139,11 +139,19 @@
   background-color: var(--color-lime-500);
 }
 
+.darkMoneyBarSegment {
+  background-color: var(--color-black);
+}
+
 .breakdownColumns {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.5rem;
   margin-bottom: 1rem;
+}
+
+.breakdownColumnsFour {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .breakdownColumn {
@@ -161,6 +169,10 @@
 
 .candidateColumn {
   border-top-color: var(--color-lime-500);
+}
+
+.darkMoneyColumn {
+  border-top-color: var(--color-black);
 }
 
 .breakdownLabel {
@@ -221,6 +233,11 @@
 }
 
 @media (max-width: 575px) {
+  .breakdownColumns,
+  .breakdownColumnsFour {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .contributionSubRow {
     align-items: flex-start;
   }
@@ -233,5 +250,15 @@
 
   .contributionDate:not(:first-child)::before {
     content: "";
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .darkMoneyColumn {
+    border-top-color: var(--color-neutral-600);
+  }
+
+  .darkMoneyBarSegment {
+    background-color: var(--color-neutral-600);
   }
 }

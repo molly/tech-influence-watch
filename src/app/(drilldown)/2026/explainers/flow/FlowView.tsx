@@ -66,7 +66,9 @@ function FlowContents({
   receiptsData: CommitteeTotalsSnapshot;
   expenditures: number;
 }) {
-  const total = companyData.total;
+  // FEC-only: the flow traces tracked vs. direct FEC money. Reported dark-money
+  // gifts have no FEC trail (it ends at the recipient), so they're excluded.
+  const total = companyData.fec_total;
   const toTracked = companyData.to_tracked;
   const receipts = receiptsData.receipts;
   const directAndOther = Math.max(0, total - toTracked);

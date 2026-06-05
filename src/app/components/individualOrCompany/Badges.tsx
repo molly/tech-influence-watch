@@ -3,11 +3,17 @@ import { BESector } from "@/app/types/Sector";
 
 import styles from "./individualOrCompany.module.css";
 
-function Badges({ sectors, key }: { sectors: BESector[]; key: string }) {
+export function Badges({
+  sectors,
+  keyPrefix,
+}: {
+  sectors: BESector[];
+  keyPrefix: string;
+}) {
   return (
     <div className={styles.badges}>
       {sectors.map((sector) => (
-        <span className={styles.sectorBadge} key={`${key}-${sector}`}>
+        <span className={styles.sectorBadge} key={`${keyPrefix}-${sector}`}>
           {sector === "ai" ? "AI" : sector}
         </span>
       ))}
@@ -25,7 +31,7 @@ export function IndividualBadges({
     sectors = ["ai", "crypto"];
   }
   sectors.sort();
-  return <Badges sectors={sectors} key={individual.id} />;
+  return <Badges sectors={sectors} keyPrefix={individual.id} />;
 }
 
 export function CompanyBadges({
@@ -39,5 +45,5 @@ export function CompanyBadges({
     return;
   }
   const sectors: BESector[] = sector === "tech" ? ["ai", "crypto"] : [sector];
-  return <Badges sectors={sectors} key={name} />;
+  return <Badges sectors={sectors} keyPrefix={name} />;
 }

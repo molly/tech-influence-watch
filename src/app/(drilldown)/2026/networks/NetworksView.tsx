@@ -9,6 +9,7 @@ import {
 } from "@/app/actions/fetch";
 import Breadcrumbs from "@/app/components/Breadcrumbs";
 import ErrorText from "@/app/components/ErrorText";
+import { Badges } from "@/app/components/individualOrCompany/Badges";
 import MoneyCard from "@/app/components/MoneyCard";
 import SpendingByPartyWithOpposition from "@/app/components/SpendingByPartyWithOpposition";
 import { NETWORKS } from "@/app/data/networks";
@@ -319,9 +320,14 @@ export default async function NetworksView({
                           {network.name}
                         </Link>
                       </h2>
-                      <span className={sharedStyles.sectorBadge}>
-                        {network.sector === "ai" ? "AI" : network.sector}
-                      </span>
+                      <Badges
+                        sectors={
+                          network.sector === "tech"
+                            ? ["ai", "crypto"]
+                            : [network.sector]
+                        }
+                        key={network.key}
+                      />
                     </div>
                     <div
                       className={styles.netDesc}

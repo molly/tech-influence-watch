@@ -489,6 +489,7 @@ export default function RaceDetailsEditor() {
               >
                 <option value="">Select type</option>
                 <option value={RaceType.General}>General</option>
+                <option value={RaceType.GeneralRunoff}>General Runoff</option>
                 <option value={RaceType.Primary}>Primary</option>
                 <option value={RaceType.PrimaryRunoff}>Primary Runoff</option>
                 <option value={RaceType.Convention}>Convention</option>

@@ -56,7 +56,7 @@ export const NETWORKS: NetworkConstant[] = [
     name: "Public First",
     sector: "ai",
     description:
-      '<p>An AI industry super PAC network pushing for favorable AI regulation through a bipartisan structure. The lead committee, <a href="/2026/committees/C00930503">Public First</a>, operates alongside the Democratic-focused <a href="/2026/committees/C00928374">Jobs and Democracy PAC</a>, led by former Rep. Brad Carson, and the Republican-focused <a href="/2026/committees/C00928390">Defending Our Values</a>, led by former Rep. Chris Stewart. All are affiliated with the <a href="/2026/companies/public-first-action">Public First Action</a> dark money group.</p>',
+      '<p>A super PAC network that claims to be pushing for stronger AI regulation and safety guardrails, founded in response to the <a href="/2026/networks/leading-the-future">Leading the Future</a> network. The lead committee, <a href="/2026/committees/C00930503">Public First</a>, operates alongside the Democratic-focused <a href="/2026/committees/C00928374">Jobs and Democracy PAC</a> (led by former Oklahama Democratic Representative Brad Carson) and the Republican-focused <a href="/2026/committees/C00928390">Defending Our Values</a> (led by former Utah Republican Representative Chris Stewart). All are affiliated with <a href="/2026/companies/public-first-action">Public First Action</a>, a 501(c)(4) dark money group that is not required to disclose its donors. The network is funded chiefly by the AI company <a href="/2026/companies/anthropic">Anthropic</a>. Despite its claims about &ldquo;AI safety&rdquo; and the public interest, critics have suggested that Anthropic is pushing policies that would benefit its business.</p>',
   },
   {
     key: "Bitcoin Policy Institute",
@@ -64,7 +64,7 @@ export const NETWORKS: NetworkConstant[] = [
     name: "Bitcoin Policy Institute",
     sector: "crypto",
     description:
-      'A pro-bitcoin advocacy and lobbying network built around the <a href="/2026/companies/bitcoin-policy-institute">Bitcoin Policy Institute</a> think tank and two affiliated 501(c)(4)s. Former Representatives Tim Ryan (D-OH) and David McIntosh (R-IN) lend bipartisan cover to the agenda, casting it as a defense of the industry against political forces it says want to &ldquo;destroy&rdquo; it.',
+      '<p>A pro-bitcoin advocacy and lobbying network built around the <a href="/2026/companies/bitcoin-policy-institute">Bitcoin Policy Institute</a> think tank and two affiliated 501(c)(4)s, the <a href="/2026/companies/blockchain-innovation-project">Blockchain Innovation Project</a> and <a href="/2026/companies/bpi-action">BPI Action</a>. Fronted by former Representatives Tim Ryan (D-OH) and David McIntosh (R-IN), it casts its agenda as a defense of the industry against political forces it says want to &ldquo;destroy&rdquo; it.</p>',
   },
   {
     key: "America First Digital",
