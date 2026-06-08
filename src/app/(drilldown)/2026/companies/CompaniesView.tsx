@@ -6,6 +6,7 @@ import Breadcrumbs from "@/app/components/Breadcrumbs";
 import ErrorText from "@/app/components/ErrorText";
 import MoneyCard, { MoneyCardSkeleton } from "@/app/components/MoneyCard";
 import Skeleton from "@/app/components/skeletons/Skeleton";
+import SourceBar, { SourceBarItem } from "@/app/components/SourceBar";
 import sharedStyles from "@/app/shared.module.css";
 import {
   CompanyCategory,
@@ -56,7 +57,6 @@ function CompanyListSkeleton() {
           <div className={styles.companyName}>
             <Skeleton randWidth={[8, 16]} />
           </div>
-          <Skeleton />
           <Skeleton width="5rem" />
         </div>
       ))}
@@ -182,6 +182,19 @@ export default async function CompaniesView({ sector }: { sector: Sector }) {
 
   const companies = companiesData as Record<string, CompanyConstant>;
 
+  const sourceItems: SourceBarItem[] = companyGroups
+    .flatMap((group) => group.groups)
+    .map((company) => ({
+      key: company.id,
+      segmentLabel: companies[company.id].name,
+      captionLabel: companies[company.id].name,
+      total: company.total,
+    }));
+  const sourceCombinedTotal = sourceItems.reduce(
+    (sum, item) => sum + item.total,
+    0,
+  );
+
   return (
     <>
       <div className={sharedStyles.fullWidthHeader}>
@@ -204,11 +217,20 @@ export default async function CompaniesView({ sector }: { sector: Sector }) {
                 <MoneyCard
                   topText="Total political contributions"
                   amount={humanizeRoundedCurrency(grandTotal, true)}
-                  bottomText={`by ${companyCount} tracked ${humanizeSector(sector, { lowercase: true, abbrev: true })} companies`}
+                  bottomText={`by ${companyCount} tracked ${humanizeSector(sector, { lowercase: true })} companies`}
                 />
               )}
             </Suspense>
           </div>
+          {hasTotals && (
+            <SourceBar
+              items={sourceItems}
+              combinedTotal={sourceCombinedTotal}
+              noun={{ singular: "company", plural: "companies" }}
+              totalLabel="all tracked company contributions"
+              className={styles.sourceBar}
+            />
+          )}
           <Suspense fallback={<CompanyListSkeleton />}>
             {companyGroups.map(({ key, title, subtitle, groups }) => (
               <CompanyListGroup

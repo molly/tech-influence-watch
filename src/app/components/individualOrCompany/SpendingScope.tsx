@@ -30,13 +30,35 @@ export default function CompanySpendingBreakdown({
   const candidateTotal = candidateGroups.reduce((sum, g) => sum + g.total, 0);
   const hasDarkMoney = darkMoneyTotal > 0;
 
+  // The "genuinely cross party lines" example must be a PAC with no partisan or
+  // candidate affiliation at all. A PAC like America PAC reads as non-partisan
+  // only because its FEC party field is blank, but it's tied to a candidate
+  // (Trump) — so exclude any PAC affiliated with a party, a beneficiary
+  // candidate, or a sponsor candidate.
   const topNonPartisanSuperPac = superPacGroups
-    .filter(
-      (g) =>
-        !g.recipient?.party ||
-        g.recipient.party === "N" ||
-        g.recipient.party === "U",
-    )
+    .filter((g) => {
+      const recipient = g.recipient;
+      if (!recipient) {
+        return false;
+      }
+      if (
+        recipient.party &&
+        recipient.party !== "N" &&
+        recipient.party !== "U"
+      ) {
+        return false;
+      }
+      if (recipient.candidate_ids && recipient.candidate_ids.length > 0) {
+        return false;
+      }
+      if (
+        recipient.sponsor_candidate_ids &&
+        recipient.sponsor_candidate_ids.length > 0
+      ) {
+        return false;
+      }
+      return true;
+    })
     .sort((a, b) => b.total - a.total)[0];
   const total = superPacTotal + partyTotal + candidateTotal + darkMoneyTotal;
 

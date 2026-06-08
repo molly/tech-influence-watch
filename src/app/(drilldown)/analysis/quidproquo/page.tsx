@@ -2,35 +2,38 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import React, { Suspense } from "react";
 
-import {
-  fetchBeneficiaries,
-  fetchConstant,
-  fetchQpq,
-  fetchTrumpCommittees,
-} from "@/app/actions/fetch";
+import { fetchQpq } from "@/app/actions/fetch";
 import Breadcrumbs from "@/app/components/Breadcrumbs";
 import ErrorText from "@/app/components/ErrorText";
 import ExternalLinkIcon from "@/app/components/ExternalLinkIcon";
+import MoneyCard from "@/app/components/MoneyCard";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import tableStyles from "@/app/components/tables.module.css";
-import { TRUMP_CANDIDATE_ID } from "@/app/data/trump";
 import sharedStyles from "@/app/shared.module.css";
-import {
-  type Beneficiary,
-  type CompanyContributionGroup,
-} from "@/app/types/Beneficiaries";
 import { QPQ } from "@/app/types/Qpq";
 import { isError } from "@/app/utils/errors";
 import { humanizeRoundedCurrency } from "@/app/utils/humanize";
 import { customMetadata } from "@/app/utils/metadata";
+import {
+  getQpqCompanyId,
+  getQpqContribMaps,
+  getQpqEntryTotal,
+  getQpqGrandTotal,
+  getQpqTrumpTotal,
+  type QpqContribMaps,
+} from "@/app/utils/qpq";
 import { range } from "@/app/utils/range";
+import {
+  getTrumpCombinedDonors,
+  type TrumpCombinedDonorsData,
+} from "@/app/utils/trumpCombinedDonors";
 
 import styles from "./page.module.css";
 
 export const metadata: Metadata = customMetadata({
-  title: "Crypto Quid Pro Quo",
+  title: "Quid pro quo",
   description:
-    "Cryptocurrency companies are reaping the benefits of their contributions to Trump and other pro-crypto politicians.",
+    "Companies are reaping the benefits of their contributions to Trump and other politicians.",
 });
 
 function QuidProQuoTableSkeleton() {
@@ -63,97 +66,13 @@ function QuidProQuoTableSkeleton() {
 }
 
 async function QuidProQuoTable() {
-  const [
-    beneficiariesResult,
-    trumpCommitteesData,
-    committeesConstant,
-    senateConstant,
-    houseConstant,
-    qpqData,
-  ] = await Promise.all([
-    fetchBeneficiaries(),
-    fetchTrumpCommittees(),
-    fetchConstant<Record<string, { id: string; name: string }>>("committees"),
-    fetchConstant<{ ids: string[] }>("senateCommittees"),
-    fetchConstant<{ ids: string[] }>("houseCommittees"),
-    fetchQpq(),
-  ]);
+  const [maps, qpqData] = await Promise.all([getQpqContribMaps(), fetchQpq()]);
 
-  const cryptoCommitteeIds = new Set(
-    committeesConstant ? Object.keys(committeesConstant) : [],
-  );
-  const senateCommitteeIds = new Set(senateConstant?.ids ?? []);
-  const houseCommitteeIds = new Set(houseConstant?.ids ?? []);
-
-  const companyIdAliases: Record<string, string> = {
-    "winklevoss-capital-management": "gemini",
-  };
-
-  const resolveCompanyId = (id: string): string => companyIdAliases[id] ?? id;
-
-  const trumpCommitteeIds = new Set<string>([
-    TRUMP_CANDIDATE_ID,
-    ...(trumpCommitteesData?.ids ?? []),
-  ]);
-
-  if (isError(beneficiariesResult) || !qpqData) {
+  if (isError(maps) || !qpqData) {
     return <ErrorText subject="contribution data" />;
   }
 
-  const beneficiaries = beneficiariesResult as Record<string, Beneficiary>;
-  const trumpContribsByCompany = new Map<string, number>();
-  const cryptoContribsByCompany = new Map<string, number>();
-  const senateContribsByCompany = new Map<string, number>();
-  const houseContribsByCompany = new Map<string, number>();
-
-  for (const [id, beneficiary] of Object.entries(beneficiaries)) {
-    const isTrump = trumpCommitteeIds.has(id);
-    const targetMap = isTrump
-      ? trumpContribsByCompany
-      : cryptoCommitteeIds.has(id)
-        ? cryptoContribsByCompany
-        : senateCommitteeIds.has(id)
-          ? senateContribsByCompany
-          : houseCommitteeIds.has(id)
-            ? houseContribsByCompany
-            : null;
-
-    if (targetMap) {
-      for (const group of beneficiary.contributions as CompanyContributionGroup[]) {
-        const companyId = resolveCompanyId(group.company_id);
-        const existing = targetMap.get(companyId) || 0;
-        targetMap.set(companyId, existing + group.total);
-      }
-    }
-  }
-
-  const getCompanyId = (entry: QPQ): string | null => {
-    if (!entry.link) {
-      return null;
-    }
-    const match = entry.link.match(/^\/2026\/companies\/(.+)$/);
-    return match ? match[1] : null;
-  };
-
-  const getTotalAmount = (entry: QPQ): number => {
-    const manualAmount =
-      "contributions" in entry && entry.contributions
-        ? entry.contributions.reduce(
-            (acc, curr) => acc + ("amount" in curr ? curr.amount || 0 : 0),
-            0,
-          )
-        : 0;
-    const companyId = getCompanyId(entry);
-    const trumpTotal =
-      companyId !== null ? (trumpContribsByCompany.get(companyId) ?? 0) : 0;
-    const cryptoTotal =
-      companyId !== null ? (cryptoContribsByCompany.get(companyId) ?? 0) : 0;
-    const senateTotal =
-      companyId !== null ? (senateContribsByCompany.get(companyId) ?? 0) : 0;
-    const houseTotal =
-      companyId !== null ? (houseContribsByCompany.get(companyId) ?? 0) : 0;
-    return manualAmount + trumpTotal + cryptoTotal + senateTotal + houseTotal;
-  };
+  const contribMaps = maps as QpqContribMaps;
 
   const hasContributions = (entry: QPQ): boolean => {
     const manualContributions =
@@ -163,15 +82,17 @@ async function QuidProQuoTable() {
     if (manualContributions.length > 0) {
       return true;
     }
-    const companyId = getCompanyId(entry);
+    if (getQpqTrumpTotal(entry, contribMaps) >= 10000) {
+      return true;
+    }
+    const companyId = getQpqCompanyId(entry);
     if (companyId === null) {
       return false;
     }
     return (
-      (trumpContribsByCompany.get(companyId) ?? 0) >= 10000 ||
-      (cryptoContribsByCompany.get(companyId) ?? 0) >= 10000 ||
-      (senateContribsByCompany.get(companyId) ?? 0) >= 10000 ||
-      (houseContribsByCompany.get(companyId) ?? 0) >= 10000
+      (contribMaps.crypto.get(companyId) ?? 0) >= 10000 ||
+      (contribMaps.senate.get(companyId) ?? 0) >= 10000 ||
+      (contribMaps.house.get(companyId) ?? 0) >= 10000
     );
   };
 
@@ -182,8 +103,8 @@ async function QuidProQuoTable() {
       if (aHas !== bHas) {
         return aHas ? -1 : 1;
       }
-      const aAmount = getTotalAmount(a);
-      const bAmount = getTotalAmount(b);
+      const aAmount = getQpqEntryTotal(a, contribMaps);
+      const bAmount = getQpqEntryTotal(b, contribMaps);
       if (aAmount === bAmount) {
         return a.name.localeCompare(b.name);
       }
@@ -257,10 +178,9 @@ async function QuidProQuoTable() {
       };
     });
 
-    const companyId = getCompanyId(entry);
+    const companyId = getQpqCompanyId(entry);
 
-    const trumpTotal =
-      companyId !== null ? trumpContribsByCompany.get(companyId) : undefined;
+    const trumpTotal = getQpqTrumpTotal(entry, contribMaps);
     if (trumpTotal && trumpTotal >= 10000) {
       allItems.push({
         amount: trumpTotal,
@@ -269,14 +189,15 @@ async function QuidProQuoTable() {
             <strong>
               {humanizeRoundedCurrency(Math.floor(trumpTotal / 10000) * 10000)}
             </strong>{" "}
-            to Trump-affiliated PACs (2026 cycle)
+            to Trump&rsquo;s campaign, inauguration, and pro-Trump PACs (since
+            2024)
           </li>
         ),
       });
     }
 
     const cryptoTotal =
-      companyId !== null ? cryptoContribsByCompany.get(companyId) : undefined;
+      companyId !== null ? contribMaps.crypto.get(companyId) : undefined;
     if (cryptoTotal && cryptoTotal >= 10000) {
       allItems.push({
         amount: cryptoTotal,
@@ -292,7 +213,7 @@ async function QuidProQuoTable() {
     }
 
     const senateTotal =
-      companyId !== null ? senateContribsByCompany.get(companyId) : undefined;
+      companyId !== null ? contribMaps.senate.get(companyId) : undefined;
     if (senateTotal && senateTotal >= 10000) {
       allItems.push({
         amount: senateTotal,
@@ -308,7 +229,7 @@ async function QuidProQuoTable() {
     }
 
     const houseTotal =
-      companyId !== null ? houseContribsByCompany.get(companyId) : undefined;
+      companyId !== null ? contribMaps.house.get(companyId) : undefined;
     if (houseTotal && houseTotal >= 10000) {
       allItems.push({
         amount: houseTotal,
@@ -351,7 +272,7 @@ async function QuidProQuoTable() {
       <tbody>
         {sortedQpq.map(([slug, entry]) => {
           const contributions = renderContribution(entry);
-          const total = getTotalAmount(entry);
+          const total = getQpqEntryTotal(entry, contribMaps);
           return (
             <tr
               key={slug}
@@ -365,7 +286,6 @@ async function QuidProQuoTable() {
                     {humanizeRoundedCurrency(total, true, 2)}
                   </div>
                 )}
-                <div className={styles.entityLabel}>To Trump & family</div>
               </td>
               <td className={styles.benefitCell} data-label="Benefit to entity">
                 <ul>{renderBenefit(entry)}</ul>
@@ -384,25 +304,64 @@ async function QuidProQuoTable() {
   );
 }
 
-export default function QuidProQuoPage() {
+export default async function QuidProQuoPage() {
+  const [combinedDonors, maps, qpqData] = await Promise.all([
+    getTrumpCombinedDonors(),
+    getQpqContribMaps(),
+    fetchQpq(),
+  ]);
+  const trumpTotal = isError(combinedDonors)
+    ? null
+    : humanizeRoundedCurrency(
+        (combinedDonors as TrumpCombinedDonorsData).grandTotal,
+        true,
+        1,
+      );
+  const grandTotal =
+    isError(maps) || !qpqData
+      ? null
+      : getQpqGrandTotal(
+          Object.values(qpqData) as QPQ[],
+          maps as QpqContribMaps,
+        );
   return (
     <div className={styles.page}>
       <Breadcrumbs crumbs={["Analysis", "Quid pro quo"]} />
-      <h1 className={sharedStyles.title}>Crypto quid pro quo</h1>
-      <p className={sharedStyles.headerSubtitle}>
-        Cryptocurrency companies are reaping the benefits of their contributions
-        to President Trump and other pro-crypto politicians.
-      </p>
-      <div className={sharedStyles.noteCard}>
-        <span className={sharedStyles.noteLabel}>Note:</span> This page tracks
-        contributions and business arrangements between cryptocurrency companies
-        and President Trump, and favorable regulatory outcomes that followed.
-        For a focused view of campaign contributions to Trump, see the{" "}
-        <Link href="/analysis/trump" className="bold">
-          Trump campaign contributions tracker
-        </Link>
-        .
-      </div>
+      <h1 className={sharedStyles.title}>Quid pro quo</h1>
+      <section className={sharedStyles.heroWithStat}>
+        <div>
+          <p className={sharedStyles.headerSubtitle}>
+            Companies are reaping the benefits of their contributions to
+            President Trump and other politicians.
+          </p>
+          <div className={sharedStyles.noteCard}>
+            <span className={sharedStyles.noteLabel}>Note:</span> This page
+            tracks contributions from and business arrangements between
+            companies and President Trump, and favorable regulatory outcomes
+            that followed. For a focused view of the industries&rsquo;{" "}
+            {trumpTotal ? (
+              <span
+                className={sharedStyles.highlightFigure}
+              >{`${trumpTotal} in campaign contributions`}</span>
+            ) : (
+              "campaign contributions"
+            )}{" "}
+            to Trump, see the{" "}
+            <Link href="/analysis/trump" className="bold">
+              Trump campaign contributions tracker
+            </Link>
+            .
+          </div>
+        </div>
+        {grandTotal !== null && (
+          <MoneyCard
+            className={styles.headerStat}
+            topText="Total to Trump &amp; family"
+            amount={`${humanizeRoundedCurrency(grandTotal, true, 1)}+`}
+            bottomText="in campaign contributions and business arrangements"
+          />
+        )}
+      </section>
       <Suspense fallback={<QuidProQuoTableSkeleton />}>
         <QuidProQuoTable />
       </Suspense>

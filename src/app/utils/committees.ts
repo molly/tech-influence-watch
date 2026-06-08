@@ -128,6 +128,14 @@ export function classifyGroup(
   if (!recipient) {
     return "superPac";
   }
+  // Super PACs and hybrid PACs make independent expenditures; they can't give
+  // directly to candidates. They often carry candidate_ids for the candidates
+  // they support (e.g. America PAC -> Trump), so they must be bucketed as super
+  // PACs before the candidate-committee check below, not as "benefitting
+  // specific candidates."
+  if (isSuperOrHybridPac(committeeType)) {
+    return "superPac";
+  }
   const hasBeneficiaries = Object.keys(recipient.candidate_details).length > 0;
   if (
     hasBeneficiaries &&

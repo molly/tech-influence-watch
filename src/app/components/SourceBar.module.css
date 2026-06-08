@@ -1,0 +1,62 @@
+/* Source bar: where the tracked total came from */
+.sourceBlock {
+  margin-bottom: 2rem;
+}
+
+.sourceBar {
+  display: flex;
+  width: 100%;
+  height: 2.75rem;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.sourceSegment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  overflow: hidden;
+  padding: 0 0.5rem;
+}
+
+.sourceSegmentLabel {
+  color: var(--color-white);
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.seg0 {
+  background-color: var(--color-lime-900);
+}
+
+.seg1 {
+  background-color: var(--color-lime-800);
+}
+
+.seg2 {
+  background-color: var(--color-lime-700);
+}
+
+.seg3 {
+  background-color: var(--color-lime-600);
+}
+
+.segRest {
+  background-color: var(--color-neutral-300);
+}
+
+.segRest .sourceSegmentLabel {
+  color: var(--color-neutral-950);
+}
+
+.sourceCaption {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--main-text);
+  margin: 0.75rem 0 0;
+}

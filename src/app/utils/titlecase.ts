@@ -54,7 +54,7 @@ export function titlecaseCommittee(
   }
   let titlecased = titlecase(str);
   titlecased = titlecased.replace(
-    /\b(SMP|LCV|AF(C|P)|UDP|PAC|RSLC|NEA|I{1,3}|DNC|D(C|S)CC|NR(S|C)C|FF|HMP|SFA|SEIU|COPE|AB|ACLU|BA|NY22|DBA|CHC|JD|GSD|JFC|NC|CA|GLCF|SAG|RJC|MA[HG]A|PA|CFG|SLF|CVA|DGA|RA?GA|EDF|PBC|LLC)\b/gi,
+    /\b(SMP|LCV|AF(C|P)|UDP|PAC|RSLC|NEA|I{1,3}|DNC|D(C|S)CC|NR(S|C)C|FF|HMP|SFA|SEIU|COPE|AB|ACLU|BA|NY22|DBA|CHC|JD|GSD|JFC|NC|CA|GLCF|SAG|RJC|MA[HG]A|PA|CFG|SLF|CVA|DGA|RA?GA|EDF|PBC|LLC|GTM)\b/gi,
     function (txt) {
       return txt.toUpperCase();
     },

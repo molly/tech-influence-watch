@@ -11,7 +11,9 @@ export function ResultNote({ candidate }: { candidate: RaceCandidate }) {
   return (
     <div className={styles.resultNote}>
       {candidate.declined
-        ? "Declined to run"
+        ? candidate.declineReason
+          ? `Declined to run: ${candidate.declineReason}`
+          : "Declined to run"
         : candidate.withdrew
           ? `Withdrew`
           : ""}

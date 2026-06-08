@@ -16,18 +16,18 @@ type NotablePattern = {
 const NOTABLE_PATTERNS: NotablePattern[] = [
   {
     key: "cross-sector",
-    label: "Cross-sector · 13 races · $24.2M",
+    label: "Cross-sector · 15 races · $26.5M",
     headline:
       "Crypto and AI PACs are spending in the same races, often through the same two committees",
     description: (
       <>
-        Thirteen races have seen spending from both crypto and AI PACs, totaling
-        $24.2M. The most common pairing is{" "}
+        Fifteen races have seen spending from both crypto and AI PACs, totaling
+        $26.5M. The most common pairing is{" "}
         <Link href="/2026/committees/C00836221">Defend American Jobs</Link> (the
         Republican arm of the Fairshake crypto super PAC network) and{" "}
         <Link href="/2026/committees/C00916692">American Mission</Link> (the
         Republican arm of the Leading the Future AI PAC network), which have
-        spent in six of these races, always supporting the same candidate. One
+        spent in seven of these races, always supporting the same candidate. One
         of the leaders of Leading the Future is also the longtime spokesperson
         for the Fairshake network.
       </>
@@ -41,14 +41,14 @@ const NOTABLE_PATTERNS: NotablePattern[] = [
         <Link href="/2026/elections/NY-H-12">NY-H-12</Link>
       </>
     ),
-    headline: "Two AI PACs spent $7M opposing each other in the same primary",
+    headline: "Two AI PACs spent $9.8M opposing each other in the same primary",
     description: (
       <>
-        <Link href="/2026/committees/C00923417">Think Big</Link> spent $4.0M
+        <Link href="/2026/committees/C00923417">Think Big</Link> spent $6.3M
         opposing <Link href="/2026/elections/NY-H-12">Alex Bores</Link> in New
         York&rsquo;s District 12;{" "}
         <Link href="/2026/committees/C00928374">Jobs and Democracy PAC</Link>{" "}
-        spent $3.0M supporting him. This has been the only intra-sector conflict
+        spent $3.5M supporting him. This has been the only intra-sector conflict
         so far this cycle.
       </>
     ),

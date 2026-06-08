@@ -30,7 +30,7 @@ export default async function CommitteeTransfersByParty({
         Transfers
         <span className={sharedStyles.sectionTitleAmount}>
           of{" "}
-          <span className={sharedStyles.sectionTitleAmountValue}>
+          <span className={sharedStyles.highlightFigure}>
             {formatCompact(total)}
           </span>{" "}
           total

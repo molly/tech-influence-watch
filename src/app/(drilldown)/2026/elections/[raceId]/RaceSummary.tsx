@@ -19,7 +19,7 @@ function RaceDate({ race }: { race: Race }) {
     return (
       <span>
         Upcoming on{" "}
-        <span className={sharedStyles.sectionTitleAmountValue}>
+        <span className={sharedStyles.highlightFigure}>
           {formatDateFromString(race.date)}
         </span>
       </span>
@@ -28,7 +28,7 @@ function RaceDate({ race }: { race: Race }) {
   return (
     <span>
       Held on{" "}
-      <span className={sharedStyles.sectionTitleAmountValue}>
+      <span className={sharedStyles.highlightFigure}>
         {formatDateFromString(race.date)}
       </span>
     </span>
@@ -150,7 +150,11 @@ export default function RaceSummary({
   let intermediateRaces;
   let nonPartisanPlaceholders = 0;
   const nonPartisanAdvancers = NONPARTISAN_PRIMARY_ADVANCERS[state];
-  if (nonPartisanAdvancers && race.type === RaceType.General && isRaceUpcoming) {
+  if (
+    nonPartisanAdvancers &&
+    race.type === RaceType.General &&
+    isRaceUpcoming
+  ) {
     // Top-two / top-four states run a single non-partisan primary that advances
     // a fixed number of candidates to the general regardless of party. Fill the
     // general out to that number with non-partisan placeholders for advancing

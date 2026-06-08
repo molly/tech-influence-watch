@@ -101,6 +101,7 @@
 
 .explanation {
   font-family: var(--font-serif);
+  max-width: 80ch;
 }
 
 @media (max-width: 600px) {

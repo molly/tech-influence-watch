@@ -8,7 +8,7 @@ import {
 import { humanizeList } from "@/app/utils/humanize";
 import { getFullPartyName } from "@/app/utils/party";
 
-import { SINGLE_MEMBER_STATES } from "../data/states";
+import { SINGLE_MEMBER_STATES, STATES_BY_ABBR } from "../data/states";
 import { ExpenditureCandidateSummary } from "../types/Expenditures";
 import { isUpcomingDate } from "./utils";
 
@@ -221,6 +221,39 @@ export const getStateFromRaceId = (raceId?: string) => {
     // Full ID with state
     return raceParts[0];
   }
+};
+
+// Race IDs are canonically uppercase (state abbr + office + district), matching
+// the Firestore keys — EXCEPT the special-election suffix, which the backend
+// keys as a lowercase "-special" (e.g. "FL-H-06-special"). Normalize
+// loosely-cased URLs (e.g. "Ct-H-04") so lookups and display resolve correctly,
+// while preserving the lowercase suffix so special races still match their key.
+export const normalizeRaceId = (raceId: string): string => {
+  if (!raceId) {
+    return raceId;
+  }
+  const upper = raceId.toUpperCase();
+  if (upper.endsWith("-SPECIAL")) {
+    return `${upper.slice(0, -"-SPECIAL".length)}-special`;
+  }
+  return upper;
+};
+
+// Whether a raceId resolves to a real race: the presidential race, or a valid
+// state abbreviation plus a parseable office. Lets pages 404 unresolvable IDs
+// instead of rendering a header built from an undefined state name.
+export const isKnownRace = (raceId: string): boolean => {
+  if (!raceId) {
+    return false;
+  }
+  if (raceId.toUpperCase() === "PRESIDENT") {
+    return true;
+  }
+  const state = raceId.split("-")[0].toUpperCase();
+  if (!(state in STATES_BY_ABBR)) {
+    return false;
+  }
+  return getRaceName(raceId) !== "";
 };
 
 type SubraceArg = {

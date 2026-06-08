@@ -143,11 +143,13 @@ function CommitteeRow({
               : "—"}
           </div>
           <div
-            className={spent > 0 ? styles.amountSpent : styles.amountPlaceholder}
+            className={
+              spent > 0 ? styles.amountSpent : styles.amountPlaceholder
+            }
           >
             <span className={styles.amountSpentLabel}>Spent </span>
             {spent > 0 ? `$${humanizeApproximateRounded(spent, 1)}` : "—"}
-            {spent > fundsThisCycle && <sup title={FOOTNOTE}>†</sup>}
+            {spent > fundsThisCycle && <sup title={FOOTNOTE}>&dagger;</sup>}
           </div>
           <div className={styles.amountRaised}>
             <span className={styles.amountRaisedLabel}>Remaining </span>$
@@ -243,27 +245,27 @@ function CommitteeGroup({
         <span className={listStyles.groupHeadingSubGroup}>{title}</span>
         {fundsOnly ? (
           <span className={sharedStyles.sectionTitleAmount}>
-            <span className={sharedStyles.sectionTitleAmountValue}>
+            <span className={sharedStyles.highlightFigure}>
               {committees.length}
             </span>{" "}
             {committees.length === 1 ? "committee" : "committees"} with{" "}
-            <span className={sharedStyles.sectionTitleAmountValue}>
+            <span className={sharedStyles.highlightFigure}>
               {humanizeRoundedCurrency(totalFunds, true)}
             </span>{" "}
             this cycle
           </span>
         ) : (
           <span className={sharedStyles.sectionTitleAmount}>
-            <span className={sharedStyles.sectionTitleAmountValue}>
+            <span className={sharedStyles.highlightFigure}>
               {committees.length}
             </span>{" "}
             {committees.length === 1 ? "committee has" : "committees have"}{" "}
             spent{" "}
-            <span className={sharedStyles.sectionTitleAmountValue}>
+            <span className={sharedStyles.highlightFigure}>
               {humanizeRoundedCurrency(totalSpent, true)}
             </span>{" "}
             and {committees.length === 1 ? "has" : "have"}{" "}
-            <span className={sharedStyles.sectionTitleAmountValue}>
+            <span className={sharedStyles.highlightFigure}>
               {humanizeRoundedCurrency(totalRemaining, true)}
             </span>{" "}
             remaining
@@ -420,7 +422,7 @@ export default async function CommitteesView({ sector }: { sector: Sector }) {
             ))}
           </Suspense>
           <div className={styles.footnoteSection}>
-            <sup>†</sup>
+            <sup>&dagger;</sup>
             <span className={styles.footnote}>{FOOTNOTE}</span>
           </div>
         </div>

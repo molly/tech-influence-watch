@@ -5,7 +5,6 @@ import {
   fetchCommitteeTotalReceipts,
   fetchCompanyTotalSpending,
 } from "@/app/actions/fetch";
-import Breadcrumbs from "@/app/components/Breadcrumbs";
 import ErrorText from "@/app/components/ErrorText";
 import sharedStyles from "@/app/shared.module.css";
 import { CommitteeTotalsSnapshot } from "@/app/types/Committee";
@@ -35,7 +34,6 @@ export default async function FlowView() {
 
   return (
     <div className={sharedStyles.main}>
-      <Breadcrumbs crumbs={["Money flow"]} />
       <h1 className={sharedStyles.title}>Money flow</h1>
       <p className={sharedStyles.headerSubtitle}>
         Money from cryptocurrency and artificial intelligence companies and
@@ -75,15 +73,9 @@ function FlowContents({
 
   return (
     <>
-      <FlowSankey
-        total={total}
-        toTracked={toTracked}
-        receipts={receipts}
-        expenditures={expenditures}
-      />
       <p className={styles.explanation}>
         Tracked companies and individuals put{" "}
-        <span className={sharedStyles.sectionTitleAmountValue}>
+        <span className={sharedStyles.highlightFigure}>
           {humanizeRoundedCurrency(total, true, 1)}
         </span>{" "}
         into the 2026 cycle. Of that,{" "}
@@ -96,18 +88,24 @@ function FlowContents({
       </p>
       <p className={styles.explanation}>
         Those super PACs took in{" "}
-        <span className={sharedStyles.sectionTitleAmountValue}>
+        <span className={sharedStyles.highlightFigure}>
           {humanizeRoundedCurrency(receipts, true, 1)}
         </span>{" "}
         in total, mostly from individuals and companies this site tracks in
         detail. So far they have spent{" "}
-        <span className={sharedStyles.sectionTitleAmountValue}>
+        <span className={sharedStyles.highlightFigure}>
           {humanizeRoundedCurrency(expenditures, true, 1)}
         </span>{" "}
         directly supporting or opposing candidates, holding the rest for later
         in the cycle. Candidates also receive some share of the direct
         contributions above.
       </p>
+      <FlowSankey
+        total={total}
+        toTracked={toTracked}
+        receipts={receipts}
+        expenditures={expenditures}
+      />
     </>
   );
 }

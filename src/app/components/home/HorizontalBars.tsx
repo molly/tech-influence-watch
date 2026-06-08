@@ -117,21 +117,29 @@ export function HorizontalPartyBars({
   partySummary: Record<string, number>;
   max?: number;
 }) {
-  const parties = Object.keys(partySummary)
-    .filter((p) => partySummary[p] > 0)
-    .sort((a, b) => {
-      const diff = getPartyOrder(a) - getPartyOrder(b);
-      if (diff !== 0) {
-        return diff;
-      }
-      return a.localeCompare(b);
-    });
+  // Always show the major parties and the non-partisan/unknown bucket as a
+  // baseline comparison, even at $0, so a one-sided breakdown still reads as
+  // one-sided. Minor parties only appear when they have spending.
+  const parties = Array.from(
+    new Set([
+      "DEM",
+      "REP",
+      "UNK",
+      ...Object.keys(partySummary).filter((p) => partySummary[p] > 0),
+    ]),
+  ).sort((a, b) => {
+    const diff = getPartyOrder(a) - getPartyOrder(b);
+    if (diff !== 0) {
+      return diff;
+    }
+    return a.localeCompare(b);
+  });
 
   const items: HorizontalBarItem[] = parties.map((party) => ({
     key: party,
     label: getPartyLabel(party),
-    value: partySummary[party],
-    displayValue: `$${humanizeApproximateRounded(partySummary[party])}`,
+    value: partySummary[party] ?? 0,
+    displayValue: `$${humanizeApproximateRounded(partySummary[party] ?? 0)}`,
   }));
 
   return <HorizontalBars items={items} max={max} showPct={max !== undefined} />;

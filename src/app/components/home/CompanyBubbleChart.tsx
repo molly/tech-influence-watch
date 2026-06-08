@@ -2,13 +2,18 @@ import { hierarchy, pack } from "d3-hierarchy";
 import Link from "next/link";
 import { Suspense } from "react";
 
-import { fetchCompanyTotalSpending, fetchConstant } from "@/app/actions/fetch";
+import {
+  fetchCompanyTotalSpending,
+  fetchConstant,
+  fetchIndividualTotalSpending,
+} from "@/app/actions/fetch";
 import sharedStyles from "@/app/shared.module.css";
 import { CompanyConstant, CompanyTotals } from "@/app/types/Companies";
+import { IndividualConstant, IndividualTotals } from "@/app/types/Individuals";
 import { BESector, Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
 import { formatCompact } from "@/app/utils/humanize";
-import { matchesSector } from "@/app/utils/sector";
+import { getSectorsForIndividual, matchesSector } from "@/app/utils/sector";
 
 import styles from "./CompanyBubbleChart.module.css";
 
@@ -19,6 +24,7 @@ type LeafDatum = {
   name: string;
   total: number;
   companySector: BESector | undefined;
+  href: string;
 };
 
 type RootDatum = {
@@ -36,10 +42,13 @@ function sectorClass(sector: BESector | undefined): string {
 }
 
 async function CompanyBubbleChartContent({ sector }: { sector: Sector }) {
-  const [allData, companiesData] = await Promise.all([
-    fetchCompanyTotalSpending("all"),
-    fetchConstant<Record<string, CompanyConstant>>("companies"),
-  ]);
+  const [allData, companiesData, individualsData, individualTotalsData] =
+    await Promise.all([
+      fetchCompanyTotalSpending("all"),
+      fetchConstant<Record<string, CompanyConstant>>("companies"),
+      fetchConstant<Record<string, IndividualConstant>>("individuals"),
+      fetchIndividualTotalSpending(),
+    ]);
 
   if (isError(allData) || !companiesData) {
     return null;
@@ -48,13 +57,52 @@ async function CompanyBubbleChartContent({ sector }: { sector: Sector }) {
   const allTotals = allData as CompanyTotals;
   const companies = companiesData as Record<string, CompanyConstant>;
 
-  const entries: LeafDatum[] = Object.entries(allTotals.by_company)
-    .map(([id, data]) => ({
+  const companyEntries: LeafDatum[] = Object.entries(allTotals.by_company).map(
+    ([id, data]) => ({
       id,
       name: companies[id]?.name ?? id,
       total: data.total,
       companySector: companies[id]?.sector,
-    }))
+      href: `/2026/companies/${id}`,
+    }),
+  );
+
+  // Include tracked individuals whose contributions aren't rolled into any
+  // tracked company (e.g. Elon Musk, once xAI is removed). The backend
+  // attributes an individual's gifts to a company by matching the company's
+  // name against the individual's `company` array, so an individual is
+  // "standalone" — and thus unrepresented by any company bubble — exactly when
+  // none of those names match a tracked company. Showing them here keeps the
+  // chart complete without double-counting money already inside a company.
+  const trackedCompanyNames = new Set(
+    Object.values(companies).map((c) => c.name),
+  );
+  const individualEntries: LeafDatum[] =
+    individualsData && !isError(individualTotalsData)
+      ? Object.values(individualsData as Record<string, IndividualConstant>)
+          .filter((ind) => {
+            const total =
+              (individualTotalsData as IndividualTotals).by_individual[ind.id]
+                ?.total ?? 0;
+            if (total <= 0) {
+              return false;
+            }
+            return !(ind.company ?? []).some((name) =>
+              trackedCompanyNames.has(name),
+            );
+          })
+          .map((ind) => ({
+            id: ind.id,
+            name: ind.name,
+            total: (individualTotalsData as IndividualTotals).by_individual[
+              ind.id
+            ].total,
+            companySector: getSectorsForIndividual(ind, companies)[0],
+            href: `/2026/individuals/${ind.id}`,
+          }))
+      : [];
+
+  const entries: LeafDatum[] = [...companyEntries, ...individualEntries]
     .filter((e) => {
       if (e.total <= 0) {
         return false;
@@ -104,11 +152,7 @@ async function CompanyBubbleChartContent({ sector }: { sector: Sector }) {
               : d.name.slice(0, maxChars) + "…";
           const darkText = d.companySector === "ai";
           return (
-            <Link
-              key={d.id}
-              href={`/2026/companies/${d.id}`}
-              className={styles.bubbleLink}
-            >
+            <Link key={d.id} href={d.href} className={styles.bubbleLink}>
               <circle
                 cx={leaf.x}
                 cy={leaf.y}
@@ -172,7 +216,7 @@ async function CompanyBubbleChartContent({ sector }: { sector: Sector }) {
 export default function CompanyBubbleChart({ sector }: { sector: Sector }) {
   return (
     <section className={sharedStyles.section}>
-      <h2 className={sharedStyles.sectionTitle}>Contributions by company</h2>
+      <h2 className={sharedStyles.sectionTitle}>Contributions by entity</h2>
       <Suspense fallback={null}>
         <CompanyBubbleChartContent sector={sector} />
       </Suspense>

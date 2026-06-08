@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 import Breadcrumbs from "@/app/components/Breadcrumbs";
@@ -8,7 +9,7 @@ import { STATES_BY_ABBR } from "@/app/data/states";
 import sharedStyles from "@/app/shared.module.css";
 import { Sector } from "@/app/types/Sector";
 import { customMetadata } from "@/app/utils/metadata";
-import { getRaceName } from "@/app/utils/races";
+import { getRaceName, isKnownRace, normalizeRaceId } from "@/app/utils/races";
 import { range } from "@/app/utils/range";
 import { humanizeSector, sectorHref } from "@/app/utils/sector";
 
@@ -20,9 +21,16 @@ import styles from "./page.module.css";
 import { SpendingSkeleton } from "./Spending";
 import SpendingCard from "./SpendingCard";
 
-export function raceDetailMetadata(raceId: string, sector: Sector): Metadata {
+export function raceDetailMetadata(rawRaceId: string, sector: Sector): Metadata {
+  const raceId = normalizeRaceId(rawRaceId);
+  if (!isKnownRace(raceId)) {
+    return customMetadata({
+      title: "Election not found",
+      description: "This election could not be found.",
+    });
+  }
   const humanizedSector = humanizeSector(sector, { context: "industry" });
-  if (raceId.toUpperCase() === "PRESIDENT") {
+  if (raceId === "PRESIDENT") {
     return customMetadata({
       title: "Presidential election",
       description: `${humanizedSector} spending to influence the United States Presidential election.`,
@@ -49,15 +57,19 @@ function SkeletonRows({
 }
 
 export default async function RaceDetailView({
-  raceId,
+  raceId: rawRaceId,
   sector,
 }: {
   raceId: string;
   sector: Sector;
 }) {
+  const raceId = normalizeRaceId(rawRaceId);
+  if (!isKnownRace(raceId)) {
+    notFound();
+  }
   const raceIdSplit = raceId.split("-");
   const raceName = getRaceName(raceId);
-  const isPres = raceId.toUpperCase() === "PRESIDENT";
+  const isPres = raceId === "PRESIDENT";
   const stateAbbr = raceIdSplit[0];
   const fullStateName = isPres ? undefined : STATES_BY_ABBR[stateAbbr];
   const stateSlug = fullStateName?.replaceAll(" ", "-").toLowerCase();

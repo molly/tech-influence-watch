@@ -326,7 +326,7 @@ export default async function NetworksView({
                             ? ["ai", "crypto"]
                             : [network.sector]
                         }
-                        key={network.key}
+                        keyPrefix={network.key}
                       />
                     </div>
                     <div

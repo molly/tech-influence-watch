@@ -45,9 +45,6 @@ const nextConfig = {
         destination: "/2026/:path*",
         permanent: false,
       },
-      // Old ?sector=crypto|ai query URLs are converted to path-based URLs in
-      // middleware (which can drop the query and avoid a redirect loop).
-      //
       // Relocated routes (permanent — these are genuine moves). Spending became
       // an explainer; quid pro quo moved out of the cycle into /analysis.
       {

@@ -19,7 +19,7 @@ async function SpendingTotal({ sector }: { sector: Sector }) {
   return (
     <span className={sharedStyles.sectionTitleAmount}>
       of{" "}
-      <span className={sharedStyles.sectionTitleAmountValue}>
+      <span className={sharedStyles.highlightFigure}>
         {formatCompact((data as CompanyTotals).fec_total)}
       </span>{" "}
       total

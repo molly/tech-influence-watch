@@ -59,7 +59,7 @@ export default async function CommitteeExpendituresByParty({
         {max != null && (
           <span className={sharedStyles.sectionTitleAmount}>
             of{" "}
-            <span className={sharedStyles.sectionTitleAmountValue}>
+            <span className={sharedStyles.highlightFigure}>
               {formatCompact(max)}
             </span>{" "}
             total

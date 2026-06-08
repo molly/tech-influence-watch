@@ -45,13 +45,11 @@ export default function ReportedContributions({
       <h2 className={sharedStyles.sectionTitle}>
         <span>Reported contributions</span>
         <span className={sharedStyles.sectionTitleAmount}>
-          <span className={sharedStyles.sectionTitleAmountValue}>
+          <span className={sharedStyles.highlightFigure}>
             ${humanizeApproximateRounded(reportedTotal, 1)}
           </span>{" "}
           across{" "}
-          <span className={sharedStyles.sectionTitleAmountValue}>
-            {sorted.length}
-          </span>{" "}
+          <span className={sharedStyles.highlightFigure}>{sorted.length}</span>{" "}
           {pluralize(sorted.length, "recipient", { includeValue: false })}
         </span>
       </h2>
@@ -62,7 +60,10 @@ export default function ReportedContributions({
       </p>
       <ul className={styles.list}>
         {sorted.map((contribution, index) => (
-          <li className={styles.row} key={`${contribution.recipientId}-${index}`}>
+          <li
+            className={styles.row}
+            key={`${contribution.recipientId}-${index}`}
+          >
             <span className={styles.name}>
               <Link href={`/2026/companies/${contribution.recipientId}`}>
                 {contribution.recipientName}

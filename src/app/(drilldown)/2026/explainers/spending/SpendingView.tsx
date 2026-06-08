@@ -82,7 +82,7 @@ export default async function SpendingView({ sector }: { sector: Sector }) {
             <SpendingByPartyWithOppositionChart sector={sector} />
           </Suspense>
         </div>
-        <p>
+        <p className={styles.explanation}>
           However, spending to oppose Democrats does not always support
           Republicans, and vice versa. For example, when a PAC opposes a
           candidate in a primary against a candidate from the same party, they
@@ -91,7 +91,7 @@ export default async function SpendingView({ sector }: { sector: Sector }) {
           election.
         </p>
         {sector !== "ai" && (
-          <p>
+          <p className={styles.explanation}>
             In some races where PACs have spent heavily to oppose candidates but
             have not supported any candidates, such as in Illinois&rsquo;{" "}
             <Link href="/2026/elections/IL-S">Senate primary</Link> and{" "}
@@ -102,7 +102,7 @@ export default async function SpendingView({ sector }: { sector: Sector }) {
             lighter italic text in the table below.
           </p>
         )}
-        <p>
+        <p className={styles.explanation}>
           Based on committee support spending, individual contributions to other
           candidates, and statements supporting other candidates, opposition
           spending can be categorized based on likely beneficiary:

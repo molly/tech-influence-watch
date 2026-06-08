@@ -105,11 +105,11 @@ export default function ContributionsCardContent({
       <h2 className={sharedStyles.sectionTitle}>
         Contributions
         <span className={sharedStyles.sectionTitleAmount}>
-          <span className={sharedStyles.sectionTitleAmountValue}>
+          <span className={sharedStyles.highlightFigure}>
             ${humanizeApproximateRounded(totalContributionAmount, 1)}
           </span>{" "}
           across{" "}
-          <span className={sharedStyles.sectionTitleAmountValue}>
+          <span className={sharedStyles.highlightFigure}>
             {individual.contributions.length}
           </span>{" "}
           recipients

@@ -113,7 +113,7 @@ export default async function CommitteeTransfers({
             {recipientCount} {recipientCount === 1 ? "committee" : "committees"}
           </span>
           <span className={sharedStyles.sectionTitleAmount}>
-            <span className={sharedStyles.sectionTitleAmountValue}>
+            <span className={sharedStyles.highlightFigure}>
               {formatCompact(totalTransferred)}
             </span>{" "}
             total

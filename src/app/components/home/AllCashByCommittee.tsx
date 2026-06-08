@@ -27,7 +27,7 @@ async function CashTotal({ sector }: { sector: Sector }) {
   return (
     <span className={sharedStyles.sectionTitleAmount}>
       of{" "}
-      <span className={sharedStyles.sectionTitleAmountValue}>
+      <span className={sharedStyles.highlightFigure}>
         {formatCompact(total)}
       </span>{" "}
       total

@@ -66,12 +66,18 @@
 }
 
 .description {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
   font-family: var(--font-serif);
   font-size: 0.95rem;
-  max-width: 38rem;
   line-height: 1.5;
   color: var(--main-text);
   margin-bottom: 0.75rem;
+}
+
+.description p {
+  margin: 0;
 }
 
 .svgHorizontal {
@@ -179,6 +185,10 @@
   .legend {
     flex-direction: column;
     gap: 0.5rem;
+  }
+
+  .description {
+    grid-template-columns: 1fr;
   }
 
   .svgHorizontal {

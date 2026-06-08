@@ -59,6 +59,7 @@ function getDonorCompanyDetails(
   donor: Contribution,
   COMPANY_ALIASES: Record<string, string>,
   INDIVIDUAL_EMPLOYERS: string[],
+  isIndividual: boolean,
 ): {
   company: string | undefined;
   companyAlias: string | undefined;
@@ -76,7 +77,11 @@ function getDonorCompanyDetails(
   let company;
   if (donor.contributor_employer && donor.contributor_employer !== "N/A") {
     company = donor.contributor_employer;
-  } else if (donor.contributor_name && donor.contributor_name.toUpperCase() !== "N/A") {
+  } else if (
+    !isIndividual &&
+    donor.contributor_name &&
+    donor.contributor_name.toUpperCase() !== "N/A"
+  ) {
     company = donor.contributor_name;
   }
   if (company && !INDIVIDUAL_EMPLOYERS.includes(company)) {
@@ -99,7 +104,12 @@ export function getDonorDetails(
     donor.contributor_last_name in COMPANY_ALIASES
   ) {
     return {
-      ...getDonorCompanyDetails(donor, COMPANY_ALIASES, INDIVIDUAL_EMPLOYERS),
+      ...getDonorCompanyDetails(
+        donor,
+        COMPANY_ALIASES,
+        INDIVIDUAL_EMPLOYERS,
+        false,
+      ),
       isIndividual: false,
     };
   }
@@ -112,18 +122,33 @@ export function getDonorDetails(
   if (hasRealFirstName || hasRealLastName) {
     return {
       ...getIndividualDonorName(donor),
-      ...getDonorCompanyDetails(donor, COMPANY_ALIASES, INDIVIDUAL_EMPLOYERS),
+      ...getDonorCompanyDetails(
+        donor,
+        COMPANY_ALIASES,
+        INDIVIDUAL_EMPLOYERS,
+        true,
+      ),
       isIndividual: true,
     };
   } else if (donor.claimed) {
     return {
       ...getClaimedDonorName(donor),
-      ...getDonorCompanyDetails(donor, COMPANY_ALIASES, INDIVIDUAL_EMPLOYERS),
+      ...getDonorCompanyDetails(
+        donor,
+        COMPANY_ALIASES,
+        INDIVIDUAL_EMPLOYERS,
+        true,
+      ),
       isIndividual: true,
     };
   } else if (donor.contributor_name) {
     return {
-      ...getDonorCompanyDetails(donor, COMPANY_ALIASES, INDIVIDUAL_EMPLOYERS),
+      ...getDonorCompanyDetails(
+        donor,
+        COMPANY_ALIASES,
+        INDIVIDUAL_EMPLOYERS,
+        false,
+      ),
       isIndividual: false,
     };
   }

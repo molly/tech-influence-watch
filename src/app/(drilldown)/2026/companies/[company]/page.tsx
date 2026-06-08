@@ -127,7 +127,8 @@ export default async function CompanyPage({
     (recipientConst.knownDonors ?? [])
       .filter(
         (donor) =>
-          donor.id === companyParam && (donor.idType ?? "company") === "company",
+          donor.id === companyParam &&
+          (donor.idType ?? "company") === "company",
       )
       .map((donor) => ({
         recipientId,
@@ -187,44 +188,44 @@ export default async function CompanyPage({
             <KnownDonors donors={knownDonors} orgName={company.name} />
           )}
           <Suspense fallback={<ContributionsSectionSkeleton />}>
-          <section className={styles.contributionSection}>
-            <h2 className={sharedStyles.sectionTitle}>
-              <span>Contributions</span>
-              <span className={sharedStyles.sectionTitleAmount}>
-                <span className={sharedStyles.sectionTitleAmountValue}>
-                  ${humanizeApproximateRounded(companyTotal, 1)}
-                </span>{" "}
-                across{" "}
-                <span className={sharedStyles.sectionTitleAmountValue}>
-                  {visibleContributions.length}
-                </span>{" "}
-                recipients
-              </span>
-            </h2>
-            {visibleContributions.length > 0 ? (
-              visibleContributions.map(
-                (
-                  contributionGroup: IndividualOrCompanyContributionGroup,
-                  ind: number,
-                ) => {
-                  return (
-                    <ContributionsGroup
-                      key={`contrib-group-${ind}`}
-                      contributionsGroup={contributionGroup}
-                      recipient={contributionGroup.recipient}
-                      company={company.name}
-                      relatedIndividuals={company.relatedIndividuals}
-                      nonCandidateCommittees={nonCandidateCommittees}
-                    />
-                  );
-                },
-              )
-            ) : (
-              <div className={styles.contributionRowEmpty}>
-                No contributions yet.
-              </div>
-            )}
-          </section>
+            <section className={styles.contributionSection}>
+              <h2 className={sharedStyles.sectionTitle}>
+                <span>Contributions</span>
+                <span className={sharedStyles.sectionTitleAmount}>
+                  <span className={sharedStyles.highlightFigure}>
+                    ${humanizeApproximateRounded(companyTotal, 1)}
+                  </span>{" "}
+                  across{" "}
+                  <span className={sharedStyles.highlightFigure}>
+                    {visibleContributions.length}
+                  </span>{" "}
+                  recipients
+                </span>
+              </h2>
+              {visibleContributions.length > 0 ? (
+                visibleContributions.map(
+                  (
+                    contributionGroup: IndividualOrCompanyContributionGroup,
+                    ind: number,
+                  ) => {
+                    return (
+                      <ContributionsGroup
+                        key={`contrib-group-${ind}`}
+                        contributionsGroup={contributionGroup}
+                        recipient={contributionGroup.recipient}
+                        company={company.name}
+                        relatedIndividuals={company.relatedIndividuals}
+                        nonCandidateCommittees={nonCandidateCommittees}
+                      />
+                    );
+                  },
+                )
+              ) : (
+                <div className={styles.contributionRowEmpty}>
+                  No contributions yet.
+                </div>
+              )}
+            </section>
           </Suspense>
           {reportedContributions.length > 0 && (
             <ReportedContributions
@@ -258,7 +259,7 @@ export default async function CompanyPage({
                   <span>Contributions by party</span>
                   <span className={sharedStyles.sectionTitleAmount}>
                     of{" "}
-                    <span className={sharedStyles.sectionTitleAmountValue}>
+                    <span className={sharedStyles.highlightFigure}>
                       ${humanizeApproximateRounded(companyTotal, 1)}
                     </span>
                   </span>
@@ -285,7 +286,7 @@ export default async function CompanyPage({
                 <Suspense fallback={<Skeleton width="10rem" />}>
                   <span className={sharedStyles.sectionTitleAmount}>
                     of{" "}
-                    <span className={sharedStyles.sectionTitleAmountValue}>
+                    <span className={sharedStyles.highlightFigure}>
                       ${humanizeApproximateRounded(candidateTotal, 1)}
                     </span>{" "}
                     directly benefitting candidates

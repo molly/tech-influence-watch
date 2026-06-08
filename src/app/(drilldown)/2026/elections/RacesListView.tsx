@@ -13,7 +13,7 @@ import RacesMethodology from "./RacesMethodology";
 
 export function racesListMetadata(sector: Sector): Metadata {
   return customMetadata({
-    title: "Influenced Elections",
+    title: "Influenced elections",
     description: `Congressional spending by ${humanizeSector(sector, { hyphen: true, lowercase: true })}focused political action committees`,
   });
 }

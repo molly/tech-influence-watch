@@ -170,7 +170,7 @@ export default async function IndividualPage({
                 <span>Contributions by party</span>
                 <span className={sharedStyles.sectionTitleAmount}>
                   of{" "}
-                  <span className={sharedStyles.sectionTitleAmountValue}>
+                  <span className={sharedStyles.highlightFigure}>
                     ${humanizeApproximateRounded(individualListData.total, 1)}
                   </span>
                 </span>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { getNetworkId } from "@/app/data/networks";
 import sharedStyles from "@/app/shared.module.css";
 import { CommitteeConstant } from "@/app/types/Committee";
 import { Sector } from "@/app/types/Sector";
@@ -50,12 +51,23 @@ export default function SpendingByCommittee({
                     {committeeConstants[id].sector}
                   </span>
                 )}
-                {committeeConstants[id]?.network && (
-                  <span className={styles.networkLabel}>
-                    {" "}
-                    {committeeConstants[id].network} network
-                  </span>
-                )}
+                {committeeConstants[id]?.network &&
+                  (getNetworkId(committeeConstants[id].network!) ? (
+                    <>
+                      {" "}
+                      <Link
+                        href={`/2026/networks/${getNetworkId(committeeConstants[id].network!)}`}
+                        className={styles.networkLabel}
+                      >
+                        {committeeConstants[id].network} network
+                      </Link>
+                    </>
+                  ) : (
+                    <span className={styles.networkLabel}>
+                      {" "}
+                      {committeeConstants[id].network} network
+                    </span>
+                  ))}
               </span>
               <span className={styles.value}>
                 {formatCompact(spending)}

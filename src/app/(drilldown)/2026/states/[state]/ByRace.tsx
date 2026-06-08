@@ -372,7 +372,7 @@ export default async function RaceCard({
                 <span className={sharedStyles.sectionTitleAmount}>
                   {expenditures.by_race[raceId]?.total ? (
                     <>
-                      <span className={sharedStyles.sectionTitleAmountValue}>
+                      <span className={sharedStyles.highlightFigure}>
                         {humanizeRoundedCurrency(
                           expenditures.by_race[raceId].total,
                           true,
@@ -388,7 +388,7 @@ export default async function RaceCard({
                     : null}
                   {expenditures.by_race_companies_total?.[raceId] ? (
                     <>
-                      <span className={sharedStyles.sectionTitleAmountValue}>
+                      <span className={sharedStyles.highlightFigure}>
                         {humanizeRoundedCurrency(
                           expenditures.by_race_companies_total[raceId],
                           true,

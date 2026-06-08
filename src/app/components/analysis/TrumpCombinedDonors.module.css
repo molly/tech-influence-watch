@@ -1,5 +1,6 @@
 .heroWithStat {
   composes: heroWithStat from "@/app/shared.module.css";
+  align-items: start;
   margin-bottom: 2rem;
 }
 
@@ -13,12 +14,178 @@
   letter-spacing: 0.03em;
   color: var(--secondary-text);
   border: 1px solid var(--card-border);
-  border-radius: var(--border-radius);
   vertical-align: middle;
   white-space: nowrap;
 }
 
-.committeeTable,
+.donorRow {
+  display: grid;
+  grid-template-columns: 1fr 8rem;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.4rem 0;
+  font-weight: 600;
+}
+
+.donorRow:not(:last-child) {
+  border-bottom: 1px solid var(--table-color);
+}
+
+.donorName {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  color: var(--main-text);
+  font-size: 0.8rem;
+}
+
+.donorAmount {
+  font-size: 0.8rem;
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.showMore {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+  padding: 0.25rem 0;
+  border: none;
+  background: none;
+  color: var(--link-text);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.showMore:hover {
+  color: var(--link-text-hover);
+}
+
+.showMore:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.showMoreCaret {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 0.35rem solid transparent;
+  border-right: 0.35rem solid transparent;
+  border-top: 0.4rem solid currentColor;
+  transition: transform 0.15s ease;
+}
+
+.showMoreCaretExpanded {
+  transform: rotate(180deg);
+}
+
+.donorNote {
+  margin-top: 0.75rem;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.9rem;
+  color: var(--secondary-text);
+}
+
+.donorNote .untrackedTag {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
+
+@media (max-width: 575px) {
+  .donorRow {
+    grid-template-columns: 1fr auto;
+  }
+}
+
+.relatedCard {
+  display: block;
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--color-lime-50);
+  border-left: 0.25rem solid var(--accent);
+}
+
+.relatedLabel {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent-on-light);
+}
+
+.relatedBody {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--main-text);
+}
+
+@media (prefers-color-scheme: dark) {
+  .relatedCard {
+    background-color: var(--color-lime-950);
+  }
+
+  .relatedLabel {
+    color: var(--color-lime-300);
+  }
+}
+
+.committeeRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--table-color);
+}
+
+.committeeInfo {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.committeeName {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.committeeDescription {
+  margin-top: 0.1rem;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--secondary-text);
+}
+
+.committeeAmount {
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.footnoteSection {
+  margin-top: 2rem;
+  font-size: 0.9rem;
+  color: var(--secondary-text);
+}
+
+.footnote {
+  font-family: var(--font-serif);
+  font-style: italic;
+}
+
 .contributionsTable {
   width: 100%;
   font-size: 0.9rem;
@@ -26,18 +193,12 @@
   border-collapse: collapse;
 }
 
-.committeeTable tr td:first-child,
 .contributionsTable tr :first-child {
   padding-left: 0;
 }
 
-.committeeTable tr td:nth-child(2),
 .contributionsTable tr :last-child {
   padding-right: 0;
-}
-
-.committeeRow:not(:last-child) {
-  border-bottom: 1px solid var(--table-color);
 }
 
 .tableNote {

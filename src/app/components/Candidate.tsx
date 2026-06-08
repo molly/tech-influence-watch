@@ -214,7 +214,10 @@ export default function Candidate({
               if (candidateSummary?.party) {
                 parts.push(candidateSummary.party);
               }
-              if (candidateSummary?.incumbent_challenge === "I") {
+              if (
+                candidateSummary?.incumbent_challenge === "I" ||
+                candidate?.incumbent === true
+              ) {
                 parts.push("incumbent");
               }
               if (writeIn) {

@@ -1,13 +1,16 @@
 {
   "min_amount": 100000,
-  "grand_total": 502530645.97,
-  "donor_count": 94,
+  "grand_total": 438407289.64,
+  "donor_count": 113,
   "committee_names": {
     "C00892471": "MAGA Inc.",
     "C00828541": "Never Surrender, Inc.",
     "C00762591": "Save America",
     "C00873893": "Trump National Committee JFC",
     "C00879510": "America PAC",
+    "C00770941": "Trump Save America Joint Fundraising Committee",
+    "C00867937": "Trump 47 Committee, Inc.",
+    "C00825851": "Make America Great Again Inc.",
     "C00894162": "Trump Vance Inaugural Committee"
   },
   "donors": [
@@ -15,22 +18,12 @@
       "id": "elon-musk",
       "label": "Elon Musk",
       "sector": "tech",
-      "total": 305416225.9,
+      "total": 200474600.0,
       "donor_names": [
         "MUSK, ELON",
-        "UNITED STATES OF AMERICA INC",
         "X CORP"
       ],
       "contributions": [
-        {
-          "amount": 40495178.0,
-          "date": "2024-11-25",
-          "committee_id": "C00879510",
-          "committee_name": "America PAC",
-          "source": "schedule_a",
-          "note": null,
-          "donor": "UNITED STATES OF AMERICA INC"
-        },
         {
           "amount": 30000000.0,
           "date": "2024-09-05",
@@ -39,15 +32,6 @@
           "source": "schedule_a",
           "note": null,
           "donor": "MUSK, ELON"
-        },
-        {
-          "amount": 27072484.0,
-          "date": "2025-06-30",
-          "committee_id": "C00879510",
-          "committee_name": "America PAC",
-          "source": "schedule_a",
-          "note": null,
-          "donor": "UNITED STATES OF AMERICA INC"
         },
         {
           "amount": 25000000.0,
@@ -95,15 +79,6 @@
           "donor": "MUSK, ELON"
         },
         {
-          "amount": 11215136.0,
-          "date": "2024-12-31",
-          "committee_id": "C00879510",
-          "committee_name": "America PAC",
-          "source": "schedule_a",
-          "note": null,
-          "donor": "UNITED STATES OF AMERICA INC"
-        },
-        {
           "amount": 11000000.0,
           "date": "2024-10-04",
           "committee_id": "C00879510",
@@ -149,15 +124,6 @@
           "donor": "MUSK, ELON"
         },
         {
-          "amount": 5500000.0,
-          "date": "2025-03-19",
-          "committee_id": "C00879510",
-          "committee_name": "America PAC",
-          "source": "schedule_a",
-          "note": null,
-          "donor": "MUSK, ELON"
-        },
-        {
           "amount": 5000000.0,
           "date": "2025-06-27",
           "committee_id": "C00892471",
@@ -194,69 +160,6 @@
           "donor": "MUSK, ELON"
         },
         {
-          "amount": 4200000.0,
-          "date": "2025-02-18",
-          "committee_id": "C00879510",
-          "committee_name": "America PAC",
-          "source": "schedule_a",
-          "note": null,
-          "donor": "MUSK, ELON"
-        },
-        {
-          "amount": 4000000.0,
-          "date": "2025-02-28",
-          "committee_id": "C00879510",
-          "committee_name": "America PAC",
-          "source": "schedule_a",
-          "note": null,
-          "donor": "MUSK, ELON"
-        },
-        {
-          "amount": 4000000.0,
-          "date": "2024-11-12",
-          "committee_id": "C00879510",
-          "committee_name": "America PAC",
-          "source": "schedule_a",
-          "note": null,
-          "donor": "MUSK, ELON"
-        },
-        {
-          "amount": 3250000.0,
-          "date": "2025-04-11",
-          "committee_id": "C00879510",
-          "committee_name": "America PAC",
-          "source": "schedule_a",
-          "note": null,
-          "donor": "MUSK, ELON"
-        },
-        {
-          "amount": 1250418.0,
-          "date": "2025-12-31",
-          "committee_id": "C00879510",
-          "committee_name": "America PAC",
-          "source": "schedule_a",
-          "note": null,
-          "donor": "UNITED STATES OF AMERICA INC"
-        },
-        {
-          "amount": 1000000.0,
-          "date": "2025-03-25",
-          "committee_id": "C00879510",
-          "committee_name": "America PAC",
-          "source": "schedule_a",
-          "note": null,
-          "donor": "MUSK, ELON"
-        },
-        {
-          "amount": 1000000.0,
-          "date": "2026-03-27",
-          "committee_id": "C00879510",
-          "committee_name": "America PAC",
-          "source": "schedule_a",
-          "note": null,
-          "donor": "MUSK, ELON"
-        },
-        {
           "amount": 1000000.0,
           "date": "2025-01-15",
           "committee_id": "C00894162",
@@ -266,73 +169,10 @@
           "donor": "X CORP"
         },
         {
-          "amount": 750000.0,
-          "date": "2025-12-15",
-          "committee_id": "C00879510",
-          "committee_name": "America PAC",
-          "source": "schedule_a",
-          "note": null,
-          "donor": "MUSK, ELON"
-        },
-        {
-          "amount": 473233.65,
-          "date": "2025-12-31",
-          "committee_id": "C00879510",
-          "committee_name": "America PAC",
-          "source": "schedule_a",
-          "note": null,
-          "donor": "UNITED STATES OF AMERICA INC"
-        },
-        {
-          "amount": 400000.0,
-          "date": "2025-08-06",
-          "committee_id": "C00879510",
-          "committee_name": "America PAC",
-          "source": "schedule_a",
-          "note": null,
-          "donor": "MUSK, ELON"
-        },
-        {
-          "amount": 347996.0,
-          "date": "2026-03-31",
-          "committee_id": "C00879510",
-          "committee_name": "America PAC",
-          "source": "schedule_a",
-          "note": null,
-          "donor": "UNITED STATES OF AMERICA INC"
-        },
-        {
-          "amount": 293451.76,
-          "date": "2026-03-31",
-          "committee_id": "C00879510",
-          "committee_name": "America PAC",
-          "source": "schedule_a",
-          "note": null,
-          "donor": "UNITED STATES OF AMERICA INC"
-        },
-        {
-          "amount": 273791.99,
-          "date": "2025-06-30",
-          "committee_id": "C00879510",
-          "committee_name": "America PAC",
-          "source": "schedule_a",
-          "note": null,
-          "donor": "UNITED STATES OF AMERICA INC"
-        },
-        {
-          "amount": 232500.0,
-          "date": "2024-11-25",
-          "committee_id": "C00879510",
-          "committee_name": "America PAC",
-          "source": "schedule_a",
-          "note": null,
-          "donor": "UNITED STATES OF AMERICA INC"
-        },
-        {
-          "amount": 112036.5,
-          "date": "2024-11-25",
-          "committee_id": "C00879510",
-          "committee_name": "America PAC",
+          "amount": 924600.0,
+          "date": "2024-10-21",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
           "source": "schedule_a",
           "note": null,
           "donor": "MUSK, ELON"
@@ -458,11 +298,11 @@
       "id": "andreessen-horowitz",
       "label": "Andreessen Horowitz",
       "sector": "tech",
-      "total": 12000000.0,
+      "total": 12844600.0,
       "donor_names": [
         "A16Z CAPITAL MANAGEMENT LLC",
-        "HOROWITZ, BENJAMIN",
-        "ANDREESSEN, MARC L"
+        "ANDREESSEN, MARC L",
+        "HOROWITZ, BENJAMIN"
       ],
       "contributions": [
         {
@@ -481,11 +321,29 @@
           "committee_name": "MAGA Inc.",
           "source": "schedule_a",
           "note": null,
-          "donor": "HOROWITZ, BENJAMIN"
+          "donor": "ANDREESSEN, MARC L"
         },
         {
           "amount": 2500000.0,
           "date": "2025-03-31",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "HOROWITZ, BENJAMIN"
+        },
+        {
+          "amount": 844600.0,
+          "date": "2024-08-08",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "ANDREESSEN, MARC L"
+        },
+        {
+          "amount": 500000.0,
+          "date": "2025-02-03",
           "committee_id": "C00892471",
           "committee_name": "MAGA Inc.",
           "source": "schedule_a",
@@ -500,15 +358,232 @@
           "source": "schedule_a",
           "note": null,
           "donor": "HOROWITZ, BENJAMIN"
-        },
+        }
+      ]
+    },
+    {
+      "id": "gemini",
+      "label": "Gemini",
+      "sector": "crypto",
+      "total": 11145833.9,
+      "donor_names": [
+        "GEMINI",
+        "GEMINI TRUST COMPANY"
+      ],
+      "contributions": [
         {
-          "amount": 500000.0,
-          "date": "2025-02-03",
+          "amount": 1500000.0,
+          "date": "2025-04-25",
           "committee_id": "C00892471",
           "committee_name": "MAGA Inc.",
           "source": "schedule_a",
           "note": null,
-          "donor": "ANDREESSEN, MARC L"
+          "donor": "GEMINI TRUST COMPANY"
+        },
+        {
+          "amount": 1499985.0,
+          "date": "2025-10-21",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "GEMINI TRUST COMPANY"
+        },
+        {
+          "amount": 1003908.64,
+          "date": "2024-10-01",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "GEMINI"
+        },
+        {
+          "amount": 1003908.64,
+          "date": "2024-10-01",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "GEMINI"
+        },
+        {
+          "amount": 999699.11,
+          "date": "2025-01-17",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "GEMINI TRUST COMPANY"
+        },
+        {
+          "amount": 847757.76,
+          "date": "2024-08-09",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "GEMINI"
+        },
+        {
+          "amount": 845074.16,
+          "date": "2024-10-01",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "GEMINI"
+        },
+        {
+          "amount": 843880.1,
+          "date": "2024-11-26",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "GEMINI"
+        },
+        {
+          "amount": 825789.06,
+          "date": "2024-10-01",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "GEMINI"
+        },
+        {
+          "amount": 519161.38,
+          "date": "2024-10-01",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "GEMINI"
+        },
+        {
+          "amount": 501203.0,
+          "date": "2024-10-01",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "GEMINI"
+        },
+        {
+          "amount": 401343.06,
+          "date": "2025-01-30",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "GEMINI TRUST COMPANY"
+        },
+        {
+          "amount": 177179.46,
+          "date": "2024-07-19",
+          "committee_id": "C00825851",
+          "committee_name": "Make America Great Again Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "GEMINI TRUST COMPANY"
+        },
+        {
+          "amount": 176944.53,
+          "date": "2024-07-19",
+          "committee_id": "C00825851",
+          "committee_name": "Make America Great Again Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "GEMINI TRUST COMPANY"
+        }
+      ]
+    },
+    {
+      "id": "cantor-fitzgerald",
+      "label": "Cantor Fitzgerald",
+      "sector": "crypto",
+      "total": 8717000.0,
+      "donor_names": [
+        "LUTNICK, HOWARD W",
+        "LUTNICK, KYLE S",
+        "LUTNICK, CASEY JANE",
+        "LUTNICK, BRANDON G",
+        "LUTNICK, HOWARD W MR",
+        "CANTOR FITZGERALD AND CO"
+      ],
+      "contributions": [
+        {
+          "amount": 5000000.0,
+          "date": "2024-08-05",
+          "committee_id": "C00825851",
+          "committee_name": "Make America Great Again Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "LUTNICK, HOWARD W"
+        },
+        {
+          "amount": 1047000.0,
+          "date": "2024-12-23",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "CANTOR FITZGERALD AND CO"
+        },
+        {
+          "amount": 750000.0,
+          "date": "2024-01-26",
+          "committee_id": "C00825851",
+          "committee_name": "Make America Great Again Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "LUTNICK, HOWARD W"
+        },
+        {
+          "amount": 419000.0,
+          "date": "2024-08-16",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "LUTNICK, KYLE S"
+        },
+        {
+          "amount": 419000.0,
+          "date": "2024-08-19",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "LUTNICK, CASEY JANE"
+        },
+        {
+          "amount": 419000.0,
+          "date": "2024-08-16",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "LUTNICK, BRANDON G"
+        },
+        {
+          "amount": 413000.0,
+          "date": "2024-04-01",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "LUTNICK, HOWARD W MR"
+        },
+        {
+          "amount": 250000.0,
+          "date": "2023-12-29",
+          "committee_id": "C00825851",
+          "committee_name": "Make America Great Again Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "LUTNICK, HOWARD W"
         }
       ]
     },
@@ -516,9 +591,9 @@
       "id": "intercontinental-exchange",
       "label": "Intercontinental Exchange",
       "sector": "crypto",
-      "total": 6000000.0,
+      "total": 7250000.0,
       "donor_names": [
-        "SPRECHER, JEFFREY C",
+        "SPRECHER, JEFFREY C.",
         "SPRECHER, JEFFREY"
       ],
       "contributions": [
@@ -529,7 +604,16 @@
           "committee_name": "MAGA Inc.",
           "source": "schedule_a",
           "note": null,
-          "donor": "SPRECHER, JEFFREY C"
+          "donor": "SPRECHER, JEFFREY C."
+        },
+        {
+          "amount": 1000000.0,
+          "date": "2024-06-26",
+          "committee_id": "C00825851",
+          "committee_name": "Make America Great Again Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "SPRECHER, JEFFREY C."
         },
         {
           "amount": 1000000.0,
@@ -539,6 +623,45 @@
           "source": "f13",
           "note": null,
           "donor": "SPRECHER, JEFFREY"
+        },
+        {
+          "amount": 250000.0,
+          "date": "2024-09-09",
+          "committee_id": "C00825851",
+          "committee_name": "Make America Great Again Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "SPRECHER, JEFFREY C."
+        }
+      ]
+    },
+    {
+      "id": "ripple",
+      "label": "Ripple",
+      "sector": "crypto",
+      "total": 5139345.33,
+      "donor_names": [
+        "ALDEROTY, STUART MR.",
+        "RIPPLE LABS, INC."
+      ],
+      "contributions": [
+        {
+          "amount": 4889345.33,
+          "date": "2025-01-02",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "RIPPLE LABS, INC."
+        },
+        {
+          "amount": 250000.0,
+          "date": "2024-06-11",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "ALDEROTY, STUART MR."
         }
       ]
     },
@@ -579,73 +702,6 @@
           "source": "schedule_a",
           "note": null,
           "donor": "BLOCKCHAIN.COM, INC."
-        }
-      ]
-    },
-    {
-      "id": "ripple",
-      "label": "Ripple",
-      "sector": "crypto",
-      "total": 4889345.33,
-      "donor_names": [
-        "RIPPLE LABS, INC."
-      ],
-      "contributions": [
-        {
-          "amount": 4889345.33,
-          "date": "2025-01-02",
-          "committee_id": "C00894162",
-          "committee_name": "Trump Vance Inaugural Committee",
-          "source": "f13",
-          "note": null,
-          "donor": "RIPPLE LABS, INC."
-        }
-      ]
-    },
-    {
-      "id": "gemini",
-      "label": "Gemini",
-      "sector": "crypto",
-      "total": 4401027.17,
-      "donor_names": [
-        "GEMINI TRUST COMPANY"
-      ],
-      "contributions": [
-        {
-          "amount": 1500000.0,
-          "date": "2025-04-25",
-          "committee_id": "C00892471",
-          "committee_name": "MAGA Inc.",
-          "source": "schedule_a",
-          "note": null,
-          "donor": "GEMINI TRUST COMPANY"
-        },
-        {
-          "amount": 1499985.0,
-          "date": "2025-10-21",
-          "committee_id": "C00892471",
-          "committee_name": "MAGA Inc.",
-          "source": "schedule_a",
-          "note": null,
-          "donor": "GEMINI TRUST COMPANY"
-        },
-        {
-          "amount": 999699.11,
-          "date": "2025-01-17",
-          "committee_id": "C00892471",
-          "committee_name": "MAGA Inc.",
-          "source": "schedule_a",
-          "note": null,
-          "donor": "GEMINI TRUST COMPANY"
-        },
-        {
-          "amount": 401343.06,
-          "date": "2025-01-30",
-          "committee_id": "C00892471",
-          "committee_name": "MAGA Inc.",
-          "source": "schedule_a",
-          "note": null,
-          "donor": "GEMINI TRUST COMPANY"
         }
       ]
     },
@@ -692,7 +748,7 @@
       "id": null,
       "label": "Chase Zimmerman",
       "sector": "crypto",
-      "total": 3499985.0,
+      "total": 3849985.0,
       "donor_names": [
         "ZIMMERMAN, CHASE"
       ],
@@ -723,6 +779,73 @@
           "source": "f13",
           "note": null,
           "donor": "ZIMMERMAN, CHASE"
+        },
+        {
+          "amount": 250000.0,
+          "date": "2024-03-28",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "ZIMMERMAN, CHASE"
+        },
+        {
+          "amount": 100000.0,
+          "date": "2024-10-15",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "ZIMMERMAN, CHASE"
+        }
+      ]
+    },
+    {
+      "id": "palantir",
+      "label": "Palantir",
+      "sector": "ai",
+      "total": 3844600.0,
+      "donor_names": [
+        "HELBERG, JACOB",
+        "KARP, ALEXANDER C",
+        "KARP, ALEXANDER"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2024-07-10",
+          "committee_id": "C00825851",
+          "committee_name": "Make America Great Again Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "HELBERG, JACOB"
+        },
+        {
+          "amount": 1000000.0,
+          "date": "2024-12-12",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "KARP, ALEXANDER C"
+        },
+        {
+          "amount": 1000000.0,
+          "date": "2024-12-17",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "KARP, ALEXANDER"
+        },
+        {
+          "amount": 844600.0,
+          "date": "2024-04-26",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "HELBERG, JACOB"
         }
       ]
     },
@@ -730,7 +853,7 @@
       "id": null,
       "label": "Chain Bridge Bank",
       "sector": "crypto",
-      "total": 3199034.73,
+      "total": 3755383.5,
       "donor_names": [
         "CHAIN BRIDGE BANK NA"
       ],
@@ -781,6 +904,15 @@
           "donor": "CHAIN BRIDGE BANK NA"
         },
         {
+          "amount": 158811.23,
+          "date": "2024-10-31",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "CHAIN BRIDGE BANK NA"
+        },
+        {
           "amount": 146135.42,
           "date": "2025-10-31",
           "committee_id": "C00828541",
@@ -803,6 +935,15 @@
           "date": "2025-12-31",
           "committee_id": "C00828541",
           "committee_name": "Never Surrender, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "CHAIN BRIDGE BANK NA"
+        },
+        {
+          "amount": 136959.62,
+          "date": "2024-06-30",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
           "source": "schedule_a",
           "note": null,
           "donor": "CHAIN BRIDGE BANK NA"
@@ -848,6 +989,24 @@
           "date": "2026-03-31",
           "committee_id": "C00828541",
           "committee_name": "Never Surrender, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "CHAIN BRIDGE BANK NA"
+        },
+        {
+          "amount": 131063.81,
+          "date": "2024-08-31",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "CHAIN BRIDGE BANK NA"
+        },
+        {
+          "amount": 129514.11,
+          "date": "2024-09-30",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
           "source": "schedule_a",
           "note": null,
           "donor": "CHAIN BRIDGE BANK NA"
@@ -930,6 +1089,178 @@
       ]
     },
     {
+      "id": null,
+      "label": "Kelly Loeffler",
+      "sector": "crypto",
+      "total": 2794600.0,
+      "donor_names": [
+        "LOEFFLER, KELLY",
+        "LOEFFLER, KELLY MS"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2024-06-26",
+          "committee_id": "C00825851",
+          "committee_name": "Make America Great Again Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "LOEFFLER, KELLY"
+        },
+        {
+          "amount": 824600.0,
+          "date": "2024-03-27",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "LOEFFLER, KELLY MS"
+        },
+        {
+          "amount": 500000.0,
+          "date": "2024-02-27",
+          "committee_id": "C00825851",
+          "committee_name": "Make America Great Again Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "LOEFFLER, KELLY"
+        },
+        {
+          "amount": 250000.0,
+          "date": "2024-09-09",
+          "committee_id": "C00825851",
+          "committee_name": "Make America Great Again Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "LOEFFLER, KELLY"
+        },
+        {
+          "amount": 220000.0,
+          "date": "2024-02-09",
+          "committee_id": "C00825851",
+          "committee_name": "Make America Great Again Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "LOEFFLER, KELLY"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Andy Beal",
+      "sector": "crypto",
+      "total": 2788000.0,
+      "donor_names": [
+        "BEAL, D ANDREW",
+        "BEAL, ANDY"
+      ],
+      "contributions": [
+        {
+          "amount": 1550000.0,
+          "date": "2024-11-20",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "BEAL, ANDY"
+        },
+        {
+          "amount": 500000.0,
+          "date": "2024-05-15",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "BEAL, D ANDREW"
+        },
+        {
+          "amount": 338000.0,
+          "date": "2024-06-04",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "BEAL, D ANDREW"
+        },
+        {
+          "amount": 200000.0,
+          "date": "2022-10-11",
+          "committee_id": "C00825851",
+          "committee_name": "Make America Great Again Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "BEAL, D ANDREW"
+        },
+        {
+          "amount": 200000.0,
+          "date": "2023-11-17",
+          "committee_id": "C00825851",
+          "committee_name": "Make America Great Again Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "BEAL, ANDY"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Sequoia Capital",
+      "sector": "tech",
+      "total": 2300000.0,
+      "donor_names": [
+        "LEONE, PATRICIA PERKINS",
+        "LEONE, DOUGLAS",
+        "MAGUIRE, SHAUN"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2024-06-14",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "LEONE, DOUGLAS"
+        },
+        {
+          "amount": 500000.0,
+          "date": "2024-06-18",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "MAGUIRE, SHAUN"
+        },
+        {
+          "amount": 300000.0,
+          "date": "2024-05-29",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "MAGUIRE, SHAUN"
+        },
+        {
+          "amount": 250000.0,
+          "date": "2024-10-30",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "LEONE, PATRICIA PERKINS"
+        },
+        {
+          "amount": 250000.0,
+          "date": "2024-10-30",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "LEONE, DOUGLAS"
+        }
+      ]
+    },
+    {
       "id": "paradigm",
       "label": "Paradigm",
       "sector": "crypto",
@@ -964,6 +1295,45 @@
           "source": "schedule_a",
           "note": null,
           "donor": "PARADIGM OPERATIONS LP"
+        }
+      ]
+    },
+    {
+      "id": "kraken",
+      "label": "Kraken",
+      "sector": "crypto",
+      "total": 2000343.22,
+      "donor_names": [
+        "POWELL, JESSE",
+        "PAYWARD INC"
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2024-12-04",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "PAYWARD INC"
+        },
+        {
+          "amount": 844943.22,
+          "date": "2024-06-28",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "POWELL, JESSE"
+        },
+        {
+          "amount": 155400.0,
+          "date": "2024-06-28",
+          "committee_id": "C00825851",
+          "committee_name": "Make America Great Again Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "POWELL, JESSE"
         }
       ]
     },
@@ -1014,36 +1384,6 @@
           "source": "schedule_a",
           "note": null,
           "donor": "GRACIAS, ANTONIO"
-        }
-      ]
-    },
-    {
-      "id": "palantir",
-      "label": "Palantir",
-      "sector": "ai",
-      "total": 2000000.0,
-      "donor_names": [
-        "KARP, ALEXANDER C",
-        "KARP, ALEXANDER"
-      ],
-      "contributions": [
-        {
-          "amount": 1000000.0,
-          "date": "2024-12-12",
-          "committee_id": "C00892471",
-          "committee_name": "MAGA Inc.",
-          "source": "schedule_a",
-          "note": null,
-          "donor": "KARP, ALEXANDER C"
-        },
-        {
-          "amount": 1000000.0,
-          "date": "2024-12-17",
-          "committee_id": "C00894162",
-          "committee_name": "Trump Vance Inaugural Committee",
-          "source": "f13",
-          "note": null,
-          "donor": "KARP, ALEXANDER"
         }
       ]
     },
@@ -1105,6 +1445,166 @@
       ]
     },
     {
+      "id": "coinbase",
+      "label": "Coinbase",
+      "sector": "crypto",
+      "total": 1950000.0,
+      "donor_names": [
+        "COINBASE EXCHANGE",
+        "COINBASE, INC."
+      ],
+      "contributions": [
+        {
+          "amount": 1000000.0,
+          "date": "2024-12-03",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "COINBASE, INC."
+        },
+        {
+          "amount": 250000.0,
+          "date": "2024-09-30",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "COINBASE EXCHANGE"
+        },
+        {
+          "amount": 250000.0,
+          "date": "2024-09-23",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "COINBASE EXCHANGE"
+        },
+        {
+          "amount": 250000.0,
+          "date": "2024-09-23",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "COINBASE EXCHANGE"
+        },
+        {
+          "amount": 100000.0,
+          "date": "2024-09-23",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "COINBASE EXCHANGE"
+        },
+        {
+          "amount": 100000.0,
+          "date": "2024-09-23",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "COINBASE EXCHANGE"
+        }
+      ]
+    },
+    {
+      "id": "tyler-winklevoss",
+      "label": "Tyler Winklevoss",
+      "sector": "crypto",
+      "total": 1948452.45,
+      "donor_names": [
+        "WINKLEVOSS, TYLER"
+      ],
+      "contributions": [
+        {
+          "amount": 1007228.27,
+          "date": "2024-06-20",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "WINKLEVOSS, TYLER"
+        },
+        {
+          "amount": 514272.13,
+          "date": "2025-01-17",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "WINKLEVOSS, TYLER"
+        },
+        {
+          "amount": 250000.0,
+          "date": "2024-06-21",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "WINKLEVOSS, TYLER"
+        },
+        {
+          "amount": 176952.05,
+          "date": "2024-07-19",
+          "committee_id": "C00825851",
+          "committee_name": "Make America Great Again Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "WINKLEVOSS, TYLER"
+        }
+      ]
+    },
+    {
+      "id": "cameron-winklevoss",
+      "label": "Cameron Winklevoss",
+      "sector": "crypto",
+      "total": 1933948.03,
+      "donor_names": [
+        "WINKLEVOSS, CAMERON"
+      ],
+      "contributions": [
+        {
+          "amount": 1007228.27,
+          "date": "2024-06-20",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "WINKLEVOSS, CAMERON"
+        },
+        {
+          "amount": 499504.78,
+          "date": "2025-01-17",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "WINKLEVOSS, CAMERON"
+        },
+        {
+          "amount": 250000.0,
+          "date": "2024-06-21",
+          "committee_id": "C00879510",
+          "committee_name": "America PAC",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "WINKLEVOSS, CAMERON"
+        },
+        {
+          "amount": 177214.98,
+          "date": "2024-07-19",
+          "committee_id": "C00825851",
+          "committee_name": "Make America Great Again Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "WINKLEVOSS, CAMERON"
+        }
+      ]
+    },
+    {
       "id": "amazon",
       "label": "Amazon",
       "sector": "tech",
@@ -1135,51 +1635,117 @@
     },
     {
       "id": null,
-      "label": "Andy Beal",
+      "label": "Stake",
       "sector": "crypto",
-      "total": 1550000.0,
+      "total": 1852396.35,
       "donor_names": [
-        "BEAL, ANDY"
+        "TEHRANI, BIJAN"
       ],
       "contributions": [
         {
-          "amount": 1550000.0,
-          "date": "2024-11-20",
+          "amount": 1000000.0,
+          "date": "2025-02-25",
           "committee_id": "C00892471",
           "committee_name": "MAGA Inc.",
           "source": "schedule_a",
           "note": null,
-          "donor": "BEAL, ANDY"
+          "donor": "TEHRANI, BIJAN"
+        },
+        {
+          "amount": 852396.35,
+          "date": "2024-08-05",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "TEHRANI, BIJAN"
         }
       ]
     },
     {
       "id": null,
-      "label": "Sequoia Capital",
-      "sector": "tech",
-      "total": 1500000.0,
+      "label": "C3.AI",
+      "sector": "ai",
+      "total": 1450000.0,
       "donor_names": [
-        "LEONE, DOUGLAS",
-        "MAGUIRE, SHAUN"
+        "SIEBEL, THOMAS",
+        "C3.AI, INC."
       ],
       "contributions": [
         {
           "amount": 1000000.0,
-          "date": "2024-06-14",
-          "committee_id": "C00879510",
-          "committee_name": "America PAC",
+          "date": "2024-12-05",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "C3.AI, INC."
+        },
+        {
+          "amount": 250000.0,
+          "date": "2024-06-06",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
           "source": "schedule_a",
           "note": null,
-          "donor": "LEONE, DOUGLAS"
+          "donor": "SIEBEL, THOMAS"
+        },
+        {
+          "amount": 100000.0,
+          "date": "2024-09-19",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "SIEBEL, THOMAS"
+        },
+        {
+          "amount": 100000.0,
+          "date": "2024-09-19",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "SIEBEL, THOMAS"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Robert Mercer",
+      "sector": "tech",
+      "total": 1427900.0,
+      "donor_names": [
+        "MERCER, ROBERT L MR",
+        "MERCER, ROBERT"
+      ],
+      "contributions": [
+        {
+          "amount": 814399.0,
+          "date": "2024-03-25",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "MERCER, ROBERT L MR"
         },
         {
           "amount": 500000.0,
-          "date": "2024-06-18",
-          "committee_id": "C00879510",
-          "committee_name": "America PAC",
+          "date": "2024-12-16",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "MERCER, ROBERT"
+        },
+        {
+          "amount": 113501.0,
+          "date": "2024-09-25",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
           "source": "schedule_a",
           "note": null,
-          "donor": "MAGUIRE, SHAUN"
+          "donor": "MERCER, ROBERT"
         }
       ]
     },
@@ -1213,22 +1779,99 @@
       ]
     },
     {
-      "id": "cantor-fitzgerald",
-      "label": "Cantor Fitzgerald",
-      "sector": "crypto",
-      "total": 1047000.0,
+      "id": "keith-rabois",
+      "label": "Keith Rabois",
+      "sector": "tech",
+      "total": 1250000.0,
       "donor_names": [
-        "CANTOR FITZGERALD AND CO"
+        "RABOIS, KEITH"
       ],
       "contributions": [
         {
-          "amount": 1047000.0,
-          "date": "2024-12-23",
+          "amount": 1000000.0,
+          "date": "2024-11-19",
           "committee_id": "C00894162",
           "committee_name": "Trump Vance Inaugural Committee",
           "source": "f13",
           "note": null,
-          "donor": "CANTOR FITZGERALD AND CO"
+          "donor": "RABOIS, KEITH"
+        },
+        {
+          "amount": 250000.0,
+          "date": "2024-09-24",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "RABOIS, KEITH"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Ziad Ghandour",
+      "sector": "ai",
+      "total": 1200000.0,
+      "donor_names": [
+        "GHANDOUR, ZIAD"
+      ],
+      "contributions": [
+        {
+          "amount": 800000.0,
+          "date": "2024-12-18",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "GHANDOUR, ZIAD"
+        },
+        {
+          "amount": 200000.0,
+          "date": "2024-12-18",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "GHANDOUR, ZIAD"
+        },
+        {
+          "amount": 200000.0,
+          "date": "2024-10-31",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "GHANDOUR, ZIAD"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Apollo Global Management",
+      "sector": "tech",
+      "total": 1174600.0,
+      "donor_names": [
+        "FIELDS, MARJORIE S",
+        "BOOKOUT, JOHN FRANK III"
+      ],
+      "contributions": [
+        {
+          "amount": 924600.0,
+          "date": "2024-09-20",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "FIELDS, MARJORIE S"
+        },
+        {
+          "amount": 250000.0,
+          "date": "2024-07-30",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "BOOKOUT, JOHN FRANK III"
         }
       ]
     },
@@ -1249,26 +1892,6 @@
           "source": "schedule_a",
           "note": null,
           "donor": "TULL, THOMAS"
-        }
-      ]
-    },
-    {
-      "id": null,
-      "label": "Stake",
-      "sector": "crypto",
-      "total": 1000000.0,
-      "donor_names": [
-        "TEHRANI, BIJAN"
-      ],
-      "contributions": [
-        {
-          "amount": 1000000.0,
-          "date": "2025-02-25",
-          "committee_id": "C00892471",
-          "committee_name": "MAGA Inc.",
-          "source": "schedule_a",
-          "note": null,
-          "donor": "TEHRANI, BIJAN"
         }
       ]
     },
@@ -1453,35 +2076,6 @@
       ]
     },
     {
-      "id": null,
-      "label": "Ziad Ghandour",
-      "sector": "ai",
-      "total": 1000000.0,
-      "donor_names": [
-        "GHANDOUR, ZIAD"
-      ],
-      "contributions": [
-        {
-          "amount": 800000.0,
-          "date": "2024-12-18",
-          "committee_id": "C00892471",
-          "committee_name": "MAGA Inc.",
-          "source": "schedule_a",
-          "note": null,
-          "donor": "GHANDOUR, ZIAD"
-        },
-        {
-          "amount": 200000.0,
-          "date": "2024-12-18",
-          "committee_id": "C00892471",
-          "committee_name": "MAGA Inc.",
-          "source": "schedule_a",
-          "note": null,
-          "donor": "GHANDOUR, ZIAD"
-        }
-      ]
-    },
-    {
       "id": "lonsdale-enterprises",
       "label": "Lonsdale Enterprises",
       "sector": "ai",
@@ -1602,26 +2196,6 @@
       ]
     },
     {
-      "id": null,
-      "label": "C3.AI",
-      "sector": "ai",
-      "total": 1000000.0,
-      "donor_names": [
-        "C3.AI, INC."
-      ],
-      "contributions": [
-        {
-          "amount": 1000000.0,
-          "date": "2024-12-05",
-          "committee_id": "C00894162",
-          "committee_name": "Trump Vance Inaugural Committee",
-          "source": "f13",
-          "note": null,
-          "donor": "C3.AI, INC."
-        }
-      ]
-    },
-    {
       "id": "circle",
       "label": "Circle",
       "sector": "crypto",
@@ -1638,26 +2212,6 @@
           "source": "f13",
           "note": null,
           "donor": "CIRCLE INTERNET GROUP, INC."
-        }
-      ]
-    },
-    {
-      "id": "coinbase",
-      "label": "Coinbase",
-      "sector": "crypto",
-      "total": 1000000.0,
-      "donor_names": [
-        "COINBASE, INC."
-      ],
-      "contributions": [
-        {
-          "amount": 1000000.0,
-          "date": "2024-12-03",
-          "committee_id": "C00894162",
-          "committee_name": "Trump Vance Inaugural Committee",
-          "source": "f13",
-          "note": null,
-          "donor": "COINBASE, INC."
         }
       ]
     },
@@ -1882,26 +2436,6 @@
       ]
     },
     {
-      "id": "kraken",
-      "label": "Kraken",
-      "sector": "crypto",
-      "total": 1000000.0,
-      "donor_names": [
-        "PAYWARD INC"
-      ],
-      "contributions": [
-        {
-          "amount": 1000000.0,
-          "date": "2024-12-04",
-          "committee_id": "C00894162",
-          "committee_name": "Trump Vance Inaugural Committee",
-          "source": "f13",
-          "note": null,
-          "donor": "PAYWARD INC"
-        }
-      ]
-    },
-    {
       "id": "perplexity",
       "label": "Perplexity",
       "sector": "ai",
@@ -1938,26 +2472,6 @@
           "source": "f13",
           "note": null,
           "donor": "QUALCOMM INCORPORATED"
-        }
-      ]
-    },
-    {
-      "id": "keith-rabois",
-      "label": "Keith Rabois",
-      "sector": "tech",
-      "total": 1000000.0,
-      "donor_names": [
-        "RABOIS, KEITH"
-      ],
-      "contributions": [
-        {
-          "amount": 1000000.0,
-          "date": "2024-11-19",
-          "committee_id": "C00894162",
-          "committee_name": "Trump Vance Inaugural Committee",
-          "source": "f13",
-          "note": null,
-          "donor": "RABOIS, KEITH"
         }
       ]
     },
@@ -2092,31 +2606,120 @@
       ]
     },
     {
-      "id": "tyler-winklevoss",
-      "label": "Tyler Winklevoss",
-      "sector": "crypto",
-      "total": 764272.13,
+      "id": null,
+      "label": "Jared Kushner",
+      "sector": "ai",
+      "total": 844600.0,
       "donor_names": [
-        "WINKLEVOSS, TYLER"
+        "KUSHNER, JARED"
       ],
       "contributions": [
         {
-          "amount": 514272.13,
-          "date": "2025-01-17",
-          "committee_id": "C00892471",
-          "committee_name": "MAGA Inc.",
+          "amount": 844600.0,
+          "date": "2024-05-31",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
           "source": "schedule_a",
           "note": null,
-          "donor": "WINKLEVOSS, TYLER"
+          "donor": "KUSHNER, JARED"
+        }
+      ]
+    },
+    {
+      "id": "interactive-brokers",
+      "label": "Interactive Brokers",
+      "sector": "crypto",
+      "total": 844600.0,
+      "donor_names": [
+        "PETERFFY, THOMAS P"
+      ],
+      "contributions": [
+        {
+          "amount": 500000.0,
+          "date": "2024-08-05",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "PETERFFY, THOMAS P"
+        },
+        {
+          "amount": 344600.0,
+          "date": "2024-08-12",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "PETERFFY, THOMAS P"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Gary Cardone",
+      "sector": "crypto",
+      "total": 844474.25,
+      "donor_names": [
+        "CARDONE, GARY"
+      ],
+      "contributions": [
+        {
+          "amount": 844474.25,
+          "date": "2024-07-23",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "CARDONE, GARY"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "David Sacks",
+      "sector": "tech",
+      "total": 800000.0,
+      "donor_names": [
+        "SACKS, DAVID",
+        "SACKS, JAQUELINE",
+        "SACKS, JACQUELINE"
+      ],
+      "contributions": [
+        {
+          "amount": 250000.0,
+          "date": "2024-05-29",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "SACKS, DAVID"
         },
         {
           "amount": 250000.0,
-          "date": "2024-06-21",
-          "committee_id": "C00879510",
-          "committee_name": "America PAC",
+          "date": "2024-05-29",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
           "source": "schedule_a",
           "note": null,
-          "donor": "WINKLEVOSS, TYLER"
+          "donor": "SACKS, JAQUELINE"
+        },
+        {
+          "amount": 150000.0,
+          "date": "2024-09-19",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "SACKS, DAVID"
+        },
+        {
+          "amount": 150000.0,
+          "date": "2024-09-19",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "SACKS, JACQUELINE"
         }
       ]
     },
@@ -2137,6 +2740,44 @@
           "source": "schedule_a",
           "note": null,
           "donor": "HBAR INC"
+        }
+      ]
+    },
+    {
+      "id": "multicoin-capital",
+      "label": "Multicoin Capital",
+      "sector": "crypto",
+      "total": 750000.0,
+      "donor_names": [
+        "SAMANI, PYAHM"
+      ],
+      "contributions": [
+        {
+          "amount": 300000.0,
+          "date": "2024-05-31",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "SAMANI, PYAHM"
+        },
+        {
+          "amount": 250000.0,
+          "date": "2024-12-19",
+          "committee_id": "C00894162",
+          "committee_name": "Trump Vance Inaugural Committee",
+          "source": "f13",
+          "note": null,
+          "donor": "SAMANI, PYAHM"
+        },
+        {
+          "amount": 200000.0,
+          "date": "2025-01-07",
+          "committee_id": "C00892471",
+          "committee_name": "MAGA Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "SAMANI, PYAHM"
         }
       ]
     },
@@ -2190,31 +2831,42 @@
       ]
     },
     {
-      "id": "cameron-winklevoss",
-      "label": "Cameron Winklevoss",
+      "id": "lightspark-group",
+      "label": "Lightspark Group",
       "sector": "crypto",
-      "total": 749504.78,
+      "total": 500000.0,
       "donor_names": [
-        "WINKLEVOSS, CAMERON"
+        "MARCUS, DAVID"
       ],
       "contributions": [
         {
-          "amount": 499504.78,
-          "date": "2025-01-17",
-          "committee_id": "C00892471",
-          "committee_name": "MAGA Inc.",
+          "amount": 500000.0,
+          "date": "2024-07-31",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
           "source": "schedule_a",
           "note": null,
-          "donor": "WINKLEVOSS, CAMERON"
-        },
+          "donor": "MARCUS, DAVID"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Magic Leap",
+      "sector": "ai",
+      "total": 500000.0,
+      "donor_names": [
+        "JOHNSON, MARGARET L"
+      ],
+      "contributions": [
         {
-          "amount": 250000.0,
-          "date": "2024-06-21",
-          "committee_id": "C00879510",
-          "committee_name": "America PAC",
+          "amount": 500000.0,
+          "date": "2024-07-30",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
           "source": "schedule_a",
           "note": null,
-          "donor": "WINKLEVOSS, CAMERON"
+          "donor": "JOHNSON, MARGARET L"
         }
       ]
     },
@@ -2260,26 +2912,6 @@
     },
     {
       "id": null,
-      "label": "Robert Mercerte",
-      "sector": "tech",
-      "total": 500000.0,
-      "donor_names": [
-        "MERCER, ROBERT"
-      ],
-      "contributions": [
-        {
-          "amount": 500000.0,
-          "date": "2024-12-16",
-          "committee_id": "C00894162",
-          "committee_name": "Trump Vance Inaugural Committee",
-          "source": "f13",
-          "note": null,
-          "donor": "MERCER, ROBERT"
-        }
-      ]
-    },
-    {
-      "id": null,
       "label": "Triller Group",
       "sector": "ai",
       "total": 500000.0,
@@ -2299,31 +2931,130 @@
       ]
     },
     {
-      "id": "multicoin-capital",
-      "label": "Multicoin Capital",
+      "id": "btc-inc",
+      "label": "BTC Inc.",
       "sector": "crypto",
-      "total": 450000.0,
+      "total": 498576.68,
       "donor_names": [
-        "SAMANI, PYAHM"
+        "BAILEY, DAVID"
+      ],
+      "contributions": [
+        {
+          "amount": 498576.68,
+          "date": "2024-07-25",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "BAILEY, DAVID"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Bill Ackman",
+      "sector": "ai",
+      "total": 419600.0,
+      "donor_names": [
+        "ACKMAN, WILLIAM A"
+      ],
+      "contributions": [
+        {
+          "amount": 419600.0,
+          "date": "2024-09-10",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "ACKMAN, WILLIAM A"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Fortress Investment Group",
+      "sector": "tech",
+      "total": 419600.0,
+      "donor_names": [
+        "MCKNIGHT, ANDREW"
       ],
       "contributions": [
         {
           "amount": 250000.0,
-          "date": "2024-12-19",
-          "committee_id": "C00894162",
-          "committee_name": "Trump Vance Inaugural Committee",
-          "source": "f13",
-          "note": null,
-          "donor": "SAMANI, PYAHM"
-        },
-        {
-          "amount": 200000.0,
-          "date": "2025-01-07",
-          "committee_id": "C00892471",
-          "committee_name": "MAGA Inc.",
+          "date": "2024-04-05",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
           "source": "schedule_a",
           "note": null,
-          "donor": "SAMANI, PYAHM"
+          "donor": "MCKNIGHT, ANDREW"
+        },
+        {
+          "amount": 169600.0,
+          "date": "2024-08-28",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "MCKNIGHT, ANDREW"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "James Pallotta",
+      "sector": "tech",
+      "total": 400000.0,
+      "donor_names": [
+        "PALLOTTA, JAMES MR"
+      ],
+      "contributions": [
+        {
+          "amount": 250000.0,
+          "date": "2024-05-13",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "PALLOTTA, JAMES MR"
+        },
+        {
+          "amount": 150000.0,
+          "date": "2024-06-11",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "PALLOTTA, JAMES MR"
+        }
+      ]
+    },
+    {
+      "id": "anduril",
+      "label": "Anduril",
+      "sector": "ai",
+      "total": 380000.0,
+      "donor_names": [
+        "LUCKEY, PALMER",
+        "LUCKEY, NICOLE"
+      ],
+      "contributions": [
+        {
+          "amount": 200000.0,
+          "date": "2024-06-28",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "LUCKEY, PALMER"
+        },
+        {
+          "amount": 180000.0,
+          "date": "2024-06-28",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "LUCKEY, NICOLE"
         }
       ]
     },
@@ -2344,6 +3075,115 @@
           "source": "f13",
           "note": "IN-KIND CONTRIBUTION: EQUIPMENT EXPENSE",
           "donor": "SAMSUNG ELECTRONICS AMERICA"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Chamath Palihapitiya",
+      "sector": "tech",
+      "total": 300000.0,
+      "donor_names": [
+        "PALIHAPITIYA, CHAMATH"
+      ],
+      "contributions": [
+        {
+          "amount": 300000.0,
+          "date": "2024-05-31",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "PALIHAPITIYA, CHAMATH"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Kresus Labs",
+      "sector": "crypto",
+      "total": 300000.0,
+      "donor_names": [
+        "TRAINA, TREVOR"
+      ],
+      "contributions": [
+        {
+          "amount": 200000.0,
+          "date": "2024-05-30",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "TRAINA, TREVOR"
+        },
+        {
+          "amount": 100000.0,
+          "date": "2024-03-11",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "TRAINA, TREVOR"
+        }
+      ]
+    },
+    {
+      "id": "anchorage-digital",
+      "label": "Anchorage Digital",
+      "sector": "crypto",
+      "total": 250000.0,
+      "donor_names": [
+        "MCCAULEY, NATHAN P"
+      ],
+      "contributions": [
+        {
+          "amount": 250000.0,
+          "date": "2024-07-29",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "MCCAULEY, NATHAN P"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Chase Herro",
+      "sector": "crypto",
+      "total": 250000.0,
+      "donor_names": [
+        "HERRO, CHASE"
+      ],
+      "contributions": [
+        {
+          "amount": 250000.0,
+          "date": "2024-07-30",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "HERRO, CHASE"
+        }
+      ]
+    },
+    {
+      "id": null,
+      "label": "Steve Witkoff",
+      "sector": "crypto",
+      "total": 250000.0,
+      "donor_names": [
+        "WITKOFF, STEVEN"
+      ],
+      "contributions": [
+        {
+          "amount": 250000.0,
+          "date": "2023-12-27",
+          "committee_id": "C00825851",
+          "committee_name": "Make America Great Again Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "WITKOFF, STEVEN"
         }
       ]
     },
@@ -2509,6 +3349,26 @@
     },
     {
       "id": null,
+      "label": "David Blumberg",
+      "sector": "ai",
+      "total": 200000.0,
+      "donor_names": [
+        "BLUMBERG, DAVID J"
+      ],
+      "contributions": [
+        {
+          "amount": 200000.0,
+          "date": "2024-09-23",
+          "committee_id": "C00867937",
+          "committee_name": "Trump 47 Committee, Inc.",
+          "source": "schedule_a",
+          "note": null,
+          "donor": "BLUMBERG, DAVID J"
+        }
+      ]
+    },
+    {
+      "id": null,
       "label": "Zeta Global",
       "sector": "ai",
       "total": 200000.0,
@@ -2618,7 +3478,6 @@
       ]
     },
     {
-      "id": "crypto",
       "label": "Consensys",
       "sector": "crypto",
       "total": 100000.0,

@@ -5,7 +5,6 @@ import {
   fetchAllCommitteeTotalExpenditures,
   fetchAllExpenditureTotalsByParty,
 } from "@/app/actions/fetch";
-import pageStyles from "@/app/page.module.css";
 import styles from "@/app/shared.module.css";
 import { ExpendituresByPartySnapshot } from "@/app/types/Expenditures";
 import { Sector } from "@/app/types/Sector";
@@ -25,7 +24,7 @@ async function ExpendituresTotal({ sector }: { sector: Sector }) {
   return (
     <span className={styles.sectionTitleAmount}>
       of{" "}
-      <span className={styles.sectionTitleAmountValue}>
+      <span className={styles.highlightFigure}>
         {formatCompact(data as number)}
       </span>{" "}
       total
@@ -71,7 +70,7 @@ export default function AllExpendituresByParty({ sector }: { sector: Sector }) {
           <ExpendituresTotal sector={sector} />
         </Suspense>
       </h2>
-      <div className={pageStyles.subtitle}>
+      <div className={styles.subtitle}>
         Independent expenditures by {sectorText}focused PACs in support of or
         opposition to candidates
       </div>

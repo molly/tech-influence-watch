@@ -1,3 +1,6 @@
+import Link from "next/link";
+
+import { getNetworkId } from "@/app/data/networks";
 import sharedStyles from "@/app/shared.module.css";
 import { CommitteeConstantWithContributions } from "@/app/types/Committee";
 import { Sector } from "@/app/types/Sector";
@@ -87,12 +90,23 @@ export default function AllCashByCommitteeChart({
                       {committee.sector}
                     </span>
                   )}
-                  {committee.network && (
-                    <span className={styles.networkLabel}>
-                      {" "}
-                      {committee.network} network
-                    </span>
-                  )}
+                  {committee.network &&
+                    (getNetworkId(committee.network) ? (
+                      <>
+                        {" "}
+                        <Link
+                          href={`/2026/networks/${getNetworkId(committee.network)}`}
+                          className={styles.networkLabel}
+                        >
+                          {committee.network} network
+                        </Link>
+                      </>
+                    ) : (
+                      <span className={styles.networkLabel}>
+                        {" "}
+                        {committee.network} network
+                      </span>
+                    ))}
                 </span>
                 <span className={styles.value}>
                   {formatCompact(barTotal)}

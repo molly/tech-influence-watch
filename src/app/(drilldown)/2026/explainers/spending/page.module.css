@@ -18,6 +18,10 @@
   margin-bottom: 1rem;
 }
 
+.explanation {
+  font-family: var(--font-serif);
+}
+
 @media (max-width: 600px) {
   .oppositionSpendingTable,
   .oppositionSpendingTable tbody {

@@ -4,14 +4,14 @@
 
 .columnHeaders {
   display: grid;
-  grid-template-columns: 20rem 1fr 8rem;
+  grid-template-columns: 1fr 8rem;
   gap: 0.75rem;
   margin-bottom: 0.25rem;
 }
 
 .individualRow {
   display: grid;
-  grid-template-columns: 20rem 1fr 8rem;
+  grid-template-columns: 1fr 8rem;
   align-items: center;
   gap: 0.75rem;
   padding: 0.6rem 0;
@@ -81,14 +81,6 @@
 }
 
 @media (max-width: 900px) {
-  .columnHeaders {
-    grid-template-columns: 1fr 8rem;
-  }
-
-  .columnHeaders > :nth-child(2) {
-    display: none;
-  }
-
   .individualRow {
     grid-template-columns: 1fr 8rem;
     grid-template-rows: auto auto;

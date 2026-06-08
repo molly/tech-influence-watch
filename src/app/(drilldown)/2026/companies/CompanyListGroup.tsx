@@ -62,11 +62,11 @@ export default function CompanyListGroup({
         <span className={listStyles.groupHeadingSubGroup}>{title}</span>
         {hasTotals && (
           <span className={sharedStyles.sectionTitleAmount}>
-            <span className={sharedStyles.sectionTitleAmountValue}>
+            <span className={sharedStyles.highlightFigure}>
               {humanizeRoundedCurrency(sectionTotal, true)}
             </span>{" "}
             contributed by{" "}
-            <span className={sharedStyles.sectionTitleAmountValue}>
+            <span className={sharedStyles.highlightFigure}>
               {groups.length}
             </span>{" "}
             {groups.length === 1 ? "company" : "companies"}
@@ -77,18 +77,13 @@ export default function CompanyListGroup({
       {hasTotals && (
         <div className={styles.columnHeaders}>
           <div className={listStyles.columnHeaderLabel}>Company</div>
-          <>
-            <div className={listStyles.columnHeaderLabel}>
-              Contribution total
-            </div>
-            <div className={listStyles.columnHeaderLabelRight}>Amount</div>
-          </>
+          <div className={listStyles.columnHeaderLabelRight}>Amount</div>
         </div>
       )}
       {visibleGroups.map(({ id, total }) => {
         const rounded = roundGroup(total);
-        const barPct = sectionTotal > 0 ? (rounded / sectionTotal) * 100 : 0;
-        const pctDisplay = Math.round(barPct);
+        const pctDisplay =
+          sectionTotal > 0 ? Math.round((rounded / sectionTotal) * 100) : 0;
         const category = companies[id].category;
         const showCryptoBadge =
           groupKey !== "crypto" &&
@@ -113,18 +108,12 @@ export default function CompanyListGroup({
               )}
             </div>
             {hasTotals && (
-              <>
-                <div className={listStyles.barTrack}>
-                  <div
-                    className={listStyles.barRaised}
-                    style={{ width: `${barPct}%` }}
-                  />
-                </div>
-                <div className={listStyles.amount}>
-                  {humanizeRoundedCurrency(total, true, 2)}
+              <div className={listStyles.amount}>
+                {humanizeRoundedCurrency(total, true, 2)}
+                {pctDisplay > 0 && (
                   <span className={listStyles.pct}> ({pctDisplay}%)</span>
-                </div>
-              </>
+                )}
+              </div>
             )}
           </div>
         );

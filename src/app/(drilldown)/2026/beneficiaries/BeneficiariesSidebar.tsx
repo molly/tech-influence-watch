@@ -164,7 +164,7 @@ export default function BeneficiariesSidebar({
           rightLabel={
             <>
               of{" "}
-              <span className={sharedStyles.sectionTitleAmountValue}>
+              <span className={sharedStyles.highlightFigure}>
                 {formatCompact(max)}
               </span>{" "}
               total
@@ -194,7 +194,7 @@ export default function BeneficiariesSidebar({
           rightLabel={
             <>
               of{" "}
-              <span className={sharedStyles.sectionTitleAmountValue}>
+              <span className={sharedStyles.highlightFigure}>
                 {formatCompact(officeTotal)}
               </span>{" "}
               total

@@ -3,17 +3,17 @@ import Link from "next/link";
 import { fetchQpq } from "@/app/actions/fetch";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import { QPQ } from "@/app/types/Qpq";
+import { isError } from "@/app/utils/errors";
 import { formatCompact, humanizeRoundedCurrency } from "@/app/utils/humanize";
+import {
+  getQpqContribMaps,
+  getQpqEntryTotal,
+  getQpqManualAmount,
+  type QpqContribMaps,
+} from "@/app/utils/qpq";
 import { range } from "@/app/utils/range";
 
 import styles from "./FeaturedTracker.module.css";
-
-function getEntryTotal(entry: QPQ): number {
-  if (!entry.contributions) {
-    return 0;
-  }
-  return entry.contributions.reduce((acc, c) => acc + (c.amount ?? 0), 0);
-}
 
 const SKELETON_NAME_WIDTHS = ["8rem", "6rem", "9rem", "7rem"];
 
@@ -49,21 +49,31 @@ export function FeaturedTrackerSkeleton() {
 }
 
 export default async function FeaturedTracker() {
-  const qpqData = await fetchQpq();
+  const [qpqData, maps] = await Promise.all([
+    fetchQpq(),
+    getQpqContribMaps(),
+  ]);
   if (!qpqData) {
     return null;
   }
 
   const entries = Object.values(qpqData) as QPQ[];
 
-  const grandTotal = entries.reduce(
-    (sum, entry) => sum + getEntryTotal(entry),
-    0,
-  );
+  // Combined "to Trump & family" total per entity: manual contributions plus the matched FEC
+  // figures, identical to the quid pro quo drilldown. Falls back to manual-only if the FEC data
+  // is unavailable so the card still renders.
+  const safeMaps = isError(maps) ? null : (maps as QpqContribMaps);
+  const entryTotal = (entry: QPQ): number => {
+    return safeMaps
+      ? getQpqEntryTotal(entry, safeMaps)
+      : getQpqManualAmount(entry);
+  };
+
+  const grandTotal = entries.reduce((sum, entry) => sum + entryTotal(entry), 0);
 
   const featuredEntries = entries
     .filter((entry) => entry.benefitSummary !== undefined)
-    .sort((a, b) => getEntryTotal(b) - getEntryTotal(a));
+    .sort((a, b) => entryTotal(b) - entryTotal(a));
 
   if (featuredEntries.length === 0) {
     return null;
@@ -93,7 +103,7 @@ export default async function FeaturedTracker() {
               <div className={styles.entryTop}>
                 <span className={styles.entryName}>{entry.name}</span>
                 <span className={styles.entryAmount}>
-                  {formatCompact(getEntryTotal(entry))}
+                  {formatCompact(entryTotal(entry))}
                 </span>
               </div>
               <div className={styles.entrySummary}>{entry.benefitSummary}</div>

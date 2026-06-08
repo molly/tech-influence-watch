@@ -75,3 +75,9 @@ export const NETWORKS: NetworkConstant[] = [
       "A pro-crypto super PAC network aligned with President Trump. The electoral arm, First Principles Digital, is a Cynthia Lummis-affiliated super PAC working to elect pro-crypto Republicans, while the network's &ldquo;education&rdquo; and advocacy work runs through the affiliated America First Digital 501(c)(4), a dark money group that operates outside FEC disclosure rules. The group has said it will &ldquo;help advance pro-crypto policies and regulations, amplify the efforts of industry champions in Washington, and support ongoing education efforts among key decision-makers.&rdquo;",
   },
 ];
+
+// Look up a network's detail-page slug by its stored `key` (the value of the
+// `network` field on committees and companies).
+export function getNetworkId(key: string): string | undefined {
+  return NETWORKS.find((network) => network.key === key)?.id;
+}

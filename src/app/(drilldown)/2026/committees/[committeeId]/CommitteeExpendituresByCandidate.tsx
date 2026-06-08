@@ -187,7 +187,7 @@ export default async function CommitteeExpendituresByCandidate({
           </span>
           <span className={sharedStyles.sectionTitleAmount}>
             of{" "}
-            <span className={sharedStyles.sectionTitleAmountValue}>
+            <span className={sharedStyles.highlightFigure}>
               {formatCompact(totalExpenditures)}
             </span>{" "}
             total

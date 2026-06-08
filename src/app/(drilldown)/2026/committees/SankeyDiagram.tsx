@@ -568,11 +568,20 @@ export default function SankeyDiagram({
   // -----------------------------------------------------------------------
   // Description text
   // -----------------------------------------------------------------------
+  const committeeById = new Map(committees.map((c) => [c.id, c]));
   const senderNetworks = new Set<string>();
   for (const edge of transferEdges) {
-    const sender = committees.find((c) => c.id === edge.fromId);
-    if (sender) {
-      senderNetworks.add(sender.network ?? sender.name);
+    const sender = committeeById.get(edge.fromId);
+    const recipient = committeeById.get(edge.toId);
+    // Only count senders that passed money to an affiliated PAC in the same
+    // network — not committees whose transfers went outside their network.
+    if (
+      sender &&
+      recipient &&
+      sender.network &&
+      sender.network === recipient.network
+    ) {
+      senderNetworks.add(sender.network);
     }
   }
   const senderList = Array.from(senderNetworks);
@@ -780,7 +789,7 @@ export default function SankeyDiagram({
         <div className={styles.description}>
           <p>
             Donors put{" "}
-            <span className={sharedStyles.sectionTitleAmountValue}>
+            <span className={sharedStyles.highlightFigure}>
               {humanizeRoundedCurrency(netContributions, true, 1)}
             </span>{" "}
             into the {committees.length} tracked{" "}
@@ -798,12 +807,12 @@ export default function SankeyDiagram({
           </p>
           <p>
             About{" "}
-            <span className={sharedStyles.sectionTitleAmountValue}>
+            <span className={sharedStyles.highlightFigure}>
               {humanizeRoundedCurrency(totalExpenditures, true, 1)}
             </span>{" "}
             of those funds have already gone to independent expenditures,
             leaving tracked committees with about{" "}
-            <span className={sharedStyles.sectionTitleAmountValue}>
+            <span className={sharedStyles.highlightFigure}>
               {humanizeRoundedCurrency(totalRemaining, true, 1)}
             </span>{" "}
             remaining to spend in the midterms.

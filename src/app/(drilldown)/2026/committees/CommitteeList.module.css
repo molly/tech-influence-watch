@@ -156,6 +156,8 @@
 
 .footnoteSection {
   margin-top: 2rem;
+  font-size: 0.9rem;
+  color: var(--secondary-text);
 }
 
 .footnote {

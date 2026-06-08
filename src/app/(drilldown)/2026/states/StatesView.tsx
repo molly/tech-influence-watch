@@ -19,7 +19,7 @@ import StatesStatsRow, { StatesStatsRowSkeleton } from "./StatesStatsRow";
 
 export function statesMetadata(sector: Sector): Metadata {
   return customMetadata({
-    title: `Spending by State`,
+    title: `Spending by state`,
     description: `States in which  ${humanizeSector(sector, { hyphen: true, lowercase: true })}focused political action committees have been spending to influence 2026 elections.`,
   });
 }

@@ -7,6 +7,10 @@
   gap: 1rem;
 }
 
+.headerStat {
+  align-self: start;
+}
+
 .qpqTable {
   width: 100%;
   border-collapse: collapse;
@@ -39,15 +43,6 @@
   font-weight: 700;
   line-height: 1.1;
   margin-top: 0.2rem;
-}
-
-.entityLabel {
-  font-size: 0.65rem;
-  font-weight: 600;
-  letter-spacing: 0.07em;
-  color: var(--secondary-text);
-  text-transform: uppercase;
-  margin-top: 0.15rem;
 }
 
 .benefitCell {
