@@ -294,8 +294,8 @@ export default async function CompanyPage({
                 </Suspense>
               </h2>
               <div className={sharedStyles.subtitle}>
-                Approximate. Some committee spending is cross-state or not tied
-                to a specific candidate, and is omitted here.
+                Approximate. Some spending may be cross-state or not tied to a
+                specific candidate, in which case it is omitted here.
               </div>
               <Suspense fallback={<USMapSkeleton />}>
                 <CompanySpendingMap

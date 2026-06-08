@@ -74,50 +74,52 @@ export default function CompanyListGroup({
         )}
       </h3>
       {subtitle && <p className={listStyles.groupSubtitle}>{subtitle}</p>}
-      {hasTotals && (
-        <div className={styles.columnHeaders}>
-          <div className={listStyles.columnHeaderLabel}>Company</div>
-          <div className={listStyles.columnHeaderLabelRight}>Amount</div>
-        </div>
-      )}
-      {visibleGroups.map(({ id, total }) => {
-        const rounded = roundGroup(total);
-        const pctDisplay =
-          sectionTotal > 0 ? Math.round((rounded / sectionTotal) * 100) : 0;
-        const category = companies[id].category;
-        const showCryptoBadge =
-          groupKey !== "crypto" &&
-          groupKey !== "crypto-capital" &&
-          groupKey !== "finance" &&
-          category.includes("crypto" as CompanyCategory);
-        const showAiBadge =
-          groupKey !== "ai" &&
-          groupKey !== "finance" &&
-          category.includes("ai" as CompanyCategory);
-        return (
-          <div key={id} className={styles.companyRow}>
-            <div className={styles.companyName} title={companies[id].name}>
-              <Link className="unstyled" href={`/2026/companies/${id}`}>
-                {companies[id].name}
-              </Link>
-              {showCryptoBadge && (
-                <span className={sharedStyles.sectorBadge}>crypto</span>
-              )}
-              {showAiBadge && (
-                <span className={sharedStyles.sectorBadge}>AI</span>
-              )}
-            </div>
-            {hasTotals && (
-              <div className={listStyles.amount}>
-                {humanizeRoundedCurrency(total, true, 2)}
-                {pctDisplay > 0 && (
-                  <span className={listStyles.pct}> ({pctDisplay}%)</span>
+      <div className={styles.table}>
+        {hasTotals && (
+          <div className={styles.columnHeaders}>
+            <div className={listStyles.columnHeaderLabel}>Company</div>
+            <div className={listStyles.columnHeaderLabelRight}>Amount</div>
+          </div>
+        )}
+        {visibleGroups.map(({ id, total }) => {
+          const rounded = roundGroup(total);
+          const pctDisplay =
+            sectionTotal > 0 ? Math.round((rounded / sectionTotal) * 100) : 0;
+          const category = companies[id].category;
+          const showCryptoBadge =
+            groupKey !== "crypto" &&
+            groupKey !== "crypto-capital" &&
+            groupKey !== "finance" &&
+            category.includes("crypto" as CompanyCategory);
+          const showAiBadge =
+            groupKey !== "ai" &&
+            groupKey !== "finance" &&
+            category.includes("ai" as CompanyCategory);
+          return (
+            <div key={id} className={styles.companyRow}>
+              <div className={styles.companyName} title={companies[id].name}>
+                <Link className="unstyled" href={`/2026/companies/${id}`}>
+                  {companies[id].name}
+                </Link>
+                {showCryptoBadge && (
+                  <span className={sharedStyles.sectorBadge}>crypto</span>
+                )}
+                {showAiBadge && (
+                  <span className={sharedStyles.sectorBadge}>AI</span>
                 )}
               </div>
-            )}
-          </div>
-        );
-      })}
+              {hasTotals && (
+                <div className={listStyles.amount}>
+                  {humanizeRoundedCurrency(total, true, 2)}
+                  {pctDisplay > 0 && (
+                    <span className={listStyles.pct}> ({pctDisplay}%)</span>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
       {isCollapsible && (
         <button
           type="button"

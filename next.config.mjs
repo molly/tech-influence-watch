@@ -10,6 +10,13 @@ const nextConfig = {
     ],
   },
   async redirects() {
+    // Before the 2026 cycle, the site was 2024-only and links had no year slug
+    // (e.g. /elections/CA-H-45). Those bare links are now preserved by pointing
+    // them at the archived 2024 site. Only routes that actually existed in 2024
+    // are listed here — 2026-only features (networks, contributions,
+    // explainers/flow, analysis/trump, sector-prefixed routes) are omitted so
+    // they don't redirect to a 404 on the archive.
+    const archive = "https://influence.citationneeded.news/2024";
     const routes = [
       "beneficiaries",
       "committees",
@@ -19,20 +26,20 @@ const nextConfig = {
       "individuals",
       "states",
     ];
-    const _2026routes = routes.flatMap((route) => [
+    const _2024routes = routes.flatMap((route) => [
       {
         source: `/${route}`,
-        destination: `/2026/${route}`,
+        destination: `${archive}/${route}`,
         permanent: false,
       },
       {
         source: `/${route}/:path*`,
-        destination: `/2026/${route}/:path*`,
+        destination: `${archive}/${route}/:path*`,
         permanent: false,
       },
     ]);
     return [
-      ..._2026routes,
+      ..._2024routes,
       {
         source: "/2026/committees/ranking",
         destination: "/2026/committees/ranking/all",

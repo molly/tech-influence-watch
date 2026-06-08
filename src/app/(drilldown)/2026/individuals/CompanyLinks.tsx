@@ -40,13 +40,13 @@ export default function CompanyLinks({
         companyEls.push(link);
       } else {
         companyEls.push(
-          <span>
+          <span key={`${individual.id}-${details.id}`}>
             {link} <span className={styles.sectorBadge}>{details.sector}</span>
           </span>,
         );
       }
     } else {
-      companyEls.push(c);
+      companyEls.push(<span key={`${individual.id}-${c}`}>{c}</span>);
     }
   }
   if (!companyEls.length) {

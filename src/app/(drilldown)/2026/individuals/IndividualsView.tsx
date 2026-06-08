@@ -27,7 +27,7 @@ import IndividualsList, { IndividualsListSkeleton } from "./IndividualsList";
 
 export function individualsMetadata(sector: Sector): Metadata {
   return customMetadata({
-    title: "Companies",
+    title: "Individuals",
     description: `${humanizeSector(sector, { hyphen: true, or: true })}related individuals active in election spending.`,
   });
 }

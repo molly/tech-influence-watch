@@ -62,6 +62,47 @@
   }
 }
 
+.tooltip {
+  padding: 0.5rem 0.625rem;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+  background-color: var(--card-background);
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  max-width: 14rem;
+  pointer-events: none;
+}
+
+.tooltipName {
+  font-weight: 700;
+  margin: 0 0 0.125rem;
+}
+
+.tooltipSubtitle {
+  margin: 0 0 0.25rem;
+  font-style: italic;
+  color: var(--secondary-text);
+}
+
+.tooltipAmount {
+  margin: 0 0 0.25rem;
+  color: var(--secondary-text);
+}
+
+.tooltipRank {
+  margin: 0 0 0.25rem;
+  font-size: 0.7rem;
+  color: var(--secondary-text);
+}
+
+.tooltipSector {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0;
+}
+
 .legend {
   display: flex;
   gap: 1rem;

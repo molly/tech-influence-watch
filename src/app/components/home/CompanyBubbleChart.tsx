@@ -1,5 +1,4 @@
 import { hierarchy, pack } from "d3-hierarchy";
-import Link from "next/link";
 import { Suspense } from "react";
 
 import {
@@ -12,10 +11,11 @@ import { CompanyConstant, CompanyTotals } from "@/app/types/Companies";
 import { IndividualConstant, IndividualTotals } from "@/app/types/Individuals";
 import { BESector, Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
-import { formatCompact } from "@/app/utils/humanize";
+import { formatCompact, humanizeList } from "@/app/utils/humanize";
 import { getSectorsForIndividual, matchesSector } from "@/app/utils/sector";
 
 import styles from "./CompanyBubbleChart.module.css";
+import CompanyBubbleChartSvg, { Bubble } from "./CompanyBubbleChartSvg";
 
 const SIZE = 400;
 
@@ -25,20 +25,54 @@ type LeafDatum = {
   total: number;
   companySector: BESector | undefined;
   href: string;
+  subtitle?: string;
 };
+
+// For individual bubbles, build a "Title of Company" line (mirroring the
+// connector logic in AssociatedCompanies). Company bubbles have no subtitle.
+function individualSubtitle(ind: IndividualConstant): string | undefined {
+  const companies = humanizeList(ind.company ?? []) as string | null;
+  if (ind.title) {
+    if (!companies) {
+      return ind.title;
+    }
+    const connector = ind.title.toLowerCase().includes("partner")
+      ? "at"
+      : "of";
+    return `${ind.title} ${connector} ${companies}`;
+  }
+  return companies ?? undefined;
+}
 
 type RootDatum = {
   children: LeafDatum[];
 };
 
-function sectorClass(sector: BESector | undefined): string {
-  if (sector === "crypto") {
-    return styles.cryptoCircle;
+// Break a too-long name across two lines at the most balanced space, but only
+// when both resulting lines fit within maxChars. Otherwise fall back to a
+// single truncated line.
+function wrapLabel(name: string, maxChars: number): string[] {
+  if (name.length <= maxChars) {
+    return [name];
   }
-  if (sector === "ai") {
-    return styles.aiCircle;
+  const words = name.split(" ");
+  if (words.length > 1) {
+    let best: { lines: [string, string]; imbalance: number } | null = null;
+    for (let i = 1; i < words.length; i++) {
+      const first = words.slice(0, i).join(" ");
+      const second = words.slice(i).join(" ");
+      if (first.length <= maxChars && second.length <= maxChars) {
+        const imbalance = Math.abs(first.length - second.length);
+        if (best === null || imbalance < best.imbalance) {
+          best = { lines: [first, second], imbalance };
+        }
+      }
+    }
+    if (best !== null) {
+      return best.lines;
+    }
   }
-  return styles.bothCircle;
+  return [name.slice(0, maxChars) + "…"];
 }
 
 async function CompanyBubbleChartContent({ sector }: { sector: Sector }) {
@@ -99,6 +133,7 @@ async function CompanyBubbleChartContent({ sector }: { sector: Sector }) {
             ].total,
             companySector: getSectorsForIndividual(ind, companies)[0],
             href: `/2026/individuals/${ind.id}`,
+            subtitle: individualSubtitle(ind),
           }))
       : [];
 
@@ -118,6 +153,12 @@ async function CompanyBubbleChartContent({ sector }: { sector: Sector }) {
     return null;
   }
 
+  // Rank and share are relative to the entities currently shown (entries are
+  // sorted descending, so rank is index + 1).
+  const totalEntities = entries.length;
+  const grandTotal = entries.reduce((sum, e) => sum + e.total, 0);
+  const rankById = new Map(entries.map((e, i) => [e.id, i + 1]));
+
   const maxTotal = entries[0].total;
   const minValue = maxTotal * 0.004;
 
@@ -131,66 +172,71 @@ async function CompanyBubbleChartContent({ sector }: { sector: Sector }) {
 
   const leaves = packed.leaves();
 
+  const bubbles: Bubble[] = leaves.map((leaf) => {
+    const d = leaf.data as LeafDatum;
+    const r = leaf.r;
+    const fontSize = Math.min(11, r * 0.32);
+    const showLabel = r >= 10;
+    const showAmount = r >= 30;
+    const maxChars = Math.floor((1.7 * r) / (fontSize * 0.6));
+    const amountFontSize = fontSize * 0.85;
+
+    // Stack the (optionally two-line) label and the amount as vertically
+    // centered lines, with a tighter gap between wrapped label lines than
+    // before the amount.
+    const lines: { text: string; size: number; kind: "label" | "amount" }[] =
+      [];
+    if (showLabel) {
+      for (const text of wrapLabel(d.name, maxChars)) {
+        lines.push({ text, size: fontSize, kind: "label" });
+      }
+    }
+    if (showAmount) {
+      lines.push({
+        text: formatCompact(d.total),
+        size: amountFontSize,
+        kind: "amount",
+      });
+    }
+    const gapBefore = (i: number): number => {
+      if (i === 0) {
+        return 0;
+      }
+      return lines[i].kind === "amount" ? fontSize * 0.6 : fontSize * 0.15;
+    };
+    const totalHeight = lines.reduce(
+      (h, line, i) => h + gapBefore(i) + line.size,
+      0,
+    );
+    let cursor = leaf.y - totalHeight / 2;
+    const positioned = lines.map((line, i) => {
+      cursor += gapBefore(i) + line.size / 2;
+      const y = cursor;
+      cursor += line.size / 2;
+      return { ...line, y };
+    });
+
+    return {
+      id: d.id,
+      name: d.name,
+      total: d.total,
+      sector: d.companySector,
+      subtitle: d.subtitle,
+      rank: rankById.get(d.id) ?? 0,
+      totalEntities,
+      share: grandTotal > 0 ? (d.total / grandTotal) * 100 : 0,
+      href: d.href,
+      x: leaf.x,
+      y: leaf.y,
+      r,
+      darkText: d.companySector === "ai",
+      lines: positioned,
+    };
+  });
+
   return (
     <>
-      <svg
-        viewBox={`0 0 ${SIZE} ${SIZE}`}
-        width="100%"
-        className={styles.svg}
-        aria-label="Company contributions bubble chart"
-      >
-        {leaves.map((leaf) => {
-          const d = leaf.data as LeafDatum;
-          const r = leaf.r;
-          const fontSize = Math.min(11, r * 0.32);
-          const showLabel = r >= 10;
-          const showAmount = r >= 30;
-          const maxChars = Math.floor((1.7 * r) / (fontSize * 0.6));
-          const label =
-            d.name.length <= maxChars
-              ? d.name
-              : d.name.slice(0, maxChars) + "…";
-          const darkText = d.companySector === "ai";
-          return (
-            <Link key={d.id} href={d.href} className={styles.bubbleLink}>
-              <circle
-                cx={leaf.x}
-                cy={leaf.y}
-                r={r}
-                className={`${styles.bubble} ${sectorClass(d.companySector)}`}
-              >
-                <title>{`${d.name}: ${formatCompact(d.total)}`}</title>
-              </circle>
-              {showLabel && (
-                <text
-                  x={leaf.x}
-                  y={showAmount ? leaf.y - fontSize * 0.6 : leaf.y}
-                  textAnchor="middle"
-                  dominantBaseline="middle"
-                  fontSize={fontSize}
-                  className={`${styles.bubbleLabel} ${darkText ? styles.bubbleLabelDark : ""}`}
-                  pointerEvents="none"
-                >
-                  {label}
-                </text>
-              )}
-              {showAmount && (
-                <text
-                  x={leaf.x}
-                  y={leaf.y + fontSize * 1.2}
-                  textAnchor="middle"
-                  dominantBaseline="middle"
-                  fontSize={fontSize * 0.85}
-                  className={`${styles.bubbleAmount} ${darkText ? styles.bubbleAmountDark : ""}`}
-                  pointerEvents="none"
-                >
-                  {formatCompact(d.total)}
-                </text>
-              )}
-            </Link>
-          );
-        })}
-      </svg>
+      <CompanyBubbleChartSvg bubbles={bubbles} />
       <div className={styles.legend}>
         {(sector === "all" || sector === "crypto") && (
           <div className={styles.legendItem}>
