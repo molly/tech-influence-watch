@@ -43,11 +43,14 @@ export default function SectorWrapper({ lastRun }: { lastRun: string | null }) {
       });
     }
   }, [lastRun]);
+  // Homepage and its sector variants (/, /crypto, /ai).
+  const isHomepage = /^\/(crypto|ai)?$/.test(pathname);
   const isExactTopLevelPath =
     /^\/2026\/((ai|crypto)\/)?(committees|companies|individuals|networks)\/?$/.test(
       pathname,
     );
   const showSector =
+    isHomepage ||
     isExactTopLevelPath ||
     SECTOR_PATHS.some((p) =>
       new RegExp(`^/2026/((ai|crypto)/)?${p}/?`).test(pathname),
