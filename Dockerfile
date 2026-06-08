@@ -17,13 +17,15 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=8080
 
-# standalone server + static + public
-COPY --from=build /app/.next/standalone ./
-COPY --from=build /app/.next/static ./.next/static
-COPY --from=build /app/public ./public
-
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
+
+# standalone server + static + public — owned by the runtime user so Next can
+# write the ISR/prerender cache back into .next/server at runtime.
+COPY --from=build --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=build --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=build --chown=nextjs:nodejs /app/public ./public
+
 USER nextjs
 
 EXPOSE 8080

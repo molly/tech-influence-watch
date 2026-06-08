@@ -1,0 +1,74 @@
+.page {
+  padding: 3rem 1rem;
+  max-width: var(--single-column-max-width);
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+}
+
+.card {
+  border: 1px solid var(--money-card-border);
+  box-shadow: 6px 6px var(--color-lime-600);
+  padding: 2rem;
+  background: var(--background);
+  max-width: 32rem;
+}
+
+.label {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--main-text);
+}
+
+.headline {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 900;
+  line-height: 1.05;
+  margin: 0.25rem 0 1rem 0;
+  color: var(--main-text);
+}
+
+.description {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--secondary-text);
+  margin: 0 0 1.5rem 0;
+}
+
+.button {
+  display: inline-block;
+  background: var(--color-lime-600);
+  color: var(--color-white);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  padding: 0.75rem 1.5rem;
+
+  &:hover {
+    background: var(--color-lime-700);
+    color: var(--color-white);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--main-text);
+    outline-offset: 2px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .button {
+    background: var(--color-lime-600);
+
+    &:hover {
+      background: var(--color-lime-500);
+    }
+  }
+}

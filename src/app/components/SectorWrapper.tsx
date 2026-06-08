@@ -11,7 +11,7 @@ const SECTOR_PATHS = [
   "contributions",
   "elections",
   "expenditures",
-  "spending",
+  "explainers/spending",
   "states",
 ];
 
