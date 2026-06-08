@@ -12,9 +12,6 @@
   margin-bottom: 1rem;
 }
 
-/* On desktop the headline sits in the left column, bottom-aligned so it lands
-   level with the call to action in the right column. */
-.headlineColumn,
 .bodyColumn {
   align-self: end;
 }
@@ -52,7 +49,7 @@
 .headline {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-size: clamp(3rem, 6vw, 4.5rem);
   line-height: 0.95;
   margin: 0;
   color: var(--main-text);
