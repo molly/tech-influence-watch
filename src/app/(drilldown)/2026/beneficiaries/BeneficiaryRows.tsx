@@ -1,6 +1,6 @@
 import MaybeLink from "@/app/components/MaybeLink";
+import SectorBadge from "@/app/components/SectorBadge";
 import COMMITTEES from "@/app/data/committees";
-import sharedStyles from "@/app/shared.module.css";
 import {
   Beneficiary,
   CandidateBeneficiary as CandidateBeneficiaryType,
@@ -71,7 +71,7 @@ function CommitteeRow({
           <span className={styles.recipientName}>
             {name}
             {isTracked && sector && (
-              <span className={sharedStyles.sectorBadge}>{sector}</span>
+              <SectorBadge>{sector}</SectorBadge>
             )}
           </span>
         </MaybeLink>

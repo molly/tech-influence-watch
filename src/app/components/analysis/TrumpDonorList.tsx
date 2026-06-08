@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { useState } from "react";
 
+import SectorBadge from "@/app/components/SectorBadge";
 import COMMITTEES from "@/app/data/committees";
-import sharedStyles from "@/app/shared.module.css";
 import { type CombinedDonor } from "@/app/utils/trumpCombinedDonors";
 import { formatCurrency } from "@/app/utils/utils";
 
@@ -57,9 +57,7 @@ export default function TrumpDonorList({
             <span className={styles.donorName}>
               {href ? <Link href={href}>{donor.name}</Link> : donor.name}
               {sectorLabel(donor.sector) && (
-                <span className={sharedStyles.sectorBadge}>
-                  {sectorLabel(donor.sector)}
-                </span>
+                <SectorBadge>{sectorLabel(donor.sector)}</SectorBadge>
               )}
               {!donor.tracked && (
                 <span className={styles.untrackedTag}>not tracked</span>

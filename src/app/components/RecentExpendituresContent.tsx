@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import sharedStyles from "@/app/shared.module.css";
+import SectorBadge from "@/app/components/SectorBadge";
 import { CommitteeConstant } from "@/app/types/Committee";
 import { Expenditure } from "@/app/types/Expenditures";
 import { Sector } from "@/app/types/Sector";
@@ -174,9 +174,9 @@ function ExpenditureRow({
               committees &&
               expenditure.committee_id &&
               committees[expenditure.committee_id]?.sector && (
-                <span className={sharedStyles.sectorBadge}>
+                <SectorBadge>
                   {committees[expenditure.committee_id].sector}
-                </span>
+                </SectorBadge>
               )}
           </div>
           <div className={styles.expenditureDescription}>

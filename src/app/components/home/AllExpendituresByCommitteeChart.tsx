@@ -1,7 +1,7 @@
 import Link from "next/link";
 
+import SectorBadge from "@/app/components/SectorBadge";
 import { getNetworkId } from "@/app/data/networks";
-import sharedStyles from "@/app/shared.module.css";
 import { CommitteeConstant } from "@/app/types/Committee";
 import { Sector } from "@/app/types/Sector";
 import { formatCompact } from "@/app/utils/humanize";
@@ -47,9 +47,7 @@ export default function SpendingByCommittee({
                   {name}
                 </Link>
                 {sector === "all" && committeeConstants[id]?.sector && (
-                  <span className={sharedStyles.sectorBadge}>
-                    {committeeConstants[id].sector}
-                  </span>
+                  <SectorBadge>{committeeConstants[id].sector}</SectorBadge>
                 )}
                 {committeeConstants[id]?.network &&
                   (getNetworkId(committeeConstants[id].network!) ? (

@@ -73,6 +73,21 @@
   pointer-events: none;
 }
 
+.tooltipInteractive {
+  pointer-events: auto;
+}
+
+.tooltipBackdrop {
+  position: fixed;
+  inset: 0;
+}
+
+.tooltipLink {
+  display: inline-block;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+}
+
 .tooltipName {
   font-weight: 700;
   margin: 0 0 0.125rem;

@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import sharedStyles from "@/app/shared.module.css";
+import SectorBadge from "@/app/components/SectorBadge";
 import { AllCommitteesSummary } from "@/app/types/Committee";
 import { ErrorType, isError } from "@/app/utils/errors";
 import { titlecaseCommittee } from "@/app/utils/titlecase";
@@ -69,7 +69,7 @@ export default async function PACsByReceiptsTableContents({
                   {committeeName}
                 </span>{" "}
               </Link>
-              <span className={sharedStyles.sectorBadge}>{sector}</span>
+              <SectorBadge>{sector}</SectorBadge>
             </>
           );
         }

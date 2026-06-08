@@ -52,6 +52,12 @@ const nextConfig = {
         destination: "/2026/:path*",
         permanent: false,
       },
+      // Ripple's company slug is `ripple`; older links used `ripple-labs`.
+      {
+        source: "/2026/companies/ripple-labs",
+        destination: "/2026/companies/ripple",
+        permanent: true,
+      },
       // Relocated routes (permanent — these are genuine moves). Spending became
       // an explainer; quid pro quo moved out of the cycle into /analysis.
       {

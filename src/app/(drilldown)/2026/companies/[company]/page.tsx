@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 import {
@@ -25,7 +26,7 @@ import sharedStyles from "@/app/shared.module.css";
 import { Company, CompanyConstant } from "@/app/types/Companies";
 import { IndividualOrCompanyContributionGroup } from "@/app/types/Contributions";
 import { classifyGroup } from "@/app/utils/committees";
-import { isError } from "@/app/utils/errors";
+import { is4xx, isError } from "@/app/utils/errors";
 import { humanizeApproximateRounded } from "@/app/utils/humanize";
 import { customMetadata } from "@/app/utils/metadata";
 import { formatCompanyName } from "@/app/utils/names";
@@ -36,13 +37,23 @@ import CompanyHeader, { CompanyHeaderSkeleton } from "./CompanyHeader";
 import CompanySpendingMap from "./CompanySpendingMap";
 import styles from "./page.module.css";
 
-export const dynamicParams = false;
+// Render on demand for slugs not captured at build time. Company data lives in
+// Firestore and updates continuously between deploys, so the prebuilt param set
+// can lag (or come back empty if the build-time fetch hiccups). dynamicParams
+// keeps real pages serving in those cases; genuinely-missing slugs still 404 via
+// notFound() below. Prebuilt params are unaffected — they stay statically cached.
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
   const data =
     await fetchConstant<Record<string, CompanyConstant>>("companies");
   if (isError(data) || !data) {
-    return [];
+    // Fail the build rather than silently shipping a site with zero prerendered
+    // company pages. dynamicParams keeps real pages serving if anything slips
+    // through, but a build that can't read Firestore should not deploy.
+    throw new Error(
+      "generateStaticParams: companies constant unavailable at build time",
+    );
   }
   return Object.keys(data).map((company) => ({ company }));
 }
@@ -107,6 +118,11 @@ export default async function CompanyPage({
       fetchConstant<Record<string, CompanyConstant>>("companies"),
     ]);
   if (isError(companyData)) {
+    // A genuinely missing company is a real 404; other errors (e.g. a transient
+    // Firestore failure) shouldn't be cached as "not found", so show the error.
+    if (is4xx(companyData)) {
+      notFound();
+    }
     return (
       <div className={sharedStyles.main}>
         <ErrorText subject="information about this company" />

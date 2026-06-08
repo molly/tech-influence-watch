@@ -1,7 +1,7 @@
 import MaybeLink from "@/app/components/MaybeLink";
+import SectorBadge from "@/app/components/SectorBadge";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import COMMITTEES from "@/app/data/committees";
-import sharedStyles from "@/app/shared.module.css";
 import { Beneficiary } from "@/app/types/Beneficiaries";
 import { humanizeApproximateRounded } from "@/app/utils/humanize";
 
@@ -66,7 +66,7 @@ export default function TopCard({
     <div className={`${styles.topCard} ${partyBorderClass}`}>
       <div className={styles.topCardHeader}>
         <span className={styles.topCardLabel}>{label}</span>
-        {isTracked && <span className={sharedStyles.sectorBadge}>crypto</span>}
+        {isTracked && <SectorBadge>crypto</SectorBadge>}
       </div>
       <div className={styles.topCardName}>
         <MaybeLink href={nameHref} className="unstyled">{name}</MaybeLink>

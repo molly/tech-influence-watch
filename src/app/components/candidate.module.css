@@ -82,6 +82,13 @@
   }
 }
 
+.chartCandidateImageWrapper.defeatedCandidateImage:after {
+  width: 9px;
+  height: 9px;
+  bottom: -1px;
+  right: -1px;
+}
+
 .party-R {
   border-color: var(--party-republican);
 }

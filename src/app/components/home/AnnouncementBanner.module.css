@@ -1,0 +1,126 @@
+/*
+ * Standalone homepage announcement. Kept fully self-contained so it can be
+ * lifted out wholesale once the announcement goes stale.
+ */
+.banner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  align-items: start;
+  padding: 1.5rem 0 2rem 0;
+  border-bottom: 1px solid var(--divider-color);
+  margin-bottom: 1rem;
+}
+
+/* On desktop the headline sits in the left column, bottom-aligned so it lands
+   level with the call to action in the right column. */
+.headlineColumn,
+.bodyColumn {
+  align-self: end;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.rule {
+  display: inline-block;
+  width: 2rem;
+  height: 0.2rem;
+  background: var(--accent-on-light);
+}
+
+.kicker {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent-on-light);
+}
+
+.date {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.9rem;
+  color: var(--secondary-text);
+}
+
+.headline {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  line-height: 0.95;
+  margin: 0;
+  color: var(--main-text);
+}
+
+.body {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  line-height: 1.5;
+  margin: 0 0 1.5rem 0;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--color-black);
+  color: var(--color-white);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 0.75rem 1.25rem;
+  text-decoration: none;
+}
+
+.cta:hover {
+  color: var(--color-white);
+  text-decoration: none;
+  background: var(--color-neutral-800);
+}
+
+.cta:focus-visible {
+  outline: 3px solid var(--accent-on-light);
+  outline-offset: 2px;
+}
+
+.readTime {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--secondary-text);
+}
+
+@media (min-width: 768px) {
+  .banner {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .cta {
+    background: var(--color-lime-500);
+    color: var(--color-black);
+  }
+
+  .cta:hover {
+    color: var(--color-black);
+    background: var(--color-lime-400);
+  }
+
+  .cta:focus-visible {
+    outline-color: var(--color-lime-300);
+  }
+}

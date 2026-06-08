@@ -1,7 +1,7 @@
 import Link from "next/link";
 
+import SectorBadge from "@/app/components/SectorBadge";
 import { getNetworkId } from "@/app/data/networks";
-import sharedStyles from "@/app/shared.module.css";
 import { CommitteeConstantWithContributions } from "@/app/types/Committee";
 import { Sector } from "@/app/types/Sector";
 import { formatCompact } from "@/app/utils/humanize";
@@ -86,9 +86,7 @@ export default function AllCashByCommitteeChart({
                     {committee.name}
                   </a>
                   {sector === "all" && committee.sector && (
-                    <span className={sharedStyles.sectorBadge}>
-                      {committee.sector}
-                    </span>
+                    <SectorBadge>{committee.sector}</SectorBadge>
                   )}
                   {committee.network &&
                     (getNetworkId(committee.network) ? (

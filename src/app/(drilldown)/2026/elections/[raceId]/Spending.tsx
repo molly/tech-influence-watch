@@ -11,6 +11,7 @@ import sharedStyles from "@/app/shared.module.css";
 import { Beneficiary } from "@/app/types/Beneficiaries";
 import { CandidateSummary, ElectionGroup } from "@/app/types/Elections";
 import { Sector } from "@/app/types/Sector";
+import { isDefeated } from "@/app/utils/races";
 import { matchesSector } from "@/app/utils/sector";
 
 import styles from "./page.module.css";
@@ -518,6 +519,11 @@ export default function Spending({
             sector !== "ai" && crypto_oppose > 0
               ? xCryptoOpposeStart - xAiOpposeWidth
               : xAiOpposeStart;
+          const summary = election.candidates[candidate];
+          const eliminated = Boolean(
+            summary &&
+              (summary.withdrew || isDefeated(election.races, summary)),
+          );
           return (
             <g key={candidate}>
               {raised && (
@@ -836,9 +842,14 @@ export default function Spending({
                         ? election.candidates[candidate]
                         : undefined
                     }
+                    defeated={eliminated}
                     chart={true}
                   />
-                  <div className={styles.candidateLabelName}>{candidate}</div>
+                  <div
+                    className={`${styles.candidateLabelName} ${eliminated ? styles.defeatedCandidateName : ""}`}
+                  >
+                    {candidate}
+                  </div>
                 </div>
               </foreignObject>
             </g>

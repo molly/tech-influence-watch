@@ -7,6 +7,7 @@ import {
   fetchStateElections,
 } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
+import SectorBadge from "@/app/components/SectorBadge";
 import sharedStyles from "@/app/shared.module.css";
 import {
   Beneficiary,
@@ -290,9 +291,9 @@ function CompanyGroup({
             {group.company_name}
           </Link>
           {sector === "all" && group.sector && group.sector !== "tech" && (
-            <span className={sharedStyles.sectorBadge}>
+            <SectorBadge>
               {group.sector === "ai" ? "AI" : group.sector}
-            </span>
+            </SectorBadge>
           )}
         </span>
         <span className={styles.companyGroupAmount}>

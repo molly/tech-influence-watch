@@ -8,6 +8,7 @@ import {
   fetchCommitteeTransferGraph,
 } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
+import SectorBadge from "@/app/components/SectorBadge";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import { NETWORKS } from "@/app/data/networks";
 import sharedStyles from "@/app/shared.module.css";
@@ -119,7 +120,7 @@ function CommitteeRow({
           </Link>
         </span>
         {!indented && sector === "all" && committee.sector && (
-          <span className={sharedStyles.sectorBadge}>{committee.sector}</span>
+          <SectorBadge>{committee.sector}</SectorBadge>
         )}
       </div>
       <div className={styles.amountFunds}>
@@ -309,9 +310,7 @@ function CommitteeGroup({
                   )}
                 </span>
                 {networkSector && sector === "all" && (
-                  <span className={sharedStyles.sectorBadge}>
-                    {networkSector}
-                  </span>
+                  <SectorBadge>{networkSector}</SectorBadge>
                 )}
               </div>
               {slot.members.map((committee) => (

@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import sharedStyles from "@/app/shared.module.css";
+import SectorBadge from "@/app/components/SectorBadge";
 import {
   RecentContribution,
   RecipientCandidateDetails,
@@ -228,11 +228,11 @@ function ContributionRow({
           {sector === "all" &&
             contribution.source_sector &&
             contribution.source_sector !== "tech" && (
-              <span className={sharedStyles.sectorBadge}>
+              <SectorBadge>
                 {contribution.source_sector === "ai"
                   ? "AI"
                   : contribution.source_sector}
-              </span>
+              </SectorBadge>
             )}
         </span>
         {contribution.source_company &&

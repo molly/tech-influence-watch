@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 import {
@@ -23,7 +24,7 @@ import {
   IndividualTotals,
 } from "@/app/types/Individuals";
 import { classifyGroup } from "@/app/utils/committees";
-import { isError } from "@/app/utils/errors";
+import { is4xx, isError } from "@/app/utils/errors";
 import { humanizeApproximateRounded } from "@/app/utils/humanize";
 import { customMetadata } from "@/app/utils/metadata";
 import { titlecase } from "@/app/utils/titlecase";
@@ -36,13 +37,23 @@ import IndividualHeader from "./IndividualHeader";
 import styles from "./page.module.css";
 import RelatedIndividuals from "./RelatedIndividuals";
 
-export const dynamicParams = false;
+// Render on demand for slugs not captured at build time. Individual data lives
+// in Firestore and updates continuously between deploys, so the prebuilt param
+// set can lag (or come back empty if the build-time fetch hiccups). dynamicParams
+// keeps real pages serving in those cases; genuinely-missing slugs still 404 via
+// notFound() below. Prebuilt params are unaffected — they stay statically cached.
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
   const data =
     await fetchConstant<Record<string, IndividualConstant>>("individuals");
   if (isError(data) || !data) {
-    return [];
+    // Fail the build rather than silently shipping a site with zero prerendered
+    // individual pages. dynamicParams keeps real pages serving if anything slips
+    // through, but a build that can't read Firestore should not deploy.
+    throw new Error(
+      "generateStaticParams: individuals constant unavailable at build time",
+    );
   }
   return Object.keys(data).map((individual) => ({ individual }));
 }
@@ -91,6 +102,19 @@ export default async function IndividualPage({
     fetchIndividualTotalSpending(),
     fetchNonCandidateCommittees(),
   ]);
+  // A genuinely missing individual — no contributions doc, or absent from the
+  // constant — is a real 404. Other failures (e.g. a transient Firestore error)
+  // fall through to the error message so they aren't cached as "not found".
+  if (
+    is4xx(contributionsData) ||
+    (individualData !== null &&
+      !(
+        individualParam in
+        (individualData as Record<string, IndividualConstant>)
+      ))
+  ) {
+    notFound();
+  }
   if (
     [contributionsData, totalsData].some(isError) ||
     [individualData, companyConstantsData].some((d) => d === null)

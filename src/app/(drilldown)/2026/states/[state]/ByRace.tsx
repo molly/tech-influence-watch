@@ -10,6 +10,7 @@ import Candidate, { CandidateImage } from "@/app/components/Candidate";
 import { CommitteeLink } from "@/app/components/CommitteeLink";
 import ErrorText from "@/app/components/ErrorText";
 import Outcome from "@/app/components/Outcome";
+import SectorBadge from "@/app/components/SectorBadge";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import sharedStyles from "@/app/shared.module.css";
 import { Beneficiary } from "@/app/types/Beneficiaries";
@@ -416,9 +417,7 @@ export default async function RaceCard({
                       committeeName={COMMITTEES ? COMMITTEES[cid].name : cid}
                     />
                     {sector === "all" && COMMITTEES[cid]?.sector && (
-                      <span className={sharedStyles.sectorBadge}>
-                        {COMMITTEES[cid].sector}
-                      </span>
+                      <SectorBadge>{COMMITTEES[cid].sector}</SectorBadge>
                     )}
                   </span>
                 ));

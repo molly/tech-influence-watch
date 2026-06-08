@@ -42,7 +42,7 @@ export default async function StatesView({ sector }: { sector: Sector }) {
         <Suspense fallback={<StatesStatsRowSkeleton />}>
           <StatesStatsRow sector={sector} />
         </Suspense>
-        <h2 className={sharedStyles.sectionTitle}>
+        <h2 className={sharedStyles.sectionTitle} id="pacs">
           {humanizeSector(sector)} PAC spending by state
         </h2>
         <section className={styles.section}>
@@ -57,7 +57,7 @@ export default async function StatesView({ sector }: { sector: Sector }) {
             </Suspense>
           </section>
         </section>
-        <h2 className={sharedStyles.sectionTitle}>
+        <h2 className={sharedStyles.sectionTitle} id="direct">
           Direct{" "}
           {humanizeSector(sector, { lowercase: true, context: "industry" })}{" "}
           spending by state

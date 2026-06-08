@@ -6,7 +6,7 @@ import HorizontalBars, {
   HorizontalBarItem,
   HorizontalBarsSkeleton,
 } from "@/app/components/home/HorizontalBars";
-import sharedStyles from "@/app/shared.module.css";
+import SectorBadge from "@/app/components/SectorBadge";
 import { CommitteeConstant } from "@/app/types/Committee";
 import { PopulatedStateExpenditures } from "@/app/types/Expenditures";
 import { Sector } from "@/app/types/Sector";
@@ -90,9 +90,7 @@ export default async function CommitteeCard({
               {committee.name}
             </Link>
             {sector === "all" && committee.sector && (
-              <span className={sharedStyles.sectorBadge}>
-                {committee.sector}
-              </span>
+              <SectorBadge>{committee.sector}</SectorBadge>
             )}
           </span>
         ) : undefined,

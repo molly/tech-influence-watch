@@ -164,6 +164,12 @@
   font-weight: bold;
 }
 
+/* Real, copyable whitespace rendered at zero width so the visible gap stays
+   the badge's margin-left, but copy/paste yields "Name crypto" not "Namecrypto". */
+.badgeSpace {
+  font-size: 0;
+}
+
 .sectorBadge {
   background-color: var(--color-black);
   color: var(--color-white);

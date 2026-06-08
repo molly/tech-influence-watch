@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { fetchConstant, fetchElection } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
+import SectorBadge from "@/app/components/SectorBadge";
 import sharedStyles from "@/app/shared.module.css";
 import { CommitteeConstant } from "@/app/types/Committee";
 import { ElectionGroup, RaceType } from "@/app/types/Elections";
@@ -92,11 +93,11 @@ export default async function CommitteeSpending({
                 {sector === "all" &&
                   committeeConstants[committeeId]?.sector &&
                   committeeConstants[committeeId].sector !== "tech" && (
-                    <span className={sharedStyles.sectorBadge}>
+                    <SectorBadge>
                       {committeeConstants[committeeId].sector === "ai"
                         ? "AI"
                         : committeeConstants[committeeId].sector}
-                    </span>
+                    </SectorBadge>
                   )}
               </span>
               <span className={styles.committeeTotal}>

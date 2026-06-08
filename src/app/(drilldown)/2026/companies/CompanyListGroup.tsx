@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 
+import SectorBadge from "@/app/components/SectorBadge";
 import sharedStyles from "@/app/shared.module.css";
 import { CompanyCategory, CompanyConstant } from "@/app/types/Companies";
 import { humanizeRoundedCurrency } from "@/app/utils/humanize";
@@ -101,12 +102,8 @@ export default function CompanyListGroup({
                 <Link className="unstyled" href={`/2026/companies/${id}`}>
                   {companies[id].name}
                 </Link>
-                {showCryptoBadge && (
-                  <span className={sharedStyles.sectorBadge}>crypto</span>
-                )}
-                {showAiBadge && (
-                  <span className={sharedStyles.sectorBadge}>AI</span>
-                )}
+                {showCryptoBadge && <SectorBadge>crypto</SectorBadge>}
+                {showAiBadge && <SectorBadge>AI</SectorBadge>}
               </div>
               {hasTotals && (
                 <div className={listStyles.amount}>
