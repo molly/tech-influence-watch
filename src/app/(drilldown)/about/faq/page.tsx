@@ -70,6 +70,27 @@ export default function FAQPage() {
             only half the story. The old domain still works if you&rsquo;ve
             bookmarked it.
           </p>
+          <h3 className={styles.aboutSectionHeader} id="scope">
+            Which elections and committees does this track? Does it include
+            state races?
+          </h3>
+          <p>
+            This site tracks money in U.S. federal elections (President, Senate,
+            and House of Representatives) using data reported to the Federal
+            Election Commission. That includes candidate campaigns, party
+            committees, PACs, and super PACs that file with the FEC.
+            Occasionally state-level candidates will have federally registered
+            PACs (particularly if they&rsquo;ve previously run for federal
+            office). Contributions from tracked companies and individuals to
+            such PACs will appear, but the entirety of spending on those races
+            will not.
+          </p>
+          <p>
+            Although I would love to someday track state-level spending,
+            particularly as the AI industry has been spending heavily at that
+            level, every state runs its own campaign finance system and
+            reconciling 50 of them is currently beyond my capacity.
+          </p>
           <h3 className={styles.aboutSectionHeader} id="classification">
             What counts as a crypto or AI company?
           </h3>
@@ -100,6 +121,29 @@ export default function FAQPage() {
             not every person who works at a crypto company and donates to a
             political campaign is included. If you think a company or individual
             is missing, please <Link href="/about/contact">get in touch</Link>.
+          </p>
+          <h3 className={styles.aboutSectionHeader} id="distinction">
+            Why does the site track people and companies who mostly contributed
+            to regular party and campaign committees, not AI or crypto super
+            PACs?
+          </h3>
+          <p>
+            This site counts two different things: money flowing{" "}
+            <span className="italic">to</span> crypto- and AI-aligned
+            committees, and money flowing <span className="italic">from</span>{" "}
+            people and companies with major crypto or AI interests. A donor can
+            show up prominently here even if most of their giving is generic
+            party money with little explicitly labeled crypto or AI, because the
+            point is partly to follow where the industry&rsquo;s money{" "}
+            <span className="italic">goes</span>, not only money that lands in
+            an industry PAC.
+          </p>
+          <p>
+            Both matter. Industry PACs are the most direct form of influence,
+            but the personal political giving of the industry&rsquo;s wealthiest
+            figures is a big part of the picture too. The drilldown views break
+            contributions down by recipient and type so you can see which is
+            which.
           </p>
           <h3 className={styles.aboutSectionHeader} id="what-about">
             Who cares what the cryptocurrency and/or AI industries are doing

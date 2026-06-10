@@ -170,10 +170,30 @@ export default function Colophon() {
               processing raw FEC data.
             </p>
             <p>
+              Some AI coding tools (Claude and a variety of open-source models)
+              were used to assist with coding and design. All code is reviewed
+              by me, and I do not use large language models to fetch, generate,
+              or analyze any of the data on this site. Data comes from FEC
+              filings and the other primary sources described above, and LLMs
+              are not in the pipeline that processes the data.
+            </p>
+            <p>
               Caching and additional cloud services are generously provided by{" "}
               <a href="https://www.fastly.com/">Fastly</a> through their{" "}
               <a href="https://www.fastly.com/fast-forward">Fast Forward</a>{" "}
               program.
+            </p>
+            <p>
+              Some of the tools and services I use to build and run this site
+              are made by companies it tracks: namely Firebase/Google Cloud
+              Platform (<Link href="/2026/companies/google">Google</Link>),
+              VSCode and Github (
+              <Link href="/2026/companies/microsoft">Microsoft</Link>), and
+              Claude (<Link href="/2026/companies/anthropic">Anthropic</Link>).
+              No company tracked here funds this site, has any say in what it
+              reports, or gets advance notice of anything I publish, and the
+              site is built to be resilient in the event of pressure or takedown
+              attempts.
             </p>
             <h3 className={styles.aboutSectionHeader} id="col-license">
               License &amp; reuse
@@ -193,8 +213,8 @@ export default function Colophon() {
               publications, attribution to <em>Tech Influence Watch</em> is
               appreciated but not required. If you find an error in something
               you&rsquo;ve published based on this data, please{" "}
-              <Link href="/about/contact">let me know</Link> so it can be corrected at
-              the source.
+              <Link href="/about/contact">let me know</Link> so it can be
+              corrected at the source.
             </p>
             <h3 className={styles.aboutSectionHeader} id="further-reading">
               Further reading
