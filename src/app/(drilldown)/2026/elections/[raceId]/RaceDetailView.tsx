@@ -46,13 +46,13 @@ export function raceDetailMetadata(rawRaceId: string, sector: Sector): Metadata 
 
 function SkeletonRows({
   numRows = 3,
-  key,
+  keyPrefix,
 }: {
   numRows?: number;
-  key?: string;
+  keyPrefix?: string;
 }) {
   return range(numRows).map((i) => (
-    <Skeleton key={`${key}-${i}`} width="100%" />
+    <Skeleton key={`${keyPrefix}-${i}`} width="100%" />
   ));
 }
 
@@ -127,7 +127,7 @@ export default async function RaceDetailView({
               })}
               focused committees
             </h2>
-            <Suspense fallback={<SkeletonRows key="committee-spending" />}>
+            <Suspense fallback={<SkeletonRows keyPrefix="committee-spending" />}>
               <CommitteeSpending sector={sector} raceId={raceId} />
             </Suspense>
           </div>
@@ -135,13 +135,13 @@ export default async function RaceDetailView({
             <h2 className={sharedStyles.sectionTitle}>
               Other spending from the industry
             </h2>
-            <Suspense fallback={<SkeletonRows key="other-support" />}>
+            <Suspense fallback={<SkeletonRows keyPrefix="other-support" />}>
               <OtherSupport raceId={raceId} sector={sector} />
             </Suspense>
           </div>
           <div>
             <h2 className={sharedStyles.sectionTitle}>Ads</h2>
-            <Suspense fallback={<SkeletonRows key="ads" />}>
+            <Suspense fallback={<SkeletonRows keyPrefix="ads" />}>
               <Ads raceId={raceId} sector={sector} />
             </Suspense>
             <div className={styles.adSubtitle}>
