@@ -5,6 +5,7 @@ import {
   doc,
   getDoc,
   getDocs,
+  serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
@@ -227,7 +228,14 @@ export default function CompanyContributionReviewPage() {
         }));
 
       const docRef = doc(db, "companies", selectedCompanyId);
-      await updateDoc(docRef, { contributions: updatedGroups });
+      // Bump updated_at so the backend pipeline's input-staleness check sees this
+      // out-of-band edit and regenerates derived data (recipientDetails) on its
+      // next run. Without it, omit/verify changes never reach the beneficiaries
+      // and quid pro quo pages.
+      await updateDoc(docRef, {
+        contributions: updatedGroups,
+        updated_at: serverTimestamp(),
+      });
 
       setCompanyData({ ...companyData, contributions: updatedGroups });
 
@@ -296,7 +304,14 @@ export default function CompanyContributionReviewPage() {
         }));
 
       const docRef = doc(db, "companies", selectedCompanyId);
-      await updateDoc(docRef, { contributions: updatedGroups });
+      // Bump updated_at so the backend pipeline's input-staleness check sees this
+      // out-of-band edit and regenerates derived data (recipientDetails) on its
+      // next run. Without it, omit/verify changes never reach the beneficiaries
+      // and quid pro quo pages.
+      await updateDoc(docRef, {
+        contributions: updatedGroups,
+        updated_at: serverTimestamp(),
+      });
 
       setCompanyData({ ...companyData, contributions: updatedGroups });
       setReviewCounts((prev) => ({
@@ -345,7 +360,14 @@ export default function CompanyContributionReviewPage() {
         }));
 
       const docRef = doc(db, "companies", selectedCompanyId);
-      await updateDoc(docRef, { contributions: updatedGroups });
+      // Bump updated_at so the backend pipeline's input-staleness check sees this
+      // out-of-band edit and regenerates derived data (recipientDetails) on its
+      // next run. Without it, omit/verify changes never reach the beneficiaries
+      // and quid pro quo pages.
+      await updateDoc(docRef, {
+        contributions: updatedGroups,
+        updated_at: serverTimestamp(),
+      });
 
       setCompanyData({ ...companyData, contributions: updatedGroups });
       setReviewCounts((prev) => ({
