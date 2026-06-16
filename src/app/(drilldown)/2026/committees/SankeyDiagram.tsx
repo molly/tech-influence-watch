@@ -11,6 +11,7 @@ import {
   humanizeList,
   humanizeNumber,
   humanizeRoundedCurrency,
+  pluralize,
 } from "@/app/utils/humanize";
 import { humanizeSector } from "@/app/utils/sector";
 
@@ -796,8 +797,8 @@ export default function SankeyDiagram({
             {humanizeSector(sector, { lowercase: true })} committees this cycle,
             alongside {humanizeRoundedCurrency(totalCarryover, true, 1)} in
             funds carried over from last cycle. From there,{" "}
-            {humanizeNumber(senderList.length)} committee
-            {senderList.length > 1 && "s"}&nbsp;&mdash;{" "}
+            {humanizeNumber(senderList.length)}{" "}
+            {pluralize(senderList.length, "committee")}&nbsp;&mdash;{" "}
             {humanizeList(senderList)}
             &nbsp;&mdash; passed money to affiliated PACs{" "}
             <Link href="/2026/networks">in their networks</Link>. Each

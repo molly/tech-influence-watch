@@ -57,9 +57,7 @@ function pacTypeLabel(committee: CommitteeConstantWithContributions): string {
 type NetworkRole = "parent" | "dem" | "rep";
 
 // True if the committee leads its network.
-function isParent(
-  committee: CommitteeConstantWithContributions,
-): boolean {
+function isParent(committee: CommitteeConstantWithContributions): boolean {
   return committee.role === "parent";
 }
 
@@ -405,7 +403,7 @@ export default async function NetworksView({
                         <MoneyCard
                           amount={formatCompact(raised)}
                           topText="Combined raised"
-                          bottomText={`across ${members.length > 10 ? members.length : humanizeNumber(members.length)} ${pluralize(members.length, "member PAC")}`}
+                          bottomText={`across ${humanizeNumber(members.length)} ${pluralize(members.length, "member PAC")}`}
                         />
                         <MoneyCard
                           amount={formatCompact(spent)}

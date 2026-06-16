@@ -98,11 +98,12 @@ export function getDonorDetails(
   COMPANY_ALIASES: Record<string, string> = {},
   INDIVIDUAL_EMPLOYERS: string[] = [],
 ): IndividualDonorType | CompanyDonorType {
-  if (
-    new Set(["COM", "PAC", "ORG"]).has(donor.entity_type || "") &&
-    donor.contributor_last_name &&
-    donor.contributor_last_name in COMPANY_ALIASES
-  ) {
+  // COM/PAC/ORG entities are organizations, never individuals. Classify them as
+  // companies regardless of alias membership so their names render through
+  // titlecaseCompany. The FEC sometimes duplicates the org name into
+  // contributor_last_name, which would otherwise route them through the
+  // individual-name path (and plain titlecase).
+  if (new Set(["COM", "PAC", "ORG"]).has(donor.entity_type || "")) {
     return {
       ...getDonorCompanyDetails(
         donor,

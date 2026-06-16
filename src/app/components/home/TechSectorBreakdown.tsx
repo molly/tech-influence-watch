@@ -55,7 +55,7 @@ function OthersRow({
     <div className={`${styles.donorRow} ${styles.othersRow}`}>
       <span className={styles.donorRank} />
       <span className={styles.othersLabel}>
-        {count > 10 ? count : humanizeNumber(count)} {pluralize(count, "other")}
+        {humanizeNumber(count)} {pluralize(count, "other")}
       </span>
       <span className={styles.donorAmount} />
       <span className={styles.donorPct}>{pct}%</span>

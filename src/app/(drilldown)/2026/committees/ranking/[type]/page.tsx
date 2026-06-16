@@ -9,7 +9,6 @@ import PACsByReceipts from "@/app/components/PACsByReceipts";
 import sharedStyles from "@/app/shared.module.css";
 import { AllCommitteesSummary } from "@/app/types/Committee";
 import { isError } from "@/app/utils/errors";
-import { humanizeNumber } from "@/app/utils/humanize";
 import { customMetadata } from "@/app/utils/metadata";
 import { titlecase } from "@/app/utils/titlecase";
 
@@ -46,21 +45,6 @@ async function getTechCountInVisible(type: string): Promise<number> {
   return (data as AllCommitteesSummary[])
     .slice(0, VISIBLE_PAC_COUNT)
     .filter((p) => p.sector === "crypto" || p.sector === "ai").length;
-}
-
-async function renderSubtitle(type: string) {
-  const techCount = await getTechCountInVisible(type);
-  if (type === "super") {
-  }
-  return (
-    <p className={sharedStyles.subtitle}>
-      Political action committees raise money to influence federal elections
-      &mdash; usually for a party, a candidate, or a cause.{" "}
-      <span className="bold">{humanizeNumber(techCount)}</span> of the{" "}
-      {humanizeNumber(VISIBLE_PAC_COUNT)} largest PACs by funds raised back the
-      crypto or AI industries. They&lsquo;re highlighted below.
-    </p>
-  );
 }
 
 export default async function PACRankingPage({

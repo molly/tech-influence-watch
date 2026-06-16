@@ -53,11 +53,25 @@ const NUMBERS = [
   "forty-nine",
   "fifty",
 ];
-export const humanizeNumber = (value: number): string => {
-  if (value < NUMBERS.length) {
+export const humanizeNumber = (
+  value: number,
+  limitToSmall: boolean = true,
+): string => {
+  if (value < NUMBERS.length && (!limitToSmall || value <= 10)) {
     return NUMBERS[value];
   }
   return value.toString();
+};
+
+export const humanizePercentage = (
+  value: number,
+  total: number,
+  decimalPlaces = 0,
+): string => {
+  if (total === 0) {
+    return "0%";
+  }
+  return `${parseFloat(((value / total) * 100).toFixed(decimalPlaces))}%`;
 };
 
 export const humanizeApproximateRounded = (

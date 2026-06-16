@@ -12,7 +12,6 @@ const COMMITTEES: Record<string, string> = {
   C00822775: "Bitcoin Freedom PAC",
   C00824896: "Blockchain Association PAC",
   C00835959: "FairShake",
-  C00836114: "Doing Business With Crypto",
   C00836221: "Defend American Jobs",
   C00845628: "US Federal Blockchain PAC",
   C00848440: "Protect Progress",
@@ -33,12 +32,14 @@ const COMMITTEES: Record<string, string> = {
   C00918722: "Blockchain Leadership Fund",
   C00922229: "Abundant Future",
   C00923417: "Think Big",
+  C00924183: "Commonwealth Prosperity Fund",
   C00928374: "Jobs and Democracy PAC",
   C00928390: "Defending Our Values",
   C00930503: "Public First",
   C00941146:
     "Foris Dax, Inc. (d/b/a Crypto.com) Federal Political Action Committee",
   C00946111: "Anthropic PBC Political Action Committee (AnthroPAC)",
+  C00946830: "You Can Push Back",
 };
 
 export default COMMITTEES;

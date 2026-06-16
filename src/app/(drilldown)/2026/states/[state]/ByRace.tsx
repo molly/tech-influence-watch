@@ -101,7 +101,7 @@ function renderOtherSupport(
   const remaining = sorted.length - MAX_COMPANIES;
   if (remaining > 0) {
     topItems.push(
-      `${remaining <= 10 ? humanizeNumber(remaining) : remaining} other ${pluralize(remaining, "company", { plural: "companies" })}`,
+      `${humanizeNumber(remaining)} other ${pluralize(remaining, "company", { plural: "companies" })}`,
     );
   }
   const companies = humanizeList(topItems);
