@@ -12,11 +12,6 @@ import Footer from "./components/Footer";
 import SubscribeBannerWrapper from "./components/SubscribeBannerWrapper";
 import { BASE_METADATA } from "./utils/metadata";
 
-// On-demand revalidation (revalidate.py, called after each pipeline run) is the
-// primary cache-refresh mechanism. This long interval is only a backstop in case
-// that call fails; it is kept well clear of the daily run cycle so a time-based
-// expiry never coincides with a pipeline mid-write and reads partial Firestore data.
-export const revalidate = 604800; // 7 days
 const sansFont = IBM_Plex_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
