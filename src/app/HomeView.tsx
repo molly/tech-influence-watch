@@ -9,7 +9,6 @@ import AllExpendituresByCommittee from "./components/home/AllExpendituresByCommi
 import AllExpendituresByParty from "./components/home/AllExpendituresByParty";
 import AllRecentContributions from "./components/home/AllRecentContributions";
 import AllRecentExpenditures from "./components/home/AllRecentExpenditures";
-import AnnouncementBanner from "./components/home/AnnouncementBanner";
 import CombinedMapToggle from "./components/home/CombinedMapToggle";
 import CompanyBubbleChart from "./components/home/CompanyBubbleChart";
 import FeaturedTracker, {
@@ -36,8 +35,6 @@ export default async function HomeView({ sector }: { sector: Sector }) {
     <div className={sharedStyles.mainLayout}>
       <Header />
       <main className={sharedStyles.main}>
-        {/* Standalone announcement banner — remove this section once stale */}
-        <AnnouncementBanner />
         <TotalsRow>
           <Suspense fallback={<MoneyCardSkeleton />}>
             <TotalCompanySpending sector={sector} />
