@@ -10,6 +10,7 @@ export interface ManualReview {
 export type SingleContribution = {
   redacted?: boolean;
   link?: string;
+  individual_link?: string;
   claimed?: boolean;
   description?: string;
   manualReview?: ManualReview;
@@ -35,6 +36,7 @@ export type SingleContribution = {
 export type RollupContribution = {
   redacted?: boolean;
   link?: string;
+  individual_link?: string;
   claimed?: boolean;
   description?: string;
   manualReview?: ManualReview;

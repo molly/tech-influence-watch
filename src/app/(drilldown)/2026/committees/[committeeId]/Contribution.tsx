@@ -23,6 +23,12 @@ function ContributorName({
 }) {
   if (contribution.redacted) {
     return <span className={styles.redactedName}>Individual</span>;
+  } else if (contribution.individual_link) {
+    return (
+      <span className={styles.donorCompany}>
+        <MaybeLink href={contribution.individual_link} className="secondaryLink">{donorDetails.name}</MaybeLink>
+      </span>
+    );
   } else if (!donorDetails.company) {
     return (
       <span className={styles.donorCompany}>
@@ -214,7 +220,7 @@ export default async function Contribution({
       <div className={styles.donorSubRow}>
         <div className={styles.donorSubRowPrimary}>
           <div>
-            {donorDetails.company === groupName ? null : (
+            {!donorDetails.isIndividual && donorDetails.company === groupName ? null : (
               <span>{donorIdentifier}</span>
             )}
             <ContributionDate contribution={contribution} />

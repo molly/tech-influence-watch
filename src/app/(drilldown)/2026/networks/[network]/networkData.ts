@@ -306,8 +306,15 @@ export async function getNetworkData(
   // Intra-network transfers (the lead committee funding its arms) surface as
   // contributions; exclude them from the network's donor roll so we don't
   // double-count dollars already attributed to the lead committee's haul.
+  // Match members both by committee link and by name: the backend only resolves
+  // a transfer's committee link once the recipient committee is tracked, so a
+  // transfer processed earlier can arrive here with no link, and we'd otherwise
+  // miss it.
   const memberCommitteeHrefs = new Set(
     memberIds.map((id) => `/2026/committees/${id}`),
+  );
+  const memberCommitteeNames = new Set(
+    members.map((member) => member.name.trim().toUpperCase()),
   );
 
   const [detailResults, donorResults, expendituresData] = await Promise.all([
@@ -346,7 +353,11 @@ export async function getNetworkData(
         continue;
       }
       const href = group.link;
-      if (href && memberCommitteeHrefs.has(href)) {
+      const companyName = group.company?.trim().toUpperCase();
+      if (
+        (href && memberCommitteeHrefs.has(href)) ||
+        (companyName && memberCommitteeNames.has(companyName))
+      ) {
         continue;
       }
       const key = group.link ?? group.company!.trim().toUpperCase();
