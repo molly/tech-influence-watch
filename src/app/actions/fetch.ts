@@ -521,18 +521,27 @@ export const fetchAllRaceIds = cache(
 
 export const fetchMapData = cache(
   async (sector: Sector = "all"): Promise<MapData | ErrorType> => {
-    const [data, committeeConstants, companyConstants] = await Promise.all([
-      fetchSnapshot("expenditures", "states"),
-      sector !== "all"
-        ? fetchConstant<Record<string, CommitteeConstant>>("committees")
-        : Promise.resolve(null),
-      sector !== "all"
-        ? fetchConstant<Record<string, CompanyConstant>>("companies")
-        : Promise.resolve(null),
-    ]);
+    const [data, committeeConstants, companyConstants, allExpendituresData] =
+      await Promise.all([
+        fetchSnapshot("expenditures", "states"),
+        sector !== "all"
+          ? fetchConstant<Record<string, CommitteeConstant>>("committees")
+          : Promise.resolve(null),
+        sector !== "all"
+          ? fetchConstant<Record<string, CompanyConstant>>("companies")
+          : Promise.resolve(null),
+        sector !== "all" ? fetchAllExpenditures() : Promise.resolve(null),
+      ]);
     if (isError(data)) {
       return data as ErrorType;
     }
+    if (allExpendituresData && isError(allExpendituresData)) {
+      return allExpendituresData as ErrorType;
+    }
+    const allExpenditures = allExpendituresData as Record<
+      ExpenditureId,
+      Expenditure
+    > | null;
     const stateData = data as Record<string, StateExpenditures>;
     const sectorCommitteeIds = getCommitteeIdsForSector(
       sector,
@@ -548,10 +557,18 @@ export const fetchMapData = cache(
         continue;
       }
       let total: number;
-      if (sectorCommitteeIds) {
+      const sectorExpIds = sectorCommitteeIds ? new Set<string>() : null;
+      if (sectorCommitteeIds && sectorExpIds) {
         total = Object.entries(stateData[state].by_committee ?? {}).reduce(
-          (sum, [id, group]) =>
-            sectorCommitteeIds.has(id) ? sum + group.total : sum,
+          (sum, [id, group]) => {
+            if (!sectorCommitteeIds.has(id)) {
+              return sum;
+            }
+            for (const expId of group.expenditures) {
+              sectorExpIds.add(expId);
+            }
+            return sum + group.total;
+          },
           0,
         );
       } else {
@@ -604,7 +621,20 @@ export const fetchMapData = cache(
         by_race_companies,
       };
       for (const raceId of Object.keys(stateData[state].by_race)) {
-        mapData[state].by_race[raceId] = stateData[state].by_race[raceId].total;
+        const raceGroup = stateData[state].by_race[raceId];
+        if (sectorExpIds && allExpenditures) {
+          const raceTotal = raceGroup.expenditures.reduce((sum, expId) => {
+            if (!sectorExpIds.has(expId)) {
+              return sum;
+            }
+            return sum + (allExpenditures[expId]?.expenditure_amount ?? 0);
+          }, 0);
+          if (raceTotal > 0) {
+            mapData[state].by_race[raceId] = raceTotal;
+          }
+        } else {
+          mapData[state].by_race[raceId] = raceGroup.total;
+        }
       }
     }
     return mapData;

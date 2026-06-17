@@ -225,7 +225,7 @@ export default function Spending({
   );
 
   const CHART_HEIGHT = useMemo(
-    () => Math.max(150, candidateNames.length * 30),
+    () => Math.max(150, candidateNames.length * 32),
     [candidateNames],
   );
 
@@ -254,7 +254,7 @@ export default function Spending({
         // are actually in, so don't show that money under this race.
         const isSuppressed = Boolean(
           summary.candidate_id &&
-            suppressedCandidateIds?.has(summary.candidate_id),
+          suppressedCandidateIds?.has(summary.candidate_id),
         );
         if (!isSuppressed) {
           candidateData.raised = summary.raised_total || 0;
@@ -522,7 +522,7 @@ export default function Spending({
           const summary = election.candidates[candidate];
           const eliminated = Boolean(
             summary &&
-              (summary.withdrew || isDefeated(election.races, summary)),
+            (summary.withdrew || isDefeated(election.races, summary)),
           );
           return (
             <g key={candidate}>
