@@ -26,6 +26,7 @@ import {
 } from "@/app/types/Contributions";
 import { getAdDate } from "@/app/utils/ads";
 import { ErrorType, isError } from "@/app/utils/errors";
+import { serializeFirestore } from "@/app/utils/firestore";
 
 import { TRUMP_CANDIDATE_ID } from "../data/trump";
 import { Ad, AdGroup } from "../types/Ads";
@@ -77,7 +78,7 @@ const fetchSnapshot = async (
     const docRef = doc(db, path, ...pathSegments);
     const snapshot = await getDoc(docRef);
     if (snapshot.exists()) {
-      return snapshot.data();
+      return serializeFirestore(snapshot.data());
     } else {
       return { error: true, statusCode: 404 };
     }
@@ -108,7 +109,7 @@ const fetchCollectionAsRecord = async <T>(
   }
   const result: Record<string, T> = {};
   for (const d of snapshot.docs) {
-    result[d.id] = d.data() as T;
+    result[d.id] = serializeFirestore(d.data()) as T;
   }
   return result;
 };
@@ -118,7 +119,7 @@ export const fetchConstant = cache(
     const docRef = doc(db, "constants", key);
     const snapshot = await getDoc(docRef);
     if (snapshot.exists()) {
-      const data = snapshot.data();
+      const data = serializeFirestore(snapshot.data());
       if (key === "individualEmployers" && "individualEmployers" in data) {
         return data.individualEmployers as T;
       }
@@ -299,7 +300,8 @@ export const fetchCommitteesWithContributions = cache(
         }))
         .filter(
           (committee) =>
-            committee.total + (committee.claimedCommitted || 0) > 0,
+            committee.total + (committee.claimedCommitted || 0) > 0 ||
+            (committee.independent_expenditures || 0) > 0,
         )
         .filter(
           (committee) =>

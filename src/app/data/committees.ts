@@ -40,6 +40,7 @@ const COMMITTEES: Record<string, string> = {
     "Foris Dax, Inc. (d/b/a Crypto.com) Federal Political Action Committee",
   C00946111: "Anthropic PBC Political Action Committee (AnthroPAC)",
   C00946830: "You Can Push Back",
+  C00949487: "Guardrails Alliance",
 };
 
 export default COMMITTEES;

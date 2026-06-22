@@ -55,18 +55,21 @@ export default function SectorWrapper({ lastRun }: { lastRun: string | null }) {
     SECTOR_PATHS.some((p) =>
       new RegExp(`^/2026/((ai|crypto)/)?${p}/?`).test(pathname),
     );
-  if (!showSector) {
+  // Nothing to show at all: no sector switcher and no timestamp.
+  if (!showSector && !formatted) {
     return null;
   }
   return (
     <div className={styles.sectorWrapper}>
       <div className={styles.sectorContents}>
-        <span>
-          Showing:
-          <Suspense fallback={null}>
-            <SectorButtons />
-          </Suspense>
-        </span>
+        {showSector && (
+          <span>
+            Showing:
+            <Suspense fallback={null}>
+              <SectorButtons />
+            </Suspense>
+          </span>
+        )}
         {formatted && (
           <span className={styles.lastUpdated}>
             Updated{" "}
