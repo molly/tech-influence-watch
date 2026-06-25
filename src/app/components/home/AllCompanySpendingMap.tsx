@@ -40,7 +40,8 @@ export default async function AllCompanySpendingMap({
   return (
     <>
       <ChloroplethMap
-        domain={generateDomain(10000, 10000000)}
+        domain={generateDomain(5000, 50000000)}
+        legendDomain={generateDomain(5000, 10000000)}
         stateValues={toStateValues(mapData)}
         labelId="spending-by-state"
       />

@@ -28,11 +28,13 @@ function getFill(
 export default function ChloroplethMap({
   stateValues,
   domain,
+  legendDomain,
   ariaLabel,
   labelId,
 }: {
   stateValues: Record<string, number>;
   domain: number[];
+  legendDomain?: number[];
   ariaLabel?: string;
   labelId?: string;
 }) {
@@ -69,7 +71,10 @@ export default function ChloroplethMap({
         {...(ariaLabel ? { "aria-label": ariaLabel } : {})}
         {...(labelId ? { "aria-labelledby": labelId } : {})}
       >
-        <Legend fillClassNames={FILL_CLASS_NAMES} domain={domain} />
+        <Legend
+          fillClassNames={FILL_CLASS_NAMES}
+          domain={legendDomain ?? domain}
+        />
         {data.map((d) => {
           const stateFullName = d.properties?.name;
           const value = stateValues[stateFullName];

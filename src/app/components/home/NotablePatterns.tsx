@@ -122,12 +122,12 @@ function buildPatterns(
       description: (
         <>
           The OpenAI- and Andreessen Horowitz-linked{" "}
-          <Link href="/2026/committees/C00923417">Think Big</Link> has spent{" "}
+          <Link href="/2026/committees/C00923417">Think Big</Link> spent{" "}
           {humanizeRoundedCurrency(thinkBigOppose, true, 1)} opposing{" "}
           <Link href="/2026/elections/NY-H-12">Alex Bores</Link> in New
           York&rsquo;s District 12; the Anthropic-linked{" "}
           <Link href="/2026/committees/C00928374">Jobs and Democracy PAC</Link>{" "}
-          has spent {humanizeRoundedCurrency(jobsAndDemocracySupport, true, 1)}{" "}
+          spent {humanizeRoundedCurrency(jobsAndDemocracySupport, true, 1)}{" "}
           supporting him. This has been the only intra-sector conflict so far
           this cycle.
         </>
@@ -149,18 +149,18 @@ function buildPatterns(
             crypto.rep_support,
             crypto.rep_support + crypto.dem_support,
           )}
-          &nbsp; Republican,{" "}
+          &nbsp;Republican,{" "}
           {humanizePercentage(
             crypto.dem_support,
             crypto.rep_support + crypto.dem_support,
           )}
-          &nbsp; Democrat). AI PACs have flipped that ratio, spending{" "}
+          &nbsp;Democrat). AI PACs have spent{" "}
           {humanizeRoundedCurrency(ai.dem_support, true, 1)} for Democrats and{" "}
           {humanizeRoundedCurrency(ai.rep_support, true, 1)} for Republicans (
           {humanizePercentage(ai.rep_support, ai.rep_support + ai.dem_support)}
-          &nbsp; Republican,{" "}
+          &nbsp;Republican,{" "}
           {humanizePercentage(ai.dem_support, ai.rep_support + ai.dem_support)}
-          &nbsp; Democrat).
+          &nbsp;Democrat).
         </>
       ),
     },

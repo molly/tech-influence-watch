@@ -46,22 +46,30 @@
 }
 
 .stateFill3 {
-  fill: var(--color-lime-300);
+  fill: var(--color-lime-200);
 }
 
 .stateFill4 {
-  fill: var(--color-lime-500);
+  fill: var(--color-lime-300);
 }
 
 .stateFill5 {
-  fill: var(--color-lime-600);
+  fill: var(--color-lime-500);
 }
 
 .stateFill6 {
-  fill: var(--color-lime-800);
+  fill: var(--color-lime-600);
 }
 
 .stateFill7 {
+  fill: var(--color-lime-700);
+}
+
+.stateFill8 {
+  fill: var(--color-lime-800);
+}
+
+.stateFill9 {
   fill: var(--color-lime-950);
 }
 
@@ -71,7 +79,9 @@
 .stateFill4,
 .stateFill5,
 .stateFill6,
-.stateFill7 {
+.stateFill7,
+.stateFill8,
+.stateFill9 {
   cursor: pointer;
 }
 
@@ -107,23 +117,31 @@
   }
 
   .stateFill3 {
-    fill: #3f6800;
+    fill: var(--color-lime-900);
   }
 
   .stateFill4 {
-    fill: var(--color-lime-600);
+    fill: #3f6800;
   }
 
   .stateFill5 {
-    fill: var(--color-lime-500);
+    fill: var(--color-lime-600);
   }
 
   .stateFill6 {
-    fill: #97cc1f;
+    fill: var(--color-lime-500);
   }
 
   .stateFill7 {
+    fill: #97cc1f;
+  }
+
+  .stateFill8 {
     fill: var(--color-lime-300);
+  }
+
+  .stateFill9 {
+    fill: var(--color-lime-200);
   }
 
   .stateLink {
