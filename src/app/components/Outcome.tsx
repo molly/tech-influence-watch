@@ -21,6 +21,9 @@ export default function Outcome({
   if (candidate.declined) {
     return `${inSentence ? " d" : "D"}eclined to run${candidate.declinedReason ? ` (${candidate.declinedReason})` : ""}`;
   }
+  if (candidate.died) {
+    return `${inSentence ? " d" : "D"}ied`;
+  }
   if (candidate.withdrew) {
     return `${inSentence ? " w" : "W"}ithdrew from the election`;
   } else {

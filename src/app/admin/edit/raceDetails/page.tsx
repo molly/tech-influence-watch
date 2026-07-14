@@ -20,6 +20,11 @@ interface CandidateFormData {
   withdrew?: boolean;
   withdrewRaceType?: string;
   withdrewRaceParty?: Party;
+  died?: boolean;
+  // A stand-in for a nominee who isn't known yet (e.g. the primary winner died
+  // or withdrew and the party hasn't named a replacement). Name it for the slot
+  // it fills — "Democratic candidate TBD" — not for a person.
+  placeholder?: boolean;
   won?: boolean;
 }
 
@@ -198,6 +203,8 @@ export default function RaceDetailsEditor() {
         withdrew: c.withdrew,
         withdrewRaceType: c.withdrew_race?.type || "",
         withdrewRaceParty: c.withdrew_race?.party,
+        died: c.died,
+        placeholder: c.placeholder,
         won: c.won,
       })),
     });
@@ -248,6 +255,15 @@ export default function RaceDetailsEditor() {
             candidateData.party = candidate.party;
           }
 
+          // A placeholder is a slot, not a person: name and party are the only
+          // meaningful fields. Writing a result or a status onto it would make
+          // the pipeline treat it as a real candidate (and try to look it up at
+          // the FEC), so bail out before any of that gets attached.
+          if (candidate.placeholder) {
+            candidateData.placeholder = true;
+            return candidateData;
+          }
+
           // Only include incumbent if true
           if (candidate.incumbent) {
             candidateData.incumbent = true;
@@ -287,6 +303,13 @@ export default function RaceDetailsEditor() {
             if (Object.keys(withdrewRace).length > 0) {
               candidateData.withdrew_race = withdrewRace;
             }
+          }
+
+          // Only include died if true. Unlike withdrew, there's no companion
+          // died_race: a death removes the candidate from every race at once,
+          // so there is no single race to point at.
+          if (candidate.died) {
+            candidateData.died = true;
           }
 
           return candidateData;
@@ -546,6 +569,24 @@ export default function RaceDetailsEditor() {
                   </button>
                 </div>
 
+                {/* Placeholder Checkbox */}
+                <div className={styles.editorInputGroup}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={candidate.placeholder || false}
+                      onChange={(e) => updateCandidate(index, "placeholder", e.target.checked)}
+                    />
+                    {" "}Placeholder (not a real person)
+                    {candidate.placeholder && (
+                      <span className={styles.withdrewNote}>
+                        Renders as a question mark. Name it for the slot, e.g.
+                        &ldquo;Democratic candidate TBD&rdquo;.
+                      </span>
+                    )}
+                  </label>
+                </div>
+
                 {/* Candidate Name */}
                 <div className={styles.editorInputGroup}>
                   <label htmlFor={`candidate-name-${index}`}>Name *</label>
@@ -577,6 +618,10 @@ export default function RaceDetailsEditor() {
                   </select>
                 </div>
 
+                {/* Everything below describes a person, so none of it applies
+                    to a placeholder slot. */}
+                {!candidate.placeholder && (
+                  <>
                 {/* Incumbent Checkbox */}
                 <div className={styles.editorInputGroup}>
                   <label>
@@ -655,6 +700,24 @@ export default function RaceDetailsEditor() {
                   </label>
                 </div>
 
+                {/* Died Checkbox */}
+                <div className={styles.editorInputGroup}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={candidate.died || false}
+                      onChange={(e) => updateCandidate(index, "died", e.target.checked)}
+                    />
+                    {" "}Died
+                    {candidate.died && (
+                      <span className={styles.withdrewNote}>
+                        Add a placeholder candidate for the replacement nominee if
+                        one hasn&rsquo;t been named yet.
+                      </span>
+                    )}
+                  </label>
+                </div>
+
                 {/* Result */}
                 <div className={styles.editorInputGroup}>
                   <label htmlFor={`candidate-result-${index}-undecided`}>Result</label>
@@ -695,6 +758,8 @@ export default function RaceDetailsEditor() {
                     })}
                   </div>
                 </div>
+                  </>
+                )}
               </div>
             ))}
 

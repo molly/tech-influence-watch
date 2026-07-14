@@ -84,8 +84,13 @@ function GoalOutcome({
   let icon = null;
   let text = null;
 
-  if (lost || candidate.withdrew) {
-    const verb = lost ? "lost" : "withdrew from";
+  if (lost || candidate.withdrew || candidate.died) {
+    // "died" stands alone as a complete phrase; the other two take "their race".
+    const outcomePhrase = lost
+      ? "lost their race"
+      : candidate.died
+        ? "died"
+        : "withdrew from their race";
     if (wasOpposed) {
       if (wasSupported) {
         icon = (
@@ -101,7 +106,7 @@ function GoalOutcome({
             <path d="M32 288c-17.7 0-32 14.3-32 32s14.3 32 32 32l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L32" />
           </svg>
         );
-        text = `Candidate both supported and opposed by industry PACs ${verb} their race`;
+        text = `Candidate both supported and opposed by industry PACs ${outcomePhrase}`;
       } else {
         icon = (
           <svg
@@ -114,7 +119,7 @@ function GoalOutcome({
             <title>Goal achieved</title>
           </svg>
         );
-        text = `Candidate opposed by industry PACs ${verb} their race`;
+        text = `Candidate opposed by industry PACs ${outcomePhrase}`;
       }
     } else {
       icon = (
@@ -127,7 +132,7 @@ function GoalOutcome({
           <title>Goal failed</title>
         </svg>
       );
-      text = `Candidate supported by industry PACs ${verb} their race`;
+      text = `Candidate supported by industry PACs ${outcomePhrase}`;
     }
   } else if (won) {
     if (wasSupported && wasOpposed) {

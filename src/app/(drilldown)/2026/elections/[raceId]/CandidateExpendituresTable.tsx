@@ -43,8 +43,10 @@ export default function CandidateExpendituresTable({
   isRaceUpcoming: boolean;
   presumptiveCandidateNames: Set<string>;
 }) {
+  // Placeholders have no summary by design (they aren't real people), so they
+  // have to be exempted from the has-a-summary filter or they'd never render.
   const trimmedCandidates = candidates.filter(
-    (c) => c.name in electionData.candidates,
+    (c) => c.placeholder || c.name in electionData.candidates,
   );
   return (
     <table className={styles.candidateExpendituresTable}>
@@ -58,10 +60,9 @@ export default function CandidateExpendituresTable({
       <tbody>
         {trimmedCandidates.map((candidate, ind) => {
           const candidateSummary = electionData.candidates[candidate.name];
-          const { supportTotal, opposeTotal } = getCandidateSupportOppose(
-            electionData.candidates[candidate.name],
-            relatedExpenditures,
-          );
+          const { supportTotal, opposeTotal } = candidateSummary
+            ? getCandidateSupportOppose(candidateSummary, relatedExpenditures)
+            : { supportTotal: 0, opposeTotal: 0 };
           const isPresumptive = presumptiveCandidateNames.has(candidate.name);
           return (
             <CandidateResult

@@ -16,10 +16,17 @@ export interface RaceCandidate {
   percentage?: number;
   won?: boolean;
   withdrew?: boolean;
+  died?: boolean;
   declined?: boolean;
   declineReason?: string;
   writeIn?: boolean;
   incumbent?: boolean;
+  // A stand-in for a nominee who isn't known yet — set by hand in the race
+  // editor when a primary winner leaves the race (withdrew or died) and their
+  // party has yet to name a replacement. Placeholders are presentation-only:
+  // they are not real people, so the backend gives them no CandidateSummary and
+  // never looks them up at the FEC. Render them as an UnknownCandidate.
+  placeholder?: boolean;
 }
 
 export enum RaceType {
@@ -56,6 +63,7 @@ export type CandidateSummary = {
   // backend's summary-level defeated/won flags lag manual race edits.
   withdrew?: boolean;
   withdrew_race?: RaceType;
+  died?: boolean;
   declined?: boolean;
   declinedReason?: string;
 

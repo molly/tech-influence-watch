@@ -8,7 +8,7 @@ import {
 } from "@/app/types/Elections";
 import { Sector } from "@/app/types/Sector";
 import { humanizeList } from "@/app/utils/humanize";
-import { getSubraceName } from "@/app/utils/races";
+import { getSubraceName, isOutOfRace } from "@/app/utils/races";
 import { humanizeSector } from "@/app/utils/sector";
 
 import { ResultNote } from "./CandidateResult";
@@ -99,13 +99,9 @@ export default function RaceCandidates({
       <tbody>
         {candidates.map((candidate, ind) => {
           const summary = electionData.candidates[candidate.name];
-          const defeated =
-            ("won" in candidate && candidate.won === false) ||
-            ("withdrew" in candidate && candidate.withdrew) ||
-            ("declined" in candidate && candidate.declined);
           const isPresumptive = presumptiveCandidateNames.has(candidate.name);
           let candidateNameClassName = "";
-          if (defeated) {
+          if (isOutOfRace(candidate)) {
             candidateNameClassName = styles.defeatedCandidateName;
           } else if (!isRaceUpcoming || isPresumptive) {
             candidateNameClassName = styles.wonCandidateName;
@@ -119,15 +115,23 @@ export default function RaceCandidates({
               <td
                 className={`${styles.candidateCell} ${!isLastRow ? styles.candidateRow : ""}`}
               >
-                <Candidate
-                  candidate={candidate}
-                  candidateSummary={summary}
-                  candidateNameClassName={candidateNameClassName}
-                  writeIn={candidate.writeIn}
-                  presumptive={isPresumptive}
-                  noMargins={true}
-                  extraText={<ResultNote candidate={candidate} />}
-                />
+                {candidate.placeholder ? (
+                  <UnknownCandidate
+                    party={candidate.party}
+                    name={candidate.name}
+                    noMargins={true}
+                  />
+                ) : (
+                  <Candidate
+                    candidate={candidate}
+                    candidateSummary={summary}
+                    candidateNameClassName={candidateNameClassName}
+                    writeIn={candidate.writeIn}
+                    presumptive={isPresumptive}
+                    noMargins={true}
+                    extraText={<ResultNote candidate={candidate} />}
+                  />
+                )}
               </td>
               {ind === 0 && (
                 <NoSpendingCell

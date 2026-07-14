@@ -1,24 +1,27 @@
-import Candidate from "@/app/components/Candidate";
+import Candidate, { UnknownCandidate } from "@/app/components/Candidate";
 import { CandidateSummary, RaceCandidate } from "@/app/types/Elections";
+import { isOutOfRace } from "@/app/utils/races";
 import { formatCurrency } from "@/app/utils/utils";
 
 import styles from "./page.module.css";
 
 export function ResultNote({ candidate }: { candidate: RaceCandidate }) {
-  if (!candidate.declined && !candidate.withdrew) {
+  let note;
+  if (candidate.declined) {
+    note = candidate.declineReason
+      ? `Declined to run: ${candidate.declineReason}`
+      : "Declined to run";
+  } else if (candidate.died) {
+    // Checked before withdrew: a candidate who died after leaving the race is
+    // described by the death, not the withdrawal.
+    note = "Died";
+  } else if (candidate.withdrew) {
+    note = "Withdrew";
+  }
+  if (!note) {
     return null;
   }
-  return (
-    <div className={styles.resultNote}>
-      {candidate.declined
-        ? candidate.declineReason
-          ? `Declined to run: ${candidate.declineReason}`
-          : "Declined to run"
-        : candidate.withdrew
-          ? `Withdrew`
-          : ""}
-    </div>
-  );
+  return <div className={styles.resultNote}>{note}</div>;
 }
 
 export default function CandidateResult({
@@ -38,12 +41,30 @@ export default function CandidateResult({
   isRaceUpcoming: boolean;
   isPresumptive?: boolean;
 }) {
+  if (candidate.placeholder) {
+    // Not a real person, so there is no summary to join to and no spending to
+    // attribute. Render the slot itself.
+    return (
+      <tr className={rowClass}>
+        <td className={styles.candidateCell}>
+          <UnknownCandidate
+            party={candidate.party}
+            name={candidate.name}
+            noMargins={true}
+          />
+        </td>
+        <td className={`${styles.spendingAmount} number-cell`}>
+          <span className={styles.nullPlaceholder}>&ndash;</span>
+        </td>
+        <td className={`${styles.spendingAmount} number-cell`}>
+          <span className={styles.nullPlaceholder}>&ndash;</span>
+        </td>
+      </tr>
+    );
+  }
+
   let candidateNameClassName;
-  if (
-    ("won" in candidate && candidate.won === false) ||
-    ("withdrew" in candidate && candidate.withdrew) ||
-    ("declined" in candidate && candidate.declined)
-  ) {
+  if (isOutOfRace(candidate)) {
     candidateNameClassName = styles.defeatedCandidateName;
   } else if (!isRaceUpcoming || isPresumptive) {
     candidateNameClassName = styles.wonCandidateName;

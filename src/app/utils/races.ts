@@ -3,6 +3,7 @@ import {
   ElectionGroup,
   ElectionsByState,
   Race,
+  RaceCandidate,
   RaceType,
 } from "@/app/types/Elections";
 import { humanizeList } from "@/app/utils/humanize";
@@ -11,6 +12,19 @@ import { getFullPartyName } from "@/app/utils/party";
 import { SINGLE_MEMBER_STATES, STATES_BY_ABBR } from "../data/states";
 import { ExpenditureCandidateSummary } from "../types/Expenditures";
 import { isUpcomingDate } from "./utils";
+
+// A candidate who is no longer running, for a reason other than losing: they
+// withdrew, they died, or they declined to enter in the first place. Distinct
+// from isDefeated, which covers losing a race that was actually held.
+export const hasLeftRace = (candidate: RaceCandidate): boolean => {
+  return Boolean(candidate.withdrew || candidate.died || candidate.declined);
+};
+
+// Whether a candidate should be struck through in a race's candidate list —
+// they either lost the race or left it. Placeholders are neither.
+export const isOutOfRace = (candidate: RaceCandidate): boolean => {
+  return candidate.won === false || hasLeftRace(candidate);
+};
 
 /**
  * Direct contributions are attributed to a candidate by candidate_id, which is
@@ -71,7 +85,7 @@ export function getDeclinedElsewhereCandidateIds(
     }
     for (const race of group.races) {
       for (const candidate of race.candidates) {
-        if (candidate.declined || candidate.withdrew) {
+        if (candidate.placeholder || hasLeftRace(candidate)) {
           continue;
         }
         activeNames.add(candidate.name);

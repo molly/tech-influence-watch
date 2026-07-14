@@ -522,7 +522,9 @@ export default function Spending({
           const summary = election.candidates[candidate];
           const eliminated = Boolean(
             summary &&
-            (summary.withdrew || isDefeated(election.races, summary)),
+              (summary.withdrew ||
+                summary.died ||
+                isDefeated(election.races, summary)),
           );
           return (
             <g key={candidate}>
