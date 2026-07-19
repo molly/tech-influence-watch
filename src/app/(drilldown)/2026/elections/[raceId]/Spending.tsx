@@ -257,7 +257,10 @@ export default function Spending({
           suppressedCandidateIds?.has(summary.candidate_id),
         );
         if (!isSuppressed) {
-          candidateData.raised = summary.raised_total || 0;
+          // Candidates with large investment losses can report negative
+          // receipts. Treat that as zero rather than letting the raised bar
+          // extend left of the axis and drag the support bars with it.
+          candidateData.raised = Math.max(0, summary.raised_total || 0);
         }
         candidateData.crypto_support = summary.crypto_support_total || 0;
         candidateData.crypto_oppose = summary.crypto_oppose_total || 0;
