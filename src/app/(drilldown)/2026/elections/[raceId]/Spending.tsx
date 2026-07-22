@@ -292,7 +292,11 @@ export default function Spending({
                   sector === "all" ||
                   (sector === "crypto" && isCrypto) ||
                   (sector === "ai" && isAI);
-                if (inCurrentSector) {
+                // Only draw the direct-contribution hatch when this candidate
+                // clears the backend significance threshold (has_non_pac_support).
+                // Below it, the "Other spending from the industry" section hides
+                // the money, so showing a hatch here makes the two disagree.
+                if (inCurrentSector && summary.has_non_pac_support) {
                   candidateData.industry_direct += contribution.total;
                 }
               } else {
