@@ -20,6 +20,21 @@ export const hasLeftRace = (candidate: RaceCandidate): boolean => {
   return Boolean(candidate.withdrew || candidate.died || candidate.declined);
 };
 
+// Whether the candidate withdrew from or died during any of the races they were
+// entered in, read from the race entries themselves. The summary-level
+// withdrew/died flags come from the backend and lag manual race edits, so a
+// candidate marked in the race editor only shows up here.
+export const hasLeftAnyRace = (
+  races: Race[],
+  candidate: CandidateSummary | ExpenditureCandidateSummary,
+): boolean => {
+  return races.some((race) =>
+    race.candidates.some(
+      (c) => c.name === candidate.common_name && (c.withdrew || c.died),
+    ),
+  );
+};
+
 // Whether a candidate should be struck through in a race's candidate list —
 // they either lost the race or left it. Placeholders are neither.
 export const isOutOfRace = (candidate: RaceCandidate): boolean => {

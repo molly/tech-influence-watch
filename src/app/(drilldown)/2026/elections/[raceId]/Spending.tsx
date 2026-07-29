@@ -11,7 +11,7 @@ import sharedStyles from "@/app/shared.module.css";
 import { Beneficiary } from "@/app/types/Beneficiaries";
 import { CandidateSummary, ElectionGroup } from "@/app/types/Elections";
 import { Sector } from "@/app/types/Sector";
-import { isDefeated } from "@/app/utils/races";
+import { hasLeftAnyRace, isDefeated } from "@/app/utils/races";
 import { matchesSector } from "@/app/utils/sector";
 
 import styles from "./page.module.css";
@@ -531,6 +531,7 @@ export default function Spending({
             summary &&
               (summary.withdrew ||
                 summary.died ||
+                hasLeftAnyRace(election.races, summary) ||
                 isDefeated(election.races, summary)),
           );
           return (

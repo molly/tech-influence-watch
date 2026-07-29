@@ -33,6 +33,10 @@ export enum RaceType {
   General = "general",
   GeneralRunoff = "general_runoff",
   Primary = "primary",
+  // A stand-alone primary held to fill a nomination the regular primary didn't
+  // settle — e.g. South Carolina replacing a nominee who died after the primary.
+  // Sits between the primary and any primary runoff.
+  SpecialPrimary = "special_primary",
   PrimaryRunoff = "primary_runoff",
   Convention = "convention",
   Special = "special",

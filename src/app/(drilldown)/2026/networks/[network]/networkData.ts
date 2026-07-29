@@ -17,6 +17,7 @@ import type {
   Contributions,
   ContributionsGroup,
 } from "@/app/types/Contributions";
+import { RaceType } from "@/app/types/Elections";
 import type {
   Expenditure,
   ExpendituresByPartySnapshot,
@@ -201,9 +202,12 @@ function getExpenditureRaceId(expenditure: Expenditure): string {
   ) {
     raceId += `-${expenditure.candidate_office_district}`;
   }
+  // A special primary ("SP") is a sub-race of the regular race, not a separate
+  // special election, so it must not pick up the "-special" suffix.
   if (
-    expenditure.subrace === "special" ||
-    (expenditure.election_type && expenditure.election_type[0] === "S")
+    expenditure.subrace !== RaceType.SpecialPrimary &&
+    (expenditure.subrace === "special" ||
+      (expenditure.election_type && expenditure.election_type[0] === "S"))
   ) {
     raceId += "-special";
   }

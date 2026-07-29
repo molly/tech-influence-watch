@@ -14,10 +14,13 @@ import { formatCurrency } from "@/app/utils/utils";
 
 import styles from "./page.module.css";
 
+// Reverse chronological: the sort below reads this back-to-front, so subraces
+// display earliest-first (special, convention, primary, special primary, ...).
 const RACE_ORDER = [
   "general",
   "general_runoff",
   "primary_runoff",
+  "special_primary",
   "primary",
   "convention",
   "special",
