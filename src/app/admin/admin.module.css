@@ -29,18 +29,99 @@
   border-bottom: 1px solid var(--color-neutral-300);
 }
 
+/* One self-contained card per ad. The previous two-column layout split each ad
+   across separate grid cells, so with posters of differing heights it wasn't
+   clear which ID and race input belonged to which ad. */
 .adGrid {
   display: grid;
-  grid-template-columns: [ad] 1fr [region] 1fr;
+  grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
   grid-gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .adCard {
-  grid-column: ad;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border: 1px solid var(--color-neutral-300);
+  border-radius: 4px;
+  background-color: var(--admin-card-bg);
 }
 
-.adRegion {
-  grid-column: region;
+.adCardSelected {
+  border-color: var(--admin-primary);
+  box-shadow: 0 0 0 1px var(--admin-primary);
+}
+
+.adCardId {
+  font-family: monospace;
+  font-size: 0.85em;
+  user-select: all;
+}
+
+.adVideo {
+  width: 100%;
+  height: auto;
+  max-height: 18rem;
+  object-fit: contain;
+  background-color: var(--color-black);
+}
+
+.bulkRaceGroup {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.stateTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.stateTab {
+  padding: 0.25rem 0.75rem;
+  background-color: var(--color-white);
+  color: var(--color-neutral-800);
+  border: 1px solid var(--color-neutral-300);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.stateTab:focus-visible {
+  outline: 2px solid var(--admin-primary);
+  outline-offset: 2px;
+}
+
+.stateTabActive {
+  background-color: var(--admin-primary);
+  color: var(--color-white);
+  border-color: var(--admin-primary);
+}
+
+.adSection {
+  margin-bottom: 2rem;
+}
+
+.adSectionHeading {
+  border-bottom: 1px solid var(--color-neutral-300);
+  padding-bottom: 0.25rem;
+}
+
+.adSectionSubheading {
+  margin-bottom: 0.5rem;
+}
+
+.archiveStatusOk {
+  background-color: var(--admin-success-bg);
+  color: var(--admin-success-text);
+}
+
+.archiveStatusFail {
+  background-color: var(--admin-error-bg);
+  color: var(--admin-error-text);
 }
 
 /* Container and textarea (used by review pages) */

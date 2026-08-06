@@ -535,17 +535,32 @@
 
 .adContent {
   display: flex;
+  flex-wrap: wrap;
   column-gap: 1rem;
 }
 
 .adEmbedGroup {
-  width: 10rem;
+  width: 20rem;
+  flex-shrink: 0;
 }
 
 .adEmbed {
   background-color: var(--color-black);
   width: 100%;
   margin: 0.5rem 0;
+}
+
+/* The width/height attributes carry the ad's real aspect ratio (they vary —
+   some creatives are vertical), so let height follow from the scaled width.
+   Cap the height so a vertical ad doesn't tower over its own details: at this
+   width one would otherwise run to about 35rem. Capped ones pillarbox against
+   the black backdrop inherited from .adEmbed. */
+.adVideo {
+  composes: adEmbed;
+  display: block;
+  height: auto;
+  max-height: 24rem;
+  object-fit: contain;
 }
 
 .adTakedown {
@@ -562,6 +577,19 @@
 
 .adTakedownWarning {
   font-size: 4rem;
+}
+
+/* TEMPORARY: see the matching note in GoogleAd.tsx. Delete both together. */
+.adDebugId {
+  font-family: monospace;
+  font-size: 0.8rem;
+  color: var(--secondary-text);
+  user-select: all;
+}
+
+/* Rendered once beneath the ad list, so each ad only has to carry a count. */
+.adMergeExplainer {
+  composes: adSubtitle;
 }
 
 .adDetailsWrapper {
@@ -597,6 +625,15 @@
   font-size: 0.9rem;
   color: var(--secondary-text);
   margin-top: 1rem;
+}
+
+/* Below this the video and the details can't sit side by side without
+   squeezing the text, so let the video take the full width and the details
+   wrap underneath it. */
+@media (max-width: 768px) {
+  .adEmbedGroup {
+    width: 100%;
+  }
 }
 
 @media (max-width: 1000px) {

@@ -1,8 +1,9 @@
 import Link from "next/link";
 
 import InformationalTooltip from "@/app/components/InformationalTooltip";
-import { GoogleAd as GoogleAdType } from "@/app/types/Ads";
+import { AdVideo, GoogleAd as GoogleAdType } from "@/app/types/Ads";
 import { CommitteeConstant } from "@/app/types/Committee";
+import { mediaUrl } from "@/app/utils/ads";
 import { humanizeApproximateRounded } from "@/app/utils/humanize";
 import { formatCurrency, formatDateFromString } from "@/app/utils/utils";
 
@@ -10,7 +11,34 @@ import styles from "./page.module.css";
 
 function formatImpressions(impressions: string) {
   const [lower, upper] = impressions.split("-");
-  return `${humanizeApproximateRounded(parseInt(lower))} – ${humanizeApproximateRounded(parseInt(upper))}`;
+  const low = humanizeApproximateRounded(parseInt(lower));
+  const high = humanizeApproximateRounded(parseInt(upper));
+  // Compare the rounded values, not the raw ones: a 1,000,000–1,050,000 range
+  // renders as "1M – 1M" too, and reads just as oddly as an exact tie.
+  if (low === high) {
+    return `~${low}`;
+  }
+  return `${low} – ${high}`;
+}
+
+// Our own copy of the ad. `preload="none"` means nothing but the poster image
+// transfers until a reader actually presses play, and the width/height
+// attributes give the browser the aspect ratio up front so the page doesn't
+// shift once the video loads.
+function RehostedVideo({ video, name }: { video: AdVideo; name: string }) {
+  return (
+    <video
+      className={styles.adVideo}
+      src={mediaUrl(video.mp4)}
+      poster={mediaUrl(video.poster)}
+      width={video.width ?? undefined}
+      height={video.height ?? undefined}
+      aria-label={`Video advertisement from ${name}`}
+      controls
+      preload="none"
+      playsInline
+    />
+  );
 }
 
 function Embed({ url }: { url: string }) {
@@ -70,12 +98,24 @@ export default function GoogleAd({
         <Link href={`/2026/committees/${ad.fec_id}`}>{name}</Link>
       </span>
       <div className={styles.adContent}>
-        {ad.videoUrl && (
+        {/* Prefer our archived copy; fall back to a hand-added YouTube embed
+            for ads captured before the pipeline started rehosting them. */}
+        {(ad.video || ad.videoUrl) && (
           <div className={styles.adEmbedGroup}>
-            <Embed url={ad.videoUrl} />
+            {ad.video ? (
+              <RehostedVideo video={ad.video} name={name} />
+            ) : (
+              <Embed url={ad.videoUrl as string} />
+            )}
           </div>
         )}
         <div className={styles.adDetailsGroup}>
+          {/* TEMPORARY: ad IDs, for finding duplicates to merge in
+              /admin/edit/ads. Delete this block (and .adDebugId) when done. */}
+          <div className={styles.adDebugId}>
+            {ad.ad_id}
+            {ad.variantCount && ` (merged: ${ad.variantCount})`}
+          </div>
           {ad.date_range_start && ad.date_range_end && (
             <div>
               <b>Shown:</b> {formatDateFromString(ad.date_range_start)} &ndash;{" "}
@@ -127,9 +167,13 @@ export default function GoogleAd({
           )}
         </div>
       </div>
-      <a className={styles.moreDetails} href={ad.ad_url}>
-        <span>More details in Google&rsquo;s Ad Transparency Center</span>
-      </a>
+      <div className={styles.moreDetails}>
+        <a href={ad.ad_url}>
+          More details in Google&rsquo;s Ad Transparency Center
+        </a>
+        {/* Just the count here; the explanation sits once below the list. */}
+        {ad.variantCount && <> &middot; Combines {ad.variantCount} ad entries</>}
+      </div>
     </div>
   );
 }

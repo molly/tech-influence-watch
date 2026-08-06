@@ -9,6 +9,7 @@ import { getCommitteeIdsForSector, humanizeSector } from "@/app/utils/sector";
 
 import GoogleAd from "./GoogleAd";
 import ImageAd from "./ImageAd";
+import styles from "./page.module.css";
 
 export default async function Ads({
   raceId,
@@ -51,10 +52,27 @@ export default async function Ads({
       </div>
     );
   }
-  return ads.map((ad) => {
-    if (ad.type === "google") {
-      return <GoogleAd ad={ad} committees={committees} key={ad.ad_id} />;
-    }
-    return <ImageAd ad={ad} committees={committees} key={ad.src} />;
-  });
+  const hasMergedAds = ads.some(
+    (ad) => ad.type === "google" && ad.variantCount,
+  );
+
+  return (
+    <>
+      {ads.map((ad) => {
+        if (ad.type === "google") {
+          return <GoogleAd ad={ad} committees={committees} key={ad.ad_id} />;
+        }
+        return <ImageAd ad={ad} committees={committees} key={ad.src} />;
+      })}
+      {hasMergedAds && (
+        <p className={styles.adMergeExplainer}>
+          Advertisers often run one ad as several variants, usually cuts of
+          different lengths, which Google&rsquo;s Ad Transparency Center lists
+          separately. Where an ad above notes that it combines multiple entries,
+          the longest version is the one shown, and the dates, cost and
+          impressions are totals across every variant.
+        </p>
+      )}
+    </>
+  );
 }

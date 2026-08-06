@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { ImageAd as ImageAdType } from "@/app/types/Ads";
 import { CommitteeConstant } from "@/app/types/Committee";
+import { mediaUrl } from "@/app/utils/ads";
 import { formatDateFromString } from "@/app/utils/utils";
 
 import styles from "./page.module.css";
@@ -32,7 +33,7 @@ export default function ImageAd({
         <div>
           <Image
             className={styles.adImage}
-            src={`https://storage.googleapis.com/follow-the-crypto-ads/${ad.src}`}
+            src={mediaUrl(ad.src)}
             alt={ad.alt || "Advertisement"}
             width={0}
             height={0}
