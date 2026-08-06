@@ -587,11 +587,6 @@
   user-select: all;
 }
 
-/* Rendered once beneath the ad list, so each ad only has to carry a count. */
-.adMergeExplainer {
-  composes: adSubtitle;
-}
-
 .adDetailsWrapper {
   display: flex;
   flex-wrap: wrap;
@@ -625,6 +620,13 @@
   font-size: 0.9rem;
   color: var(--secondary-text);
   margin-top: 1rem;
+}
+
+/* Rendered once beneath the ad list, so each ad only has to carry a count.
+   Must stay below .adSubtitle: composes only resolves classes declared
+   earlier in the file. */
+.adMergeExplainer {
+  composes: adSubtitle;
 }
 
 /* Below this the video and the details can't sit side by side without
