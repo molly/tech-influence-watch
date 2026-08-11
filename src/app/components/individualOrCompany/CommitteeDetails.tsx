@@ -145,21 +145,37 @@ export default function CommitteeDetails({
   if (!recipient) {
     return null;
   }
+  // Not necessarily the first ID: an unresolvable one (the FEC occasionally
+  // returns committee IDs in candidate_ids) can come first.
+  const firstResolvable = (ids: string[]) => {
+    return ids.find((id) => recipient.candidate_details?.[id]);
+  };
   if (isSingleCandidateCommittee(recipient, nonCandidateCommittees)) {
-    const candidateId = (recipient.candidate_ids as string[])[0];
-    const details = recipient.candidate_details?.[candidateId];
-    return (
-      <CandidateCommitteeDetails recipient={recipient} details={details} />
-    );
+    const candidateId = firstResolvable(recipient.candidate_ids as string[]);
+    const details = candidateId
+      ? recipient.candidate_details[candidateId]
+      : undefined;
+    if (details) {
+      return (
+        <CandidateCommitteeDetails recipient={recipient} details={details} />
+      );
+    }
   } else if (isMultiCandidateCommittee(recipient, nonCandidateCommittees)) {
     return <MultiCandidateCommitteeDetails recipient={recipient} />;
   } else if (isSingleSponsorCandidateCommittee(recipient)) {
-    const candidateId = (recipient.sponsor_candidate_ids as string[])[0];
-    const details = recipient.candidate_details?.[candidateId];
-    return (
-      <CandidateCommitteeDetails recipient={recipient} details={details} />
+    const candidateId = firstResolvable(
+      recipient.sponsor_candidate_ids as string[],
     );
-  } else if (recipient.description) {
+    const details = candidateId
+      ? recipient.candidate_details[candidateId]
+      : undefined;
+    if (details) {
+      return (
+        <CandidateCommitteeDetails recipient={recipient} details={details} />
+      );
+    }
+  }
+  if (recipient.description) {
     return (
       <div className={styles.committeeDetails}>
         <span className={styles.committeeDetail}>{recipient.description}</span>

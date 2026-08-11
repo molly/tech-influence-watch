@@ -43,7 +43,13 @@ export function isSingleCandidateCommittee(
     return false;
   }
   if (recipient?.candidate_ids) {
-    if (recipient.candidate_ids.length === 1) {
+    // Require the details to exist: an ID we can't resolve (the FEC occasionally
+    // returns committee IDs in candidate_ids) has nothing to render, so treat the
+    // committee as a non-candidate one rather than rendering an empty candidate.
+    const knownIds = recipient.candidate_ids.filter(
+      (id) => recipient.candidate_details?.[id],
+    );
+    if (knownIds.length === 1) {
       return true;
     }
     const uniqueCandidateIds = getUniqueCandidateIds(recipient);
@@ -62,12 +68,12 @@ export function isMultiCandidateCommittee(
     return false;
   }
   if (recipient?.candidate_ids && recipient.candidate_ids.length > 1) {
-    const candidates = recipient.candidate_ids.map(
-      (id) => recipient.candidate_details[id],
-    );
+    const candidates = recipient.candidate_ids
+      .map((id) => recipient.candidate_details?.[id])
+      .filter((c) => c);
     if (
-      new Set(candidates.map((c) => !c || !c.name || c.name.split(", ")[0]))
-        .size > 1
+      candidates.length > 1 &&
+      new Set(candidates.map((c) => !c.name || c.name.split(", ")[0])).size > 1
     ) {
       return true;
     }
@@ -77,13 +83,16 @@ export function isMultiCandidateCommittee(
 
 export function isSingleSponsorCandidateCommittee(recipient: RecipientDetails) {
   if (recipient?.sponsor_candidate_ids) {
-    if (recipient.sponsor_candidate_ids.length === 1) {
+    const candidates = recipient.sponsor_candidate_ids
+      .map((id) => recipient.candidate_details?.[id])
+      .filter((c) => c && c.name);
+    if (candidates.length === 1) {
       return true;
     }
-    const candidates = recipient.sponsor_candidate_ids.map(
-      (id) => recipient.candidate_details[id],
-    );
-    if (new Set(candidates.map((c) => c.name.split(", ")[0])).size === 1) {
+    if (
+      candidates.length > 1 &&
+      new Set(candidates.map((c) => c.name.split(", ")[0])).size === 1
+    ) {
       return true;
     }
   }
