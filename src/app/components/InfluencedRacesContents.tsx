@@ -9,7 +9,6 @@ import {
   fetchAllStateElections,
   fetchBeneficiaries,
   fetchCandidateExpenditures,
-  fetchConstant,
 } from "@/app/actions/fetch";
 import styles from "@/app/components/tables.module.css";
 import sharedStyles from "@/app/shared.module.css";
@@ -29,9 +28,12 @@ import { formatCurrency } from "@/app/utils/utils";
 
 import { STATES_BY_ABBR } from "../data/states";
 import { Beneficiary } from "../types/Beneficiaries";
-import { CommitteeConstant } from "../types/Committee";
 import { Sector } from "../types/Sector";
-import { getCommitteeIdsForSector, humanizeSector } from "../utils/sector";
+import {
+  getSectorOpposeTotal,
+  getSectorSupportTotal,
+  humanizeSector,
+} from "../utils/sector";
 import Candidate, { CandidateSkeleton } from "./Candidate";
 import ErrorText from "./ErrorText";
 import InformationalTooltip from "./InformationalTooltip";
@@ -64,14 +66,16 @@ export function InfluencedRacesContentsSkeleton({
 function GoalOutcome({
   candidate,
   races,
+  sector,
   explanatoryText = false,
 }: {
   candidate: ExpenditureCandidateSummary;
   races: Race[];
+  sector: Sector;
   explanatoryText?: boolean;
 }) {
-  const wasOpposed = candidate.oppose_total > 0;
-  const wasSupported = candidate.support_total > 0;
+  const wasOpposed = getSectorOpposeTotal(candidate, sector) > 0;
+  const wasSupported = getSectorSupportTotal(candidate, sector) > 0;
   const nextRace = getUpcomingRaceForCandidate(races, candidate);
   // Derive win/loss from the recorded race result rather than the summary's
   // `defeated`/`won` flags, which the pipeline doesn't keep in sync with manual
@@ -198,11 +202,15 @@ function CandidateRow({
   candidate,
   race,
   beneficiary,
+  sector,
 }: {
   candidate: ExpenditureCandidateSummary;
   race: ElectionGroup;
   beneficiary?: Beneficiary;
+  sector: Sector;
 }) {
+  const supportTotal = getSectorSupportTotal(candidate, sector);
+  const opposeTotal = getSectorOpposeTotal(candidate, sector);
   const raceHref = `/2026/elections/${candidate.state}-${candidate.race}`;
   const raceName = getRaceName(
     `${candidate.state}-${candidate.race}`,
@@ -234,24 +242,24 @@ function CandidateRow({
         </Link>
       </td>
       <td
-        className={`${styles.supportCol} ${candidate.support_total ? "number-cell" : `center-cell ${styles.noValue}`}`}
+        className={`${styles.supportCol} ${supportTotal ? "number-cell" : `center-cell ${styles.noValue}`}`}
       >
         <span className={styles.mobileLabel}>Support</span>
         <span className={styles.mobileValue}>
-          {candidate.support_total ? (
-            formatCurrency(candidate.support_total, true)
+          {supportTotal ? (
+            formatCurrency(supportTotal, true)
           ) : (
             <span className={styles.nilCell}>—</span>
           )}
         </span>
       </td>
       <td
-        className={`${styles.opposeCol} ${candidate.oppose_total ? "number-cell" : `center-cell ${styles.noValue}`}`}
+        className={`${styles.opposeCol} ${opposeTotal ? "number-cell" : `center-cell ${styles.noValue}`}`}
       >
         <span className={styles.mobileLabel}>Oppose</span>
         <span className={styles.mobileValue}>
-          {candidate.oppose_total ? (
-            formatCurrency(candidate.oppose_total, true)
+          {opposeTotal ? (
+            formatCurrency(opposeTotal, true)
           ) : (
             <span className={styles.nilCell}>—</span>
           )}
@@ -270,7 +278,7 @@ function CandidateRow({
         </span>
       </td>
       <td className={`small-cell center-cell ${styles.goalCol}`}>
-        <GoalOutcome candidate={candidate} races={race.races} />
+        <GoalOutcome candidate={candidate} races={race.races} sector={sector} />
       </td>
       <td className={`text-cell ${styles.outcomeCol}`}>
         <div className={styles.outcomeContent}>
@@ -280,6 +288,7 @@ function CandidateRow({
           <GoalOutcome
             candidate={candidate}
             races={race.races}
+            sector={sector}
             explanatoryText={true}
           />
         </div>
@@ -296,15 +305,11 @@ export default async function InfluencedRacesContents({
   sector?: Sector;
 }) {
   const fetchLimit = sector === "all" && !fullPage ? 5 : undefined;
-  const [expenditureData, raceData, beneficiariesData, committeeData] =
-    await Promise.all([
-      fetchCandidateExpenditures(fetchLimit),
-      fetchAllStateElections(),
-      fetchBeneficiaries(sector),
-      sector !== "all"
-        ? fetchConstant<Record<string, CommitteeConstant>>("committees")
-        : Promise.resolve(null),
-    ]);
+  const [expenditureData, raceData, beneficiariesData] = await Promise.all([
+    fetchCandidateExpenditures(fetchLimit),
+    fetchAllStateElections(),
+    fetchBeneficiaries(sector),
+  ]);
 
   if (isError(expenditureData) || isError(raceData)) {
     return (
@@ -319,45 +324,26 @@ export default async function InfluencedRacesContents({
   const beneficiaries = isError(beneficiariesData)
     ? {}
     : (beneficiariesData as Record<string, Beneficiary>);
-  const committeeConstants =
-    sector !== "all" && !isError(committeeData)
-      ? (committeeData as Record<string, CommitteeConstant>)
-      : null;
-
   let rows: string[];
-  let displayCandidates: Record<string, ExpenditureCandidateSummary>;
 
-  if (sector !== "all" && committeeConstants) {
-    const committeeIds =
-      getCommitteeIdsForSector(sector, committeeConstants) ?? new Set<string>();
-    const filtered: Record<string, ExpenditureCandidateSummary> = {};
-    for (const name of order) {
-      const candidate = candidates[name];
-      const raceSpending =
-        raceDetails[candidate.state]?.[candidate.race]?.spending ?? {};
-      const hasSectorSpending = Object.keys(raceSpending).some((id) =>
-        committeeIds.has(id),
-      );
-      if (hasSectorSpending) {
-        filtered[name] = candidate;
-      }
-    }
-    rows = Object.keys(filtered).sort((a, b) => {
-      const totalA = filtered[a].support_total + filtered[a].oppose_total;
-      const totalB = filtered[b].support_total + filtered[b].oppose_total;
-      return totalB - totalA;
-    });
+  if (sector === "all") {
+    rows = order;
+  } else {
+    // Keep only candidates this sector's PACs actually spent on, and re-rank by
+    // the sector's own spending — `order` is sorted by combined crypto+AI money.
+    const sectorTotal = (name: string) =>
+      getSectorSupportTotal(candidates[name], sector) +
+      getSectorOpposeTotal(candidates[name], sector);
+    rows = order
+      .filter((name) => sectorTotal(name) > 0)
+      .sort((a, b) => sectorTotal(b) - sectorTotal(a));
     if (!fullPage) {
       rows = rows.slice(0, 5);
     }
-    displayCandidates = filtered;
-  } else {
-    rows = order;
-    displayCandidates = candidates;
   }
 
   const rowNodes = rows.map((candidateName) => {
-    const candidate = displayCandidates[candidateName];
+    const candidate = candidates[candidateName];
     const beneficiary =
       beneficiaries && candidate.candidate_id
         ? beneficiaries[candidate.candidate_id]
@@ -368,6 +354,7 @@ export default async function InfluencedRacesContents({
         candidate={candidate}
         race={raceDetails[candidate.state][candidate.race]}
         beneficiary={beneficiary}
+        sector={sector}
       />
     );
   });

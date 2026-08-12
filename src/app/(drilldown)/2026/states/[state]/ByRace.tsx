@@ -39,7 +39,12 @@ import {
   sortRaces,
 } from "@/app/utils/races";
 import { range } from "@/app/utils/range";
-import { matchesSector, sectorHref } from "@/app/utils/sector";
+import {
+  getSectorOpposeTotal,
+  getSectorSupportTotal,
+  matchesSector,
+  sectorHref,
+} from "@/app/utils/sector";
 import { formatCurrency } from "@/app/utils/utils";
 
 import styles from "./page.module.css";
@@ -55,26 +60,6 @@ const renderAmount = (amount: number, supportOppose: string) => {
   }
   return "";
 };
-
-function getSupportTotal(candidate: CandidateSummary, sector: Sector): number {
-  if (sector === "crypto") {
-    return candidate.crypto_support_total ?? 0;
-  }
-  if (sector === "ai") {
-    return candidate.ai_support_total ?? 0;
-  }
-  return candidate.support_total;
-}
-
-function getOpposeTotal(candidate: CandidateSummary, sector: Sector): number {
-  if (sector === "crypto") {
-    return candidate.crypto_oppose_total ?? 0;
-  }
-  if (sector === "ai") {
-    return candidate.ai_oppose_total ?? 0;
-  }
-  return candidate.oppose_total;
-}
 
 const MAX_COMPANIES = 3;
 
@@ -111,8 +96,8 @@ function renderOtherSupport(
     : " (or executives)";
   const isUpcoming = !!getUpcomingRaceForCandidate(races, candidate);
   const hasPacSpending =
-    getSupportTotal(candidate, sector) > 0 ||
-    getOpposeTotal(candidate, sector) > 0;
+    getSectorSupportTotal(candidate, sector) > 0 ||
+    getSectorOpposeTotal(candidate, sector) > 0;
   let verb;
   if (isUpcoming && hasPacSpending) {
     verb = isPlural ? "have also contributed" : "has also contributed";
@@ -150,8 +135,8 @@ function Influenced({
 }) {
   const committees = humanizeList(committeeNames);
   const amounts = humanizeList([
-    renderAmount(getSupportTotal(candidate, sector), "support"),
-    renderAmount(getOpposeTotal(candidate, sector), "oppose"),
+    renderAmount(getSectorSupportTotal(candidate, sector), "support"),
+    renderAmount(getSectorOpposeTotal(candidate, sector), "oppose"),
   ]);
 
   const involvedRaces = (candidate.expenditure_races as string[]).map(
@@ -325,20 +310,20 @@ export default async function RaceCard({
         const influenced = Object.values(election?.candidates ?? {})
           .filter(
             (c: CandidateSummary) =>
-              getSupportTotal(c, sector) > 0 || getOpposeTotal(c, sector) > 0,
+              getSectorSupportTotal(c, sector) > 0 || getSectorOpposeTotal(c, sector) > 0,
           )
           .sort(
             (a, b) =>
-              getSupportTotal(b, sector) +
-              getOpposeTotal(b, sector) -
-              (getSupportTotal(a, sector) + getOpposeTotal(a, sector)),
+              getSectorSupportTotal(b, sector) +
+              getSectorOpposeTotal(b, sector) -
+              (getSectorSupportTotal(a, sector) + getSectorOpposeTotal(a, sector)),
           );
         const otherOnlyInfluenced = Object.values(election?.candidates ?? {})
           .filter(
             (c: CandidateSummary) =>
               c.has_non_pac_support &&
-              getSupportTotal(c, sector) === 0 &&
-              getOpposeTotal(c, sector) === 0 &&
+              getSectorSupportTotal(c, sector) === 0 &&
+              getSectorOpposeTotal(c, sector) === 0 &&
               c.candidate_id &&
               beneficiaries[c.candidate_id] &&
               !suppressedCandidateIds.has(c.candidate_id),

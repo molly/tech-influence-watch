@@ -1,5 +1,6 @@
 import { CommitteeConstant } from "../types/Committee";
 import { CompanyConstant } from "../types/Companies";
+import { CandidateSummary } from "../types/Elections";
 import { IndividualConstant } from "../types/Individuals";
 import { BESector, Sector } from "../types/Sector";
 
@@ -177,6 +178,37 @@ export function matchesSector(
     return true; // tech appears in all sector views
   }
   return entitySector === (sector as BESector);
+}
+
+/**
+ * Outside spending toward a candidate, narrowed to one sector's PACs. The
+ * backend precomputes the per-sector splits; the unsuffixed totals are the
+ * combined ("all") figures.
+ */
+export function getSectorSupportTotal(
+  candidate: CandidateSummary,
+  sector: Sector,
+): number {
+  if (sector === "crypto") {
+    return candidate.crypto_support_total ?? 0;
+  }
+  if (sector === "ai") {
+    return candidate.ai_support_total ?? 0;
+  }
+  return candidate.support_total;
+}
+
+export function getSectorOpposeTotal(
+  candidate: CandidateSummary,
+  sector: Sector,
+): number {
+  if (sector === "crypto") {
+    return candidate.crypto_oppose_total ?? 0;
+  }
+  if (sector === "ai") {
+    return candidate.ai_oppose_total ?? 0;
+  }
+  return candidate.oppose_total;
 }
 
 export function getCommitteeIdsForSector(
