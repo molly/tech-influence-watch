@@ -11,6 +11,10 @@ export type Expenditure = {
   committee_id: number;
   subrace: string;
   uid: string;
+  // The name the rest of the site calls this candidate, resolved off the race
+  // roster by the pipeline. The FEC name fields are filer-entered and can hold
+  // a different surname entirely, so prefer this — see getCandidateName.
+  candidate_common_name?: string;
 } & Pick<
   ScheduleE,
   | "expenditure_amount"

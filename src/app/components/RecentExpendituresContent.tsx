@@ -5,16 +5,13 @@ import { CommitteeConstant } from "@/app/types/Committee";
 import { Expenditure } from "@/app/types/Expenditures";
 import { Sector } from "@/app/types/Sector";
 import {
+  getCandidateName,
   getCategory,
   humanizeExpenditureDescription,
 } from "@/app/utils/expenditures";
 import { range } from "@/app/utils/range";
 import { sectorHref } from "@/app/utils/sector";
-import {
-  sentenceCase,
-  titlecaseIndividualName,
-  titlecaseSuffix,
-} from "@/app/utils/titlecase";
+import { sentenceCase, titlecaseSuffix } from "@/app/utils/titlecase";
 import {
   formatCurrency,
   formatDateFromString,
@@ -86,24 +83,7 @@ function ExpenditureRow({
   sector?: Sector;
   fullPage?: boolean;
 }) {
-  let name;
-  if ("candidate_last_name" in expenditure) {
-    const first_name = expenditure.candidate_first_name
-      ? expenditure.candidate_first_name.split(" ")[0]
-      : "";
-    name = [
-      first_name,
-      expenditure.candidate_middle_name,
-      expenditure.candidate_last_name,
-    ];
-  } else {
-    name = [
-      expenditure.candidate_first_name,
-      expenditure.candidate_name,
-      expenditure.candidate_suffix,
-    ];
-  }
-  name = name.filter(Boolean).map(titlecaseIndividualName).join(" ");
+  const name = getCandidateName(expenditure);
   let subraceName = getSubraceName({
     type: expenditure.subrace as RaceType,
     party: expenditure.candidate_party ? expenditure.candidate_party[0] : null,

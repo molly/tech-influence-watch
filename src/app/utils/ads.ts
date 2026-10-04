@@ -94,6 +94,10 @@ function resolvePrimaryId(adId: string, ads: Map<string, GoogleAd>): string {
  * Non-Google ads pass through untouched.
  */
 export function mergeAdVariants(ads: Ad[]): Ad[] {
+  // Marked in /admin/edit/ads as not belonging to a race we track (geo
+  // targeting pulls in some governor races), rather than a genuine Google ad.
+  ads = ads.filter((ad) => !(ad.type === "google" && ad.excluded));
+
   const googleAds = new Map<string, GoogleAd>();
   for (const ad of ads) {
     if (ad.type === "google") {

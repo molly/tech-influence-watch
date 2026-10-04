@@ -1,6 +1,7 @@
 "use client";
 
 import { doc, setDoc } from "firebase/firestore";
+import Image from "next/image";
 import { Fragment, useEffect, useState } from "react";
 
 import { fetchConstant, fetchGoogleAds } from "@/app/actions/fetch";
@@ -28,14 +29,14 @@ async function saveAdConstants(adsConstants: Record<string, GoogleAdConstant>) {
 }
 
 function ArchiveStatus({ ad }: { ad: GoogleAd }) {
-  if (ad.video) {
+  if (ad.video || ad.image) {
     return (
       <span className={`${styles.dataSourceBadge} ${styles.archiveStatusOk}`}>
         Archived
       </span>
     );
   }
-  if ((ad.video_attempts || 0) >= 3) {
+  if ((ad.video_attempts || 0) >= 3 || (ad.image_attempts || 0) >= 3) {
     return (
       <span className={`${styles.dataSourceBadge} ${styles.archiveStatusFail}`}>
         Archiving failed
@@ -80,7 +81,7 @@ export default function AdsEditor() {
         setTaggedOnLoad(
           new Set(
             Object.entries(constants)
-              .filter(([, constant]) => constant.race)
+              .filter(([, constant]) => constant.race || constant.excluded)
               .map(([adId]) => adId),
           ),
         );
@@ -261,6 +262,26 @@ export default function AdsEditor() {
     setSaveState("");
   };
 
+  // For ads geo-targeting pulls in that aren't a race we track (governor races,
+  // mainly). Excluding takes them out of the untagged queue for good, same as
+  // assigning a race does, without needing a race id that doesn't exist.
+  const excludeSelected = () => {
+    if (!selected.size) {
+      return;
+    }
+    const updated = { ...adConstants };
+    for (const adId of selected) {
+      updated[adId] = { ...updated[adId], excluded: true };
+    }
+    setAdConstants(updated);
+    setSelected(new Set());
+    setSaveState("");
+  };
+
+  const toggleExcluded = (adId: string) => {
+    updateConstant(adId, { excluded: !adConstants[adId]?.excluded });
+  };
+
   const save = async () => {
     setSaveState("saving");
     try {
@@ -307,6 +328,7 @@ export default function AdsEditor() {
               applyRaceToSelected();
             }
           }}
+          placeholder="AL-H-01"
         />
         <button
           onClick={applyRaceToSelected}
@@ -317,6 +339,9 @@ export default function AdsEditor() {
       </span>
       <button onClick={mergeSelected} disabled={selected.size < 2}>
         Merge {selected.size > 1 ? `${selected.size} selected` : "selected"}
+      </button>
+      <button onClick={excludeSelected} disabled={selected.size === 0}>
+        Not a relevant race ({selected.size || 0})
       </button>
       <label>
         <input
@@ -418,6 +443,15 @@ export default function AdsEditor() {
                         preload="none"
                         playsInline
                       />
+                    ) : ad.image ? (
+                      <Image
+                        className={styles.adVideo}
+                        src={mediaUrl(ad.image.src)}
+                        alt={constant.imageAlt || `Ad ${ad.ad_id}`}
+                        width={0}
+                        height={0}
+                        sizes="100vw"
+                      />
                     ) : (
                       <ArchiveStatus ad={ad} />
                     )}
@@ -430,8 +464,25 @@ export default function AdsEditor() {
                         onChange={(e) =>
                           updateConstant(ad.ad_id, { race: e.target.value })
                         }
+                        placeholder="AL-H-01"
                       />
                     </div>
+                    {ad.image && (
+                      <div>
+                        <label htmlFor={`image-alt-${ad.ad_id}`}>
+                          Image alt text
+                        </label>{" "}
+                        <input
+                          type="text"
+                          id={`image-alt-${ad.ad_id}`}
+                          value={constant.imageAlt ?? ""}
+                          onChange={(e) =>
+                            updateConstant(ad.ad_id, { imageAlt: e.target.value })
+                          }
+                          placeholder="What the ad says — Google doesn't give us real text for this one"
+                        />
+                      </div>
+                    )}
                     <div>
                       <a href={ad.ad_url}>Ad Transparency Center</a>
                       {constant.variantOf && (
@@ -444,6 +495,19 @@ export default function AdsEditor() {
                           </span>{" "}
                           <button onClick={() => unmerge(ad.ad_id)}>
                             Unmerge
+                          </button>
+                        </>
+                      )}
+                      {constant.excluded && (
+                        <>
+                          {" "}
+                          <span
+                            className={`${styles.dataSourceBadge} ${styles.dataSourceManual}`}
+                          >
+                            Not a relevant race
+                          </span>{" "}
+                          <button onClick={() => toggleExcluded(ad.ad_id)}>
+                            Undo
                           </button>
                         </>
                       )}

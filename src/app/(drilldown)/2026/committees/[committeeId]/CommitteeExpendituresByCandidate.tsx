@@ -17,9 +17,9 @@ import {
   Expenditure,
 } from "@/app/types/Expenditures";
 import { isError } from "@/app/utils/errors";
+import { getCandidateName } from "@/app/utils/expenditures";
 import { formatCompact } from "@/app/utils/humanize";
 import { getRaceName } from "@/app/utils/races";
-import { titlecaseIndividualName } from "@/app/utils/titlecase";
 import { formatCurrency } from "@/app/utils/utils";
 
 import styles from "./page.module.css";
@@ -32,23 +32,6 @@ type CandidateTarget = {
   support: number;
   oppose: number;
 };
-
-function getCandidateName(expenditure: Expenditure): string {
-  let parts: (string | null | undefined)[];
-  if ("candidate_last_name" in expenditure && expenditure.candidate_last_name) {
-    const firstName = expenditure.candidate_first_name
-      ? expenditure.candidate_first_name.split(" ")[0]
-      : "";
-    parts = [
-      firstName,
-      expenditure.candidate_middle_name,
-      expenditure.candidate_last_name,
-    ];
-  } else {
-    parts = [expenditure.candidate_first_name, expenditure.candidate_name];
-  }
-  return parts.filter(Boolean).map(titlecaseIndividualName).join(" ");
-}
 
 function getExpenditureRaceId(expenditure: Expenditure): string {
   let raceId = expenditure.candidate_office ?? "";

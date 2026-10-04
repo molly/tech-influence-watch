@@ -1,7 +1,8 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import InformationalTooltip from "@/app/components/InformationalTooltip";
-import { AdVideo, GoogleAd as GoogleAdType } from "@/app/types/Ads";
+import { AdImage, AdVideo, GoogleAd as GoogleAdType } from "@/app/types/Ads";
 import { CommitteeConstant } from "@/app/types/Committee";
 import { mediaUrl } from "@/app/utils/ads";
 import { humanizeApproximateRounded } from "@/app/utils/humanize";
@@ -37,6 +38,29 @@ function RehostedVideo({ video, name }: { video: AdVideo; name: string }) {
       controls
       preload="none"
       playsInline
+    />
+  );
+}
+
+// Google doesn't expose a text/image ad's actual headline or body copy as
+// data anywhere, so this rehosted preview image is the only record of what
+// the ad said. `alt` is a human-written caption (GoogleAdConstant.imageAlt),
+// not derived from anything Google gives us.
+function RehostedImage({
+  image,
+  alt,
+}: {
+  image: AdImage;
+  alt?: string;
+}) {
+  return (
+    <Image
+      className={styles.adImage}
+      src={mediaUrl(image.src)}
+      alt={alt || "Advertisement"}
+      width={0}
+      height={0}
+      sizes="100vw"
     />
   );
 }
@@ -107,6 +131,11 @@ export default function GoogleAd({
             ) : (
               <Embed url={ad.videoUrl as string} />
             )}
+          </div>
+        )}
+        {ad.image && (
+          <div className={styles.adEmbedGroup}>
+            <RehostedImage image={ad.image} alt={ad.imageAlt} />
           </div>
         )}
         <div className={styles.adDetailsGroup}>
