@@ -478,9 +478,27 @@ export const fetchTrumpCommittees = cache(
 );
 
 // EXPENDITURES ----------------------------------------------------------
+// The full expenditure set is sharded across expenditures/all_0 through
+// all_{N-1} to stay under Firestore's per-document index entry limit. Must
+// match NUM_SHARDS in the backend's expenditure_utils.py.
+const EXPENDITURE_SHARDS = 10;
+
 export const fetchAllExpenditures = cache(
-  async (): Promise<Record<ExpenditureId, Expenditure> | ErrorType> =>
-    fetchSnapshot("expenditures", "all"),
+  async (): Promise<Record<ExpenditureId, Expenditure> | ErrorType> => {
+    const shards = await Promise.all(
+      Array.from({ length: EXPENDITURE_SHARDS }, (_, i) =>
+        fetchSnapshot("expenditures", `all_${i}`),
+      ),
+    );
+    const allExpenditures: Record<ExpenditureId, Expenditure> = {};
+    for (const shard of shards) {
+      if (isError(shard)) {
+        return shard as ErrorType;
+      }
+      Object.assign(allExpenditures, shard);
+    }
+    return allExpenditures;
+  },
 );
 
 export const fetchAllRaceIds = cache(

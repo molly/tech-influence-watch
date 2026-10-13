@@ -72,7 +72,7 @@ function buildPatterns(
     }
   }
   const strattonOppose = opposeByCandidate.get("Juliana Stratton") ?? 0;
-  const boresOppose = opposeByCandidate.get("Alex Bores") ?? 0;
+  const brownOppose = opposeByCandidate.get("Sherrod Brown") ?? 0;
 
   return [
     {
@@ -169,10 +169,10 @@ function buildPatterns(
           Democrats and just {humanizeRoundedCurrency(all.rep_oppose, true, 1)}{" "}
           against Republicans. The largest targets are Illinois Senate candidate{" "}
           <Link href="/2026/elections/IL-S">Juliana Stratton</Link> (
-          {humanizeRoundedCurrency(strattonOppose, true, 1)}) and New York
-          District 12 candidate{" "}
-          <Link href="/2026/elections/NY-H-12">Alex Bores</Link> (
-          {humanizeRoundedCurrency(boresOppose, true, 1)}).
+          {humanizeRoundedCurrency(strattonOppose, true, 1)}) and Ohio Senate
+          candidate{" "}
+          <Link href="/2026/elections/OH-S-special">Sherrod Brown</Link> (
+          {humanizeRoundedCurrency(brownOppose, true, 1)}).
         </>
       ),
     },
