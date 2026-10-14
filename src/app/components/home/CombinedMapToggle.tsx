@@ -13,7 +13,7 @@ export default function CombinedMapToggle({
   companyMap: React.ReactNode;
   superPacMap: React.ReactNode;
 }) {
-  const [active, setActive] = useState<"company" | "superpac">("company");
+  const [active, setActive] = useState<"company" | "superpac">("superpac");
 
   return (
     <div>
@@ -22,21 +22,21 @@ export default function CombinedMapToggle({
       </h2>
       <div className={styles.toggleRow}>
         <button
-          className={active === "company" ? styles.activeButton : styles.button}
-          onClick={() => setActive("company")}
-        >
-          Industry contributions
-        </button>
-        <button
           className={
             active === "superpac" ? styles.activeButton : styles.button
           }
           onClick={() => setActive("superpac")}
         >
-          PAC expenditures
+          Super PAC expenditures
+        </button>
+        <button
+          className={active === "company" ? styles.activeButton : styles.button}
+          onClick={() => setActive("company")}
+        >
+          Direct contributions
         </button>
       </div>
-      {active === "company" ? companyMap : superPacMap}
+      {active === "superpac" ? superPacMap : companyMap}
     </div>
   );
 }
