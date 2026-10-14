@@ -255,14 +255,12 @@ function Contribution({
         )}
         {occupation && <span className="secondary"> ({occupation})</span>}
       </span>
-      <span className={styles.contributionRight}>
-        <span className={styles.contributionAmount}>
-          {formatCurrency(contribution.total)}
-        </span>
-        {committeeNames && (
-          <span className={styles.contributionVia}> via {committeeNames}</span>
-        )}
+      <span className={styles.contributionAmount}>
+        {formatCurrency(contribution.total)}
       </span>
+      {committeeNames && (
+        <span className={styles.contributionVia}>via {committeeNames}</span>
+      )}
     </li>
   );
 }

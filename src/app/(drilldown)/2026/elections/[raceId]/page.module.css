@@ -490,9 +490,10 @@
 
 .otherSupportContribution {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: baseline;
-  gap: 0.5rem;
+  column-gap: 0.5rem;
   padding: 0.1rem 0 0.1rem 1rem;
   font-size: 0.9rem;
 }
@@ -506,16 +507,14 @@
   font-weight: 500;
 }
 
-.contributionRight {
-  text-align: right;
-  flex-shrink: 0;
-}
-
 .contributionAmount {
+  flex-shrink: 0;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 .contributionVia {
+  flex-basis: 100%;
   font-family: var(--font-serif);
   font-style: italic;
   color: var(--secondary-text);
