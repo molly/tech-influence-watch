@@ -10,7 +10,10 @@ import sharedStyles from "@/app/shared.module.css";
 import { CommitteeDetails } from "@/app/types/Committee";
 import { Contributions } from "@/app/types/Contributions";
 import { CommitteeTotalExpenditures } from "@/app/types/Expenditures";
-import { isSuperOrHybridPac } from "@/app/utils/committees";
+import {
+  isElectioneeringFiler,
+  spendsOnCandidates,
+} from "@/app/utils/committees";
 import { is4xx, isError } from "@/app/utils/errors";
 import { formatCurrency } from "@/app/utils/utils";
 
@@ -29,7 +32,7 @@ export default async function CommitteeExpendituresTotal({
     return null;
   }
   const committee = committeeData as CommitteeDetails;
-  if (!isSuperOrHybridPac(committee.committee_type)) {
+  if (!spendsOnCandidates(committee.committee_type)) {
     return null;
   }
   if (isError(totalData) && !is4xx(totalData)) {
@@ -44,7 +47,9 @@ export default async function CommitteeExpendituresTotal({
   const disbursements = totals.disbursements || 0;
 
   let tooltip;
-  if (!isError(donorData)) {
+  // Electioneering filers don't report receipts, so spending always exceeds
+  // the (zero) amount raised and the reporting-lag explanation doesn't apply.
+  if (!isError(donorData) && !isElectioneeringFiler(committee.committee_type)) {
     const donors = donorData as Contributions;
     const total = donors.total_contributed + donors.total_transferred;
     if (total < expenditures + disbursements) {
@@ -65,7 +70,11 @@ export default async function CommitteeExpendituresTotal({
       amount={formatCurrency(expenditures, true)}
       topText="Total spending"
       tooltip={tooltip}
-      bottomText="in independent expenditures."
+      bottomText={
+        isElectioneeringFiler(committee.committee_type)
+          ? "in electioneering communications."
+          : "in independent expenditures."
+      }
     />
   );
 }

@@ -163,6 +163,13 @@ function ExpenditureRow({
               )}
           </div>
           <div className={styles.expenditureDescription}>
+            {expenditure.source === "electioneering" && (
+              <span>
+                <Link href="/about/faq#electioneering">
+                  Electioneering communication
+                </Link>
+              </span>
+            )}
             {expenditure.category_code && (
               <span>{getCategory(expenditure.category_code)}</span>
             )}

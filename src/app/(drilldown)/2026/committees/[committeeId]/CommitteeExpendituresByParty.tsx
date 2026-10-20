@@ -10,6 +10,7 @@ import SpendingByPartyWithOpposition, {
 import sharedStyles from "@/app/shared.module.css";
 import { CommitteeDetails } from "@/app/types/Committee";
 import { CommitteeTotalExpenditures } from "@/app/types/Expenditures";
+import { isElectioneeringFiler } from "@/app/utils/committees";
 import { is4xx, isError } from "@/app/utils/errors";
 import { formatCompact } from "@/app/utils/humanize";
 
@@ -73,7 +74,13 @@ export default async function CommitteeExpendituresByParty({
           max={max}
         />
       ) : (
-        <p>{`${committee.name} has not made any independent expenditures.`}</p>
+        <p>
+          {`${committee.name} has not made any ${
+            isElectioneeringFiler(committee.committee_type)
+              ? "electioneering communications"
+              : "independent expenditures"
+          }.`}
+        </p>
       )}
     </>
   );

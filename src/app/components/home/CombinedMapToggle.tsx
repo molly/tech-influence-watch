@@ -27,7 +27,7 @@ export default function CombinedMapToggle({
           }
           onClick={() => setActive("superpac")}
         >
-          Super PAC expenditures
+          PAC expenditures
         </button>
         <button
           className={active === "company" ? styles.activeButton : styles.button}

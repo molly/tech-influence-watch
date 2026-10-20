@@ -7,6 +7,7 @@ import MoneyCard from "@/app/components/MoneyCard";
 import sharedStyles from "@/app/shared.module.css";
 import { CommitteeDetails } from "@/app/types/Committee";
 import { Contributions } from "@/app/types/Contributions";
+import { isElectioneeringFiler } from "@/app/utils/committees";
 import { is4xx, isError } from "@/app/utils/errors";
 
 import { formatCurrency } from "../../../../utils/utils";
@@ -81,6 +82,11 @@ export default async function CommitteeRaised({
 
   const committee = committeeData as CommitteeDetails;
   const donors = donorData as Contributions;
+
+  // These groups don't report receipts to the FEC, so a total would read as $0.
+  if (isElectioneeringFiler(committee.committee_type)) {
+    return <MoneyCard amount="Undisclosed" topText="Total raised" />;
+  }
 
   const total =
     donors.total_contributed +

@@ -18,6 +18,7 @@ import type {
   TransferEdge,
 } from "@/app/types/Committee";
 import { Sector } from "@/app/types/Sector";
+import { isElectioneeringFiler } from "@/app/utils/committees";
 import { isError } from "@/app/utils/errors";
 import {
   humanizeApproximateRounded,
@@ -44,12 +45,15 @@ export function committeesMetadata(sector: Sector): Metadata {
   });
 }
 
-type PacGroup = "super" | "hybrid" | "connected" | "other";
+type PacGroup = "super" | "hybrid" | "electioneering" | "connected" | "other";
 
 const FOOTNOTE =
   "Due to different reporting frequencies for receipts and expenditures, committees sometimes appear to have spent more than they have raised.";
 
 function getPacGroup(committee: CommitteeConstantWithContributions): PacGroup {
+  if (isElectioneeringFiler(committee.committee_type)) {
+    return "electioneering";
+  }
   if (committee.committee_type === "O") {
     return "super";
   }
@@ -65,11 +69,18 @@ function getPacGroup(committee: CommitteeConstantWithContributions): PacGroup {
 const PAC_GROUP_LABELS: Record<PacGroup, string> = {
   super: "Super PACs",
   hybrid: "Hybrid PACs",
+  electioneering: "Electioneering communication groups",
   connected: "Corporation or lobbyist PACs",
   other: "Other PACs",
 };
 
-const PAC_GROUP_ORDER: PacGroup[] = ["super", "hybrid", "connected", "other"];
+const PAC_GROUP_ORDER: PacGroup[] = [
+  "super",
+  "hybrid",
+  "electioneering",
+  "connected",
+  "other",
+];
 
 function CommitteeListSkeleton() {
   return range(10).map((x) => (
@@ -94,6 +105,7 @@ function CommitteeRow({
   prominentTotal = false,
   transferredOut = 0,
   fundsOnly = false,
+  electioneering = false,
 }: {
   committee: CommitteeConstantWithContributions;
   sector?: Sector;
@@ -101,12 +113,17 @@ function CommitteeRow({
   prominentTotal?: boolean;
   transferredOut?: number;
   fundsOnly?: boolean;
+  electioneering?: boolean;
 }) {
   const spent = committee.independent_expenditures || 0;
   const fundsThisCycle = committee.total;
   const remaining = Math.max(0, committee.total - transferredOut - spent);
   const rowClass = [
-    fundsOnly ? styles.committeeRowFundsOnly : styles.committeeRow,
+    fundsOnly
+      ? styles.committeeRowFundsOnly
+      : electioneering
+        ? styles.committeeRowFundsAndSpent
+        : styles.committeeRow,
     indented ? styles.committeeRowIndented : "",
   ]
     .filter(Boolean)
@@ -124,10 +141,20 @@ function CommitteeRow({
         )}
       </div>
       <div className={styles.amountFunds}>
-        <span className={styles.amountFundsLabel}>Funds this cycle </span>$
-        {humanizeApproximateRounded(fundsThisCycle, 1)}
+        <span className={styles.amountFundsLabel}>Funds this cycle </span>
+        {electioneering
+          ? "Undisclosed"
+          : `$${humanizeApproximateRounded(fundsThisCycle, 1)}`}
       </div>
-      {!fundsOnly && (
+      {electioneering && (
+        <div
+          className={spent > 0 ? styles.amountSpent : styles.amountPlaceholder}
+        >
+          <span className={styles.amountSpentLabel}>Spent </span>
+          {spent > 0 ? `$${humanizeApproximateRounded(spent, 1)}` : "—"}
+        </div>
+      )}
+      {!fundsOnly && !electioneering && (
         <>
           <div
             className={
@@ -168,12 +195,16 @@ function CommitteeGroup({
   sector = "all",
   transferEdges = [],
   fundsOnly = false,
+  electioneering = false,
 }: {
   title: string;
   committees: CommitteeConstantWithContributions[];
   sector?: Sector;
   transferEdges?: TransferEdge[];
   fundsOnly?: boolean;
+  // Groups that don't disclose their funding: funds show as undisclosed and
+  // the group is ranked by spending instead.
+  electioneering?: boolean;
 }) {
   if (committees.length === 0) {
     return null;
@@ -228,15 +259,17 @@ function CommitteeGroup({
   for (const committee of standalone) {
     slots.push({ kind: "standalone", committee });
   }
+  const rankValue = (c: CommitteeConstantWithContributions) =>
+    electioneering ? (c.independent_expenditures ?? 0) : c.total;
   slots.sort((a, b) => {
     const aTotal =
       a.kind === "network"
-        ? Math.max(...a.members.map((c) => c.total))
-        : a.committee.total;
+        ? Math.max(...a.members.map(rankValue))
+        : rankValue(a.committee);
     const bTotal =
       b.kind === "network"
-        ? Math.max(...b.members.map((c) => c.total))
-        : b.committee.total;
+        ? Math.max(...b.members.map(rankValue))
+        : rankValue(b.committee);
     return bTotal - aTotal;
   });
 
@@ -244,7 +277,17 @@ function CommitteeGroup({
     <div className={styles.committeeGroup}>
       <h3 className={listStyles.groupHeadingSpaceBetween}>
         <span className={listStyles.groupHeadingSubGroup}>{title}</span>
-        {fundsOnly ? (
+        {electioneering ? (
+          <span className={sharedStyles.sectionTitleAmount}>
+            <span className={sharedStyles.highlightFigure}>
+              {committees.length}
+            </span>{" "}
+            {committees.length === 1 ? "group has" : "groups have"} spent{" "}
+            <span className={sharedStyles.highlightFigure}>
+              {humanizeRoundedCurrency(totalSpent, true)}
+            </span>
+          </span>
+        ) : fundsOnly ? (
           <span className={sharedStyles.sectionTitleAmount}>
             <span className={sharedStyles.highlightFigure}>
               {committees.length}
@@ -275,12 +318,19 @@ function CommitteeGroup({
       </h3>
       <div
         className={
-          fundsOnly ? styles.columnHeadersFundsOnly : styles.columnHeaders
+          fundsOnly
+            ? styles.columnHeadersFundsOnly
+            : electioneering
+              ? styles.columnHeadersFundsAndSpent
+              : styles.columnHeaders
         }
       >
         <div className={styles.columnHeaderLabel}>Committee</div>
         <div className={styles.columnHeaderLabelRight}>Funds this cycle</div>
-        {!fundsOnly && (
+        {electioneering && (
+          <div className={styles.columnHeaderLabelRight}>Spent</div>
+        )}
+        {!fundsOnly && !electioneering && (
           <>
             <div className={styles.columnHeaderLabelRight}>Transferred out</div>
             <div className={styles.columnHeaderLabelRight}>Spent</div>
@@ -321,6 +371,7 @@ function CommitteeGroup({
                   indented
                   transferredOut={sentOutById.get(committee.id) ?? 0}
                   fundsOnly={fundsOnly}
+                  electioneering={electioneering}
                 />
               ))}
             </div>
@@ -334,6 +385,7 @@ function CommitteeGroup({
             prominentTotal
             transferredOut={sentOutById.get(slot.committee.id) ?? 0}
             fundsOnly={fundsOnly}
+            electioneering={electioneering}
           />
         );
       })}
@@ -364,6 +416,7 @@ export default async function CommitteesView({ sector }: { sector: Sector }) {
   const grouped: Record<PacGroup, CommitteeConstantWithContributions[]> = {
     super: [],
     hybrid: [],
+    electioneering: [],
     connected: [],
     other: [],
   };
@@ -399,7 +452,12 @@ export default async function CommitteesView({ sector }: { sector: Sector }) {
             !isError(data) && (
               <SankeyDiagram
                 sector={sector}
-                committees={committees}
+                // The diagram traces disclosed money from donors through to
+                // spending. These groups disclose only the spending, so their
+                // ads would be drawn as coming out of other committees' funds.
+                committees={committees.filter(
+                  (c) => !isElectioneeringFiler(c.committee_type),
+                )}
                 totalFunds={cardAmount}
                 transferEdges={transferData as TransferEdge[]}
               />
@@ -411,7 +469,12 @@ export default async function CommitteesView({ sector }: { sector: Sector }) {
                 title={PAC_GROUP_LABELS[group]}
                 committees={grouped[group]}
                 sector={sector}
-                fundsOnly={group !== "super" && group !== "hybrid"}
+                fundsOnly={
+                  group !== "super" &&
+                  group !== "hybrid" &&
+                  group !== "electioneering"
+                }
+                electioneering={group === "electioneering"}
                 transferEdges={
                   transferData !== null && !isError(transferData)
                     ? (transferData as TransferEdge[])

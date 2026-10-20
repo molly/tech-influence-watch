@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Link from "next/link";
 import { Suspense } from "react";
 
 import { fetchCommitteeDetails } from "@/app/actions/fetch";
@@ -7,7 +8,10 @@ import TotalsRow from "@/app/components/TotalsRow";
 import COMMITTEES from "@/app/data/committees";
 import sharedStyles from "@/app/shared.module.css";
 import { CommitteeDetails } from "@/app/types/Committee";
-import { isSuperOrHybridPac } from "@/app/utils/committees";
+import {
+  isElectioneeringFiler,
+  spendsOnCandidates,
+} from "@/app/utils/committees";
 import { isError } from "@/app/utils/errors";
 import { customMetadata } from "@/app/utils/metadata";
 
@@ -59,6 +63,38 @@ async function CommitteeExpendituresBottomSections({
   );
 }
 
+async function CommitteeDonors({ committeeId }: { committeeId: string }) {
+  const committeeData = await fetchCommitteeDetails(committeeId);
+  if (
+    !isError(committeeData) &&
+    isElectioneeringFiler((committeeData as CommitteeDetails).committee_type)
+  ) {
+    // Like the dark money groups tracked as companies, these groups don't
+    // disclose their donors, so there's no FEC donor list to show.
+    return (
+      <p className={styles.donorNote}>
+        {(committeeData as CommitteeDetails).name} does not disclose its donors.
+        Groups that run{" "}
+        <Link href="/about/faq#electioneering">
+          electioneering communications
+        </Link>{" "}
+        without registering as a PAC only have to report donors who gave
+        specifically to pay for those ads.
+      </p>
+    );
+  }
+  return (
+    <>
+      <Suspense fallback={<TopDonorsSortLinks isDate={false} />}>
+        <TopDonorsSortControl />
+      </Suspense>
+      <Suspense fallback={<TopDonorsSkeleton />}>
+        <TopDonors committeeId={committeeId} />
+      </Suspense>
+    </>
+  );
+}
+
 async function CommitteeRightColumn({ committeeId }: { committeeId: string }) {
   const committeeData = await fetchCommitteeDetails(committeeId);
   if (isError(committeeData)) {
@@ -66,10 +102,11 @@ async function CommitteeRightColumn({ committeeId }: { committeeId: string }) {
   }
   const committee = committeeData as CommitteeDetails;
 
-  // Only committees that can make independent expenditures (super PACs and
-  // hybrid PACs) get the expenditures breakdown. For everyone else, their
+  // Only committees that spend on candidates directly (super PACs and hybrid
+  // PACs through independent expenditures, and electioneering communication
+  // filers) get the expenditures breakdown. For everyone else, their
   // transfers to other committees are the more meaningful activity.
-  if (!isSuperOrHybridPac(committee.committee_type)) {
+  if (!spendsOnCandidates(committee.committee_type)) {
     return (
       <>
         {committee.transfers_by_party && (
@@ -141,11 +178,15 @@ export default async function CommitteePage({
             <div className={styles.donorSectionHeaderGroup}>
               <h2 className={styles.donorSectionHeader}>Top donors</h2>
             </div>
-            <Suspense fallback={<TopDonorsSortLinks isDate={false} />}>
-              <TopDonorsSortControl />
-            </Suspense>
-            <Suspense fallback={<TopDonorsSkeleton />}>
-              <TopDonors committeeId={committeeId} />
+            <Suspense
+              fallback={
+                <>
+                  <TopDonorsSortLinks isDate={false} />
+                  <TopDonorsSkeleton />
+                </>
+              }
+            >
+              <CommitteeDonors committeeId={committeeId} />
             </Suspense>
           </section>
           <div className={styles.rightColumn}>

@@ -220,6 +220,31 @@ export default function FAQPage() {
             show the most up-to-date data as possible, at the expense of
             occasionally unusual numbers.
           </p>
+          <h3 className={styles.aboutSectionHeader} id="electioneering">
+            What are electioneering communications?
+          </h3>
+          <p>
+            Most of the ad spending on this site is in the form of independent
+            expenditures, which are ads that expressly call for a
+            candidate&rsquo;s election or defeat. Electioneering communications
+            are a separate category. They&rsquo;re TV or radio ads that mention
+            a federal candidate within 60 days of a general election or 30 days
+            of a primary and are aimed at that candidate&rsquo;s voters, but
+            don&rsquo;t explicitly tell viewers how to vote.
+          </p>
+          <p>
+            The two are reported differently. Groups that run electioneering
+            communications must report them to the FEC within 24 hours of the ad
+            airing, but if the group is a corporation or nonprofit rather than a
+            PAC, it only has to disclose donors who gave specifically to pay for
+            those ads. These groups are often dark money organizations that
+            don&rsquo;t otherwise report their finances to the FEC. The Campaign
+            Legal Center has a{" "}
+            <a href="https://www.ifs.org/wp-content/uploads/2014/10/Rules_for_Political_Advertising_on_Television_and_Radio_FINAL_9-24-14.pdf">
+              useful summary
+            </a>{" "}
+            of the rules for each type of political ad.
+          </p>
           <h3 className={styles.aboutSectionHeader} id="pacs-data">
             What&rsquo;s going on with the{" "}
             <Link href="/2026/committees/ranking/super">list of PACs</Link>? Why

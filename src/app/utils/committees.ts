@@ -109,6 +109,25 @@ export function isSuperOrHybridPac(
   );
 }
 
+// Electioneering communication filers (E) report ads that name candidates on
+// Form 9 rather than as independent expenditures. They're usually nonprofits
+// that file nothing else with the FEC.
+export function isElectioneeringFiler(
+  committeeType: string | null | undefined,
+): boolean {
+  return committeeType === "E";
+}
+
+// Committees whose spending on candidates the pipeline tracks: independent
+// expenditures by super/hybrid PACs and electioneering communications.
+export function spendsOnCandidates(
+  committeeType: string | null | undefined,
+): boolean {
+  return (
+    isSuperOrHybridPac(committeeType) || isElectioneeringFiler(committeeType)
+  );
+}
+
 export function getDesignation(designation_full: string | undefined) {
   if (!designation_full || designation_full === "Unauthorized") {
     return null;

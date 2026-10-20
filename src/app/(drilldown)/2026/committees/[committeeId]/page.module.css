@@ -60,6 +60,11 @@
   margin: 0;
 }
 
+/* Matches the note on dark money groups' reported donors. */
+.donorNote {
+  composes: note from "@/app/components/individualOrCompany/KnownDonors.module.css";
+}
+
 .donorAmount {
   font-variant-numeric: tabular-nums;
 }

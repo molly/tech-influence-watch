@@ -15,6 +15,9 @@ export type Expenditure = {
   // roster by the pipeline. The FEC name fields are filer-entered and can hold
   // a different surname entirely, so prefer this — see getCandidateName.
   candidate_common_name?: string;
+  // Set on electioneering communications (FEC Form 9), which the pipeline
+  // stores alongside Schedule E independent expenditures.
+  source?: "electioneering";
 } & Pick<
   ScheduleE,
   | "expenditure_amount"
