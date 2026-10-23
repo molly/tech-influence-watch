@@ -12,6 +12,9 @@ import styles from "./page.module.css";
 import RaceCandidates from "./RaceCandidates";
 
 function RaceDate({ race }: { race: Race }) {
+  if (race.canceled) {
+    return <span>Canceled</span>;
+  }
   if (!("date" in race) || race.date === null) {
     return null;
   }

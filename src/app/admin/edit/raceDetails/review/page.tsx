@@ -39,6 +39,63 @@ function shardDocName(state: string, raceId: string): string {
   return `${state}_${shardIndex(raceId)}`;
 }
 
+async function fetchConflicts(): Promise<RaceConflict[]> {
+  const raceDetailsCollection = collection(db, "raceDetails");
+  const snapshot = await getDocs(raceDetailsCollection);
+
+  const foundConflicts: RaceConflict[] = [];
+
+  snapshot.forEach((stateDoc) => {
+    const docId = stateDoc.id;
+    const lastUnderscore = docId.lastIndexOf("_");
+    const state =
+      lastUnderscore !== -1 && /^\d$/.test(docId.slice(lastUnderscore + 1))
+        ? docId.slice(0, lastUnderscore)
+        : docId;
+    const stateData = stateDoc.data() as ElectionsByState;
+
+    Object.entries(stateData).forEach(([raceId, raceGroup]) => {
+      const manualRaces = raceGroup.manualRaces || [];
+      const scrapedRaces = raceGroup.scrapedRaces || [];
+      const currentRaces = raceGroup.races || [];
+      const lastReviewed = raceGroup.lastReviewed || 0;
+      const manualRacesUpdated = raceGroup.manualRacesUpdated || 0;
+      const scrapedRacesUpdated = raceGroup.scrapedRacesUpdated || 0;
+
+      // Check if there are new changes since last review.
+      // If lastReviewed is 0 the race has never been reviewed, so show it
+      // regardless of whether the update timestamp is set (covers scraped
+      // races that were written before the timestamp field was introduced).
+      const neverReviewed = lastReviewed === 0;
+      const hasUnreviewedManual =
+        manualRaces.length > 0 &&
+        (neverReviewed || manualRacesUpdated > lastReviewed);
+      const hasUnreviewedScraped =
+        scrapedRaces.length > 0 &&
+        (neverReviewed || scrapedRacesUpdated > lastReviewed);
+
+      if (hasUnreviewedManual || hasUnreviewedScraped) {
+        foundConflicts.push({
+          state,
+          raceId,
+          manualRaces,
+          scrapedRaces,
+          currentRaces,
+          dataSource: raceGroup.dataSource,
+        });
+      }
+    });
+  });
+
+  foundConflicts.sort((a, b) => {
+    if (a.state !== b.state) {
+      return a.state.localeCompare(b.state);
+    }
+    return a.raceId.localeCompare(b.raceId);
+  });
+  return foundConflicts;
+}
+
 export default function RaceReviewPage() {
   const [conflicts, setConflicts] = useState<RaceConflict[]>([]);
   const [selectedConflict, setSelectedConflict] = useState<RaceConflict | null>(
@@ -53,10 +110,6 @@ export default function RaceReviewPage() {
     boolean[]
   >([]);
 
-  useEffect(() => {
-    loadConflicts();
-  }, []);
-
   const generateRaceKey = (race: Race): string => {
     const raceType = race.type || "";
     const party = race.party || "none";
@@ -67,66 +120,21 @@ export default function RaceReviewPage() {
   const loadConflicts = async () => {
     setLoading(true);
     try {
-      const raceDetailsCollection = collection(db, "raceDetails");
-      const snapshot = await getDocs(raceDetailsCollection);
-
-      const foundConflicts: RaceConflict[] = [];
-
-      snapshot.forEach((stateDoc) => {
-        const docId = stateDoc.id;
-        const lastUnderscore = docId.lastIndexOf("_");
-        const state =
-          lastUnderscore !== -1 && /^\d$/.test(docId.slice(lastUnderscore + 1))
-            ? docId.slice(0, lastUnderscore)
-            : docId;
-        const stateData = stateDoc.data() as ElectionsByState;
-
-        Object.entries(stateData).forEach(([raceId, raceGroup]) => {
-          const manualRaces = raceGroup.manualRaces || [];
-          const scrapedRaces = raceGroup.scrapedRaces || [];
-          const currentRaces = raceGroup.races || [];
-          const lastReviewed = raceGroup.lastReviewed || 0;
-          const manualRacesUpdated = raceGroup.manualRacesUpdated || 0;
-          const scrapedRacesUpdated = raceGroup.scrapedRacesUpdated || 0;
-
-          // Check if there are new changes since last review.
-          // If lastReviewed is 0 the race has never been reviewed, so show it
-          // regardless of whether the update timestamp is set (covers scraped
-          // races that were written before the timestamp field was introduced).
-          const neverReviewed = lastReviewed === 0;
-          const hasUnreviewedManual =
-            manualRaces.length > 0 &&
-            (neverReviewed || manualRacesUpdated > lastReviewed);
-          const hasUnreviewedScraped =
-            scrapedRaces.length > 0 &&
-            (neverReviewed || scrapedRacesUpdated > lastReviewed);
-
-          if (hasUnreviewedManual || hasUnreviewedScraped) {
-            foundConflicts.push({
-              state,
-              raceId,
-              manualRaces,
-              scrapedRaces,
-              currentRaces,
-              dataSource: raceGroup.dataSource,
-            });
-          }
-        });
-      });
-
-      foundConflicts.sort((a, b) => {
-        if (a.state !== b.state) {
-          return a.state.localeCompare(b.state);
-        }
-        return a.raceId.localeCompare(b.raceId);
-      });
-      setConflicts(foundConflicts);
+      setConflicts(await fetchConflicts());
     } catch (error) {
       console.error("Error loading conflicts:", error);
     } finally {
       setLoading(false);
     }
   };
+
+  // loading starts true, so the initial fetch doesn't need to set it
+  useEffect(() => {
+    fetchConflicts()
+      .then(setConflicts)
+      .catch((error) => console.error("Error loading conflicts:", error))
+      .finally(() => setLoading(false));
+  }, []);
 
   const copyScrapedToManual = (race: Race) => {
     setDraftRace({ ...race, candidates: [...race.candidates] });

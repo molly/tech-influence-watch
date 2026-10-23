@@ -127,6 +127,7 @@ export interface ElectionGroup {
   lastReviewed?: number; // Timestamp when races were last reviewed
   dataSource?: "manual" | "scraped" | "merged"; // Which source the reviewed races came from
   manualRacesUpdated?: number; // Timestamp when manualRaces were last updated
+  createdManually?: boolean; // Race group was created in the admin UI, not by the pipeline
   scrapedRacesUpdated?: number; // Timestamp when scrapedRaces were last updated
   candidates: Record<string, CandidateSummary>;
   spending: Record<string, RaceSpending>;

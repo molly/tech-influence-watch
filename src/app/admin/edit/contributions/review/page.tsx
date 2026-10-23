@@ -189,16 +189,23 @@ export default function ContributionReviewPage() {
     })();
   }, []);
 
+  const selectCommittee = (committeeId: string) => {
+    setSelectedCommitteeId(committeeId);
+    setRawTransactions(null);
+    if (committeeId) {
+      setLoadingState("loading");
+    } else {
+      setContributions(null);
+    }
+  };
+
   // Load contributions when committee is selected
   useEffect(() => {
-    setRawTransactions(null);  
     if (!selectedCommitteeId) {
-      setContributions(null);  
       return;
     }
 
     (async () => {
-      setLoadingState("loading");
       try {
         const docRef = doc(db, "contributions", selectedCommitteeId);
         const snapshot = await getDoc(docRef);
@@ -862,7 +869,7 @@ export default function ContributionReviewPage() {
         <select
           className={styles.editorSelect}
           value={selectedCommitteeId}
-          onChange={(e) => setSelectedCommitteeId(e.target.value)}
+          onChange={(e) => selectCommittee(e.target.value)}
         >
           <option value="">Select a committee</option>
           {committeeKeys.map((key) => {

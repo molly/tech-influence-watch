@@ -23,6 +23,7 @@ const COMMITTEES: Record<string, string> = {
   C00880518: "Bitcoin Voter PAC",
   C00881250: "Make Bitcoin Great Again",
   C00883116: "Stripe, Inc. Political Action Committee",
+  C00890343: "Wisconsin Working PAC",
   C00893883: "Americans for Responsible Innovation PAC (ARI PAC)",
   C00894055: "Circle Internet Group, Inc. PAC",
   C00894428: "First Principles Digital",
@@ -39,6 +40,7 @@ const COMMITTEES: Record<string, string> = {
   C00930503: "Public First",
   C00941146:
     "Foris Dax, Inc. (d/b/a Crypto.com) Federal Political Action Committee",
+  C00942318: "Crypto Council for Innovation PAC",
   C00946111: "Anthropic PBC Political Action Committee (AnthroPAC)",
   C00946830: "You Can Push Back",
   C00948232: "Jump PAC",

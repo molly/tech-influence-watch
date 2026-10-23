@@ -35,7 +35,13 @@ type NotablePattern = {
 // recompute on every render, but the prose only changes when that check flags.
 const DEFEND_AMERICAN_JOBS = "C00836221";
 const AMERICAN_MISSION = "C00916692";
-const INTRA_SECTOR_RACES = ["NY-H-12", "MA-H-06", "AZ-H-01", "MT-H-01"];
+const INTRA_SECTOR_RACES = [
+  "NY-H-12",
+  "MA-H-06",
+  "AZ-H-01",
+  "MT-H-01",
+  "NC-H-01",
+];
 
 function buildPatterns(
   insights: RaceInsight[],
@@ -71,8 +77,9 @@ function buildPatterns(
       }
     }
   }
-  const strattonOppose = opposeByCandidate.get("Juliana Stratton") ?? 0;
   const brownOppose = opposeByCandidate.get("Sherrod Brown") ?? 0;
+  // Osborn is an independent, so his opposition isn't in the by-party totals.
+  const osbornOppose = opposeByCandidate.get("Dan Osborn") ?? 0;
 
   return [
     {
@@ -109,11 +116,12 @@ function buildPatterns(
           <Link href="/2026/elections/NY-H-12">NY-H-12</Link>,{" "}
           <Link href="/2026/elections/MA-H-06">MA-H-06</Link>,{" "}
           <Link href="/2026/elections/AZ-H-01">AZ-H-01</Link>,{" "}
-          <Link href="/2026/elections/MT-H-01">MT-H-01</Link>
+          <Link href="/2026/elections/MT-H-01">MT-H-01</Link>,{" "}
+          <Link href="/2026/elections/NC-H-01">NC-H-01</Link>
         </>
       ),
       headline:
-        "AI PACs have turned on each other in four House races this cycle",
+        "AI PACs have turned on each other in five House races this cycle",
       description: (
         <>
           AI PACs have spent{" "}
@@ -160,17 +168,17 @@ function buildPatterns(
     },
     {
       key: "opposition-targets",
-      label: `Opposition spending · ${formatCompact(all.dem_oppose + all.rep_oppose)}`,
-      headline: "Nearly all negative spending targets Democrats",
+      label: `Opposition spending · ${formatCompact(all.dem_oppose + all.rep_oppose + osbornOppose)}`,
+      headline: "Most negative spending targets Democrats",
       description: (
         <>
           Of the money spent opposing candidates rather than supporting them,{" "}
           {humanizeRoundedCurrency(all.dem_oppose, true, 1)} has gone against
-          Democrats and just {humanizeRoundedCurrency(all.rep_oppose, true, 1)}{" "}
-          against Republicans. The largest targets are Illinois Senate candidate{" "}
-          <Link href="/2026/elections/IL-S">Juliana Stratton</Link> (
-          {humanizeRoundedCurrency(strattonOppose, true, 1)}) and Ohio Senate
-          candidate{" "}
+          Democrats, {humanizeRoundedCurrency(osbornOppose, true, 1)} against{" "}
+          <Link href="/2026/elections/NE-S">Dan Osborn</Link>, an independent
+          challenging Republican Senator Pete Ricketts in Nebraska, and just{" "}
+          {humanizeRoundedCurrency(all.rep_oppose, true, 1)} against
+          Republicans. The largest target is Ohio Senate candidate{" "}
           <Link href="/2026/elections/OH-S-special">Sherrod Brown</Link> (
           {humanizeRoundedCurrency(brownOppose, true, 1)}).
         </>

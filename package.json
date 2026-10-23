@@ -24,9 +24,9 @@
     "@testing-library/react": "^16.3.1",
     "@types/d3": "^7.4.3",
     "@types/geojson": "^7946.0.14",
-    "@types/jest": "^29.5.12",
+    "@types/jest": "^30.0.0",
     "@types/luxon": "^3.4.2",
-    "@types/node": "^20",
+    "@types/node": "^24.19.2",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@types/topojson-client": "^3.1.4",
@@ -36,11 +36,17 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-perfectionist": "^5.9.0",
     "eslint-plugin-simple-import-sort": "^13.0.0",
-    "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0",
+    "jest": "^30.5.2",
+    "jest-environment-jsdom": "^30.5.2",
     "next": "^16.1.6",
     "prettier": "^3.2.5",
     "ts-node": "^10.9.2",
     "typescript": "^5"
+  },
+  "allowScripts": {
+    "@firebase/util": false,
+    "@parcel/watcher": false,
+    "protobufjs": false,
+    "unrs-resolver": false
   }
 }

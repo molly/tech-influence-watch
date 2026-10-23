@@ -325,7 +325,15 @@ export default function RaceDetailsEditor() {
       }
 
       // Get or create the race group for the specified race ID
-      const raceGroup = existingData[raceId] || { races: [], manualRaces: [], candidates: {}, spending: {} };
+      // createdManually marks a race the pipeline didn't create, so the backend
+      // keeps it even before any spending is attributed to it.
+      const raceGroup = existingData[raceId] || {
+        races: [],
+        manualRaces: [],
+        candidates: {},
+        spending: {},
+        createdManually: true,
+      };
 
       // Save to manualRaces instead of races (races is for scraper)
       if (!raceGroup.manualRaces) {

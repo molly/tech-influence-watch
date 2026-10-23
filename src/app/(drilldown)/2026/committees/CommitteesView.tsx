@@ -140,12 +140,6 @@ function CommitteeRow({
           <SectorBadge>{committee.sector}</SectorBadge>
         )}
       </div>
-      <div className={styles.amountFunds}>
-        <span className={styles.amountFundsLabel}>Funds this cycle </span>
-        {electioneering
-          ? "Undisclosed"
-          : `$${humanizeApproximateRounded(fundsThisCycle, 1)}`}
-      </div>
       {electioneering && (
         <div
           className={spent > 0 ? styles.amountSpent : styles.amountPlaceholder}
@@ -154,6 +148,12 @@ function CommitteeRow({
           {spent > 0 ? `$${humanizeApproximateRounded(spent, 1)}` : "—"}
         </div>
       )}
+      <div className={styles.amountFunds}>
+        <span className={styles.amountFundsLabel}>Funds this cycle </span>
+        {electioneering
+          ? "Undisclosed"
+          : `$${humanizeApproximateRounded(fundsThisCycle, 1)}`}
+      </div>
       {!fundsOnly && !electioneering && (
         <>
           <div
@@ -326,10 +326,10 @@ function CommitteeGroup({
         }
       >
         <div className={styles.columnHeaderLabel}>Committee</div>
-        <div className={styles.columnHeaderLabelRight}>Funds this cycle</div>
         {electioneering && (
           <div className={styles.columnHeaderLabelRight}>Spent</div>
         )}
+        <div className={styles.columnHeaderLabelRight}>Funds this cycle</div>
         {!fundsOnly && !electioneering && (
           <>
             <div className={styles.columnHeaderLabelRight}>Transferred out</div>

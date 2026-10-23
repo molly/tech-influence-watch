@@ -9,7 +9,7 @@ import {
   useFloating,
 } from "@floating-ui/react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 
 import { BESector } from "@/app/types/Sector";
 import { formatCompact } from "@/app/utils/humanize";
@@ -17,6 +17,14 @@ import { formatCompact } from "@/app/utils/humanize";
 import styles from "./CompanyBubbleChart.module.css";
 
 const SIZE = 400;
+
+const HOVER_NONE_QUERY = "(hover: none)";
+
+function subscribeToHoverNone(onChange: () => void): () => void {
+  const query = window.matchMedia(HOVER_NONE_QUERY);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+}
 
 export type BubbleLine = {
   text: string;
@@ -80,15 +88,11 @@ export default function CompanyBubbleChartSvg({
   const [hovered, setHovered] = useState<Bubble | null>(null);
   // On touch devices there's no hover, so a tap opens the tooltip (and the
   // tooltip carries the link) instead of navigating immediately.
-  const [isTouch, setIsTouch] = useState(false);
-
-  useEffect(() => {
-    const query = window.matchMedia("(hover: none)");
-    setIsTouch(query.matches);
-    const onChange = (e: MediaQueryListEvent): void => setIsTouch(e.matches);
-    query.addEventListener("change", onChange);
-    return () => query.removeEventListener("change", onChange);
-  }, []);
+  const isTouch = useSyncExternalStore(
+    subscribeToHoverNone,
+    () => window.matchMedia(HOVER_NONE_QUERY).matches,
+    () => false,
+  );
 
   const { refs, floatingStyles } = useFloating({
     open: hovered !== null,
