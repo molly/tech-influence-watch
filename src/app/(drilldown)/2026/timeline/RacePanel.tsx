@@ -103,9 +103,7 @@ export default function RacePanel({
   expenditures,
   totals,
   series,
-  highlight,
-  dimOutside,
-  periodLabel,
+  throughLabel,
   siblings,
   committees,
   sector,
@@ -116,9 +114,7 @@ export default function RacePanel({
   expenditures: FlowExpenditure[];
   totals: DirectionTotals;
   series: WeekBucket[];
-  highlight: [number, number];
-  dimOutside: boolean;
-  periodLabel: string;
+  throughLabel: string;
   siblings: SiblingRace[];
   committees: Record<string, string>;
   sector: Sector;
@@ -206,7 +202,7 @@ export default function RacePanel({
           topText={
             <span className={styles.moneyCardTop}>
               <span>Tech spending in this race</span>
-              <span>{periodLabel}</span>
+              <span>{throughLabel}</span>
             </span>
           }
           amount={humanizeRoundedCurrency(totals.total, true, 1)}
@@ -218,10 +214,6 @@ export default function RacePanel({
         <h3 className={sharedStyles.sectionTitle}>Weekly spending</h3>
         <WeeklyBars
           series={series}
-          mode="direction"
-          highlight={highlight}
-          highlightLabel="Selected"
-          dimOutside={dimOutside}
           small={true}
           label={`Weekly tech spending in ${getRaceLabel(race)}`}
         />
@@ -260,7 +252,7 @@ export default function RacePanel({
         </h3>
         {recent.length === 0 ? (
           <p className={sharedStyles.subtitle}>
-            No expenditures in this period.
+            No expenditures yet.
           </p>
         ) : (
           <table className={styles.expenditureTable}>

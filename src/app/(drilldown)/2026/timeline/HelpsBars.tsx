@@ -12,6 +12,12 @@ function lastName(name: string) {
 
 export function getHelpsLabel(line: HelpsLine): string {
   if (!line.beneficiary) {
+    if (line.direction === "R") {
+      return "Helps Republicans";
+    }
+    if (line.direction === "D") {
+      return "Helps Democrats";
+    }
     return "No clear beneficiary";
   }
   const party =

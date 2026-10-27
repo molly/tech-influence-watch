@@ -3,37 +3,23 @@ import { formatCompact } from "@/app/utils/humanize";
 import styles from "./SpendingFlow.module.css";
 import { weekStart } from "./spendingFlowUtils";
 
-export type BarMode = "total" | "direction" | "sector";
-
 export interface WeekBucket {
   R: number;
   D: number;
   U: number;
-  crypto: number;
-  ai: number;
-  tech: number;
   total: number;
 }
 
 export function emptyBucket(): WeekBucket {
-  return { R: 0, D: 0, U: 0, crypto: 0, ai: 0, tech: 0, total: 0 };
+  return { R: 0, D: 0, U: 0, total: 0 };
 }
 
 // Stacked bottom to top.
-const SEGMENTS: Record<BarMode, { key: keyof WeekBucket; className: string }[]> =
-  {
-    total: [{ key: "total", className: styles.fillTotal }],
-    direction: [
-      { key: "U", className: styles.fillU },
-      { key: "D", className: styles.fillD },
-      { key: "R", className: styles.fillR },
-    ],
-    sector: [
-      { key: "ai", className: styles.fillAi },
-      { key: "crypto", className: styles.fillCrypto },
-      { key: "tech", className: styles.fillTech },
-    ],
-  };
+const SEGMENTS: { key: keyof WeekBucket; className: string }[] = [
+  { key: "U", className: styles.fillU },
+  { key: "D", className: styles.fillD },
+  { key: "R", className: styles.fillR },
+];
 
 const PLOT_HEIGHT = 100;
 const BAR_WIDTH = 10;
@@ -80,18 +66,10 @@ export function getMonthTicks(numWeeks: number, monthStep: number) {
 
 export default function WeeklyBars({
   series,
-  mode,
-  highlight,
-  highlightLabel,
-  dimOutside,
   small,
   label,
 }: {
   series: WeekBucket[];
-  mode: BarMode;
-  highlight?: [number, number];
-  highlightLabel?: string;
-  dimOutside?: boolean;
   small?: boolean;
   label: string;
 }) {
@@ -102,11 +80,7 @@ export default function WeeklyBars({
 
   const bars = series.flatMap((bucket, week) => {
     let y = PLOT_HEIGHT;
-    const dim =
-      dimOutside &&
-      highlight &&
-      (week < highlight[0] || week > highlight[1]);
-    return SEGMENTS[mode].map(({ key, className }) => {
+    return SEGMENTS.map(({ key, className }) => {
       const height = (bucket[key] / top) * PLOT_HEIGHT;
       y -= height;
       if (height <= 0) {
@@ -119,7 +93,7 @@ export default function WeeklyBars({
           y={y}
           width={BAR_WIDTH - 3}
           height={height}
-          className={dim ? `${className} ${styles.dimmed}` : className}
+          className={className}
         />
       );
     });
@@ -160,17 +134,6 @@ export default function WeeklyBars({
             vectorEffect="non-scaling-stroke"
           />
         </svg>
-        {highlight && dimOutside && (
-          <div
-            className={styles.bracket}
-            style={{
-              left: `${(highlight[0] / n) * 100}%`,
-              width: `${((highlight[1] - highlight[0] + 1) / n) * 100}%`,
-            }}
-          >
-            {highlightLabel && <span>{highlightLabel}</span>}
-          </div>
-        )}
       </div>
       <div />
       <div className={styles.barChartX} aria-hidden={true}>

@@ -26,11 +26,6 @@
   color: var(--secondary-text);
 }
 
-.sectionHeading {
-  font-size: inherit;
-  margin: 0;
-}
-
 .filterGroup {
   display: flex;
   align-items: center;
@@ -109,12 +104,6 @@
   border-right: 1px solid var(--table-color);
 }
 
-.lower {
-  display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-  gap: 2rem;
-}
-
 /* ── Map ───────────────────────────────────────────────────────────── */
 
 .mapBar {
@@ -124,14 +113,6 @@
   flex-wrap: wrap;
   gap: 0.5rem 1rem;
   margin-bottom: 0.75rem;
-}
-
-.mapContext {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 0.9rem;
-  color: var(--secondary-text);
-  font-variant-numeric: tabular-nums;
 }
 
 .mapBox {
@@ -350,10 +331,16 @@
   display: grid;
   grid-template-columns: auto auto minmax(0, 1fr);
   gap: 1rem;
-  align-items: start;
+  align-items: end;
   padding: 0.875rem 0 0.25rem;
   margin-bottom: 1.5rem;
   border-bottom: 1px solid var(--table-color);
+}
+
+/* Lined up with the slider rather than the month labels under it. */
+.playGroup,
+.weekOf {
+  margin-bottom: 0.875rem;
 }
 
 .playGroup {
@@ -432,11 +419,26 @@
   min-width: 0;
 }
 
+/* Pulled up so the top of the slider track meets the bottom of the bars. The
+   input is 1.25rem tall with a 3px track centered in it. */
 .rangeWrapper {
   position: relative;
+  margin-top: calc(1.5px - 0.625rem);
 }
 
-/* Filled portion of the track, drawn under the input's transparent track. */
+/* The input's own track is transparent; the unfilled track and the filled
+   portion are drawn underneath it. */
+.rangeWrapper::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(50% - 1.5px);
+  height: 3px;
+  background: var(--card-border);
+  pointer-events: none;
+}
+
 .rangeFill {
   position: absolute;
   left: 0;
@@ -465,41 +467,46 @@
 .range::-webkit-slider-runnable-track {
   height: 3px;
   background: transparent;
-  box-shadow: inset 0 0 0 1.5px var(--card-border);
 }
 
 .range::-moz-range-track {
   height: 3px;
-  background: var(--card-border);
+  background: transparent;
 }
 
+/* The thumb is 0.75rem wide; the timeline's other layers are inset by half
+   that (0.375rem) so week positions line up with its center. */
 .range::-webkit-slider-thumb {
   appearance: none;
-  width: 1rem;
-  height: 1rem;
-  margin-top: -0.4rem;
-  border: 2px solid var(--main-text);
-  border-radius: 0;
-  background: var(--color-lime-500);
+  width: 0.75rem;
+  height: 0.75rem;
+  margin-top: calc(1.5px - 0.375rem);
+  border: 0;
+  border-radius: 50%;
+  background: var(--main-text);
 }
 
 .range::-moz-range-thumb {
-  width: 0.8rem;
-  height: 0.8rem;
-  border: 2px solid var(--main-text);
-  border-radius: 0;
-  background: var(--color-lime-500);
+  width: 0.75rem;
+  height: 0.75rem;
+  border: 0;
+  border-radius: 50%;
+  background: var(--main-text);
 }
 
-.timelineTicks,
-.timelineEvents {
+/* Events, bars, and month labels are inset by half the slider thumb so that
+   0–100% matches the thumb's center at the first and last week. */
+.timelineEvents,
+.histogram,
+.timelineTicks {
   position: relative;
-  color: var(--secondary-text);
+  margin: 0 0.375rem;
 }
 
 .timelineTicks {
   height: 1rem;
   font-size: 0.7rem;
+  color: var(--secondary-text);
 }
 
 .timelineTicks span {
@@ -507,39 +514,25 @@
   white-space: nowrap;
 }
 
-/* Event labels sit above the bar, each with a tick mark that runs down to the
-   middle of the track. Events past the end of the bar (e.g. the general
-   election) get their own row above, with no tick. */
+/* Event labels sit above the chart. Events past the end of the bar (e.g. the
+   general election) get their own row, with no tick. */
 .timelineEvents {
-  position: relative;
-  z-index: 1;
-  height: 2.5rem;
+  height: 2.25rem;
   font-family: var(--font-serif);
   font-style: italic;
   font-size: 0.75rem;
-  pointer-events: none;
+  color: var(--secondary-text);
 }
 
 .timelineEvents span {
   position: absolute;
-  /* Half the range input's height, so the tick ends at the track. */
-  bottom: -0.625rem;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  bottom: 0.125rem;
+  padding-left: 0.3rem;
   white-space: nowrap;
 }
 
-.timelineEvents span::after {
-  content: "";
-  width: 1px;
-  height: 1rem;
-  margin-top: 0.1rem;
-  background: var(--main-text);
-}
-
 .timelineEvents .eventRight {
-  align-items: flex-end;
+  padding: 0 0.3rem 0 0;
   transform: translateX(-100%);
 }
 
@@ -547,21 +540,69 @@
   top: 0;
   right: 0;
   bottom: auto;
+  padding: 0;
 }
 
-.timelineEvents .eventEnd::after {
-  content: none;
+.timelineChart {
+  position: relative;
+}
+
+.histogram {
+  height: 4rem;
+  cursor: pointer;
+}
+
+.histogram svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.histogram rect {
+  stroke: none;
+}
+
+.histogramFuture {
+  fill-opacity: 0.15;
+}
+
+.histogramTooltip {
+  position: absolute;
+  bottom: calc(100% + 0.25rem);
+  z-index: 2;
+  display: flex;
+  gap: 0.375rem;
+  padding: 0.25rem 0.5rem;
+  transform: translateX(-50%);
+  background: var(--background);
+  border: 1px solid var(--money-card-border);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* Event tick marks run from the top of the chart down to the middle of the
+   slider track. */
+.eventTicks {
+  position: absolute;
+  top: -0.125rem;
+  bottom: 0.625rem;
+  left: 0.375rem;
+  right: 0.375rem;
+  pointer-events: none;
+
+  span {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--main-text);
+  }
 }
 
 /* ── Weekly bar charts ─────────────────────────────────────────────── */
-
-.chartNote {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 0.8rem;
-  color: var(--secondary-text);
-  margin: 0 0 1.5rem;
-}
 
 .barChart {
   display: grid;
@@ -623,28 +664,6 @@
   stroke: var(--main-text);
 }
 
-.dimmed {
-  fill-opacity: 0.3;
-}
-
-.bracket {
-  position: absolute;
-  top: -0.625rem;
-  height: 0.375rem;
-  border: 1px solid var(--main-text);
-  border-bottom: 0;
-}
-
-.bracket span {
-  position: absolute;
-  right: -2px;
-  bottom: 0.5rem;
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 0.7rem;
-  white-space: nowrap;
-}
-
 /* SVG fills (bars, bubbles, pings). Bubbles and pings stroke in the same
    color; bar rects turn the stroke off above. */
 .fillR {
@@ -665,39 +684,14 @@
   color: var(--party-unknown);
 }
 
-.fillTotal {
-  fill: var(--main-text);
-}
-
-.fillCrypto {
-  fill: var(--color-lime-700);
-}
-
-.fillAi {
-  fill: var(--color-lime-400);
-}
-
-.fillTech {
-  fill: var(--color-black);
-}
-
-.swatchTotal {
-  background: var(--main-text);
-}
-
-.swatchCrypto {
-  background: var(--color-lime-700);
-}
-
-.swatchAi {
-  background: var(--color-lime-400);
-}
-
-.swatchTech {
-  background: var(--color-black);
-}
-
 /* ── Activity ──────────────────────────────────────────────────────── */
+
+.activity {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 2rem;
+  align-items: center;
+}
 
 .activityCards {
   display: grid;
@@ -706,19 +700,14 @@
   margin: 0.25rem 0 1rem;
 }
 
-.changeUp,
-.changeDown {
+.thisWeek {
   font-size: 0.8rem;
   color: var(--secondary-text);
   font-variant-numeric: tabular-nums;
-}
 
-.changeUp .bold {
-  color: var(--accent-on-light);
-}
-
-.changeDown .bold {
-  color: var(--main-text);
+  .bold {
+    color: var(--main-text);
+  }
 }
 
 .directionBreakdown {
@@ -942,58 +931,8 @@
   margin: 0 0 1rem;
 }
 
-.panelNote {
-  composes: annotation;
-  font-size: 0.9rem;
-  padding: 0.75rem 0;
-  border-top: 1px solid var(--table-color);
-  border-bottom: 1px solid var(--table-color);
-}
-
 .panelSection {
   margin-top: 1.5rem;
-}
-
-.candidates {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  padding: 0.875rem 0 1rem;
-  border-top: 1px solid var(--table-color);
-  border-bottom: 1px solid var(--table-color);
-}
-
-.candidateCard {
-  min-width: 0;
-}
-
-.candidateWho {
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
-}
-
-.candidateName {
-  font-weight: 600;
-  font-size: 0.9rem;
-  line-height: 1.2;
-}
-
-.candidateRaised {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1.6rem;
-  line-height: 1;
-  margin: 0.625rem 0 0.375rem;
-  font-variant-numeric: tabular-nums;
-}
-
-.moneyCardTop {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 0.5rem;
-  flex-wrap: wrap;
 }
 
 .siblings {
@@ -1084,8 +1023,9 @@
 }
 
 @media (max-width: 900px) {
-  .lower {
+  .activity {
     grid-template-columns: minmax(0, 1fr);
+    gap: 0;
   }
 }
 
@@ -1117,7 +1057,6 @@
     display: none;
   }
 
-
   .rankingTable thead {
     display: none;
   }
@@ -1142,10 +1081,6 @@
   .rankingTable td:nth-child(4) {
     grid-column: 3;
     grid-row: 1;
-  }
-
-  .candidates {
-    grid-template-columns: minmax(0, 1fr);
   }
 
   .expenditureTable th:nth-child(5),
@@ -1199,15 +1134,4 @@
     color: var(--secondary-text);
   }
 
-  .fillTech {
-    fill: var(--color-neutral-500);
-  }
-
-  .swatchTech {
-    background: var(--color-neutral-500);
-  }
-
-  .changeUp .bold {
-    color: var(--accent);
-  }
 }

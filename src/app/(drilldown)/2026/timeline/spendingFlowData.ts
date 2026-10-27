@@ -16,12 +16,10 @@ import type { Expenditure } from "@/app/types/Expenditures";
 import type { Sector } from "@/app/types/Sector";
 import { ErrorType, isError } from "@/app/utils/errors";
 import { getCandidateName } from "@/app/utils/expenditures";
-import { hasLeftRace } from "@/app/utils/races";
 import { matchesSector } from "@/app/utils/sector";
 
 import {
   FLOW_START_DATE,
-  FlowCandidate,
   FlowDirection,
   FlowExpenditure,
   FlowRace,
@@ -53,7 +51,12 @@ function getDirection(
   const details = expenditure.candidate_id
     ? opposition[expenditure.candidate_id]
     : undefined;
-  const beneficiary = details?.benefitsCandidate ?? null;
+  // "–" in the constant means the opposition helps a party but no particular
+  // candidate.
+  const beneficiary =
+    details?.benefitsCandidate && details.benefitsCandidate !== "–"
+      ? details.benefitsCandidate
+      : null;
   if (details?.benefitsParty === "REP") {
     return { direction: "R", beneficiary };
   }
@@ -63,33 +66,17 @@ function getDirection(
   return { direction: "U", beneficiary };
 }
 
-// The candidates shown on a race's panel: the general-election field if one is
-// set, otherwise the most recent contest, minus anyone who has left the race.
-function getRaceCandidates(
+// The race's general election date, if one is scheduled and not canceled.
+function getGeneralDate(
   elections: Record<string, ElectionsByState>,
   raceId: string,
-): { candidates: FlowCandidate[]; generalDate: string | null } {
+): string | null {
   const [state, ...rest] = raceId.split("-");
   const group = elections[state]?.[rest.join("-")];
-  if (!group) {
-    return { candidates: [], generalDate: null };
-  }
-  const races = group.races.filter((race) => !race.canceled);
-  const general = races.find((race) => race.type === RaceType.General);
-  const race = general ?? races[races.length - 1];
-  if (!race) {
-    return { candidates: [], generalDate: null };
-  }
-  const candidates = race.candidates
-    .filter((c) => !c.placeholder && !hasLeftRace(c) && c.won !== false)
-    .map((c) => ({
-      name: c.name,
-      party: c.party,
-      incumbent: Boolean(c.incumbent),
-      raised: group.candidates[c.name]?.raised_total ?? 0,
-    }))
-    .sort((a, b) => (a.party ?? "Z").localeCompare(b.party ?? "Z"));
-  return { candidates, generalDate: general?.date ?? null };
+  const general = group?.races.find(
+    (race) => race.type === RaceType.General && !race.canceled,
+  );
+  return general?.date ?? null;
 }
 
 export async function fetchSpendingFlowData(
@@ -140,7 +127,6 @@ export async function fetchSpendingFlowData(
       amount: expenditure.expenditure_amount,
       direction,
       stage: expenditure.subrace === "general" ? "general" : "primary",
-      sector: committee.sector,
       committeeId: expenditure.committee_id,
       candidate: getCandidateName(expenditure),
       candidateParty: partyLetter(expenditure.candidate_party),
@@ -165,7 +151,7 @@ export async function fetchSpendingFlowData(
         office === "H" && CENTROIDS[districtKey]
           ? [CENTROIDS[districtKey][0], CENTROIDS[districtKey][1]]
           : null,
-      ...getRaceCandidates(elections, raceId),
+      generalDate: getGeneralDate(elections, raceId),
     };
   }
 

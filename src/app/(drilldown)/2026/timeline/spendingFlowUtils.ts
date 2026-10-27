@@ -1,8 +1,6 @@
 import { DateTime } from "luxon";
 
 import { STATES_BY_ABBR } from "@/app/data/states";
-import type { Party } from "@/app/types/Elections";
-import type { BESector } from "@/app/types/Sector";
 
 // The timeline runs in 7-day bins from the start of the 2026 election year.
 export const FLOW_START_DATE = "2026-01-01";
@@ -23,7 +21,6 @@ export interface FlowExpenditure {
   amount: number;
   direction: FlowDirection;
   stage: FlowStage;
-  sector: BESector;
   committeeId: string;
   candidate: string;
   candidateParty?: string;
@@ -32,13 +29,6 @@ export interface FlowExpenditure {
   // support, or the oppositionSpending beneficiary for opposition.
   beneficiary: string | null;
   description?: string;
-}
-
-export interface FlowCandidate {
-  name: string;
-  party?: Party;
-  incumbent: boolean;
-  raised: number;
 }
 
 export interface FlowRace {
@@ -50,7 +40,6 @@ export interface FlowRace {
   // races are placed at the state's centroid, computed client-side from the
   // same topology the map draws.
   latLon: [number, number] | null;
-  candidates: FlowCandidate[];
   generalDate: string | null;
 }
 
@@ -64,13 +53,11 @@ export interface SpendingFlowData {
 
 export type StageFilter = "all" | FlowStage;
 export type OfficeFilter = "all" | "S" | "H";
-export type PeriodFilter = "14d" | "all";
 export type ShowFilter = "all" | FlowDirection;
 
 export interface FlowFilters {
   stage: StageFilter;
   office: OfficeFilter;
-  period: PeriodFilter;
 }
 
 export interface DirectionTotals {
@@ -106,16 +93,6 @@ export function formatShortDate(date: DateTime): string {
   return date.toFormat("LLL d");
 }
 
-export function getPeriodWeeks(
-  period: PeriodFilter,
-  week: number,
-): [number, number] {
-  if (period === "14d") {
-    return [Math.max(0, week - 1), week];
-  }
-  return [0, week];
-}
-
 // The last day a week covers, capped at today so the current week doesn't
 // claim days that haven't happened yet.
 export function weekEnd(week: number, today: string): DateTime {
@@ -124,18 +101,8 @@ export function weekEnd(week: number, today: string): DateTime {
   return end < todayDate ? end : todayDate;
 }
 
-export function getPeriodLabel(
-  period: PeriodFilter,
-  week: number,
-  today: string,
-): string {
-  const end = weekEnd(week, today);
-  if (period === "all") {
-    return `${end.year} through ${end.toFormat("LLL d")}`;
-  }
-  const start = weekStart(getPeriodWeeks(period, week)[0]);
-  const startFormat = start.year === end.year ? "LLL d" : "LLL d, yyyy";
-  return `${start.toFormat(startFormat)} – ${end.toFormat("LLL d, yyyy")}`;
+export function getThroughLabel(week: number, today: string): string {
+  return `Through ${weekEnd(week, today).toFormat("LLL d, yyyy")}`;
 }
 
 export function getRaceOffice(raceId: string): "S" | "H" {
@@ -156,13 +123,6 @@ export function matchesFilters(
     return false;
   }
   return true;
-}
-
-export function inWeeks(
-  expenditure: FlowExpenditure,
-  [from, to]: [number, number],
-): boolean {
-  return expenditure.week >= from && expenditure.week <= to;
 }
 
 export function emptyTotals(): DirectionTotals {

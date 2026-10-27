@@ -53,14 +53,14 @@ export default function RaceRanking({
   rows,
   selectedId,
   onSelect,
-  periodLabel,
+  throughLabel,
   sector,
   today,
 }: {
   rows: RankingRow[];
   selectedId: string | null;
   onSelect: (raceId: string) => void;
-  periodLabel: string;
+  throughLabel: string;
   sector: Sector;
   today: string;
 }) {
@@ -77,11 +77,11 @@ export default function RaceRanking({
     <section className={styles.ranking}>
       <h2 className={sharedStyles.sectionTitle}>
         Races drawing the most tech money
-        <span className={sharedStyles.sectionTitleAmount}>{periodLabel}</span>
+        <span className={sharedStyles.sectionTitleAmount}>{throughLabel}</span>
       </h2>
       {top.length === 0 ? (
         <p className={sharedStyles.subtitle}>
-          No tech spending in races matching these filters during this period.
+          No tech spending yet in races matching these filters.
         </p>
       ) : (
         <table className={styles.rankingTable}>
@@ -135,7 +135,7 @@ export default function RaceRanking({
       <div className={styles.rankingFoot}>
         <span>
           {top.length > 0 &&
-            `Top ${top.length} of ${rows.length} races with tech spending in this period`}
+            `Top ${top.length} of ${rows.length} races with tech spending`}
         </span>
         <Link href={sectorHref("/2026/elections", sector)}>
           See all races &rarr;

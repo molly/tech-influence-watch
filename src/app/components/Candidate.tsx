@@ -30,7 +30,6 @@ export function CandidateSkeleton({ onCard }: { onCard?: boolean }) {
 
 export function CandidateImage({
   candidate,
-  party: partyProp,
   firstName,
   lastName,
   defeated,
@@ -39,8 +38,6 @@ export function CandidateImage({
   noMargins = false,
 }: {
   candidate?: CandidateSummary | ExpenditureCandidateSummary;
-  // For callers with a party but no candidate summary to pass.
-  party?: Party;
   firstName?: string;
   lastName?: string;
   defeated?: boolean;
@@ -59,9 +56,8 @@ export function CandidateImage({
   if (noMargins) {
     candidateImageWrapperClassNames += ` ${styles.noMargins}`;
   }
-  const party = candidate?.party ?? partyProp;
-  if (party) {
-    candidateImageWrapperClassNames += ` ${styles[getPartyClass(party)]}`;
+  if (candidate && candidate.party) {
+    candidateImageWrapperClassNames += ` ${styles[getPartyClass(candidate.party)]}`;
   } else {
     candidateImageWrapperClassNames += ` ${styles["party-loading"]}`;
   }
