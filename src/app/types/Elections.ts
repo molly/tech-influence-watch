@@ -1,4 +1,4 @@
-import { Candidate, ScheduleEByCandidate } from "./FECTypes";
+import { Candidate, ScheduleE } from "./FECTypes";
 import { BESector } from "./Sector";
 
 export enum Party {
@@ -42,6 +42,26 @@ export enum RaceType {
   Special = "special",
 }
 
+// One independent expenditure for or against a candidate, as stored by the
+// backend's outside_spending.py (SCHEDULE_E_FIELDS).
+export type OutsideSpendingRow = Pick<
+  ScheduleE,
+  | "expenditure_amount"
+  | "expenditure_date"
+  | "dissemination_date"
+  | "expenditure_description"
+  | "support_oppose_indicator"
+  | "candidate_id"
+  | "category_code"
+  | "category_code_full"
+  | "committee_id"
+  | "pdf_url"
+  | "transaction_id"
+> & {
+  subrace?: string;
+  source?: "electioneering";
+};
+
 type OutsideSpending = {
   support_total: number;
   oppose_total: number;
@@ -49,8 +69,8 @@ type OutsideSpending = {
   ai_support_total?: number;
   crypto_oppose_total?: number;
   ai_oppose_total?: number;
-  support: ScheduleEByCandidate[];
-  oppose: ScheduleEByCandidate[];
+  support: OutsideSpendingRow[];
+  oppose: OutsideSpendingRow[];
 };
 
 export type CandidateSummary = {
@@ -81,6 +101,10 @@ export type CandidateSummary = {
 
   raised_total?: number;
   spent_total?: number;
+  // Receipts by FEC filing period (coverage end date), from the candidate's
+  // principal campaign committees. Used to show raised_total as of an earlier
+  // date.
+  raised_reports?: { date: string; receipts: number }[];
 
   outside_spending?: OutsideSpending;
   opposition_details?: OppositionConstant;

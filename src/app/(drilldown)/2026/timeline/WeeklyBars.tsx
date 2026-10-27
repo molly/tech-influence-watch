@@ -16,7 +16,6 @@ export function emptyBucket(): WeekBucket {
 
 // Stacked bottom to top.
 const SEGMENTS: { key: keyof WeekBucket; className: string }[] = [
-  { key: "U", className: styles.fillU },
   { key: "D", className: styles.fillD },
   { key: "R", className: styles.fillR },
 ];
@@ -25,7 +24,7 @@ const PLOT_HEIGHT = 100;
 const BAR_WIDTH = 10;
 
 // Round a gridline step up to 1, 2, 2.5, or 5 times a power of ten.
-function niceStep(value: number): number {
+export function niceStep(value: number): number {
   const power = Math.pow(10, Math.floor(Math.log10(value)));
   const m = value / power;
   if (m <= 1) {

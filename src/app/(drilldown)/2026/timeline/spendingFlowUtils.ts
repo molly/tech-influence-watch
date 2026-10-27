@@ -2,6 +2,7 @@ import { DateTime } from "luxon";
 
 import { STATES_BY_ABBR } from "@/app/data/states";
 import type { Party } from "@/app/types/Elections";
+import type { BESector } from "@/app/types/Sector";
 
 // The timeline runs in 7-day bins from the start of the 2026 election year.
 export const FLOW_START_DATE = "2026-01-01";
@@ -22,6 +23,7 @@ export interface FlowExpenditure {
   amount: number;
   direction: FlowDirection;
   stage: FlowStage;
+  sector: BESector;
   committeeId: string;
   candidate: string;
   candidateParty?: string;
@@ -32,11 +34,26 @@ export interface FlowExpenditure {
   description?: string;
 }
 
+// Sparse weekly sums for weeks with any spending: [week index, amount,
+// election stage].
+export type WeeklyAmounts = [number, number, FlowStage][];
+
 export interface FlowCandidate {
   name: string;
   party?: Party;
   incumbent: boolean;
+  // Whether they're in the current field (the general, if one is set). Others
+  // are listed only when they drew tech spending, with a status like "Lost Jun
+  // 23 Democratic primary".
+  inField: boolean;
+  status: string | null;
   raised: number;
+  // Receipts by filing period, keyed by the week the period ends.
+  raisedReports: { week: number; date: string; receipts: number }[];
+  // Independent expenditures for and against this candidate by all outside
+  // groups, tech or not.
+  outsideFor: WeeklyAmounts;
+  outsideAgainst: WeeklyAmounts;
 }
 
 export interface FlowRace {
@@ -49,6 +66,8 @@ export interface FlowRace {
   // same topology the map draws.
   latLon: [number, number] | null;
   candidates: FlowCandidate[];
+  // All outside spending in the race, for or against any candidate.
+  outsideTotal: WeeklyAmounts;
   generalDate: string | null;
 }
 
@@ -62,7 +81,7 @@ export interface SpendingFlowData {
 
 export type StageFilter = "all" | FlowStage;
 export type OfficeFilter = "all" | "S" | "H";
-export type ShowFilter = "all" | FlowDirection;
+export type ShowFilter = "all" | PartyDirection;
 
 export interface FlowFilters {
   stage: StageFilter;
@@ -76,14 +95,19 @@ export interface DirectionTotals {
   total: number;
 }
 
+// The directions the page shows. "U" stays in the data model as a fallback
+// for spending that can't be assigned to a party (support for a third-party
+// candidate, or opposition missing from the oppositionSpending constant), but
+// none of today's spending lands there, so it isn't shown.
+export type PartyDirection = "R" | "D";
+
 export const DIRECTIONS: {
-  key: FlowDirection;
+  key: PartyDirection;
   label: string;
   phrase: string;
 }[] = [
   { key: "R", label: "Favoring Republicans", phrase: "favoring Republicans" },
   { key: "D", label: "Favoring Democrats", phrase: "favoring Democrats" },
-  { key: "U", label: "Unassigned / unclear", phrase: "unassigned" },
 ];
 
 export function weekStart(week: number): DateTime {
@@ -219,4 +243,37 @@ export function getHelpsLines(expenditures: FlowExpenditure[]): HelpsLine[] {
       parts: line.parts.sort((a, b) => b.amount - a.amount),
     }))
     .sort((a, b) => b.total - a.total);
+}
+
+export function sumThroughWeek(
+  amounts: WeeklyAmounts,
+  week: number,
+  stage: StageFilter,
+): number {
+  let total = 0;
+  for (const [w, amount, s] of amounts) {
+    if (w <= week && (stage === "all" || s === stage)) {
+      total += amount;
+    }
+  }
+  return total;
+}
+
+// A candidate's fundraising as of a week: the current total, less whatever
+// was reported for periods ending after it. Stepping back from the current
+// total keeps the latest week equal to the FEC's candidate total.
+export function raisedThroughWeek(
+  candidate: FlowCandidate,
+  week: number,
+): { amount: number; through: string | null } {
+  let amount = candidate.raised;
+  let through: string | null = null;
+  for (const report of candidate.raisedReports) {
+    if (report.week > week) {
+      amount -= report.receipts;
+    } else {
+      through = report.date;
+    }
+  }
+  return { amount: Math.max(0, amount), through };
 }

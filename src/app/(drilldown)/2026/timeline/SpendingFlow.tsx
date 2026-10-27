@@ -16,26 +16,25 @@ import styles from "./SpendingFlow.module.css";
 import {
   DIRECTIONS,
   DirectionTotals,
-  FlowDirection,
   FlowExpenditure,
+  formatShortDate,
   getThroughLabel,
   matchesFilters,
   OfficeFilter,
+  PartyDirection,
   ShowFilter,
   SpendingFlowData,
   StageFilter,
   sumByDirection,
+  weekStart,
 } from "./spendingFlowUtils";
 import SpendingMap, { MapItem, PING_MS, PingBatch } from "./SpendingMap";
 import Timeline from "./Timeline";
 import { emptyBucket, WeekBucket } from "./WeeklyBars";
 
 const STEP_MS = 900;
-function dominantDirection(totals: DirectionTotals): FlowDirection {
-  if (totals.R >= totals.D && totals.R >= totals.U) {
-    return "R";
-  }
-  return totals.D >= totals.U ? "D" : "U";
+function dominantDirection(totals: DirectionTotals): PartyDirection {
+  return totals.R >= totals.D ? "R" : "D";
 }
 
 function directionValue(totals: DirectionTotals, show: ShowFilter): number {
@@ -96,6 +95,7 @@ export default function SpendingFlow({
   // Everything on the page is cumulative: 2026 spending through the
   // scrubber's week, so scrubbing or playing shows the year building up.
   const throughLabel = getThroughLabel(week, data.today);
+  const weekLabel = formatShortDate(weekStart(week));
   const shortThroughLabel = throughLabel.replace(/, \d{4}$/, "");
   const cumulative = filtered.filter((e) => e.week >= 0 && e.week <= week);
   const byRace = groupByRace(cumulative);
@@ -262,7 +262,6 @@ export default function SpendingFlow({
                 { value: "all", label: "All spending" },
                 { value: "D", label: "Favoring Democrats" },
                 { value: "R", label: "Favoring Republicans" },
-                { value: "U", label: "Unassigned" },
               ]}
             />
           </div>
@@ -325,7 +324,7 @@ export default function SpendingFlow({
                       <span className="bold">
                         +{humanizeRoundedCurrency(thisWeekTotal, true, 1)}
                       </span>{" "}
-                      this week
+                      week of {weekLabel}
                     </span>
                   }
                 />
@@ -335,7 +334,7 @@ export default function SpendingFlow({
                   bottomText={
                     <span className={styles.thisWeek}>
                       <span className="bold">{thisWeekRaces}</span> with
-                      spending this week
+                      spending week of {weekLabel}
                     </span>
                   }
                 />
@@ -349,6 +348,7 @@ export default function SpendingFlow({
             selectedId={selectedId}
             onSelect={setSelectedId}
             throughLabel={throughLabel}
+            weekLabel={weekLabel}
             sector={sector}
             today={data.today}
           />
@@ -356,9 +356,12 @@ export default function SpendingFlow({
         <RacePanel
           race={selectedRace}
           expenditures={selectedExpenditures}
+          yearExpenditures={filtered.filter((e) => e.raceId === selectedId)}
           totals={sumByDirection(selectedExpenditures)}
           series={selectedSeries}
           throughLabel={shortThroughLabel}
+          week={week}
+          stage={stage}
           siblings={siblings}
           committees={data.committees}
           sector={sector}

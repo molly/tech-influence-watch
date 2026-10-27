@@ -24,7 +24,6 @@ const EVENTS = [
 
 // Stacked bottom to top.
 const SEGMENTS: { key: FlowDirection; className: string }[] = [
-  { key: "U", className: styles.fillU },
   { key: "D", className: styles.fillD },
   { key: "R", className: styles.fillR },
 ];

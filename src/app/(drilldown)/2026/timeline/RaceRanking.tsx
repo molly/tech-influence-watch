@@ -1,6 +1,8 @@
 import { DateTime } from "luxon";
 import Link from "next/link";
+import { useState } from "react";
 
+import Pagination from "@/app/components/Pagination";
 import sharedStyles from "@/app/shared.module.css";
 import { Sector } from "@/app/types/Sector";
 import { humanizeRoundedCurrency } from "@/app/utils/humanize";
@@ -15,7 +17,7 @@ import {
   getRaceLabel,
 } from "./spendingFlowUtils";
 
-const MAX_ROWS = 10;
+const PAGE_SIZE = 10;
 const MAX_LINES = 3;
 
 export interface RankingRow {
@@ -25,24 +27,39 @@ export interface RankingRow {
   thisWeek: number;
 }
 
-function RaceTags({ row, today }: { row: RankingRow; today: string }) {
-  const generalOnly = row.expenditures.every((e) => e.stage === "general");
-  const primaryOnly = row.expenditures.every((e) => e.stage === "primary");
+function RaceTags({
+  row,
+  today,
+  weekLabel,
+}: {
+  row: RankingRow;
+  today: string;
+  weekLabel: string;
+}) {
+  const byStage = { primary: 0, general: 0 };
+  for (const e of row.expenditures) {
+    byStage[e.stage] += e.amount;
+  }
   const upcomingGeneral =
     row.race.generalDate && row.race.generalDate >= today
       ? DateTime.fromISO(row.race.generalDate).toFormat("LLL d")
       : null;
   return (
     <div className={styles.tags}>
-      {primaryOnly && <span className={`${styles.tag} ${styles.tagOutline}`}>Primary</span>}
-      {generalOnly && (
+      {byStage.primary > 0 && (
+        <span className={`${styles.tag} ${styles.tagOutline}`}>
+          Primary · {humanizeRoundedCurrency(byStage.primary, true, 1)}
+        </span>
+      )}
+      {byStage.general > 0 && (
         <span className={styles.tag}>
-          General{upcomingGeneral ? ` · ${upcomingGeneral}` : ""}
+          General{upcomingGeneral ? ` · ${upcomingGeneral}` : ""} ·{" "}
+          {humanizeRoundedCurrency(byStage.general, true, 1)}
         </span>
       )}
       {row.thisWeek > 0 && (
         <span className={`${styles.tag} ${styles.tagWeek}`}>
-          +{humanizeRoundedCurrency(row.thisWeek, true, 1)} this week
+          +{humanizeRoundedCurrency(row.thisWeek, true, 1)} week of {weekLabel}
         </span>
       )}
     </div>
@@ -54,6 +71,7 @@ export default function RaceRanking({
   selectedId,
   onSelect,
   throughLabel,
+  weekLabel,
   sector,
   today,
 }: {
@@ -61,16 +79,27 @@ export default function RaceRanking({
   selectedId: string | null;
   onSelect: (raceId: string) => void;
   throughLabel: string;
+  weekLabel: string;
   sector: Sector;
   today: string;
 }) {
-  const top = rows.slice(0, MAX_ROWS).map((row) => ({
+  const [page, setPage] = useState(1);
+  const withLines = rows.map((row) => ({
     ...row,
     lines: getHelpsLines(row.expenditures).slice(0, MAX_LINES),
   }));
+  // One scale across every page, so bars compare between pages.
   const max = Math.max(
     0,
-    ...top.flatMap((row) => row.lines.map((line) => line.total)),
+    ...withLines.flatMap((row) => row.lines.map((line) => line.total)),
+  );
+  // The row count changes as the week and filters change; stay on a page that
+  // exists.
+  const totalPages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const pageRows = withLines.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE,
   );
 
   return (
@@ -79,7 +108,7 @@ export default function RaceRanking({
         Races drawing the most tech money
         <span className={sharedStyles.sectionTitleAmount}>{throughLabel}</span>
       </h2>
-      {top.length === 0 ? (
+      {rows.length === 0 ? (
         <p className={sharedStyles.subtitle}>
           No tech spending yet in races matching these filters.
         </p>
@@ -87,14 +116,13 @@ export default function RaceRanking({
         <table className={styles.rankingTable}>
           <thead>
             <tr>
-              <th>#</th>
               <th>Race</th>
               <th className={styles.helpsColumn}>Who the money helps</th>
               <th className="number-cell">Total</th>
             </tr>
           </thead>
           <tbody>
-            {top.map((row, i) => (
+            {pageRows.map((row) => (
               <tr
                 key={row.race.id}
                 className={
@@ -104,9 +132,6 @@ export default function RaceRanking({
                 }
                 onClick={() => onSelect(row.race.id)}
               >
-                <td className={styles.rank}>
-                  {String(i + 1).padStart(2, "0")}
-                </td>
                 <td>
                   <button
                     type="button"
@@ -119,7 +144,7 @@ export default function RaceRanking({
                   >
                     {getRaceLabel(row.race)}
                   </button>
-                  <RaceTags row={row} today={today} />
+                  <RaceTags row={row} today={today} weekLabel={weekLabel} />
                 </td>
                 <td>
                   <HelpsBars lines={row.lines} max={max} />
@@ -132,11 +157,15 @@ export default function RaceRanking({
           </tbody>
         </table>
       )}
+      <Pagination
+        page={currentPage}
+        totalPages={totalPages}
+        totalItems={rows.length}
+        pageSize={PAGE_SIZE}
+        itemLabel="races with tech spending"
+        onPageChange={setPage}
+      />
       <div className={styles.rankingFoot}>
-        <span>
-          {top.length > 0 &&
-            `Top ${top.length} of ${rows.length} races with tech spending`}
-        </span>
         <Link href={sectorHref("/2026/elections", sector)}>
           See all races &rarr;
         </Link>

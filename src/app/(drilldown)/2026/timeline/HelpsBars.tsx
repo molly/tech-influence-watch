@@ -10,7 +10,26 @@ function lastName(name: string) {
   return getFirstLastName(name)[1];
 }
 
-export function getHelpsLabel(line: HelpsLine): string {
+// Last names, unless two different people in the same row share one (e.g.
+// Lindsey and Darline Graham), in which case those get full names.
+function getNameFormatter(lines: HelpsLine[]): (name: string) => string {
+  const names = new Set(
+    lines.flatMap((line) => [
+      ...(line.beneficiary ? [line.beneficiary] : []),
+      ...line.parts.map((part) => part.candidate),
+    ]),
+  );
+  const counts = new Map<string, number>();
+  for (const name of names) {
+    counts.set(lastName(name), (counts.get(lastName(name)) ?? 0) + 1);
+  }
+  return (name) => ((counts.get(lastName(name)) ?? 0) > 1 ? name : lastName(name));
+}
+
+export function getHelpsLabel(
+  line: HelpsLine,
+  formatName: (name: string) => string = lastName,
+): string {
   if (!line.beneficiary) {
     if (line.direction === "R") {
       return "Helps Republicans";
@@ -24,7 +43,7 @@ export function getHelpsLabel(line: HelpsLine): string {
     line.party === "R" || line.party === "D" || line.party === "I"
       ? ` (${line.party})`
       : "";
-  return `Helps ${lastName(line.beneficiary)}${party}`;
+  return `Helps ${formatName(line.beneficiary)}${party}`;
 }
 
 export default function HelpsBars({
@@ -34,11 +53,12 @@ export default function HelpsBars({
   lines: HelpsLine[];
   max: number;
 }) {
+  const formatName = getNameFormatter(lines);
   return (
     <HorizontalBars
       max={max}
       items={lines.map((line) => {
-        const label = getHelpsLabel(line);
+        const label = getHelpsLabel(line, formatName);
         const displayValue = humanizeRoundedCurrency(line.total, true, 1);
         return {
           key: line.key,
@@ -52,7 +72,7 @@ export default function HelpsBars({
               {line.parts
                 .map(
                   (part) =>
-                    `${humanizeRoundedCurrency(part.amount, true, 1)} ${part.kind} ${lastName(part.candidate)}`,
+                    `${humanizeRoundedCurrency(part.amount, true, 1)} ${part.kind} ${formatName(part.candidate)}`,
                 )
                 .join(" + ")}
             </span>
