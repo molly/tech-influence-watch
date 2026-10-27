@@ -1,6 +1,7 @@
 import { DateTime } from "luxon";
 
 import { STATES_BY_ABBR } from "@/app/data/states";
+import type { Party } from "@/app/types/Elections";
 
 // The timeline runs in 7-day bins from the start of the 2026 election year.
 export const FLOW_START_DATE = "2026-01-01";
@@ -31,6 +32,13 @@ export interface FlowExpenditure {
   description?: string;
 }
 
+export interface FlowCandidate {
+  name: string;
+  party?: Party;
+  incumbent: boolean;
+  raised: number;
+}
+
 export interface FlowRace {
   id: string;
   state: string;
@@ -40,6 +48,7 @@ export interface FlowRace {
   // races are placed at the state's centroid, computed client-side from the
   // same topology the map draws.
   latLon: [number, number] | null;
+  candidates: FlowCandidate[];
   generalDate: string | null;
 }
 

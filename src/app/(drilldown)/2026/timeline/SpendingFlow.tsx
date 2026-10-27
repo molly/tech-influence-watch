@@ -96,6 +96,7 @@ export default function SpendingFlow({
   // Everything on the page is cumulative: 2026 spending through the
   // scrubber's week, so scrubbing or playing shows the year building up.
   const throughLabel = getThroughLabel(week, data.today);
+  const shortThroughLabel = throughLabel.replace(/, \d{4}$/, "");
   const cumulative = filtered.filter((e) => e.week >= 0 && e.week <= week);
   const byRace = groupByRace(cumulative);
   const totals = sumByDirection(cumulative);
@@ -355,7 +356,9 @@ export default function SpendingFlow({
         <RacePanel
           race={selectedRace}
           expenditures={selectedExpenditures}
+          totals={sumByDirection(selectedExpenditures)}
           series={selectedSeries}
+          throughLabel={shortThroughLabel}
           siblings={siblings}
           committees={data.committees}
           sector={sector}
