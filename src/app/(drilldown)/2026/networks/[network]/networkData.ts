@@ -17,7 +17,6 @@ import type {
   Contributions,
   ContributionsGroup,
 } from "@/app/types/Contributions";
-import { RaceType } from "@/app/types/Elections";
 import type {
   Expenditure,
   ExpendituresByPartySnapshot,
@@ -192,26 +191,6 @@ function companyRole(company: CompanyConstant | undefined): string | undefined {
     return undefined;
   }
   return COMPANY_CATEGORY_LABELS[company.category[0]];
-}
-
-function getExpenditureRaceId(expenditure: Expenditure): string {
-  let raceId = expenditure.candidate_office ?? "";
-  if (
-    expenditure.candidate_office_district &&
-    expenditure.candidate_office_district !== "00"
-  ) {
-    raceId += `-${expenditure.candidate_office_district}`;
-  }
-  // A special primary ("SP") is a sub-race of the regular race, not a separate
-  // special election, so it must not pick up the "-special" suffix.
-  if (
-    expenditure.subrace !== RaceType.SpecialPrimary &&
-    (expenditure.subrace === "special" ||
-      (expenditure.election_type && expenditure.election_type[0] === "S"))
-  ) {
-    raceId += "-special";
-  }
-  return raceId;
 }
 
 function getCandidateName(expenditure: Expenditure): string {
@@ -507,7 +486,7 @@ export async function getNetworkData(
       if (!memberIdSet.has(String(expenditure.committee_id))) {
         continue;
       }
-      if (!expenditure.candidate_office_state) {
+      if (!expenditure.candidate_office_state || !expenditure.race_id) {
         continue;
       }
       const name = getCandidateName(expenditure);
@@ -516,13 +495,13 @@ export async function getNetworkData(
       }
       expenditureCount += 1;
       const state = expenditure.candidate_office_state;
-      const raceId = getExpenditureRaceId(expenditure);
+      const raceId = expenditure.race_id;
       const lastName = (
         expenditure.candidate_last_name ??
         expenditure.candidate_name ??
         ""
       ).toUpperCase();
-      const key = `${state}-${raceId}-${lastName}`;
+      const key = `${raceId}-${lastName}`;
       const isSupport = expenditure.support_oppose_indicator === "S";
       const amount = expenditure.expenditure_amount ?? 0;
       const committeeId = String(expenditure.committee_id);
@@ -575,9 +554,7 @@ export async function getNetworkData(
     }))
     .sort((a, b) => b.total - a.total);
 
-  const raceCount = new Set(
-    candidates.map((target) => `${target.state}-${target.raceId}`),
-  ).size;
+  const raceCount = new Set(candidates.map((target) => target.raceId)).size;
 
   return {
     network,

@@ -13,6 +13,8 @@ export interface HorizontalBarItem {
   value: number;
   displayValue?: string;
   ariaLabel?: string;
+  // Overrides the default accent fill, e.g. with a party color class.
+  fillClassName?: string;
 }
 
 export function HorizontalBars({
@@ -53,7 +55,10 @@ export function HorizontalBars({
               }
             >
               {item.value > 0 && (
-                <div className={styles.fill} style={{ width: `${pct}%` }} />
+                <div
+                  className={`${styles.fill} ${item.fillClassName ?? ""}`}
+                  style={{ width: `${pct}%` }}
+                />
               )}
             </div>
           </li>

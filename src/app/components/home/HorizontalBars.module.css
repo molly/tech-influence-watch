@@ -139,6 +139,21 @@
   border-color: var(--color-lime-300);
 }
 
+.colorRepublican {
+  background: var(--party-republican);
+  border-color: var(--party-republican);
+}
+
+.colorDemocrat {
+  background: var(--party-democrat);
+  border-color: var(--party-democrat);
+}
+
+.colorUnknownParty {
+  background: var(--party-unknown);
+  border-color: var(--party-unknown);
+}
+
 @media (prefers-color-scheme: dark) {
   .track {
     position: relative;

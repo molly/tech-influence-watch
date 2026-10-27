@@ -34,7 +34,7 @@ export default function NetworkByCandidate({ data }: { data: NetworkData }) {
         <>
           {target.prefix}{" "}
           <Link
-            href={`/2026/elections/${target.state}-${target.raceId}`}
+            href={`/2026/elections/${target.raceId}`}
             className="secondaryLink"
           >
             {target.name}

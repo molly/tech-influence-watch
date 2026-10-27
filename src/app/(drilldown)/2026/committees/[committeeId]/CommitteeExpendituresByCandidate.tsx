@@ -11,7 +11,6 @@ import {
 } from "@/app/components/home/HorizontalBars";
 import { STATES_BY_ABBR } from "@/app/data/states";
 import sharedStyles from "@/app/shared.module.css";
-import { RaceType } from "@/app/types/Elections";
 import {
   CommitteeTotalExpenditures,
   Expenditure,
@@ -33,26 +32,6 @@ type CandidateTarget = {
   oppose: number;
 };
 
-function getExpenditureRaceId(expenditure: Expenditure): string {
-  let raceId = expenditure.candidate_office ?? "";
-  if (
-    expenditure.candidate_office_district &&
-    expenditure.candidate_office_district !== "00"
-  ) {
-    raceId += `-${expenditure.candidate_office_district}`;
-  }
-  // A special primary ("SP") is a sub-race of the regular race, not a separate
-  // special election, so it must not pick up the "-special" suffix.
-  if (
-    expenditure.subrace !== RaceType.SpecialPrimary &&
-    (expenditure.subrace === "special" ||
-      (expenditure.election_type && expenditure.election_type[0] === "S"))
-  ) {
-    raceId += "-special";
-  }
-  return raceId;
-}
-
 export default async function CommitteeExpendituresByCandidate({
   committeeId,
 }: {
@@ -73,7 +52,7 @@ export default async function CommitteeExpendituresByCandidate({
     if (String(expenditure.committee_id) !== committeeId) {
       continue;
     }
-    if (!expenditure.candidate_office_state) {
+    if (!expenditure.candidate_office_state || !expenditure.race_id) {
       continue;
     }
 
@@ -83,13 +62,13 @@ export default async function CommitteeExpendituresByCandidate({
     }
 
     const state = expenditure.candidate_office_state;
-    const raceId = getExpenditureRaceId(expenditure);
+    const raceId = expenditure.race_id;
     const lastName = (
       expenditure.candidate_last_name ??
       expenditure.candidate_name ??
       ""
     ).toUpperCase();
-    const key = `${state}-${raceId}-${lastName}`;
+    const key = `${raceId}-${lastName}`;
 
     const isSupport = expenditure.support_oppose_indicator === "S";
     const amount = expenditure.expenditure_amount ?? 0;
@@ -123,7 +102,7 @@ export default async function CommitteeExpendituresByCandidate({
     return null;
   }
 
-  const raceCount = new Set(sorted.map((t) => `${t.state}-${t.raceId}`)).size;
+  const raceCount = new Set(sorted.map((t) => t.raceId)).size;
 
   const totalExpenditures =
     !isError(totalsData) &&
@@ -139,13 +118,13 @@ export default async function CommitteeExpendituresByCandidate({
     const partyLetter = target.party ? target.party[0] : "";
 
     return {
-      key: `${target.state}-${target.raceId}-${target.name}-${i}`,
+      key: `${target.raceId}-${target.name}-${i}`,
       label: `${prefix} ${target.name}${partyLetter ? ` (${partyLetter})` : ""}`,
       labelNode: (
         <>
           {prefix}{" "}
           <Link
-            href={`/2026/elections/${target.state}-${target.raceId}`}
+            href={`/2026/elections/${target.raceId}`}
             className="secondaryLink"
           >
             {target.name}

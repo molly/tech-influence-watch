@@ -1,0 +1,1213 @@
+/* ── Page header ───────────────────────────────────────────────────── */
+
+.mast {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.5rem;
+  align-items: end;
+}
+
+.mastMeta {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.9rem;
+  color: var(--secondary-text);
+  text-align: right;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+/* ── Shared bits ───────────────────────────────────────────────────── */
+
+.annotation {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.8rem;
+  color: var(--secondary-text);
+}
+
+.sectionHeading {
+  font-size: inherit;
+  margin: 0;
+}
+
+.filterGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.filterLabel {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.8rem;
+  color: var(--secondary-text);
+}
+
+.segmented {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.segment {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.2;
+  padding: 0.375rem 0.75rem;
+  margin-left: -1px;
+  border: 1px solid var(--card-border);
+  background: var(--background);
+  color: var(--main-text);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.segment:first-child {
+  margin-left: 0;
+}
+
+.segment:hover {
+  background: var(--card-background);
+}
+
+.segment:focus-visible {
+  position: relative;
+  outline: 2px solid var(--main-text);
+  outline-offset: 2px;
+}
+
+.segmentActive,
+.segmentActive:hover {
+  position: relative;
+  background: var(--main-text);
+  border-color: var(--main-text);
+  color: var(--background);
+}
+
+/* ── Layout ────────────────────────────────────────────────────────── */
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.75rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--divider-color);
+  border-bottom: 1px solid var(--table-color);
+}
+
+.body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 30rem;
+}
+
+.left {
+  min-width: 0;
+  padding: 1.25rem 1.75rem 1.75rem 0;
+  border-right: 1px solid var(--table-color);
+}
+
+.lower {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 2rem;
+}
+
+/* ── Map ───────────────────────────────────────────────────────────── */
+
+.mapBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.mapContext {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.9rem;
+  color: var(--secondary-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.mapBox {
+  position: relative;
+  background: var(--card-background);
+  border: 1px solid var(--card-border);
+  padding: 0.5rem 0.5rem 0;
+}
+
+.map {
+  position: relative;
+}
+
+.mapSvg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.stateShape {
+  fill: var(--table-color);
+  transition: fill 0.15s;
+}
+
+.stateShapeActive {
+  fill: var(--card-border);
+}
+
+.stateMesh {
+  fill: none;
+  stroke: var(--card-background);
+  stroke-width: 1.2;
+  pointer-events: none;
+}
+
+.race {
+  cursor: pointer;
+  outline: none;
+}
+
+.raceCircle {
+  fill-opacity: 0.55;
+  stroke-width: 1;
+  transition: r 0.6s ease-out;
+}
+
+.race:hover .raceCircle,
+.race:focus-visible .raceCircle {
+  fill-opacity: 0.8;
+}
+
+.race:focus-visible .raceCircle {
+  stroke: var(--main-text);
+  stroke-width: 2;
+}
+
+.raceSibling .raceCircle {
+  stroke: var(--main-text);
+  stroke-dasharray: 3 2;
+}
+
+.raceSelected {
+  fill: none;
+  stroke: var(--main-text);
+  stroke-width: 2;
+}
+
+.pings {
+  pointer-events: none;
+}
+
+.pingDot,
+.pingRing {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+}
+
+.pingDot {
+  stroke: none;
+  animation: pingDot 1.8s ease-out forwards;
+}
+
+.pingRing {
+  fill: none;
+  stroke-width: 1.5;
+  animation: pingRing 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes pingDot {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  20% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+@keyframes pingRing {
+  0% {
+    opacity: 0.7;
+    transform: scale(0.3);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+.mapTooltip {
+  position: absolute;
+  z-index: 4;
+  min-width: 12.5rem;
+  max-width: 16rem;
+  padding: 0.5rem 0.625rem;
+  transform: translate(-50%, calc(-100% - 0.875rem));
+  background: var(--background);
+  border: 1px solid var(--money-card-border);
+  font-size: 0.8rem;
+  pointer-events: none;
+}
+
+.mapTooltipTitle {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.mapTooltipSub {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--secondary-text);
+  margin: 0.125rem 0 0.375rem;
+}
+
+.mapTooltipRow {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.mapTooltipSwatch {
+  width: 0.5rem;
+  height: 0.5rem;
+  background: currentColor;
+}
+
+.mapTooltipSiblings {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--secondary-text);
+  margin-top: 0.375rem;
+  padding-top: 0.3rem;
+  border-top: 1px solid var(--table-color);
+}
+
+.mapLegend {
+  position: absolute;
+  left: 0.75rem;
+  bottom: 0.75rem;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.625rem 0.75rem;
+  background: var(--background);
+  border: 1px solid var(--card-border);
+  font-size: 0.8rem;
+}
+
+.mapLegendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.mapLegendItem svg {
+  flex: none;
+}
+
+.mapLegendNote {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-top: 0.25rem;
+  padding-top: 0.375rem;
+  border-top: 1px solid var(--table-color);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.75rem;
+  color: var(--secondary-text);
+}
+
+.legendPingDot {
+  fill: var(--main-text);
+}
+
+.legendPingRing {
+  fill: none;
+  stroke: var(--main-text);
+  stroke-opacity: 0.4;
+  stroke-width: 1.5;
+}
+
+/* ── Timeline ──────────────────────────────────────────────────────── */
+
+.timeline {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+  padding: 0.875rem 0 0.25rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--table-color);
+}
+
+.playGroup {
+  display: flex;
+}
+
+.playButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: none;
+  border: 0;
+  background: var(--main-text);
+  cursor: pointer;
+}
+
+.playButton:hover {
+  background: var(--color-neutral-800);
+}
+
+.playButton:focus-visible,
+.speedButton:focus-visible {
+  outline: 2px solid var(--main-text);
+  outline-offset: 2px;
+}
+
+.playIcon {
+  width: 0;
+  height: 0;
+  margin-left: 0.2rem;
+  border-left: 0.75rem solid var(--background);
+  border-top: 0.45rem solid transparent;
+  border-bottom: 0.45rem solid transparent;
+}
+
+.pauseIcon {
+  width: 0.75rem;
+  height: 0.8rem;
+  border-left: 0.25rem solid var(--background);
+  border-right: 0.25rem solid var(--background);
+}
+
+.speedButton {
+  height: 2.5rem;
+  min-width: 2.75rem;
+  margin-left: -1px;
+  padding: 0 0.5rem;
+  border: 1px solid var(--main-text);
+  background: var(--background);
+  color: var(--main-text);
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+.speedButton:hover {
+  background: var(--card-background);
+}
+
+.weekOf {
+  min-width: 7.5rem;
+}
+
+.weekOfValue {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.6rem;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.timelineTrack {
+  min-width: 0;
+}
+
+.rangeWrapper {
+  position: relative;
+}
+
+/* Filled portion of the track, drawn under the input's transparent track. */
+.rangeFill {
+  position: absolute;
+  left: 0;
+  top: calc(50% - 1.5px);
+  height: 3px;
+  background: var(--main-text);
+  pointer-events: none;
+}
+
+.range {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 1.25rem;
+  margin: 0;
+  background: transparent;
+  appearance: none;
+  cursor: pointer;
+}
+
+.range:focus-visible {
+  outline: 2px solid var(--main-text);
+  outline-offset: 2px;
+}
+
+.range::-webkit-slider-runnable-track {
+  height: 3px;
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--card-border);
+}
+
+.range::-moz-range-track {
+  height: 3px;
+  background: var(--card-border);
+}
+
+.range::-webkit-slider-thumb {
+  appearance: none;
+  width: 1rem;
+  height: 1rem;
+  margin-top: -0.4rem;
+  border: 2px solid var(--main-text);
+  border-radius: 0;
+  background: var(--color-lime-500);
+}
+
+.range::-moz-range-thumb {
+  width: 0.8rem;
+  height: 0.8rem;
+  border: 2px solid var(--main-text);
+  border-radius: 0;
+  background: var(--color-lime-500);
+}
+
+.timelineTicks,
+.timelineEvents {
+  position: relative;
+  color: var(--secondary-text);
+}
+
+.timelineTicks {
+  height: 1rem;
+  font-size: 0.7rem;
+}
+
+.timelineTicks span {
+  position: absolute;
+  white-space: nowrap;
+}
+
+/* Event labels sit above the bar, each with a tick mark that runs down to the
+   middle of the track. Events past the end of the bar (e.g. the general
+   election) get their own row above, with no tick. */
+.timelineEvents {
+  position: relative;
+  z-index: 1;
+  height: 2.5rem;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.75rem;
+  pointer-events: none;
+}
+
+.timelineEvents span {
+  position: absolute;
+  /* Half the range input's height, so the tick ends at the track. */
+  bottom: -0.625rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  white-space: nowrap;
+}
+
+.timelineEvents span::after {
+  content: "";
+  width: 1px;
+  height: 1rem;
+  margin-top: 0.1rem;
+  background: var(--main-text);
+}
+
+.timelineEvents .eventRight {
+  align-items: flex-end;
+  transform: translateX(-100%);
+}
+
+.timelineEvents .eventEnd {
+  top: 0;
+  right: 0;
+  bottom: auto;
+}
+
+.timelineEvents .eventEnd::after {
+  content: none;
+}
+
+/* ── Weekly bar charts ─────────────────────────────────────────────── */
+
+.chartNote {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.8rem;
+  color: var(--secondary-text);
+  margin: 0 0 1.5rem;
+}
+
+.barChart {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: 10.5rem auto;
+  column-gap: 0.5rem;
+  margin-top: 1.25rem;
+}
+
+.barChartSmall {
+  grid-template-rows: 7rem auto;
+}
+
+.barChartY {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: -0.375rem 0;
+  font-size: 0.7rem;
+  color: var(--secondary-text);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.barChartPlot {
+  position: relative;
+}
+
+.barChartPlot svg {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.barChartPlot rect {
+  stroke: none;
+}
+
+.barChartX {
+  position: relative;
+  height: 1.1rem;
+  font-size: 0.7rem;
+  color: var(--secondary-text);
+}
+
+.barChartX span {
+  position: absolute;
+  top: 0.25rem;
+  white-space: nowrap;
+}
+
+.gridline {
+  stroke: var(--table-color);
+}
+
+.baseline {
+  stroke: var(--main-text);
+}
+
+.dimmed {
+  fill-opacity: 0.3;
+}
+
+.bracket {
+  position: absolute;
+  top: -0.625rem;
+  height: 0.375rem;
+  border: 1px solid var(--main-text);
+  border-bottom: 0;
+}
+
+.bracket span {
+  position: absolute;
+  right: -2px;
+  bottom: 0.5rem;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.7rem;
+  white-space: nowrap;
+}
+
+/* SVG fills (bars, bubbles, pings). Bubbles and pings stroke in the same
+   color; bar rects turn the stroke off above. */
+.fillR {
+  fill: var(--party-republican);
+  stroke: var(--party-republican);
+  color: var(--party-republican);
+}
+
+.fillD {
+  fill: var(--party-democrat);
+  stroke: var(--party-democrat);
+  color: var(--party-democrat);
+}
+
+.fillU {
+  fill: var(--party-unknown);
+  stroke: var(--party-unknown);
+  color: var(--party-unknown);
+}
+
+.fillTotal {
+  fill: var(--main-text);
+}
+
+.fillCrypto {
+  fill: var(--color-lime-700);
+}
+
+.fillAi {
+  fill: var(--color-lime-400);
+}
+
+.fillTech {
+  fill: var(--color-black);
+}
+
+.swatchTotal {
+  background: var(--main-text);
+}
+
+.swatchCrypto {
+  background: var(--color-lime-700);
+}
+
+.swatchAi {
+  background: var(--color-lime-400);
+}
+
+.swatchTech {
+  background: var(--color-black);
+}
+
+/* ── Activity ──────────────────────────────────────────────────────── */
+
+.activityCards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 0.25rem 0 1rem;
+}
+
+.changeUp,
+.changeDown {
+  font-size: 0.8rem;
+  color: var(--secondary-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.changeUp .bold {
+  color: var(--accent-on-light);
+}
+
+.changeDown .bold {
+  color: var(--main-text);
+}
+
+.directionBreakdown {
+  margin-top: 0.5rem;
+}
+
+.directionLegend {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.625rem;
+  margin-top: 0.625rem;
+}
+
+.directionValue {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.directionPct {
+  font-size: 0.8rem;
+  color: var(--secondary-text);
+}
+
+.directionLabel {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.8rem;
+  color: var(--secondary-text);
+  padding-left: 1rem;
+  margin-top: 1px;
+}
+
+/* ── Ranking table ─────────────────────────────────────────────────── */
+
+.ranking {
+  margin-top: 2rem;
+}
+
+.rankingTable {
+  width: 100%;
+  font-variant-numeric: tabular-nums;
+
+  th {
+    font-size: 0.75rem;
+    color: var(--table-header-color);
+    text-align: left;
+    padding: 0.375rem 0.625rem;
+    border-bottom: 1px solid var(--divider-color);
+  }
+
+  th:global(.number-cell) {
+    text-align: right;
+  }
+
+  td {
+    padding: 0.75rem 0.625rem;
+    border-bottom: 1px solid var(--table-color);
+    vertical-align: middle;
+  }
+}
+
+.helpsColumn {
+  width: 52%;
+}
+
+.rankingRow {
+  cursor: pointer;
+}
+
+.rankingRow:hover {
+  background: var(--card-background);
+}
+
+.rankingRowActive,
+.rankingRowActive:hover {
+  background: var(--color-lime-50);
+}
+
+.rankingRowActive td:first-child {
+  box-shadow: inset 3px 0 var(--main-text);
+}
+
+.rank {
+  width: 2.25rem;
+  font-size: 0.75rem;
+  color: var(--tertiary-text);
+}
+
+.rankingRaceName {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--main-text);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.3rem;
+  line-height: 1;
+  text-align: left;
+  cursor: pointer;
+}
+
+.rankingRaceName:focus-visible {
+  outline: 2px solid var(--main-text);
+  outline-offset: 2px;
+}
+
+.rankingTotal {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.5rem;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.rankingFoot {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-top: 0.625rem;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.8rem;
+  color: var(--secondary-text);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: 0.3rem;
+}
+
+.tag {
+  composes: sectorBadge from "@/app/shared.module.css";
+  margin-left: 0;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  border: 1px solid transparent;
+}
+
+.tagOutline {
+  background: none;
+  border-color: var(--card-border);
+  color: var(--secondary-text);
+}
+
+.tagWeek {
+  background: var(--color-lime-50);
+  border-color: var(--accent-on-light);
+  color: var(--color-lime-800);
+}
+
+/* ── Race panel ────────────────────────────────────────────────────── */
+
+.panel {
+  min-width: 0;
+  padding: 1.25rem 0 1.75rem 1.5rem;
+}
+
+.panelEmpty {
+  composes: subtitle from "@/app/shared.module.css";
+  margin-top: 2.5rem;
+}
+
+.panelCrumbs {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  nav {
+    margin-bottom: 0;
+  }
+}
+
+.panelClose {
+  padding: 0 0.125rem;
+  border: 0;
+  background: none;
+  color: var(--main-text);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.panelClose:focus-visible {
+  outline: 2px solid var(--main-text);
+  outline-offset: 2px;
+}
+
+.panelTitle {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0.375rem 0 0.125rem;
+
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-size: 3rem;
+    line-height: 0.9;
+    margin: 0;
+  }
+
+  a {
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+}
+
+.panelSubtitle {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.9rem;
+  color: var(--secondary-text);
+  margin: 0 0 1rem;
+}
+
+.panelNote {
+  composes: annotation;
+  font-size: 0.9rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--table-color);
+  border-bottom: 1px solid var(--table-color);
+}
+
+.panelSection {
+  margin-top: 1.5rem;
+}
+
+.candidates {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  padding: 0.875rem 0 1rem;
+  border-top: 1px solid var(--table-color);
+  border-bottom: 1px solid var(--table-color);
+}
+
+.candidateCard {
+  min-width: 0;
+}
+
+.candidateWho {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.candidateName {
+  font-weight: 600;
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+
+.candidateRaised {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.6rem;
+  line-height: 1;
+  margin: 0.625rem 0 0.375rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.moneyCardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.siblings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.siblingButton {
+  display: flex;
+  align-items: baseline;
+  gap: 0.375rem;
+  padding: 0.375rem 0.625rem;
+  border: 1px solid var(--card-border);
+  background: var(--background);
+  color: var(--main-text);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  span {
+    font-weight: 400;
+    color: var(--secondary-text);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.siblingButton:hover {
+  border-color: var(--main-text);
+}
+
+.siblingButton:focus-visible {
+  outline: 2px solid var(--main-text);
+  outline-offset: 2px;
+}
+
+.expenditureTable {
+  width: 100%;
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+
+  th {
+    font-size: 0.75rem;
+    color: var(--table-header-color);
+    text-align: left;
+    padding: 0.25rem 0.375rem;
+    border-bottom: 1px solid var(--divider-color);
+  }
+
+  td {
+    padding: 0.45rem 0.375rem;
+    border-bottom: 1px solid var(--table-color);
+    vertical-align: top;
+  }
+
+  th:global(.number-cell) {
+    text-align: right;
+  }
+}
+
+.expenditureAmount {
+  font-weight: 600;
+}
+
+.expenditureDirection {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  white-space: nowrap;
+}
+
+/* ── Responsive ────────────────────────────────────────────────────── */
+
+@media (max-width: 1180px) {
+  .body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .left {
+    padding-right: 0;
+    border-right: 0;
+    border-bottom: 1px solid var(--table-color);
+  }
+
+  .panel {
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .lower {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .mast {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .mastMeta {
+    text-align: left;
+    margin-top: -0.75rem;
+  }
+
+  .mapLegend {
+    position: static;
+    margin: 0.5rem -0.5rem 0;
+    border-width: 1px 0 0;
+  }
+
+  .timeline {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .timelineTrack {
+    grid-column: 1 / -1;
+  }
+
+  .timelineTicks span:nth-child(even) {
+    display: none;
+  }
+
+
+  .rankingTable thead {
+    display: none;
+  }
+
+  .rankingTable tr {
+    display: grid;
+    grid-template-columns: 2.25rem minmax(0, 1fr) auto;
+    border-bottom: 1px solid var(--table-color);
+  }
+
+  .rankingTable td {
+    border-bottom: 0;
+    padding: 0.5rem 0.375rem;
+  }
+
+  .rankingTable td:nth-child(3) {
+    grid-column: 2 / -1;
+    grid-row: 2;
+    padding-top: 0;
+  }
+
+  .rankingTable td:nth-child(4) {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .candidates {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .expenditureTable th:nth-child(5),
+  .expenditureTable td:nth-child(5) {
+    display: none;
+  }
+}
+
+@media (max-width: 575px) {
+  .activityCards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .directionLegend {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pingRing {
+    display: none;
+  }
+
+  .raceCircle {
+    transition: none;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .stateShapeActive {
+    fill: var(--color-neutral-600);
+  }
+
+  .playButton:hover {
+    background: var(--color-neutral-400);
+  }
+
+  .rankingRowActive,
+  .rankingRowActive:hover {
+    background: var(--color-lime-950);
+  }
+
+  .tagWeek {
+    background: var(--color-lime-950);
+    border-color: var(--color-lime-500);
+    color: var(--color-lime-300);
+  }
+
+  .tagOutline {
+    background: none;
+    color: var(--secondary-text);
+  }
+
+  .fillTech {
+    fill: var(--color-neutral-500);
+  }
+
+  .swatchTech {
+    background: var(--color-neutral-500);
+  }
+
+  .changeUp .bold {
+    color: var(--accent);
+  }
+}

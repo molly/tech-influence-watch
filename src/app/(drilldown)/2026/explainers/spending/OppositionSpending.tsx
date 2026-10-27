@@ -129,6 +129,8 @@ export default async function OppositionSpending({
             <td className="text-cell">
               {candidate.common_name}
               {candidate.party ? ` (${candidate.party})` : ""}
+              {/* TEMP: show candidate IDs to help fill in missing data */}
+              <span className="secondary"> {candidate.candidate_id}</span>
             </td>
             <td className="text-cell">
               <Link href={sectorHref(`/2026/elections/${race}`, sector)}>

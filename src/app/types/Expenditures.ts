@@ -8,13 +8,18 @@ enum CandidateOffice {
 }
 
 export type Expenditure = {
-  committee_id: number;
+  committee_id: string;
   subrace: string;
   uid: string;
   // The name the rest of the site calls this candidate, resolved off the race
   // roster by the pipeline. The FEC name fields are filer-entered and can hold
   // a different surname entirely, so prefer this — see getCandidateName.
   candidate_common_name?: string;
+  // The race this expenditure is filed under (e.g. "OH-S-special"), resolved
+  // by the pipeline. Whether a race is a special can't be read off
+  // election_type alone, so use this rather than rebuilding the id from the
+  // FEC office fields. Set whenever candidate_office_state is.
+  race_id?: string;
   // Set on electioneering communications (FEC Form 9), which the pipeline
   // stores alongside Schedule E independent expenditures.
   source?: "electioneering";

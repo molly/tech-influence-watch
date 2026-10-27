@@ -47,31 +47,6 @@ export function RecentExpendituresContentSkeleton({
   ));
 }
 
-function getRaceId(expenditure: Expenditure, withState = false) {
-  let raceId = "";
-  if (withState) {
-    raceId = `${expenditure.candidate_office_state}-${expenditure.candidate_office}`;
-  } else if (expenditure.candidate_office) {
-    raceId = expenditure.candidate_office;
-  }
-  if (
-    expenditure.candidate_office_district &&
-    expenditure.candidate_office_district !== "00"
-  ) {
-    raceId += `-${expenditure.candidate_office_district}`;
-  }
-  // A special primary ("SP") is a sub-race of the regular race, not a separate
-  // special election, so it must not pick up the "-special" suffix.
-  if (
-    expenditure.subrace !== RaceType.SpecialPrimary &&
-    (expenditure.subrace === "special" ||
-      (expenditure.election_type && expenditure.election_type[0] == "S"))
-  ) {
-    raceId += "-special";
-  }
-  return raceId;
-}
-
 function ExpenditureRow({
   expenditure,
   committees,
@@ -134,15 +109,15 @@ function ExpenditureRow({
         <div className={styles.expenditureDetails}>
           <div>
             {subraceName && `${subraceName}, `}
-            {expenditure.candidate_office_state && (
+            {expenditure.candidate_office_state && expenditure.race_id && (
               <span className={`${styles.expenditureRace} no-wrap`}>
                 <Link
                   href={sectorHref(
-                    `/2026/elections/${getRaceId(expenditure, true)}`,
+                    `/2026/elections/${expenditure.race_id}`,
                     sector ?? "all",
                   )}
                 >{`${STATES_BY_ABBR[expenditure.candidate_office_state]} ${getRaceName(
-                  getRaceId(expenditure),
+                  expenditure.race_id,
                 )}`}</Link>
               </span>
             )}

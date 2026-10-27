@@ -11,6 +11,7 @@ export const NAV_ITEMS: NavItem[] = [
     id: "spending",
     label: "Spending",
     children: [
+      { label: "Spending over time", href: "/2026/timeline", useSector: true },
       { label: "By committees", href: "/2026/committees", useSector: true },
       { label: "By networks", href: "/2026/networks", useSector: true },
       { label: "By companies", href: "/2026/companies", useSector: true },
