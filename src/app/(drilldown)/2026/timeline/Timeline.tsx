@@ -41,6 +41,7 @@ export default function Timeline({
   onTogglePlay,
   speed,
   onSpeedChange,
+  techLabel,
 }: {
   series: WeekBucket[];
   week: number;
@@ -50,6 +51,7 @@ export default function Timeline({
   onTogglePlay: () => void;
   speed: number;
   onSpeedChange: (speed: number) => void;
+  techLabel: string;
 }) {
   const [hoverWeek, setHoverWeek] = useState<number | null>(null);
   const span = Math.max(lastWeek, 1);
@@ -154,7 +156,7 @@ export default function Timeline({
               viewBox={`0 0 ${span * BAR_STEP} ${PLOT_HEIGHT}`}
               preserveAspectRatio="none"
               role="img"
-              aria-label="Weekly tech spending nationwide in 2026"
+              aria-label={`Weekly ${techLabel} spending nationwide in 2026`}
             >
               {bars}
             </svg>

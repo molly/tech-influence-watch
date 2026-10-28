@@ -55,6 +55,17 @@ export function humanizeSector(
   return label;
 }
 
+/**
+ * Short lowercase noun for a sector's money in running text, as in "tech
+ * spending" or "AI money". "Tech" covers both sectors together.
+ */
+export function humanizeSectorShort(sector: Sector): string {
+  if (sector === "all") {
+    return "tech";
+  }
+  return humanizeSector(sector, { abbrev: true, lowercase: true });
+}
+
 export function parseSector(value: string | undefined): Sector {
   if (value === "crypto" || value === "ai") {
     return value;

@@ -10,7 +10,8 @@ export const getFirstLastName = (commonName: string): string[] => {
   const firstName = nameParts[0];
   let lastName = nameParts[nameParts.length - 1];
   if (lastName.match(/^([IVX]|[SJ]r\.?)+$/)) {
-    lastName = nameParts[nameParts.length - 2];
+    // Drop the comma in "Jackson, Jr."
+    lastName = nameParts[nameParts.length - 2].replace(/,$/, "");
   }
   return [firstName, lastName];
 };

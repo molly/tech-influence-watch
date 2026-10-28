@@ -201,6 +201,9 @@ export interface HelpsLine {
   direction: FlowDirection;
   beneficiary: string | null;
   party?: string;
+  // Whether all of it opposes candidates from the party it helps, as in a
+  // primary, so the label can say "other Democrats".
+  intraParty: boolean;
   total: number;
   parts: HelpsPart[];
 }
@@ -221,10 +224,14 @@ export function getHelpsLines(expenditures: FlowExpenditure[]): HelpsLine[] {
             : e.direction === "U"
               ? undefined
               : e.direction,
+        intraParty: true,
         total: 0,
         parts: [],
       };
       lines.set(key, line);
+    }
+    if (e.supportOppose === "S" || e.candidateParty !== e.direction) {
+      line.intraParty = false;
     }
     line.total += e.amount;
     const kind = e.supportOppose === "S" ? "for" : "against";

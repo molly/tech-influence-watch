@@ -6,7 +6,7 @@ import Pagination from "@/app/components/Pagination";
 import sharedStyles from "@/app/shared.module.css";
 import { Sector } from "@/app/types/Sector";
 import { humanizeRoundedCurrency } from "@/app/utils/humanize";
-import { sectorHref } from "@/app/utils/sector";
+import { humanizeSectorShort, sectorHref } from "@/app/utils/sector";
 
 import HelpsBars from "./HelpsBars";
 import styles from "./SpendingFlow.module.css";
@@ -84,6 +84,7 @@ export default function RaceRanking({
   today: string;
 }) {
   const [page, setPage] = useState(1);
+  const techLabel = humanizeSectorShort(sector);
   const withLines = rows.map((row) => ({
     ...row,
     lines: getHelpsLines(row.expenditures).slice(0, MAX_LINES),
@@ -105,12 +106,12 @@ export default function RaceRanking({
   return (
     <section className={styles.ranking}>
       <h2 className={sharedStyles.sectionTitle}>
-        Races drawing the most tech money
+        Races drawing the most {techLabel} money
         <span className={sharedStyles.sectionTitleAmount}>{throughLabel}</span>
       </h2>
       {rows.length === 0 ? (
         <p className={sharedStyles.subtitle}>
-          No tech spending yet in races matching these filters.
+          No {techLabel} spending yet in races matching these filters.
         </p>
       ) : (
         <table className={styles.rankingTable}>
@@ -162,7 +163,7 @@ export default function RaceRanking({
         totalPages={totalPages}
         totalItems={rows.length}
         pageSize={PAGE_SIZE}
-        itemLabel="races with tech spending"
+        itemLabel={`races with ${techLabel} spending`}
         onPageChange={setPage}
       />
       <div className={styles.rankingFoot}>

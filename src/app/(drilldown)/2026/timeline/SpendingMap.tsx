@@ -89,6 +89,7 @@ export default function SpendingMap({
   onSelect,
   pings,
   label,
+  techLabel,
 }: {
   items: MapItem[];
   radiusReference: number;
@@ -96,6 +97,7 @@ export default function SpendingMap({
   onSelect: (raceId: string) => void;
   pings: PingBatch[];
   label: string;
+  techLabel: string;
 }) {
   const { states, mesh } = useStateShapes();
   const [hoveredId, setHoveredId] = useState<string | null>(null);
@@ -185,7 +187,7 @@ export default function SpendingMap({
         viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
         className={styles.mapSvg}
         role="group"
-        aria-label={`Map of races with tech spending, ${label}`}
+        aria-label={`Map of races with ${techLabel} spending, ${label}`}
       >
         <g>
           {states.map((state) => (

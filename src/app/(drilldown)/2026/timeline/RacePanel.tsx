@@ -16,7 +16,8 @@ import {
   humanizeRoundedCurrency,
 } from "@/app/utils/humanize";
 import { getFirstLastName } from "@/app/utils/names";
-import { humanizeSector, sectorHref } from "@/app/utils/sector";
+import { humanizeSectorShort, sectorHref } from "@/app/utils/sector";
+import { sentenceCase } from "@/app/utils/titlecase";
 
 import CandidateMoneyChart, {
   getMoneyAxis,
@@ -323,10 +324,7 @@ export default function RacePanel({
     sumThroughWeek(race.outsideTotal, week, stage),
     totals.total,
   );
-  const techLabel =
-    sector === "all"
-      ? "tech"
-      : humanizeSector(sector, { abbrev: true, lowercase: true });
+  const techLabel = humanizeSectorShort(sector);
   const hasBoth = money.some(
     (m) => m.techFor.both > 0 || m.techAgainst.both > 0,
   );
@@ -434,7 +432,7 @@ export default function RacePanel({
         <MoneyCard
           topText={
             <span className={styles.moneyCardTop}>
-              <span>Tech spending in this race</span>
+              <span>{sentenceCase(`${techLabel} spending in this race`, false)}</span>
               <span>{throughLabel}</span>
             </span>
           }
@@ -472,7 +470,7 @@ export default function RacePanel({
         <WeeklyBars
           series={series}
           small={true}
-          label={`Weekly tech spending in ${getRaceLabel(race)}`}
+          label={`Weekly ${techLabel} spending in ${getRaceLabel(race)}`}
         />
       </div>
 
@@ -481,7 +479,7 @@ export default function RacePanel({
           <h3 className={sharedStyles.sectionTitle}>
             Other races in {stateName}
             <span className={sharedStyles.sectionTitleAmount}>
-              {siblings.length} with tech spending
+              {siblings.length} with {techLabel} spending
             </span>
           </h3>
           <div className={styles.siblings}>

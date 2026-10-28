@@ -7,6 +7,8 @@ import MoneyCard from "@/app/components/MoneyCard";
 import sharedStyles from "@/app/shared.module.css";
 import { Sector } from "@/app/types/Sector";
 import { humanizeRoundedCurrency } from "@/app/utils/humanize";
+import { humanizeSectorShort } from "@/app/utils/sector";
+import { sentenceCase } from "@/app/utils/titlecase";
 
 import DirectionBreakdown, { DirectionSwatch } from "./DirectionBreakdown";
 import RacePanel from "./RacePanel";
@@ -79,6 +81,7 @@ export default function SpendingFlow({
   sector: Sector;
 }) {
   const lastWeek = data.numWeeks - 1;
+  const techLabel = humanizeSectorShort(sector);
   const [stage, setStage] = useState<StageFilter>("all");
   const [office, setOffice] = useState<OfficeFilter>("all");
   const [show, setShow] = useState<ShowFilter>("all");
@@ -273,6 +276,7 @@ export default function SpendingFlow({
               onSelect={setSelectedId}
               pings={pings}
               label={throughLabel}
+              techLabel={techLabel}
             />
             <div className={styles.mapLegend}>
               {DIRECTIONS.map(({ key, label }) => (
@@ -305,11 +309,12 @@ export default function SpendingFlow({
             onTogglePlay={togglePlay}
             speed={speed}
             onSpeedChange={setSpeed}
+            techLabel={techLabel}
           />
 
           <section>
             <h2 className={sharedStyles.sectionTitle}>
-              Tech spending so far
+              {sentenceCase(`${techLabel} spending so far`, false)}
               <span className={sharedStyles.sectionTitleAmount}>
                 {throughLabel} · Nationwide
               </span>
@@ -317,7 +322,7 @@ export default function SpendingFlow({
             <div className={styles.activity}>
               <div className={styles.activityCards}>
                 <MoneyCard
-                  topText="Total tech spending"
+                  topText={`Total ${techLabel} spending`}
                   amount={humanizeRoundedCurrency(totals.total, true, 1)}
                   bottomText={
                     <span className={styles.thisWeek}>

@@ -31,11 +31,12 @@ export function getHelpsLabel(
   formatName: (name: string) => string = lastName,
 ): string {
   if (!line.beneficiary) {
+    const other = line.intraParty ? "other " : "";
     if (line.direction === "R") {
-      return "Helps Republicans";
+      return `Helps ${other}Republicans`;
     }
     if (line.direction === "D") {
-      return "Helps Democrats";
+      return `Helps ${other}Democrats`;
     }
     return "No clear beneficiary";
   }

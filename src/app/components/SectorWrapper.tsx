@@ -14,6 +14,7 @@ const SECTOR_PATHS = [
   "expenditures",
   "explainers/spending",
   "states",
+  "timeline",
 ];
 
 function formatLastRun(isoString: string, compact: boolean): string {
