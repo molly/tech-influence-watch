@@ -20,6 +20,14 @@ import {
 const PAGE_SIZE = 10;
 const MAX_LINES = 3;
 
+function getCandidateStatuses(race: FlowRace): Record<string, string> {
+  return Object.fromEntries(
+    race.candidates.flatMap((candidate) =>
+      candidate.status ? [[candidate.name, candidate.status]] : [],
+    ),
+  );
+}
+
 export interface RankingRow {
   race: FlowRace;
   expenditures: FlowExpenditure[];
@@ -59,7 +67,8 @@ function RaceTags({
       )}
       {row.thisWeek > 0 && (
         <span className={`${styles.tag} ${styles.tagWeek}`}>
-          +{humanizeRoundedCurrency(row.thisWeek, true, 1)} week of {weekLabel}
+          +{humanizeRoundedCurrency(row.thisWeek, true, 1)} during the week of{" "}
+          {weekLabel}
         </span>
       )}
     </div>
@@ -148,7 +157,11 @@ export default function RaceRanking({
                   <RaceTags row={row} today={today} weekLabel={weekLabel} />
                 </td>
                 <td>
-                  <HelpsBars lines={row.lines} max={max} />
+                  <HelpsBars
+                    lines={row.lines}
+                    max={max}
+                    statuses={getCandidateStatuses(row.race)}
+                  />
                 </td>
                 <td className={styles.rankingTotal}>
                   {humanizeRoundedCurrency(row.total, true, 1)}

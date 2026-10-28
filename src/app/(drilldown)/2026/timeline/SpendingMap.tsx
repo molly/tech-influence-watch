@@ -24,6 +24,9 @@ const HEIGHT = 610;
 const MAX_RADIUS = 56;
 const MIN_RADIUS = 4;
 const MIN_PING_RADIUS = 2.5;
+// A tap or click on the map this close to a circle's edge, in screen pixels,
+// selects it, so small circles can be picked on a phone.
+const TAP_SLOP_PX = 20;
 // How long a ping animates. Batches older than this are dropped.
 export const PING_MS = 1800;
 
@@ -170,6 +173,32 @@ export default function SpendingMap({
     }),
   );
 
+  // Clicks on a circle are handled by the circle; this catches the ones that
+  // land on the map near one.
+  const selectNearest = (e: React.MouseEvent<SVGSVGElement>) => {
+    const svg = e.currentTarget;
+    const matrix = svg.getScreenCTM();
+    if (!matrix || placed.length === 0) {
+      return;
+    }
+    const point = new DOMPoint(e.clientX, e.clientY).matrixTransform(
+      matrix.inverse(),
+    );
+    const slop = TAP_SLOP_PX * (WIDTH / svg.getBoundingClientRect().width);
+    const nearest =
+      placed[
+        d3.Delaunay.from(
+          placed,
+          (p) => p.x,
+          (p) => p.y,
+        ).find(point.x, point.y)
+      ];
+    const distance = Math.hypot(nearest.x - point.x, nearest.y - point.y);
+    if (distance - nearest.r <= slop) {
+      onSelect(nearest.race.id);
+    }
+  };
+
   const hovered = hoveredId ? placedById[hoveredId] : null;
   const siblingIds = new Set(
     hovered
@@ -188,6 +217,7 @@ export default function SpendingMap({
         className={styles.mapSvg}
         role="group"
         aria-label={`Map of races with ${techLabel} spending, ${label}`}
+        onClick={selectNearest}
       >
         <g>
           {states.map((state) => (
@@ -218,7 +248,10 @@ export default function SpendingMap({
                 tabIndex={0}
                 aria-label={`${label}: ${formatCompact(Math.round(p.value))}`}
                 aria-pressed={p.race.id === selectedId}
-                onClick={() => onSelect(p.race.id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onSelect(p.race.id);
+                }}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();

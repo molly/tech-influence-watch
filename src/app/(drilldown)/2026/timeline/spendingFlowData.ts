@@ -4,6 +4,7 @@ import {
   fetchAllExpenditures,
   fetchAllStateElections,
   fetchConstant,
+  fetchPipelineLastRun,
 } from "@/app/actions/fetch";
 import districtCentroids from "@/app/data/districtCentroids.json";
 import type { CommitteeConstant } from "@/app/types/Committee";
@@ -22,6 +23,7 @@ import { getSubraceName, hasLeftRace } from "@/app/utils/races";
 import { matchesSector } from "@/app/utils/sector";
 
 import {
+  FLOW_END_DATE,
   FLOW_START_DATE,
   FlowCandidate,
   FlowDirection,
@@ -77,7 +79,12 @@ function weeklyAmounts(rows: OutsideSpendingRow[]): WeeklyAmounts {
   const byWeek = new Map<string, WeeklyAmounts[number]>();
   for (const row of rows) {
     const date = row.expenditure_date ?? row.dissemination_date;
-    if (!date || date < FLOW_START_DATE || !row.expenditure_amount) {
+    if (
+      !date ||
+      date < FLOW_START_DATE ||
+      date > FLOW_END_DATE ||
+      !row.expenditure_amount
+    ) {
       continue;
     }
     const week = getWeekIndex(date);
@@ -195,12 +202,13 @@ function getRaceCandidates(
 export async function fetchSpendingFlowData(
   sector: Sector,
 ): Promise<SpendingFlowData | ErrorType> {
-  const [expendituresData, electionsData, committees, opposition] =
+  const [expendituresData, electionsData, committees, opposition, lastRun] =
     await Promise.all([
       fetchAllExpenditures(),
       fetchAllStateElections(),
       fetchConstant<Record<string, CommitteeConstant>>("committees"),
       fetchConstant<Record<string, OppositionConstant>>("oppositionSpending"),
+      fetchPipelineLastRun(),
     ]);
   if (isError(expendituresData)) {
     return expendituresData as ErrorType;
@@ -222,6 +230,7 @@ export async function fetchSpendingFlowData(
       !expenditure.race_id ||
       !date ||
       date < FLOW_START_DATE ||
+      date > FLOW_END_DATE ||
       !committee?.sector ||
       (sector !== "all" && !matchesSector(committee.sector, sector))
     ) {
@@ -276,15 +285,19 @@ export async function fetchSpendingFlowData(
   }
 
   // Run through the current week, or further if anything is dated ahead of
-  // today (e.g. a scheduled dissemination date).
+  // today (e.g. a scheduled dissemination date), but not past election day.
   const today = DateTime.utc().toISODate() ?? FLOW_START_DATE;
-  const lastWeek = Math.max(
-    getWeekIndex(today),
-    ...expenditures.map((e) => e.week),
+  const lastWeek = Math.min(
+    Math.max(getWeekIndex(today), ...expenditures.map((e) => e.week)),
+    getWeekIndex(FLOW_END_DATE),
   );
+  // Formatted the same way as the page header's "Data through" date.
+  const dataThrough =
+    (lastRun && DateTime.fromISO(lastRun).toISODate()) || today;
   return {
     numWeeks: lastWeek + 1,
     today,
+    dataThrough,
     races,
     expenditures,
     committees: committeeNames,

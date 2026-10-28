@@ -1,5 +1,6 @@
 import { DateTime } from "luxon";
 import Link from "next/link";
+import { useEffect, useRef } from "react";
 
 import Breadcrumbs from "@/app/components/Breadcrumbs";
 import { CandidateImage } from "@/app/components/Candidate";
@@ -33,7 +34,6 @@ import {
   FlowRace,
   getRaceDistrict,
   getRaceLabel,
-  PartyDirection,
   raisedThroughWeek,
   StageFilter,
   sumThroughWeek,
@@ -118,10 +118,14 @@ function CandidateCard({
   money,
   axis,
   techLabel,
+  sharedThrough,
 }: {
   money: CandidateMoney;
   axis: { top: number; ticks: number[] };
   techLabel: string;
+  // The filing date most candidates in the race share, given once in the
+  // note under the legend.
+  sharedThrough: string | null;
 }) {
   const { candidate } = money;
   const [firstName, lastName] = getFirstLastName(candidate.name);
@@ -145,21 +149,16 @@ function CandidateCard({
           </div>
         </div>
       </div>
-      <div className={styles.candidateRaised}>
-        {humanizeRoundedCurrency(money.raised.amount, true, 1)}
-      </div>
-      <div className={styles.annotation}>
-        {money.raised.through
-          ? `Raised through ${formatFilingDate(money.raised.through)}, all sources`
-          : "Total raised, all sources"}
-      </div>
       <CandidateMoneyChart
         top={axis.top}
         ticks={axis.ticks}
         bars={[
           {
             key: "raised",
-            label: "Raised",
+            label:
+              money.raised.through && money.raised.through !== sharedThrough
+                ? `Raised through ${formatFilingDate(money.raised.through)}`
+                : "Raised",
             segments: [
               {
                 key: "raised",
@@ -188,6 +187,23 @@ function CandidateCard({
   );
 }
 
+// The filing date shared by the most candidates.
+function getSharedThrough(money: CandidateMoney[]): string | null {
+  const counts = new Map<string, number>();
+  for (const { raised } of money) {
+    if (raised.through) {
+      counts.set(raised.through, (counts.get(raised.through) ?? 0) + 1);
+    }
+  }
+  let shared: string | null = null;
+  for (const [date, count] of counts) {
+    if (shared === null || count > (counts.get(shared) ?? 0)) {
+      shared = date;
+    }
+  }
+  return shared;
+}
+
 // FEC filing periods end on fixed dates; show the year only when it isn't the
 // timeline's year.
 function formatFilingDate(date: string): string {
@@ -195,30 +211,26 @@ function formatFilingDate(date: string): string {
   return parsed.toFormat(parsed.year === 2026 ? "LLL d" : "LLL d, yyyy");
 }
 
-const DIRECTION_SHORT: Record<PartyDirection, string> = {
-  R: "Republicans",
-  D: "Democrats",
-};
-
-// "■ 100% favoring Republicans · $0 Democrats"
+// "■ $616,000 favoring Republicans (44%)  ■ $784,000 favoring Democrats (56%)".
+// Amounts, not just shares, so it's clear they split the tech total above.
 function DirectionSummary({ totals }: { totals: DirectionTotals }) {
   if (totals.total <= 0) {
     return null;
   }
-  const [lead, ...rest] = DIRECTIONS.slice().sort(
-    (a, b) => totals[b.key] - totals[a.key],
-  );
   return (
     <div className={styles.directionSummary}>
-      <DirectionSwatch direction={lead.key} />
-      <span className="bold">
-        {humanizePercentage(totals[lead.key], totals.total)}
-      </span>{" "}
-      {lead.phrase}
-      {rest.map(({ key }) => (
-        <span key={key} className={styles.annotation}>
-          {" "}
-          · {humanizeRoundedCurrency(totals[key], true, 1)} {DIRECTION_SHORT[key]}
+      {DIRECTIONS.map(({ key, phrase }) => (
+        <span key={key} className={styles.directionSummaryItem}>
+          <DirectionSwatch direction={key} />
+          <span>
+            <span className="bold">
+              {humanizeRoundedCurrency(totals[key], true, 1)}
+            </span>{" "}
+            {phrase}{" "}
+            <span className={styles.directionPct}>
+              ({humanizePercentage(totals[key], totals.total)})
+            </span>
+          </span>
         </span>
       ))}
     </div>
@@ -241,7 +253,8 @@ export default function RacePanel({
   yearExpenditures,
   totals,
   series,
-  throughLabel,
+  throughDate,
+  scrubber,
   week,
   stage,
   siblings,
@@ -257,7 +270,10 @@ export default function RacePanel({
   yearExpenditures: FlowExpenditure[];
   totals: DirectionTotals;
   series: WeekBucket[];
-  throughLabel: string;
+  throughDate: string;
+  // A compact timeline, shown at the top of the panel when it's a bottom sheet
+  // covering the real one.
+  scrubber: React.ReactNode;
   week: number;
   stage: StageFilter;
   siblings: SiblingRace[];
@@ -266,6 +282,14 @@ export default function RacePanel({
   onSelect: (raceId: string) => void;
   onClose: () => void;
 }) {
+  // On narrow screens the panel is a bottom sheet that scrolls on its own;
+  // start each race at the top.
+  const panelRef = useRef<HTMLElement>(null);
+  const raceId = race?.id;
+  useEffect(() => {
+    panelRef.current?.scrollTo({ top: 0 });
+  }, [raceId]);
+
   if (!race) {
     return (
       <aside className={styles.panel}>
@@ -320,11 +344,17 @@ export default function RacePanel({
     ]),
   );
   const axis = getMoneyAxis(maxBar);
+  const sharedThrough = getSharedThrough(money);
   const allOutside = Math.max(
     sumThroughWeek(race.outsideTotal, week, stage),
     totals.total,
   );
+  // Everything the candidates have raised plus everything outside groups have
+  // spent, for scale.
+  const allRaceMoney =
+    money.reduce((sum, m) => sum + m.raised.amount, 0) + allOutside;
   const techLabel = humanizeSectorShort(sector);
+  const throughLabel = `Through ${throughDate}`;
   const hasBoth = money.some(
     (m) => m.techFor.both > 0 || m.techAgainst.both > 0,
   );
@@ -335,7 +365,24 @@ export default function RacePanel({
     : "at-large district";
 
   return (
-    <aside className={styles.panel} aria-label={`${getRaceLabel(race)} spending`}>
+    <aside
+      ref={panelRef}
+      className={`${styles.panel} ${styles.panelOpen}`}
+      aria-label={`${getRaceLabel(race)} spending`}
+    >
+      {/* On narrow screens the close button moves up here, so it stays in
+          reach as the sheet scrolls. */}
+      <div className={styles.panelScrubber}>
+        {scrubber}
+        <button
+          type="button"
+          className={styles.panelClose}
+          aria-label="Close race details"
+          onClick={onClose}
+        >
+          &times;
+        </button>
+      </div>
       <div className={styles.panelCrumbs}>
         <Breadcrumbs
           crumbs={[
@@ -352,7 +399,7 @@ export default function RacePanel({
         />
         <button
           type="button"
-          className={styles.panelClose}
+          className={`${styles.panelClose} ${styles.panelCloseCrumbs}`}
           aria-label="Close race details"
           onClick={onClose}
         >
@@ -381,6 +428,7 @@ export default function RacePanel({
                 money={m}
                 axis={axis}
                 techLabel={techLabel}
+                sharedThrough={sharedThrough}
               />
             ))}
           </div>
@@ -419,6 +467,14 @@ export default function RacePanel({
                 Crypto and AI
               </span>
             )}
+            <span className={styles.raisedNote}>
+              Outside spending through {throughDate}. Campaign
+              fundraising is total receipts from FEC reports
+              {sharedThrough
+                ? ` through ${formatFilingDate(sharedThrough)}`
+                : ""}
+              , including loans and self-funding.
+            </span>
           </div>
         </div>
       ) : (
@@ -449,8 +505,8 @@ export default function RacePanel({
                       labelNode: (
                         <span className={styles.shareLabel}>
                           {humanizePercentage(totals.total, allOutside)} of the{" "}
-                          {humanizeRoundedCurrency(allOutside, true, 1)} from
-                          all outside groups
+                          {humanizeRoundedCurrency(allOutside, true, 1)} in
+                          outside spending
                         </span>
                       ),
                       value: totals.total,
@@ -459,6 +515,28 @@ export default function RacePanel({
                   ]}
                 />
               )}
+              {allRaceMoney > 0 && (
+                <div className={styles.raceShareBar}>
+                  <HorizontalBars
+                    max={allRaceMoney}
+                    items={[
+                      {
+                        key: "raceShare",
+                        label: "Share of all spending in the race",
+                        labelNode: (
+                          <span className={styles.shareLabel}>
+                            {humanizePercentage(totals.total, allRaceMoney)} of
+                            the {humanizeRoundedCurrency(allRaceMoney, true, 1)}{" "}
+                            total spent in this race
+                          </span>
+                        ),
+                        value: totals.total,
+                        ariaLabel: `${humanizePercentage(totals.total, allRaceMoney)} of all spending in this race`,
+                      },
+                    ]}
+                  />
+                </div>
+              )}
               <DirectionSummary totals={totals} />
             </>
           }
@@ -466,7 +544,12 @@ export default function RacePanel({
       </div>
 
       <div className={styles.panelSection}>
-        <h3 className={sharedStyles.sectionTitle}>Weekly spending</h3>
+        <h3 className={sharedStyles.sectionTitle}>
+          Weekly spending
+          <span className={sharedStyles.sectionTitleAmount}>
+            {throughLabel}
+          </span>
+        </h3>
         <WeeklyBars
           series={series}
           small={true}
@@ -479,7 +562,7 @@ export default function RacePanel({
           <h3 className={sharedStyles.sectionTitle}>
             Other races in {stateName}
             <span className={sharedStyles.sectionTitleAmount}>
-              {siblings.length} with {techLabel} spending
+              {throughLabel} · {siblings.length} with {techLabel} spending
             </span>
           </h3>
           <div className={styles.siblings}>
@@ -500,9 +583,9 @@ export default function RacePanel({
 
       <div className={styles.panelSection}>
         <h3 className={sharedStyles.sectionTitle}>
-          Recent expenditures
+          Latest expenditures
           <span className={sharedStyles.sectionTitleAmount}>
-            <Link href={raceHref}>View all &rarr;</Link>
+            {throughLabel} · <Link href={raceHref}>View all &rarr;</Link>
           </span>
         </h3>
         {recent.length === 0 ? (

@@ -12,6 +12,7 @@ import { sentenceCase } from "@/app/utils/titlecase";
 
 import DirectionBreakdown, { DirectionSwatch } from "./DirectionBreakdown";
 import RacePanel from "./RacePanel";
+import RacePicker from "./RacePicker";
 import RaceRanking, { RankingRow } from "./RaceRanking";
 import SegmentedControl from "./SegmentedControl";
 import styles from "./SpendingFlow.module.css";
@@ -20,7 +21,7 @@ import {
   DirectionTotals,
   FlowExpenditure,
   formatShortDate,
-  getThroughLabel,
+  getThroughDate,
   matchesFilters,
   OfficeFilter,
   PartyDirection,
@@ -31,10 +32,43 @@ import {
   weekStart,
 } from "./spendingFlowUtils";
 import SpendingMap, { MapItem, PING_MS, PingBatch } from "./SpendingMap";
-import Timeline from "./Timeline";
+import Timeline, { CompactTimeline } from "./Timeline";
 import { emptyBucket, WeekBucket } from "./WeeklyBars";
 
 const STEP_MS = 900;
+
+const STAGE_OPTIONS: { value: StageFilter; label: string }[] = [
+  { value: "all", label: "All" },
+  { value: "primary", label: "Primaries" },
+  { value: "general", label: "General" },
+];
+const OFFICE_OPTIONS: { value: OfficeFilter; label: string }[] = [
+  { value: "all", label: "All" },
+  { value: "H", label: "House" },
+  { value: "S", label: "Senate" },
+];
+const SHOW_OPTIONS: { value: ShowFilter; label: string }[] = [
+  { value: "all", label: "All spending" },
+  { value: "D", label: "Favoring Democrats" },
+  { value: "R", label: "Favoring Republicans" },
+];
+
+// "All stages · Senate · All spending", for the collapsed filters on mobile.
+function summarizeFilters(
+  stage: StageFilter,
+  office: OfficeFilter,
+  show: ShowFilter,
+): string {
+  const label = <T extends string>(
+    options: { value: T; label: string }[],
+    value: T,
+  ) => options.find((option) => option.value === value)?.label ?? value;
+  return [
+    stage === "all" ? "All stages" : label(STAGE_OPTIONS, stage),
+    office === "all" ? "All offices" : label(OFFICE_OPTIONS, office),
+    label(SHOW_OPTIONS, show),
+  ].join(" · ");
+}
 function dominantDirection(totals: DirectionTotals): PartyDirection {
   return totals.R >= totals.D ? "R" : "D";
 }
@@ -85,6 +119,7 @@ export default function SpendingFlow({
   const [stage, setStage] = useState<StageFilter>("all");
   const [office, setOffice] = useState<OfficeFilter>("all");
   const [show, setShow] = useState<ShowFilter>("all");
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [week, setWeek] = useState(lastWeek);
   const [playing, setPlaying] = useState(false);
   const [speed, setSpeed] = useState(1);
@@ -97,9 +132,9 @@ export default function SpendingFlow({
   );
   // Everything on the page is cumulative: 2026 spending through the
   // scrubber's week, so scrubbing or playing shows the year building up.
-  const throughLabel = getThroughLabel(week, data.today);
+  const throughDate = getThroughDate(week, data.dataThrough, data.today);
+  const throughLabel = `Through ${throughDate}`;
   const weekLabel = formatShortDate(weekStart(week));
-  const shortThroughLabel = throughLabel.replace(/, \d{4}$/, "");
   const cumulative = filtered.filter((e) => e.week >= 0 && e.week <= week);
   const byRace = groupByRace(cumulative);
   const totals = sumByDirection(cumulative);
@@ -119,6 +154,20 @@ export default function SpendingFlow({
     .sort((a, b) => b.total - a.total);
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  // Escape closes the race panel, which covers the page as a bottom sheet on
+  // narrow screens.
+  useEffect(() => {
+    if (!selectedId) {
+      return;
+    }
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setSelectedId(null);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [selectedId]);
 
   const mapItems: MapItem[] = rankingRows.map((row) => {
     const raceTotals = sumByDirection(row.expenditures);
@@ -218,6 +267,24 @@ export default function SpendingFlow({
     return () => window.clearInterval(interval);
   }, [playing, speed, lastWeek]);
 
+  // Once the main timeline scrolls off the top of the screen, a compact copy
+  // sticks there so the selected week stays visible.
+  const timelineRef = useRef<HTMLDivElement>(null);
+  const [pastTimeline, setPastTimeline] = useState(false);
+  useEffect(() => {
+    const timeline = timelineRef.current;
+    if (!timeline) {
+      return;
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      setPastTimeline(
+        !entry.isIntersecting && entry.boundingClientRect.top < 0,
+      );
+    });
+    observer.observe(timeline);
+    return () => observer.disconnect();
+  }, []);
+
   const togglePlay = () => {
     if (playing) {
       setPlaying(false);
@@ -230,29 +297,68 @@ export default function SpendingFlow({
   };
 
 
+  // Shown at the top of the screen once the main timeline scrolls away, and
+  // in the race panel when it covers the timeline on narrow screens.
+  const compactTimeline = (
+    <CompactTimeline
+      week={week}
+      lastWeek={lastWeek}
+      onWeekChange={setWeek}
+      playing={playing}
+      onTogglePlay={togglePlay}
+      throughDate={throughDate}
+    />
+  );
+
   return (
     <>
-      <div className={styles.filters}>
-        <SegmentedControl
-          label="Election stage"
-          value={stage}
-          onChange={setStage}
-          options={[
-            { value: "all", label: "All" },
-            { value: "primary", label: "Primaries" },
-            { value: "general", label: "General" },
-          ]}
-        />
-        <SegmentedControl
-          label="Office"
-          value={office}
-          onChange={setOffice}
-          options={[
-            { value: "all", label: "All" },
-            { value: "H", label: "House" },
-            { value: "S", label: "Senate" },
-          ]}
-        />
+      <div className={styles.stickyScrubber}>
+        {pastTimeline && compactTimeline}
+      </div>
+      {/* On mobile the filters collapse behind a toggle, and the map filter
+          joins them here instead of sitting above the map. */}
+      <div className={styles.filters} data-open={filtersOpen || undefined}>
+        <button
+          type="button"
+          className={styles.filtersToggle}
+          aria-expanded={filtersOpen}
+          aria-controls="spending-filters"
+          onClick={() => setFiltersOpen((open) => !open)}
+        >
+          <span className="bold">Filters</span>
+          <span className={styles.filtersSummary}>
+            {summarizeFilters(stage, office, show)}
+          </span>
+          <span
+            className={
+              filtersOpen
+                ? `${styles.chevron} ${styles.chevronOpen}`
+                : styles.chevron
+            }
+          />
+        </button>
+        <div id="spending-filters" className={styles.filterControls}>
+          <SegmentedControl
+            label="Election stage"
+            value={stage}
+            onChange={setStage}
+            options={STAGE_OPTIONS}
+          />
+          <SegmentedControl
+            label="Office"
+            value={office}
+            onChange={setOffice}
+            options={OFFICE_OPTIONS}
+          />
+          <div className={styles.showFilterMobile}>
+            <SegmentedControl
+              label="Show on map"
+              value={show}
+              onChange={setShow}
+              options={SHOW_OPTIONS}
+            />
+          </div>
+        </div>
       </div>
       <div className={styles.body}>
         <div className={styles.left}>
@@ -261,23 +367,37 @@ export default function SpendingFlow({
               label="Show on map"
               value={show}
               onChange={setShow}
-              options={[
-                { value: "all", label: "All spending" },
-                { value: "D", label: "Favoring Democrats" },
-                { value: "R", label: "Favoring Republicans" },
-              ]}
+              options={SHOW_OPTIONS}
             />
           </div>
           <div className={styles.mapBox}>
-            <SpendingMap
-              items={mapItems}
-              radiusReference={radiusReference}
-              selectedId={selectedId}
-              onSelect={setSelectedId}
-              pings={pings}
-              label={throughLabel}
-              techLabel={techLabel}
-            />
+            {/* The date sits on the map itself so it stays in view while
+                playing, even when the timeline is off screen. */}
+            <div className={styles.mapStage}>
+              <SpendingMap
+                items={mapItems}
+                radiusReference={radiusReference}
+                selectedId={selectedId}
+                onSelect={setSelectedId}
+                pings={pings}
+                label={throughLabel}
+                techLabel={techLabel}
+              />
+              <div className={styles.mapDate}>
+                <div className={styles.annotation}>Through</div>
+                <div className={styles.weekOfValue}>{throughDate}</div>
+              </div>
+            </div>
+            {!playing && (
+              <button
+                type="button"
+                className={styles.mapPlay}
+                onClick={togglePlay}
+              >
+                <span className={styles.playIcon} />
+                Play 2026 week by week
+              </button>
+            )}
             <div className={styles.mapLegend}>
               {DIRECTIONS.map(({ key, label }) => (
                 <div key={key} className={styles.mapLegendItem}>
@@ -299,8 +419,14 @@ export default function SpendingFlow({
               </div>
             </div>
           </div>
+          <RacePicker
+            rows={rankingRows}
+            selectedId={selectedId}
+            onSelect={setSelectedId}
+          />
 
           <Timeline
+            ref={timelineRef}
             series={nationalSeries}
             week={week}
             lastWeek={lastWeek}
@@ -310,13 +436,14 @@ export default function SpendingFlow({
             speed={speed}
             onSpeedChange={setSpeed}
             techLabel={techLabel}
+            throughDate={throughDate}
           />
 
           <section>
             <h2 className={sharedStyles.sectionTitle}>
-              {sentenceCase(`${techLabel} spending so far`, false)}
+              {sentenceCase(`${techLabel} spending nationwide`, false)}
               <span className={sharedStyles.sectionTitleAmount}>
-                {throughLabel} · Nationwide
+                {throughLabel}
               </span>
             </h2>
             <div className={styles.activity}>
@@ -329,7 +456,7 @@ export default function SpendingFlow({
                       <span className="bold">
                         +{humanizeRoundedCurrency(thisWeekTotal, true, 1)}
                       </span>{" "}
-                      week of {weekLabel}
+                      during the week of {weekLabel}
                     </span>
                   }
                 />
@@ -339,7 +466,7 @@ export default function SpendingFlow({
                   bottomText={
                     <span className={styles.thisWeek}>
                       <span className="bold">{thisWeekRaces}</span> with
-                      spending week of {weekLabel}
+                      spending during the week of {weekLabel}
                     </span>
                   }
                 />
@@ -364,7 +491,8 @@ export default function SpendingFlow({
           yearExpenditures={filtered.filter((e) => e.raceId === selectedId)}
           totals={sumByDirection(selectedExpenditures)}
           series={selectedSeries}
-          throughLabel={shortThroughLabel}
+          throughDate={throughDate}
+          scrubber={compactTimeline}
           week={week}
           stage={stage}
           siblings={siblings}

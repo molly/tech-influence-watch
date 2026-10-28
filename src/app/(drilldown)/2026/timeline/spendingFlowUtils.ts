@@ -6,6 +6,8 @@ import type { BESector } from "@/app/types/Sector";
 
 // The timeline runs in 7-day bins from the start of the 2026 election year.
 export const FLOW_START_DATE = "2026-01-01";
+// General election day. The timeline stops here.
+export const FLOW_END_DATE = "2026-11-03";
 
 // Which party a dollar helps. Support for a candidate helps their party;
 // opposition helps whichever party the oppositionSpending constant says it
@@ -74,6 +76,8 @@ export interface FlowRace {
 export interface SpendingFlowData {
   numWeeks: number;
   today: string;
+  // The date the data was last updated, which can be behind today.
+  dataThrough: string;
   races: Record<string, FlowRace>;
   expenditures: FlowExpenditure[];
   committees: Record<string, string>;
@@ -126,16 +130,25 @@ export function formatShortDate(date: DateTime): string {
   return date.toFormat("LLL d");
 }
 
-// The last day a week covers, capped at today so the current week doesn't
-// claim days that haven't happened yet.
-export function weekEnd(week: number, today: string): DateTime {
-  const end = weekStart(week).plus({ days: 6 });
-  const todayDate = DateTime.fromISO(today, { zone: "utc" });
-  return end < todayDate ? end : todayDate;
+// The last day a week covers, capped at the data's last update so the current
+// week doesn't claim days there's no data for yet, and at election day.
+export function weekEnd(week: number, dataThrough: string): DateTime {
+  return DateTime.min(
+    weekStart(week).plus({ days: 6 }),
+    DateTime.fromISO(dataThrough, { zone: "utc" }),
+    DateTime.fromISO(FLOW_END_DATE, { zone: "utc" }),
+  );
 }
 
-export function getThroughLabel(week: number, today: string): string {
-  return `Through ${weekEnd(week, today).toFormat("LLL d, yyyy")}`;
+// "Oct 31, 2026", or "today" when the selected week runs up to the current
+// date.
+export function getThroughDate(
+  week: number,
+  dataThrough: string,
+  today: string,
+): string {
+  const end = weekEnd(week, dataThrough);
+  return end.toISODate() === today ? "today" : end.toFormat("LLL d, yyyy");
 }
 
 export function getRaceOffice(raceId: string): "S" | "H" {

@@ -1,8 +1,6 @@
-import { DateTime } from "luxon";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
-import { fetchPipelineLastRun } from "@/app/actions/fetch";
 import Breadcrumbs from "@/app/components/Breadcrumbs";
 import ErrorText from "@/app/components/ErrorText";
 import USMapSkeleton from "@/app/components/skeletons/USMapSkeleton";
@@ -32,22 +30,6 @@ async function SpendingFlowContent({ sector }: { sector: Sector }) {
   return <SpendingFlow data={data as SpendingFlowData} sector={sector} />;
 }
 
-async function DataThrough() {
-  const lastRun = await fetchPipelineLastRun();
-  if (!lastRun) {
-    return null;
-  }
-  return (
-    <>
-      <br />
-      Data through{" "}
-      <span className={sharedStyles.highlightFigure}>
-        {DateTime.fromISO(lastRun).toFormat("LLL d, yyyy")}
-      </span>
-    </>
-  );
-}
-
 export default function SpendingFlowView({ sector }: { sector: Sector }) {
   return (
     <>
@@ -64,12 +46,7 @@ export default function SpendingFlowView({ sector }: { sector: Sector }) {
                 attention — and when.
               </p>
             </div>
-            <div className={styles.mastMeta}>
-              2026 election cycle
-              <Suspense fallback={null}>
-                <DataThrough />
-              </Suspense>
-            </div>
+            <div className={styles.mastMeta}>2026 election cycle</div>
           </div>
         </section>
       </div>
