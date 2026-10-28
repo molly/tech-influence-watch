@@ -268,6 +268,15 @@ export const normalizeRaceId = (raceId: string): string => {
   return upper;
 };
 
+// Incumbent per the FEC (incumbent_challenge "I") or the race roster, which is
+// set by hand and catches cases the FEC record lags on
+export const isIncumbent = (
+  candidateSummary?: Pick<CandidateSummary, "incumbent_challenge">,
+  raceCandidate?: Pick<RaceCandidate, "incumbent">,
+): boolean =>
+  candidateSummary?.incumbent_challenge === "I" ||
+  raceCandidate?.incumbent === true;
+
 // Whether a raceId resolves to a real race: the presidential race, or a valid
 // state abbreviation plus a parseable office. Lets pages 404 unresolvable IDs
 // instead of rendering a header built from an undefined state name.

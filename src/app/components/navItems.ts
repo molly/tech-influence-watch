@@ -55,6 +55,11 @@ export const NAV_ITEMS: NavItem[] = [
     children: [
       { label: "Quid pro quo", href: "/analysis/quidproquo" },
       { label: "Contributions to Trump", href: "/analysis/trump" },
+      {
+        label: "Battlegrounds and safe seats",
+        href: "/2026/analysis/battlegrounds",
+        useSector: true,
+      },
     ],
   },
   {

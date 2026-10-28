@@ -1,0 +1,58 @@
+.bucket {
+  margin-bottom: 1rem;
+}
+
+.round {
+  margin-bottom: 1rem;
+}
+
+.round h3 {
+  font-size: 1rem;
+}
+
+.contestMeta {
+  font-size: 0.75rem;
+  color: var(--secondary-text);
+  margin-top: 0.125rem;
+}
+
+.strategyCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.strategyCard {
+  min-width: 0;
+}
+
+/* Left-hand bar colored by the party the row's money helped */
+.directionCell {
+  border-left: 0.25rem solid var(--party-unknown);
+  padding-left: 0.5rem;
+}
+
+.democratic {
+  border-left-color: var(--party-democrat);
+}
+
+.republican {
+  border-left-color: var(--party-republican);
+}
+
+.independent {
+  border-left-color: var(--party-independent);
+}
+
+.libertarian {
+  border-left-color: var(--party-libertarian);
+}
+
+.green {
+  border-left-color: var(--party-green);
+}
+
+.unknownParty {
+  border-left-color: var(--party-unknown);
+}

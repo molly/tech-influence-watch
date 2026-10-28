@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
 import Breadcrumbs from "@/app/components/Breadcrumbs";
+import RaceRating from "@/app/components/RaceRating";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import { STATES_BY_ABBR } from "@/app/data/states";
 import sharedStyles from "@/app/shared.module.css";
@@ -100,6 +101,7 @@ export default async function RaceDetailView({
               ? "Presidential election"
               : `${fullStateName} ${raceName} election`}
           </h1>
+          <RaceRating raceId={raceId} />
         </section>
       </div>
       <div className={styles.columns}>

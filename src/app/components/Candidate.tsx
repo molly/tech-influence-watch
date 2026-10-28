@@ -3,6 +3,7 @@ import { ReactNode } from "react";
 import sharedStyles from "@/app/shared.module.css";
 import { CandidateSummary, Party, RaceCandidate } from "@/app/types/Elections";
 import { getFirstLastName } from "@/app/utils/names";
+import { isIncumbent } from "@/app/utils/races";
 
 import { ExpenditureCandidateSummary } from "../types/Expenditures";
 import styles from "./candidate.module.css";
@@ -218,10 +219,7 @@ export default function Candidate({
               if (candidateSummary?.party) {
                 parts.push(candidateSummary.party);
               }
-              if (
-                candidateSummary?.incumbent_challenge === "I" ||
-                candidate?.incumbent === true
-              ) {
+              if (isIncumbent(candidateSummary, candidate)) {
                 parts.push("incumbent");
               }
               if (writeIn) {

@@ -123,6 +123,10 @@
   display: none;
 }
 
+.mobileRating {
+  display: none;
+}
+
 .trackedCommittee {
   font-weight: 700;
 }
@@ -188,6 +192,7 @@
   /* Desktop-only columns — content moved into mobileMeta / mobileGoalOutcome */
   .influencedTableRow .stateCol,
   .influencedTableRow .officeCol,
+  .influencedTableRow .ratingCol,
   .influencedTableRow .goalCol {
     display: none;
   }
@@ -266,6 +271,11 @@
     display: block;
     margin-top: 0.25rem;
     font-size: 1em;
+  }
+
+  .mobileRating {
+    display: inline-block;
+    margin-left: 0.5rem;
   }
 
   .skeletonExtra {

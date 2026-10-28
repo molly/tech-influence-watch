@@ -123,6 +123,7 @@ export function isSectorAwarePath(canonicalPath: string): boolean {
     "/2026/beneficiaries",
     "/2026/states",
     "/2026/elections",
+    "/2026/analysis/battlegrounds",
   ];
   if (exact.includes(canonicalPath)) {
     return true;

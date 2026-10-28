@@ -30,6 +30,14 @@ export default function RacesMethodology() {
         in a settled race occurred&nbsp;&mdash; typically, whether a supported
         candidate won or an opposed candidate lost.
       </p>
+      <p className={styles.note}>
+        Race ratings come from the{" "}
+        <a href="https://www.cookpolitical.com/ratings">
+          Cook Political Report
+        </a>
+        , as of October 20, 2026 for Senate races and October 23, 2026 for House
+        races. They are not updated after that.
+      </p>
     </section>
   );
 }

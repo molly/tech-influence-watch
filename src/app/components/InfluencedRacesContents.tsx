@@ -26,6 +26,7 @@ import {
 import { range } from "@/app/utils/range";
 import { formatCurrency } from "@/app/utils/utils";
 
+import { COOK_RATINGS } from "../data/cookRatings";
 import { STATES_BY_ABBR } from "../data/states";
 import { Beneficiary } from "../types/Beneficiaries";
 import { Sector } from "../types/Sector";
@@ -38,6 +39,7 @@ import Candidate, { CandidateSkeleton } from "./Candidate";
 import ErrorText from "./ErrorText";
 import InformationalTooltip from "./InformationalTooltip";
 import Outcome from "./Outcome";
+import { RaceRatingChip, RatingHeader } from "./RaceRating";
 import Skeleton from "./skeletons/Skeleton";
 
 export function InfluencedRacesContentsSkeleton({
@@ -203,17 +205,21 @@ function CandidateRow({
   race,
   beneficiary,
   sector,
+  showRating,
 }: {
   candidate: ExpenditureCandidateSummary;
   race: ElectionGroup;
   beneficiary?: Beneficiary;
   sector: Sector;
+  // Ratings are shown on the full elections list, not the homepage preview
+  showRating: boolean;
 }) {
   const supportTotal = getSectorSupportTotal(candidate, sector);
   const opposeTotal = getSectorOpposeTotal(candidate, sector);
-  const raceHref = `/2026/elections/${candidate.state}-${candidate.race}`;
+  const raceId = `${candidate.state}-${candidate.race}`;
+  const raceHref = `/2026/elections/${raceId}`;
   const raceName = getRaceName(
-    `${candidate.state}-${candidate.race}`,
+    raceId,
     race.year,
     true,
   );
@@ -229,6 +235,9 @@ function CandidateRow({
           <Link href={stateHref}>{STATES_BY_ABBR[candidate.state]}</Link>
           {" · "}
           <Link href={raceHref}>{raceName}</Link>
+          {showRating && (
+            <RaceRatingChip raceId={raceId} className={styles.mobileRating} />
+          )}
         </div>
       </td>
       <td className={`center-cell ${styles.stateCol}`}>
@@ -241,6 +250,15 @@ function CandidateRow({
           {raceName}
         </Link>
       </td>
+      {showRating && (
+        <td className={`center-cell ${styles.ratingCol}`}>
+          {COOK_RATINGS[raceId] ? (
+            <RaceRatingChip raceId={raceId} />
+          ) : (
+            <span className={styles.nilCell}>—</span>
+          )}
+        </td>
+      )}
       <td
         className={`${styles.supportCol} ${supportTotal ? "number-cell" : `center-cell ${styles.noValue}`}`}
       >
@@ -355,6 +373,7 @@ export default async function InfluencedRacesContents({
         race={raceDetails[candidate.state][candidate.race]}
         beneficiary={beneficiary}
         sector={sector}
+        showRating={fullPage}
       />
     );
   });
@@ -365,6 +384,7 @@ export default async function InfluencedRacesContents({
         <th className="text-cell">Candidate</th>
         <th className="center-cell">State</th>
         <th className="center-cell small-cell">Office</th>
+        {fullPage && <RatingHeader />}
         <th className="number-cell">Support</th>
         <th className="number-cell">Oppose</th>
         <th className="small-cell center-cell">

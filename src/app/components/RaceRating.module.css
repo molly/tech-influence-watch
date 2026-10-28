@@ -1,0 +1,73 @@
+.rating {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 0.5rem;
+  row-gap: 0.25rem;
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.scale {
+  display: flex;
+  gap: 0.125rem;
+  width: 7rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.step {
+  flex: 1;
+  height: 0.5rem;
+}
+
+/* Stepped shading of the party tokens, strongest at the "solid" ends */
+.solid-d {
+  background: var(--party-democrat);
+}
+
+.likely-d {
+  background: color-mix(in srgb, var(--party-democrat) 60%, transparent);
+}
+
+.lean-d {
+  background: color-mix(in srgb, var(--party-democrat) 30%, transparent);
+}
+
+.tossup {
+  background: var(--table-color);
+}
+
+.lean-r {
+  background: color-mix(in srgb, var(--party-republican) 30%, transparent);
+}
+
+.likely-r {
+  background: color-mix(in srgb, var(--party-republican) 60%, transparent);
+}
+
+.solid-r {
+  background: var(--party-republican);
+}
+
+.current {
+  outline: 0.125rem solid var(--main-text);
+  outline-offset: 0.0625rem;
+}
+
+.source {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.8rem;
+  color: var(--secondary-text);
+}
+
+.chip {
+  display: inline-block;
+  padding: 0.125rem 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--main-text);
+  white-space: nowrap;
+}

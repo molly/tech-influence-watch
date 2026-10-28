@@ -246,8 +246,10 @@ export default function RaceDetailsEditor() {
       const race: any = {
         type: raceForm.type,
         candidates: raceForm.candidates.map((candidate) => {
+          // Names are matched by exact string downstream, so a stray space
+          // would split one person into two candidates
           const candidateData: any = {
-            name: candidate.name,
+            name: candidate.name.trim(),
           };
 
           // Only include party if it's set
