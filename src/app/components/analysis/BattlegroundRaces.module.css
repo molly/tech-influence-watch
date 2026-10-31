@@ -56,3 +56,85 @@
 .unknownParty {
   border-left-color: var(--party-unknown);
 }
+
+/* Proportional bar under the lead paragraph */
+.splitBlock {
+  margin: 0 1rem 1.5rem 0;
+}
+
+/* Bracket over the part of the bar that one contest accounts for */
+.splitAnnotationRow {
+  display: flex;
+}
+
+/* Zero basis so the spans split by amount alone, not the label's width */
+.splitAnnotation,
+.splitAnnotationSpacer {
+  flex-basis: 0;
+  min-width: 0;
+}
+
+.splitAnnotationLabel {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.75rem;
+  color: var(--secondary-text);
+  white-space: nowrap;
+  margin-bottom: 0.125rem;
+}
+
+/* A |-----| span: end caps with a line across the middle */
+.splitAnnotationBracket {
+  position: relative;
+  height: 0.5rem;
+  margin-bottom: 0.25rem;
+  border-left: 1px solid var(--secondary-text);
+  border-right: 1px solid var(--secondary-text);
+}
+
+.splitAnnotationBracket::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  border-top: 1px solid var(--secondary-text);
+}
+
+.splitBar {
+  margin-bottom: 0.5rem;
+}
+
+.segCompetitive {
+  background-color: var(--color-lime-600);
+}
+
+.segLikely {
+  background-color: var(--color-lime-300);
+}
+
+.segSafe {
+  background-color: var(--color-neutral-800);
+}
+
+.segUnderdog {
+  background-color: var(--color-neutral-400);
+}
+
+.segUnclassified {
+  background-color: var(--color-neutral-200);
+}
+
+@media (prefers-color-scheme: dark) {
+  .segSafe {
+    background-color: var(--color-neutral-200);
+  }
+
+  .segUnderdog {
+    background-color: var(--color-neutral-500);
+  }
+
+  .segUnclassified {
+    background-color: var(--color-neutral-700);
+  }
+}

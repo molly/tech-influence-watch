@@ -35,6 +35,7 @@ const COMMITTEES: Record<string, string> = {
   C00922229: "Abundant Future",
   C00923417: "Think Big",
   C00924183: "Commonwealth Prosperity Fund",
+  C00928069: "DREAM NYC",
   C00928374: "Jobs and Democracy PAC",
   C00928390: "Defending Our Values",
   C00930503: "Public First",

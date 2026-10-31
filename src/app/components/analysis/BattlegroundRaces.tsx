@@ -3,11 +3,9 @@ import Link from "next/link";
 import { fetchAllStateElections, fetchConstant } from "@/app/actions/fetch";
 import { CommitteeLink } from "@/app/components/CommitteeLink";
 import ErrorText from "@/app/components/ErrorText";
-import HorizontalBars, {
-  HorizontalBarItem,
-  HorizontalBarsSkeleton,
-} from "@/app/components/home/HorizontalBars";
+import barStyles from "@/app/components/home/HorizontalBars.module.css";
 import patternStyles from "@/app/components/home/NotablePatterns.module.css";
+import legendStyles from "@/app/components/home/TechSectorBreakdown.module.css";
 import MoneyCard, { MoneyCardSkeleton } from "@/app/components/MoneyCard";
 import { RaceRatingChip, RatingHeader } from "@/app/components/RaceRating";
 import Skeleton from "@/app/components/skeletons/Skeleton";
@@ -593,6 +591,88 @@ function StrategyCard({
   );
 }
 
+const SEGMENT_CLASSES: Record<Category, string> = {
+  competitive: styles.segCompetitive,
+  likely: styles.segLikely,
+  safe: styles.segSafe,
+  underdog: styles.segUnderdog,
+  unclassified: styles.segUnclassified,
+};
+
+interface SplitSegment {
+  key: string;
+  label: string;
+  amount: number;
+  className: string;
+}
+
+// The lead paragraph's split as one proportional bar. The annotation brackets
+// the start of the bar, so it marks a contest within the first segment.
+function SplitBar({
+  segments,
+  total,
+  annotation,
+}: {
+  segments: SplitSegment[];
+  total: number;
+  annotation?: { label: string; amount: number };
+}) {
+  const describe = (s: { label: string; amount: number }) =>
+    `${s.label} ${currency(s.amount)}, ${pctText(s.amount, total)}`;
+  return (
+    <div className={styles.splitBlock}>
+      {annotation && (
+        <div className={styles.splitAnnotationRow} aria-hidden="true">
+          <div
+            className={styles.splitAnnotation}
+            style={{ flexGrow: annotation.amount }}
+          >
+            <div className={styles.splitAnnotationLabel}>
+              {annotation.label}: {currency(annotation.amount)} (
+              {pctText(annotation.amount, total)} of all spending)
+            </div>
+            <div className={styles.splitAnnotationBracket} />
+          </div>
+          <div
+            className={styles.splitAnnotationSpacer}
+            style={{ flexGrow: total - annotation.amount }}
+          />
+        </div>
+      )}
+      <div
+        className={`${barStyles.track} ${styles.splitBar}`}
+        role="img"
+        aria-label={`Spending by how competitive the contest was: ${segments
+          .map(describe)
+          .join(
+            "; ",
+          )}${annotation ? `. Of that, ${describe(annotation)}` : ""}`}
+      >
+        {segments.map((s) => (
+          <div
+            key={s.key}
+            className={`${barStyles.segment} ${s.className}`}
+            style={{ flexGrow: s.amount }}
+          />
+        ))}
+      </div>
+      <div className={legendStyles.barLegend}>
+        {segments.map((s) => (
+          <div key={s.key} className={legendStyles.barLegendItem}>
+            <span
+              className={`${legendStyles.barLegendSwatch} ${s.className}`}
+            />
+            <span className={legendStyles.barLegendName}>{s.label}</span>
+            <span className={legendStyles.barLegendValue}>
+              {currency(s.amount)} · {pctText(s.amount, total)}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function SectorContent({
   sector,
   pieces,
@@ -627,18 +707,12 @@ function SectorContent({
     (c) => piecesIn(c.key).length > 0,
   );
 
-  const barItems: HorizontalBarItem[] = visibleCategories.map((c) => {
-    const categoryPieces = piecesIn(c.key);
-    const value = sum(categoryPieces);
-    const general = sum(categoryPieces.filter((p) => p.type === "general"));
-    return {
-      key: c.key,
-      label: c.barLabel,
-      value,
-      displayValue: currency(value),
-      subtitle: `${currency(general)} in generals, ${currency(value - general)} in primaries`,
-    };
-  });
+  const splitSegments: SplitSegment[] = visibleCategories.map((c) => ({
+    key: c.key,
+    label: c.barLabel,
+    amount: sum(piecesIn(c.key)),
+    className: SEGMENT_CLASSES[c.key],
+  }));
 
   return (
     <>
@@ -678,6 +752,20 @@ function SectorContent({
               % of the money.
             </p>
           )}
+          <SplitBar
+            segments={splitSegments}
+            total={total}
+            // Marked even when the paragraph doesn't call it out, so its share
+            // of the competitive segment is visible
+            annotation={
+              topCompetitive
+                ? {
+                    label: raceName(topCompetitive.raceId),
+                    amount: topCompetitive.amount,
+                  }
+                : undefined
+            }
+          />
           <div className={sharedStyles.noteCard}>
             <span className={sharedStyles.noteLabel}>Note:</span> general
             elections are classified with the Cook Political Report&rsquo;s
@@ -704,50 +792,40 @@ function SectorContent({
           <StrategyCard key={s} sector={s} pieces={strategyPieces[s]} />
         ))}
       </div>
-      <div className={sharedStyles.columns}>
-        <div className={sharedStyles.mainColumn}>
-          {visibleCategories.map((c) => {
-            const rows = groupByContest(piecesIn(c.key));
-            return (
-              <section key={c.key} className={styles.bucket}>
-                <h2 className={sharedStyles.sectionTitle}>
-                  {c.title}
-                  <span className={sharedStyles.sectionTitleAmount}>
-                    {rows.length} {rows.length === 1 ? "contest" : "contests"}
-                  </span>
-                </h2>
-                {ROUNDS.map((round) => {
-                  const roundRows = rows.filter(
-                    (row) => (row.type === "general") === round.general,
-                  );
-                  if (!roundRows.length) {
-                    return null;
-                  }
-                  return (
-                    <div key={round.title} className={styles.round}>
-                      <h3 className={sharedStyles.sectionTitle}>
-                        {round.title}
-                        <span className={sharedStyles.sectionTitleAmount}>
-                          {currency(
-                            sum(roundRows.flatMap((row) => row.pieces)),
-                          )}{" "}
-                          in {roundRows.length}{" "}
-                          {roundRows.length === 1 ? "contest" : "contests"}
-                        </span>
-                      </h3>
-                      <ContestTable rows={roundRows} general={round.general} />
-                    </div>
-                  );
-                })}
-              </section>
-            );
-          })}
-        </div>
-        <div className={sharedStyles.sideColumn}>
-          <h2 className={sharedStyles.sectionTitle}>Where the money went</h2>
-          <HorizontalBars items={barItems} />
-        </div>
-      </div>
+      {visibleCategories.map((c) => {
+        const rows = groupByContest(piecesIn(c.key));
+        return (
+          <section key={c.key} className={styles.bucket}>
+            <h2 className={sharedStyles.sectionTitle}>
+              {c.title}
+              <span className={sharedStyles.sectionTitleAmount}>
+                {rows.length} {rows.length === 1 ? "contest" : "contests"}
+              </span>
+            </h2>
+            {ROUNDS.map((round) => {
+              const roundRows = rows.filter(
+                (row) => (row.type === "general") === round.general,
+              );
+              if (!roundRows.length) {
+                return null;
+              }
+              return (
+                <div key={round.title} className={styles.round}>
+                  <h3 className={sharedStyles.sectionTitle}>
+                    {round.title}
+                    <span className={sharedStyles.sectionTitleAmount}>
+                      {currency(sum(roundRows.flatMap((row) => row.pieces)))} in{" "}
+                      {roundRows.length}{" "}
+                      {roundRows.length === 1 ? "contest" : "contests"}
+                    </span>
+                  </h3>
+                  <ContestTable rows={roundRows} general={round.general} />
+                </div>
+              );
+            })}
+          </section>
+        );
+      })}
     </>
   );
 }
@@ -759,21 +837,16 @@ export function BattlegroundRacesSkeleton() {
         <div>
           <Skeleton height="1.1rem" width="80%" />
           <Skeleton height="1.1rem" width="55%" />
+          <div className={styles.splitBlock}>
+            <Skeleton height="0.625rem" width="100%" />
+          </div>
         </div>
         <MoneyCardSkeleton />
       </section>
-      <div className={sharedStyles.columns}>
-        <div className={sharedStyles.mainColumn}>
-          <h2 className={sharedStyles.sectionTitle}>Competitive contests</h2>
-          {Array.from({ length: 10 }).map((_, i) => (
-            <Skeleton key={i} width="100%" />
-          ))}
-        </div>
-        <div className={sharedStyles.sideColumn}>
-          <h2 className={sharedStyles.sectionTitle}>Where the money went</h2>
-          <HorizontalBarsSkeleton numBars={3} />
-        </div>
-      </div>
+      <h2 className={sharedStyles.sectionTitle}>Competitive contests</h2>
+      {Array.from({ length: 10 }).map((_, i) => (
+        <Skeleton key={i} width="100%" />
+      ))}
     </>
   );
 }

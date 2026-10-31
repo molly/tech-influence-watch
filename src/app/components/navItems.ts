@@ -60,6 +60,11 @@ export const NAV_ITEMS: NavItem[] = [
         href: "/2026/analysis/battlegrounds",
         useSector: true,
       },
+      {
+        label: "What the ads say",
+        href: "/2026/analysis/ads",
+        useSector: true,
+      },
     ],
   },
   {

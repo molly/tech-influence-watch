@@ -81,3 +81,8 @@ export const NETWORKS: NetworkConstant[] = [
 export function getNetworkId(key: string): string | undefined {
   return NETWORKS.find((network) => network.key === key)?.id;
 }
+
+// Look up a network's detail-page slug by its display name.
+export function getNetworkIdByName(name: string): string | undefined {
+  return NETWORKS.find((network) => network.name === name)?.id;
+}

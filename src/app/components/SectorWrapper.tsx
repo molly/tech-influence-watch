@@ -7,6 +7,7 @@ import styles from "./header.module.css";
 import SectorButtons from "./SectorButtons";
 
 const SECTOR_PATHS = [
+  "analysis/ads",
   "analysis/battlegrounds",
   "beneficiaries",
   "contributions",

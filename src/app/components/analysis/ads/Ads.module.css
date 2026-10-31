@@ -1,0 +1,1167 @@
+/* ── Shared bits ───────────────────────────────────────────────────── */
+
+.note {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--secondary-text);
+  max-width: 80ch;
+  margin: 0.5rem 0 0;
+}
+
+.meta {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.8rem;
+  color: var(--secondary-text);
+}
+
+.smallLink {
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.subheading {
+  display: flex;
+  align-items: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.2rem;
+  margin: 1rem 0 0;
+}
+
+.swatch {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  flex: none;
+}
+
+.swatchDem {
+  background: var(--party-democrat);
+}
+
+.swatchRep {
+  background: var(--party-republican);
+}
+
+.swatchBoth {
+  background: var(--card-border);
+}
+
+.swatchInd {
+  background: var(--party-independent);
+}
+
+.swatchLib {
+  background: var(--party-libertarian);
+}
+
+.swatchGreen {
+  background: var(--party-green);
+}
+
+.swatchUnknown {
+  background: var(--party-unknown);
+}
+
+.partyTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-family: var(--font-sans);
+  font-style: normal;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--secondary-text);
+  white-space: nowrap;
+}
+
+.inlineWho {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.videoCardQuote mark,
+.transcript mark {
+  background: var(--color-lime-50);
+  color: var(--main-text);
+  box-shadow: inset 0 -2px 0 var(--color-lime-300);
+}
+
+/* ── Video cards ───────────────────────────────────────────────────── */
+
+.videoBox {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: var(--color-black);
+
+  video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+.noVideo {
+  display: flex;
+  align-items: flex-end;
+  padding: 0.4rem 0.5rem;
+  background: var(--card-background);
+  border: 1px solid var(--table-color);
+  font-size: 0.7rem;
+  color: var(--secondary-text);
+}
+
+.videoCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.videoCardWho {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.videoCardQuote {
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.videoRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 1.25rem;
+  margin-top: 0.75rem;
+}
+
+.adPair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 0.75rem 0 0.25rem;
+}
+
+/* ── Industry mentions by stance ───────────────────────────────────── */
+
+.stanceColumns {
+  --favorable: var(--color-lime-600);
+  --mixed: var(--color-neutral-500);
+  --critical: var(--main-text);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  gap: 0 2.75rem;
+}
+
+.stanceColumn {
+  padding-top: 1rem;
+}
+
+.stanceTitle {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.2rem;
+  margin: 0 0 0.5rem;
+}
+
+.stanceBig {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.stanceBigNumber {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 3.5rem;
+  line-height: 0.9;
+  font-variant-numeric: tabular-nums;
+}
+
+.stanceBigOf {
+  font-size: 0.5em;
+  color: var(--secondary-text);
+}
+
+.stanceBigLabel {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--secondary-text);
+  line-height: 1.3;
+}
+
+.dots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin-bottom: 0.75rem;
+}
+
+.dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  border: 1px solid var(--card-border);
+  background: var(--background);
+}
+
+.dotFavorable {
+  background: var(--favorable);
+  border-color: var(--favorable);
+}
+
+.dotMixed {
+  background: var(--mixed);
+  border-color: var(--mixed);
+}
+
+.dotCritical {
+  background: var(--critical);
+  border-color: var(--critical);
+}
+
+/* Stances that lean two (or three) ways split the square diagonally. */
+.dotFavorableMixed,
+.dotMixedCritical,
+.dotFavorableCritical,
+.dotFavorableMixedCritical {
+  border-color: var(--critical);
+}
+
+.dotFavorableMixed {
+  background: linear-gradient(
+    to bottom right,
+    var(--favorable) 50%,
+    var(--mixed) 50%
+  );
+}
+
+.dotMixedCritical {
+  background: linear-gradient(
+    to bottom right,
+    var(--mixed) 50%,
+    var(--critical) 50%
+  );
+}
+
+.dotFavorableCritical {
+  background: linear-gradient(
+    to bottom right,
+    var(--favorable) 50%,
+    var(--critical) 50%
+  );
+}
+
+.dotFavorableMixedCritical {
+  background: linear-gradient(
+    to bottom right,
+    var(--favorable) 33.3%,
+    var(--mixed) 33.3% 66.7%,
+    var(--critical) 66.7%
+  );
+}
+
+.stanceBigTech {
+  margin: -0.25rem 0 0.75rem;
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--secondary-text);
+  line-height: 1.3;
+}
+
+.stanceLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  margin: 0 0 1.5rem;
+  padding: 0;
+  list-style: none;
+  font-size: 0.875rem;
+}
+
+.stanceLegendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.stanceNote {
+  margin: -0.5rem 0 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--main-text);
+  line-height: 1.5;
+}
+
+.stanceGroup {
+  margin-bottom: 1.5rem;
+}
+
+.stanceGroupHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  margin: 0;
+  padding: 0.5rem 1rem;
+  border-top: 1px solid var(--group-header-border);
+  border-bottom: 1px solid var(--group-header-border);
+  background: var(--group-header-background);
+  color: var(--group-header-text);
+}
+
+.stanceGroupLabel {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.2rem;
+}
+
+.stanceGroupCount {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.875rem;
+}
+
+.stanceGroupFavorable {
+  --group-header-background: var(--favorable);
+  --group-header-border: var(--favorable);
+  --group-header-text: var(--color-white);
+  --group-count-color: var(--favorable);
+}
+
+.stanceGroupMixed {
+  --group-header-background: var(--card-background);
+  --group-header-border: var(--mixed);
+  --group-header-text: var(--main-text);
+  --group-count-color: var(--main-text);
+}
+
+.stanceGroupCritical {
+  --group-header-background: var(--critical);
+  --group-header-border: var(--critical);
+  --group-header-text: var(--background);
+  --group-count-color: var(--main-text);
+}
+
+.dotLink:hover,
+.dotLink:focus-visible {
+  outline: 2px solid var(--main-text);
+  outline-offset: 1px;
+}
+
+.dotTooltip {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.dotsHighlighting .dot {
+  opacity: 0.25;
+}
+
+.dotsHighlighting .dotActive {
+  opacity: 1;
+  outline: 1.5px solid var(--main-text);
+  outline-offset: 1px;
+}
+
+.stanceRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 2.5rem;
+  gap: 0.75rem;
+  align-items: start;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--table-color);
+  color: var(--main-text);
+}
+
+a.stanceRow:hover {
+  color: var(--main-text);
+  text-decoration: none;
+}
+
+a.stanceRow:hover .stanceRowLabel {
+  text-decoration: underline;
+}
+
+a.stanceRow:focus-visible {
+  outline: 2px solid var(--main-text);
+  outline-offset: 2px;
+}
+
+.stanceRowLabel {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.stanceRowDescription {
+  display: block;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.8rem;
+  color: var(--secondary-text);
+}
+
+.stanceRowCommittees {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.125rem 0.75rem;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--secondary-text);
+}
+
+.stanceRowCommitteeCount {
+  font-weight: 600;
+  color: var(--main-text);
+}
+
+.stanceRowCount {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.75rem;
+  line-height: 1;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--group-count-color);
+}
+
+/* ── Dem. vs. Rep. arms ────────────────────────────────────────────── */
+
+.networkArms {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(21rem, 1fr));
+  gap: 0.5rem 2.5rem;
+  margin-top: 0.5rem;
+}
+
+.divergeHeadRow,
+.divergeRow {
+  display: grid;
+  grid-template-columns: 2.75rem minmax(0, 1fr) 8rem minmax(0, 1fr) 2.75rem;
+  column-gap: 0.6rem;
+  align-items: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.divergeHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.125rem 0.4rem;
+  padding: 0.75rem 0 0.5rem;
+  border-bottom: 1px solid var(--card-border);
+  align-self: stretch;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.25;
+
+  a {
+    color: var(--main-text);
+  }
+}
+
+.divergeHeadLeft {
+  grid-column: 1 / 3;
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.divergeHeadRight {
+  grid-column: 4 / 6;
+}
+
+.divergeHeadCount {
+  flex-basis: 100%;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--secondary-text);
+}
+
+.divergeRow > span {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid var(--table-color);
+  font-size: 0.8rem;
+}
+
+.divergeValue {
+  justify-content: flex-end;
+  color: var(--secondary-text);
+}
+
+.divergeValueRight {
+  justify-content: flex-start;
+}
+
+.divergeValueNotable {
+  color: var(--main-text);
+  font-weight: 600;
+}
+
+.divergeLabel {
+  justify-content: center;
+  text-align: center;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.divergeBar {
+  position: relative;
+
+  i {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    height: 0.75rem;
+    margin-top: -0.375rem;
+  }
+}
+
+.divergeBarLeft i {
+  left: auto;
+  right: 0;
+}
+
+/* ── Attack ads ────────────────────────────────────────────────────── */
+
+.attackRaces {
+  font-family: var(--font-serif);
+  font-style: italic;
+
+  a {
+    font-family: var(--font-sans);
+    font-style: normal;
+    font-weight: 500;
+  }
+}
+
+/* ── Tag heatmap ───────────────────────────────────────────────────── */
+
+.heatmapControls {
+  margin: 0.75rem 0 0;
+}
+
+.heatmapWrap {
+  position: relative;
+  overflow-x: auto;
+  margin-top: 0.4rem;
+}
+
+.heatmap {
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+
+  th,
+  td {
+    padding: 0;
+  }
+}
+
+.heatmapColumnGroups th {
+  padding: 0.25rem 0.375rem;
+  border-left: 1px solid var(--card-border);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.8rem;
+  color: var(--secondary-text);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.heatmapColumnGroups th:nth-child(-n + 2) {
+  border-left: none;
+}
+
+/* Each label runs up a 45° lane slanting right from the top of its column.
+   The lane is the column's own box, skewed, and its left border draws the
+   guide line; the label inside undoes the skew and turns to match. Labels
+   lean over the header cells of later columns, which would otherwise catch
+   the pointer, so only the label text takes hover. */
+.heatmapColumnTags th {
+  position: relative;
+  height: 6.5rem;
+  pointer-events: none;
+
+  div {
+    position: absolute;
+    inset: 0;
+    border-left: 1px solid var(--card-border);
+    transform-origin: 0 100%;
+    transform: skewX(-45deg);
+  }
+
+  span {
+    position: absolute;
+    bottom: -0.5rem;
+    left: 50%;
+    padding-left: 0.75rem;
+    line-height: 1rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+    transform-origin: 0 50%;
+    transform: skewX(45deg) rotate(-45deg);
+    pointer-events: auto;
+  }
+
+  span:hover {
+    color: var(--link-text);
+  }
+
+  span[title] {
+    cursor: help;
+  }
+}
+
+/* Outlines the column whose label is hovered. The measured cells reach only
+   halfway into the 1px gaps between them, so the box grows by the other half
+   to fill each gap fully, whether it's blank or a group divider. */
+.heatmapColumnHighlight {
+  position: absolute;
+  left: calc(var(--left) - 0.5px);
+  top: calc(var(--top) - 0.5px);
+  width: calc(var(--width) + 1px);
+  height: calc(var(--height) + 1px);
+  border: 1px solid var(--secondary-text);
+  pointer-events: none;
+}
+
+.heatmapColumnTags .heatmapLaneGroupStart div {
+  border-left-color: var(--secondary-text);
+}
+
+.heatmapColumnTags .heatmapIndustryColumn span {
+  color: var(--link-text);
+  font-weight: 700;
+}
+
+.heatmapGroupRow th {
+  padding: 0.5rem 0 0.25rem;
+  border-bottom: 1px solid var(--card-border);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.05rem;
+  text-align: left;
+}
+
+.heatmapRowLabel {
+  height: 1.875rem;
+  padding: 0 0.875rem 0 0 !important;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+
+  .partyTag {
+    margin-left: 0.5rem;
+  }
+}
+
+.heatmap tbody tr:hover .heatmapRowLabel {
+  color: var(--link-text);
+}
+
+.heatmapRowCount {
+  padding: 0 0.75rem 0 0 !important;
+  font-size: 0.8rem;
+  color: var(--secondary-text);
+  text-align: right;
+}
+
+.heatmapCell {
+  --share: 0;
+  width: 1.75rem;
+  min-width: 1.75rem;
+  height: 1.75rem;
+  border: 1px solid var(--background);
+  background: color-mix(
+    in oklch,
+    var(--main-text) calc(8% + var(--share) * 82%),
+    var(--card-background)
+  );
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: 600;
+
+  a {
+    display: block;
+    line-height: 1.75rem;
+    color: var(--main-text);
+  }
+
+  a:hover {
+    text-decoration: none;
+  }
+}
+
+.heatmapCell:not(.heatmapCellEmpty):hover,
+.heatmapCell:focus-within {
+  outline: 2px solid var(--main-text);
+  outline-offset: -2px;
+}
+
+.heatmapCell a:focus-visible {
+  outline: none;
+}
+
+.heatmapCellDark a {
+  color: var(--background);
+}
+
+.heatmapCellEmpty {
+  background: var(--card-background);
+}
+
+.heatmapGroupStart {
+  border-left: 1px solid var(--card-border) !important;
+}
+
+.heatmapSubtotal .heatmapRowLabel {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--secondary-text);
+}
+
+/* Rules above each network and above the grand total. In collapsed tables a
+   tie between two cells' borders goes to the upper cell, so a top border here
+   would lose to the background-colored gaps around the cells above; the rule
+   goes on the bottom of the row above instead. The first network has no row
+   above it in the body, so it gets a top border of its own. */
+.heatmap tbody tr:has(+ .heatmapGroupRow) > *,
+.heatmap tbody tr:has(+ .heatmapTotal) > * {
+  border-bottom: 1px solid var(--main-text);
+}
+
+.heatmap tbody tr:first-child.heatmapGroupRow th {
+  border-top: 1px solid var(--main-text);
+}
+
+.heatmapTotal .heatmapRowLabel {
+  font-weight: 700;
+}
+
+.heatmapScale {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  font-size: 0.8rem;
+  color: var(--secondary-text);
+}
+
+.heatmapScaleSwatches {
+  display: flex;
+
+  i {
+    width: 1.375rem;
+    height: 0.75rem;
+    background: color-mix(
+      in oklch,
+      var(--main-text) calc(8% + var(--share) * 82%),
+      var(--card-background)
+    );
+  }
+}
+
+/* ── Shared playbook ───────────────────────────────────────────────── */
+
+.playbook {
+  display: grid;
+  grid-template-columns: minmax(0, 2.4fr) minmax(15rem, 1fr);
+  gap: 2.5rem;
+  margin-top: 1rem;
+}
+
+.playbookTables {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  gap: 1.75rem;
+}
+
+.playbookTitle {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.125rem;
+  margin: 0;
+}
+
+.playbookAside {
+  align-self: start;
+}
+
+/* ── Script templates ──────────────────────────────────────────────── */
+
+.template {
+  display: grid;
+  grid-template-columns: minmax(14rem, 1fr) minmax(0, 2.6fr);
+  gap: 1.5rem;
+  padding: 1.125rem 0;
+  border-bottom: 1px solid var(--table-color);
+}
+
+.templateCommittee {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0 0 0.25rem;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.2rem;
+}
+
+.templateScript {
+  margin: 0.4rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.45;
+
+  u {
+    text-decoration: none;
+    border-bottom: 1.5px dashed var(--tertiary-text);
+    color: var(--secondary-text);
+  }
+}
+
+.templateStrip {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+  gap: 0.6rem;
+
+  figure {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    margin: 0;
+  }
+
+  figcaption {
+    font-size: 0.75rem;
+    line-height: 1.3;
+    color: var(--secondary-text);
+  }
+}
+
+.templateName {
+  display: block;
+  font-weight: 600;
+  color: var(--main-text);
+}
+
+/* ── Ad library ────────────────────────────────────────────────────── */
+
+.libraryControls {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  padding: 0.875rem 0;
+  background: var(--background);
+  border-top: 1px solid var(--divider-color);
+  border-bottom: 1px solid var(--table-color);
+
+  label {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  select,
+  input {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.875rem;
+    color: var(--main-text);
+    background: var(--background);
+    border: 1px solid var(--card-border);
+    border-radius: 0;
+  }
+
+  input {
+    width: 12.5rem;
+  }
+
+  select:focus-visible,
+  input:focus-visible {
+    outline: 2px solid var(--main-text);
+    outline-offset: 2px;
+  }
+}
+
+.controlLabel {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.875rem;
+  color: var(--secondary-text);
+}
+
+.tag:focus-visible,
+.textButton:focus-visible,
+.moreButton:focus-visible {
+  outline: 2px solid var(--main-text);
+  outline-offset: 2px;
+}
+
+.libraryCount {
+  margin-left: auto;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.875rem;
+  color: var(--secondary-text);
+}
+
+.libraryAds {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(35rem, 1fr));
+  gap: 0 2.5rem;
+}
+
+.libraryAd {
+  display: grid;
+  grid-template-columns: 13.75rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+  padding: 1.125rem 0;
+  border-bottom: 1px solid var(--table-color);
+  scroll-margin-top: 4rem;
+}
+
+.libraryAdBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.libraryAdMedia {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.libraryAdHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.libraryAdHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 1rem;
+}
+
+.libraryAdCandidate {
+  font-size: 1rem;
+}
+
+.libraryAdBy {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.5rem;
+}
+
+/* The committee's role and sector badge wrap together. */
+.libraryAdCommitteeMeta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+/* The row's gap spaces the badge, so it drops the badge's own margin. */
+.libraryAdCommitteeMeta .libraryAdBadge {
+  margin-left: 0;
+}
+
+.libraryAdByLabel {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--secondary-text);
+}
+
+.race {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.375rem;
+  line-height: 1;
+}
+
+.libraryAdCommittee {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.libraryAdCommitteeRole {
+  font-size: 0.875rem;
+  color: var(--secondary-text);
+}
+
+.transcript {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.transcriptClamped {
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.excerpts {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.libraryAdTags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.stanceLabel,
+.excerptLabel {
+  margin-right: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--link-text);
+}
+
+.tag {
+  padding: 0.125rem 0.45rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--main-text);
+  background: var(--background);
+  border: 1px solid var(--card-border);
+  cursor: pointer;
+}
+
+.tag:hover {
+  border-color: var(--main-text);
+}
+
+.tagIndustry {
+  border-color: var(--color-lime-600);
+  color: var(--link-text);
+}
+
+/* The tag has spans, so hovering it highlights them in the transcript. */
+.tagHasSpans {
+  box-shadow: inset 0 -2px 0 var(--color-lime-300);
+}
+
+.tagActive,
+.tagActive:hover {
+  color: var(--background);
+  background: var(--main-text);
+  border-color: var(--main-text);
+}
+
+.libraryAdLinks {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.textButton {
+  padding: 0;
+  font-weight: 500;
+  color: var(--secondary-text);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.more {
+  padding: 1.125rem 0 0;
+}
+
+.moreButton {
+  padding: 0.5rem 1.125rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--main-text);
+  background: var(--background);
+  border: 1px solid var(--main-text);
+  cursor: pointer;
+}
+
+/* ── Responsive / dark ─────────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .playbook {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .template {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .libraryAds {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .libraryAd {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .libraryCount {
+    margin-left: 0;
+  }
+
+  .libraryControls {
+    position: static;
+  }
+
+  .networkArms {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .divergeHeadRow,
+  .divergeRow {
+    grid-template-columns: 2.5rem minmax(0, 1fr) 6.5rem minmax(0, 1fr) 2.5rem;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .videoCardQuote mark,
+  .transcript mark {
+    background: var(--color-lime-950);
+    box-shadow: inset 0 -2px 0 var(--color-lime-600);
+  }
+
+  .tagHasSpans {
+    box-shadow: inset 0 -2px 0 var(--color-lime-600);
+  }
+}

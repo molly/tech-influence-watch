@@ -1,0 +1,161 @@
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 27.5rem;
+  gap: 3rem;
+  align-items: start;
+  margin-bottom: 1.5rem;
+}
+
+.lede {
+  max-width: 62ch;
+  margin: 0 0 1rem;
+  font-size: 1.125rem;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.scope {
+  max-width: 62ch;
+  margin: 0;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--table-color);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--secondary-text);
+}
+
+.scopeLabel {
+  font-family: var(--font-sans);
+  font-style: normal;
+  font-weight: 600;
+  color: var(--main-text);
+}
+
+.statCard {
+  padding: 1.375rem 1.5rem 1.25rem;
+}
+
+.statValue {
+  margin-top: 0.5rem;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 4.75rem;
+  line-height: 0.9;
+  font-variant-numeric: tabular-nums;
+}
+
+.statOf {
+  font-size: 0.5em;
+  font-weight: 700;
+  color: var(--secondary-text);
+}
+
+.statTable {
+  width: 100%;
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+
+  td {
+    padding: 0.4rem 0;
+    border-top: 1px solid var(--table-color);
+  }
+}
+
+.statTable .statGroupRow > * {
+  padding: 0.75rem 0 0.25rem;
+  border-top: none;
+}
+
+/* Committees outside a network, set off from the network above them the way
+   a network's header row is. */
+.statTable tbody + .statUngrouped > tr:first-child > td {
+  padding-top: 0.75rem;
+  border-top: none;
+}
+
+.statGroupRow th {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1rem;
+  text-align: left;
+}
+
+.statTable .statIndented {
+  padding-left: 1rem;
+}
+
+.statPct {
+  width: 3.5rem;
+  color: var(--secondary-text);
+}
+
+.section {
+  margin-top: 2.75rem;
+}
+
+.mentionsHeading {
+  margin-top: 1.75rem;
+}
+
+.noteBeforeContent {
+  margin-bottom: 1rem;
+}
+
+.libraryCta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  padding: 1rem 0 0;
+}
+
+.libraryButton {
+  padding: 0.6rem 1.125rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--main-text);
+  background: var(--background);
+  border: 1px solid var(--main-text);
+}
+
+.libraryButton:hover {
+  color: var(--background);
+  background: var(--main-text);
+  text-decoration: none;
+}
+
+.libraryButton:focus-visible {
+  outline: 2px solid var(--main-text);
+  outline-offset: 2px;
+}
+
+.source {
+  max-width: 90ch;
+  margin-top: 2.25rem;
+  padding-top: 0.875rem;
+  border-top: 1px solid var(--table-color);
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--secondary-text);
+}
+
+.libraryLede {
+  composes: headerSubtitle from "@/app/shared.module.css";
+}
+
+@media (max-width: 1100px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+
+  .statCard {
+    max-width: 27.5rem;
+  }
+}

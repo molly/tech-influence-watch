@@ -2,7 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 import InformationalTooltip from "@/app/components/InformationalTooltip";
-import { AdImage, AdVideo, GoogleAd as GoogleAdType } from "@/app/types/Ads";
+import RehostedAdVideo from "@/app/components/RehostedAdVideo";
+import { AdImage, GoogleAd as GoogleAdType } from "@/app/types/Ads";
 import { CommitteeConstant } from "@/app/types/Committee";
 import { mediaUrl } from "@/app/utils/ads";
 import { humanizeApproximateRounded } from "@/app/utils/humanize";
@@ -22,37 +23,11 @@ function formatImpressions(impressions: string) {
   return `${low} – ${high}`;
 }
 
-// Our own copy of the ad. `preload="none"` means nothing but the poster image
-// transfers until a reader actually presses play, and the width/height
-// attributes give the browser the aspect ratio up front so the page doesn't
-// shift once the video loads.
-function RehostedVideo({ video, name }: { video: AdVideo; name: string }) {
-  return (
-    <video
-      className={styles.adVideo}
-      src={mediaUrl(video.mp4)}
-      poster={mediaUrl(video.poster)}
-      width={video.width ?? undefined}
-      height={video.height ?? undefined}
-      aria-label={`Video advertisement from ${name}`}
-      controls
-      preload="none"
-      playsInline
-    />
-  );
-}
-
 // Google doesn't expose a text/image ad's actual headline or body copy as
 // data anywhere, so this rehosted preview image is the only record of what
 // the ad said. `alt` is a human-written caption (GoogleAdConstant.imageAlt),
 // not derived from anything Google gives us.
-function RehostedImage({
-  image,
-  alt,
-}: {
-  image: AdImage;
-  alt?: string;
-}) {
+function RehostedImage({ image, alt }: { image: AdImage; alt?: string }) {
   return (
     <Image
       className={styles.adImage}
@@ -127,7 +102,11 @@ export default function GoogleAd({
         {(ad.video || ad.videoUrl) && (
           <div className={styles.adEmbedGroup}>
             {ad.video ? (
-              <RehostedVideo video={ad.video} name={name} />
+              <RehostedAdVideo
+                video={ad.video}
+                name={name}
+                className={styles.adVideo}
+              />
             ) : (
               <Embed url={ad.videoUrl as string} />
             )}
@@ -201,7 +180,9 @@ export default function GoogleAd({
           More details in Google&rsquo;s Ad Transparency Center
         </a>
         {/* Just the count here; the explanation sits once below the list. */}
-        {ad.variantCount && <> &middot; Combines {ad.variantCount} ad entries</>}
+        {ad.variantCount && (
+          <> &middot; Combines {ad.variantCount} ad entries</>
+        )}
       </div>
     </div>
   );

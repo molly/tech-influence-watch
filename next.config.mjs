@@ -88,6 +88,12 @@ const nextConfig = {
     ];
   },
   output: "standalone",
+  // The ad analysis pages read these CSVs at request time, which the
+  // standalone build doesn't trace on its own.
+  outputFileTracingIncludes: {
+    "/2026/**/analysis/ads/**": ["./src/app/data/*.csv"],
+    "/2026/analysis/ads/**": ["./src/app/data/*.csv"],
+  },
   compress: true,
 };
 

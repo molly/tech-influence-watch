@@ -74,6 +74,23 @@ export const humanizePercentage = (
   return `${parseFloat(((value / total) * 100).toFixed(decimalPlaces))}%`;
 };
 
+// A share as "one in N": "one in five" for 4 of 20, "fewer than one in six"
+// for 22 of 145 (the smallest N the share still falls under). "No" for none,
+// and "22 of 40" for half or more, which "one in N" can't express.
+export const humanizeOneIn = (value: number, total: number): string => {
+  if (value === 0) {
+    return "no";
+  }
+  if (value * 2 > total) {
+    return `${humanizeNumber(value)} of ${humanizeNumber(total)}`;
+  }
+  const ratio = total / value;
+  if (Number.isInteger(ratio)) {
+    return `one in ${humanizeNumber(ratio)}`;
+  }
+  return `fewer than one in ${humanizeNumber(Math.floor(ratio))}`;
+};
+
 export const humanizeApproximateRounded = (
   value: number,
   decimalPlaces?: number,
@@ -154,6 +171,16 @@ export const pluralize = (
     return value === 1 ? `${number} ${singular}` : `${number} ${plural}`;
   }
   return value === 1 ? singular : plural;
+};
+
+// 1st, 2nd, 3rd, 4th, 11th, 12th, 13th, 21st...
+export const ordinal = (n: number): string => {
+  const lastTwo = n % 100;
+  if (lastTwo >= 11 && lastTwo <= 13) {
+    return `${n}th`;
+  }
+  const suffix = { 1: "st", 2: "nd", 3: "rd" }[n % 10] ?? "th";
+  return `${n}${suffix}`;
 };
 
 export const possessive = (term: string) =>

@@ -6,7 +6,7 @@ import {
   RaceCandidate,
   RaceType,
 } from "@/app/types/Elections";
-import { humanizeList } from "@/app/utils/humanize";
+import { humanizeList, ordinal, possessive } from "@/app/utils/humanize";
 import { getFullPartyName } from "@/app/utils/party";
 
 import { SINGLE_MEMBER_STATES, STATES_BY_ABBR } from "../data/states";
@@ -189,6 +189,30 @@ export const getRaceName = (
     }
   }
   return raceName;
+};
+
+// A race as a reader would say it: "Nebraska Senate", "California’s 14th
+// District", "Wyoming’s At-Large District", "Ohio Senate special".
+export const getRaceHeadline = (raceId: string): string => {
+  const state = getStateFromRaceId(raceId);
+  const stateName = STATES_BY_ABBR[state];
+  if (!stateName) {
+    return getRaceName(raceId);
+  }
+  const [, office, district] = raceId.toUpperCase().split("-");
+  const special = raceId.toUpperCase().endsWith("-SPECIAL") ? " special" : "";
+  if (office === "S") {
+    return `${stateName} Senate${special}`;
+  }
+  if (office === "H") {
+    const number = parseInt(district, 10);
+    const seat =
+      SINGLE_MEMBER_STATES.includes(state) || isNaN(number)
+        ? "At-Large"
+        : ordinal(number);
+    return `${possessive(stateName)} ${seat} District${special}`;
+  }
+  return `${stateName} ${getRaceName(raceId)}`;
 };
 
 // Builds a compact "Active in ..." phrase from a set of raceIds, collapsing all

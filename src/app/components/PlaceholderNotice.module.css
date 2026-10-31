@@ -1,0 +1,27 @@
+.block,
+.inline {
+  background: var(--admin-warning-bg);
+  color: var(--admin-warning-text);
+  border: 2px dashed var(--admin-warning-text);
+  font-family: var(--font-sans);
+  font-style: normal;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.block {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  margin: 0.5rem 0;
+}
+
+.inline {
+  padding: 0 0.25rem;
+}
+
+.label {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.75rem;
+}
