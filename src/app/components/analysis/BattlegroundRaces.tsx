@@ -11,7 +11,7 @@ import { RaceRatingChip, RatingHeader } from "@/app/components/RaceRating";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import tableStyles from "@/app/components/tables.module.css";
 import { COOK_RATINGS, COOK_RATINGS_AS_OF } from "@/app/data/cookRatings";
-import competitivenessReview from "@/app/data/raceCompetitiveness.review.json";
+import competitiveness from "@/app/data/raceCompetitiveness.json";
 import { STATES_BY_ABBR } from "@/app/data/states";
 import sharedStyles from "@/app/shared.module.css";
 import { CommitteeConstant } from "@/app/types/Committee";
@@ -73,7 +73,8 @@ const CATEGORIES: {
 
 // Hand-marked contests that Cook's general election ratings can't classify:
 // primaries, and generals between two candidates of the same party. Generated
-// and marked by the backend's commands/race_competitiveness.py.
+// and marked by the backend's commands/race_competitiveness.py, which exports
+// the marks from its (uncommitted) review file to raceCompetitiveness.json.
 interface ReviewedContest {
   key: string;
   race_id: string;
@@ -90,7 +91,7 @@ interface ReviewedContest {
 // Index the reviewed contests by race, round, and candidate, since that's how
 // spending is keyed
 const REVIEWED_CONTESTS = new Map<string, ReviewedContest>();
-for (const contest of competitivenessReview.contests as ReviewedContest[]) {
+for (const contest of competitiveness.contests as ReviewedContest[]) {
   for (const candidate of contest.candidates) {
     REVIEWED_CONTESTS.set(
       `${contest.race_id}|${contest.type}|${candidate.name}`,

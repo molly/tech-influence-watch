@@ -1,0 +1,2250 @@
+{
+  "contests": [
+    {
+      "key": "FL-H-06-special|general|N",
+      "race_id": "FL-H-06-special",
+      "type": "general",
+      "party": "N",
+      "competitive": "likely",
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Randy Fine",
+          "won": true
+        },
+        {
+          "name": "Joshua Weil",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "FL-H-01-special|general|N",
+      "race_id": "FL-H-01-special",
+      "type": "general",
+      "party": "N",
+      "competitive": "likely",
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Jimmy Patronis",
+          "won": true
+        },
+        {
+          "name": "Gay Valimont",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "NY-H-12|primary|D",
+      "race_id": "NY-H-12",
+      "type": "primary",
+      "party": "D",
+      "competitive": true,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Alex Bores",
+          "won": false
+        },
+        {
+          "name": "Micah Lasher",
+          "won": true
+        },
+        {
+          "name": "Jack Schlossberg",
+          "won": false
+        },
+        {
+          "name": "George Conway",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "IL-S|primary|D",
+      "race_id": "IL-S",
+      "type": "primary",
+      "party": "D",
+      "competitive": true,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Juliana Stratton",
+          "won": true
+        },
+        {
+          "name": "Robin Kelly",
+          "won": false
+        },
+        {
+          "name": "Raja Krishnamoorthi",
+          "won": false
+        },
+        {
+          "name": "Dick Durbin",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "KY-S|primary|R",
+      "race_id": "KY-S",
+      "type": "primary",
+      "party": "R",
+      "competitive": true,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Andy Barr",
+          "won": true
+        },
+        {
+          "name": "Nate Morris",
+          "won": false
+        },
+        {
+          "name": "Daniel Cameron",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "AL-S|primary|R",
+      "race_id": "AL-S",
+      "type": "primary",
+      "party": "R",
+      "competitive": true,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Barry Moore",
+          "won": true
+        },
+        {
+          "name": "Tommy Tuberville",
+          "won": false
+        },
+        {
+          "name": "Jared Hudson",
+          "won": true
+        },
+        {
+          "name": "Steve Marshall",
+          "won": false
+        },
+        {
+          "name": "Rodney Walker",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "MD-H-05|primary|D",
+      "race_id": "MD-H-05",
+      "type": "primary",
+      "party": "D",
+      "competitive": "likely",
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Adrian Boafo",
+          "won": true
+        },
+        {
+          "name": "Harry Dunn",
+          "won": false
+        },
+        {
+          "name": "Quincy Bareebe",
+          "won": false
+        },
+        {
+          "name": "Steny Hoyer",
+          "won": false
+        },
+        {
+          "name": "Rushern Baker",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "AL-S|primary_runoff|R",
+      "race_id": "AL-S",
+      "type": "primary_runoff",
+      "party": "R",
+      "competitive": true,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Barry Moore",
+          "won": true
+        },
+        {
+          "name": "Jared Hudson",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "TX-H-18|primary_runoff|D",
+      "race_id": "TX-H-18",
+      "type": "primary_runoff",
+      "party": "D",
+      "competitive": true,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Christian Menefee",
+          "won": true
+        },
+        {
+          "name": "Al Green",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "GA-H-13|primary|D",
+      "race_id": "GA-H-13",
+      "type": "primary",
+      "party": "D",
+      "competitive": "likely",
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Jasmine Clark",
+          "won": true
+        },
+        {
+          "name": "David Scott",
+          "won": false
+        },
+        {
+          "name": "Everton Blair",
+          "won": false
+        },
+        {
+          "name": "Heavenly Kimes",
+          "won": false
+        },
+        {
+          "name": "Emanuel Jones",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "CA-H-11|general|N",
+      "race_id": "CA-H-11",
+      "type": "general",
+      "party": "N",
+      "competitive": "likely",
+      "favorite": "Scott Wiener",
+      "candidates": [
+        {
+          "name": "Scott Wiener",
+          "won": null
+        },
+        {
+          "name": "Connie Chan",
+          "won": null
+        }
+      ]
+    },
+    {
+      "key": "NY-H-15|primary|D",
+      "race_id": "NY-H-15",
+      "type": "primary",
+      "party": "D",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Ritchie Torres",
+          "won": true
+        },
+        {
+          "name": "Michael Blake",
+          "won": false
+        },
+        {
+          "name": "Jose Vega",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "IL-H-07|primary|D",
+      "race_id": "IL-H-07",
+      "type": "primary",
+      "party": "D",
+      "competitive": true,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "La Shawn Ford",
+          "won": true
+        },
+        {
+          "name": "Danny Davis",
+          "won": false
+        },
+        {
+          "name": "Anthony Driver Jr.",
+          "won": false
+        },
+        {
+          "name": "Kina Collins",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "IL-H-02|primary|D",
+      "race_id": "IL-H-02",
+      "type": "primary",
+      "party": "D",
+      "competitive": true,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Jesse L. Jackson, Jr.",
+          "won": false
+        },
+        {
+          "name": "Robert Peters",
+          "won": false
+        },
+        {
+          "name": "Yumeka Brown",
+          "won": false
+        },
+        {
+          "name": "Donna Miller",
+          "won": true
+        }
+      ]
+    },
+    {
+      "key": "OK-S|primary|R",
+      "race_id": "OK-S",
+      "type": "primary",
+      "party": "R",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Kevin Hern",
+          "won": true
+        }
+      ]
+    },
+    {
+      "key": "FL-H-24|primary|D",
+      "race_id": "FL-H-24",
+      "type": "primary",
+      "party": "D",
+      "competitive": true,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Oliver Gilbert",
+          "won": true
+        },
+        {
+          "name": "Shevrin Jones",
+          "won": false
+        },
+        {
+          "name": "Kendrick Meek Jr.",
+          "won": false
+        },
+        {
+          "name": "Frederica Wilson",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "MI-H-13|primary|D",
+      "race_id": "MI-H-13",
+      "type": "primary",
+      "party": "D",
+      "competitive": true,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Shri Thanedar",
+          "won": false
+        },
+        {
+          "name": "Donavan McKinney",
+          "won": true
+        }
+      ]
+    },
+    {
+      "key": "IL-H-08|primary|D",
+      "race_id": "IL-H-08",
+      "type": "primary",
+      "party": "D",
+      "competitive": true,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Melissa Bean",
+          "won": true
+        },
+        {
+          "name": "Yasmeen Bankole",
+          "won": false
+        },
+        {
+          "name": "Dan Tully",
+          "won": false
+        },
+        {
+          "name": "Junaid Ahmed",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "TX-H-35|primary_runoff|R",
+      "race_id": "TX-H-35",
+      "type": "primary_runoff",
+      "party": "R",
+      "competitive": true,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Carlos De La Cruz",
+          "won": true
+        },
+        {
+          "name": "John Lujan",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "NC-H-04|primary|D",
+      "race_id": "NC-H-04",
+      "type": "primary",
+      "party": "D",
+      "competitive": true,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Valerie Foushee",
+          "won": true
+        },
+        {
+          "name": "Nida Allam",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "FL-H-25|primary|R",
+      "race_id": "FL-H-25",
+      "type": "primary",
+      "party": "R",
+      "competitive": true,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Scott Singer",
+          "won": true
+        },
+        {
+          "name": "Dan Franzese",
+          "won": false
+        },
+        {
+          "name": "Raven Harrison",
+          "won": false
+        },
+        {
+          "name": "George Moraitis",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "TX-H-18|primary|D",
+      "race_id": "TX-H-18",
+      "type": "primary",
+      "party": "D",
+      "competitive": true,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Christian Menefee",
+          "won": true
+        },
+        {
+          "name": "Al Green",
+          "won": true
+        },
+        {
+          "name": "Amanda Edwards",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "GA-H-01|primary|R",
+      "race_id": "GA-H-01",
+      "type": "primary",
+      "party": "R",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "James Kingston",
+          "won": true
+        },
+        {
+          "name": "Patrick Farrell",
+          "won": false
+        },
+        {
+          "name": "Brian Montgomery",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "WA-H-04|primary|N",
+      "race_id": "WA-H-04",
+      "type": "primary",
+      "party": "N",
+      "competitive": "likely",
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Amanda McKinney",
+          "won": true
+        },
+        {
+          "name": "Matt Boehnke",
+          "won": false
+        },
+        {
+          "name": "John Duresky",
+          "won": true
+        },
+        {
+          "name": "Jerrod Sessler",
+          "won": false
+        },
+        {
+          "name": "Dan Newhouse",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "TX-H-08|primary|R",
+      "race_id": "TX-H-08",
+      "type": "primary",
+      "party": "R",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Jessica Steinmann",
+          "won": true
+        },
+        {
+          "name": "Brett Jensen",
+          "won": false
+        },
+        {
+          "name": "Nick Tran",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "GA-H-14|primary|R",
+      "race_id": "GA-H-14",
+      "type": "primary",
+      "party": "R",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Clayton Fuller",
+          "won": true
+        },
+        {
+          "name": "Colton Moore",
+          "won": false
+        },
+        {
+          "name": "Brian Stover",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "UT-H-01|primary|D",
+      "race_id": "UT-H-01",
+      "type": "primary",
+      "party": "D",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Ben McAdams",
+          "won": true
+        },
+        {
+          "name": "Nate Blouin",
+          "won": false
+        },
+        {
+          "name": "Liban Mohamed",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "VA-H-11-special|primary|D",
+      "race_id": "VA-H-11-special",
+      "type": "primary",
+      "party": "D",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "James Walkinshaw",
+          "won": true
+        },
+        {
+          "name": "Irene Shin",
+          "won": false
+        },
+        {
+          "name": "Stella Pekarsky",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "CA-H-34|general|N",
+      "race_id": "CA-H-34",
+      "type": "general",
+      "party": "N",
+      "competitive": true,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Jimmy Gomez",
+          "won": null
+        },
+        {
+          "name": "Angela Gonzales-Torres",
+          "won": null
+        }
+      ]
+    },
+    {
+      "key": "TX-H-19|primary_runoff|R",
+      "race_id": "TX-H-19",
+      "type": "primary_runoff",
+      "party": "R",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Tom Sell",
+          "won": true
+        },
+        {
+          "name": "Abraham Enriquez",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "UT-H-03|primary|R",
+      "race_id": "UT-H-03",
+      "type": "primary",
+      "party": "R",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Celeste Maloy",
+          "won": true
+        },
+        {
+          "name": "Phil Lyman",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "CO-H-08|primary|D",
+      "race_id": "CO-H-08",
+      "type": "primary",
+      "party": "D",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Manny Rutinel",
+          "won": true
+        },
+        {
+          "name": "Shannon Bird",
+          "won": false
+        },
+        {
+          "name": "Evan Munsing",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "GA-H-10|primary|R",
+      "race_id": "GA-H-10",
+      "type": "primary",
+      "party": "R",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Houston Gaines",
+          "won": true
+        },
+        {
+          "name": "Ryan Millsap",
+          "won": false
+        },
+        {
+          "name": "Jeff Baker",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "AL-H-02|primary|R",
+      "race_id": "AL-H-02",
+      "type": "primary",
+      "party": "R",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Rhett Marques",
+          "won": true
+        },
+        {
+          "name": "Hampton Harris",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "TX-H-09|primary_runoff|R",
+      "race_id": "TX-H-09",
+      "type": "primary_runoff",
+      "party": "R",
+      "competitive": true,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Alex Mealer",
+          "won": true
+        },
+        {
+          "name": "Briscoe Cain",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "SC-S|primary|R",
+      "race_id": "SC-S",
+      "type": "primary",
+      "party": "R",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Lindsey Graham",
+          "won": true
+        },
+        {
+          "name": "Mark Lynch",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "NJ-H-08|primary|D",
+      "race_id": "NJ-H-08",
+      "type": "primary",
+      "party": "D",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Robert Menendez Jr.",
+          "won": true
+        },
+        {
+          "name": "Mussab Ali",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "CA-H-11|primary|N",
+      "race_id": "CA-H-11",
+      "type": "primary",
+      "party": "N",
+      "competitive": true,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Saikat Chakrabarti",
+          "won": false
+        },
+        {
+          "name": "Connie Chan",
+          "won": true
+        },
+        {
+          "name": "Scott Wiener",
+          "won": true
+        }
+      ]
+    },
+    {
+      "key": "WY-S|primary|R",
+      "race_id": "WY-S",
+      "type": "primary",
+      "party": "R",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Harriet Hageman",
+          "won": true
+        },
+        {
+          "name": "Cynthia Lummis",
+          "won": false
+        },
+        {
+          "name": "Sam Mead",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "TX-H-10|primary|R",
+      "race_id": "TX-H-10",
+      "type": "primary",
+      "party": "R",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Chris Gober",
+          "won": true
+        },
+        {
+          "name": "Ben Bius",
+          "won": false
+        },
+        {
+          "name": "Rob Altman",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "MI-S|primary|R",
+      "race_id": "MI-S",
+      "type": "primary",
+      "party": "R",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Mike Rogers",
+          "won": true
+        }
+      ]
+    },
+    {
+      "key": "MA-H-06|primary|D",
+      "race_id": "MA-H-06",
+      "type": "primary",
+      "party": "D",
+      "competitive": "likely",
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Daniel Koh",
+          "won": true
+        },
+        {
+          "name": "Seth Moulton",
+          "won": false
+        },
+        {
+          "name": "Tram Nguyen",
+          "won": false
+        },
+        {
+          "name": "Beth Andres-Beck",
+          "won": false
+        },
+        {
+          "name": "John Beccia",
+          "won": false
+        },
+        {
+          "name": "Jamie Belsito",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "SC-S|primary_runoff|R",
+      "race_id": "SC-S",
+      "type": "primary_runoff",
+      "party": "R",
+      "competitive": "likely",
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Darline Graham",
+          "won": true
+        },
+        {
+          "name": "Ralph Norman",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "LA-S|primary_runoff|R",
+      "race_id": "LA-S",
+      "type": "primary_runoff",
+      "party": "R",
+      "competitive": true,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Julia Letlow",
+          "won": true
+        },
+        {
+          "name": "John Fleming",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "AZ-H-01|primary|R",
+      "race_id": "AZ-H-01",
+      "type": "primary",
+      "party": "R",
+      "competitive": "likely",
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Jay Feely",
+          "won": true
+        },
+        {
+          "name": "Joseph Chaplik",
+          "won": false
+        },
+        {
+          "name": "John Trobough",
+          "won": false
+        },
+        {
+          "name": "David Schweikert",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "NE-S|primary|R",
+      "race_id": "NE-S",
+      "type": "primary",
+      "party": "R",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Pete Ricketts",
+          "won": true
+        },
+        {
+          "name": "Todd Knobel",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "CA-H-19|primary|N",
+      "race_id": "CA-H-19",
+      "type": "primary",
+      "party": "N",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Jimmy Panetta",
+          "won": true
+        },
+        {
+          "name": "Peter Verbica",
+          "won": true
+        },
+        {
+          "name": "Sean Dougherty",
+          "won": false
+        },
+        {
+          "name": "Tuka Gafari",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "MT-H-01|primary|R",
+      "race_id": "MT-H-01",
+      "type": "primary",
+      "party": "R",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Aaron Flint",
+          "won": true
+        },
+        {
+          "name": "Christi Jacobsen",
+          "won": false
+        },
+        {
+          "name": "Albert Olszewski",
+          "won": false
+        },
+        {
+          "name": "Ryan Zinke",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "NY-H-25|primary|D",
+      "race_id": "NY-H-25",
+      "type": "primary",
+      "party": "D",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Joseph Morelle",
+          "won": true
+        }
+      ]
+    },
+    {
+      "key": "AL-H-01|primary|R",
+      "race_id": "AL-H-01",
+      "type": "primary",
+      "party": "R",
+      "competitive": true,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Jerry Carl",
+          "won": true
+        },
+        {
+          "name": "Rhett Marques",
+          "won": false
+        },
+        {
+          "name": "Joshua McKee",
+          "won": false
+        },
+        {
+          "name": "Barry Moore",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "MD-H-06|primary|D",
+      "race_id": "MD-H-06",
+      "type": "primary",
+      "party": "D",
+      "competitive": true,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "April McClain Delaney",
+          "won": true
+        },
+        {
+          "name": "George Gluck",
+          "won": false
+        },
+        {
+          "name": "Alexis Goldstein",
+          "won": false
+        },
+        {
+          "name": "David Trone",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "IN-H-04|primary|R",
+      "race_id": "IN-H-04",
+      "type": "primary",
+      "party": "R",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Jim Baird",
+          "won": true
+        },
+        {
+          "name": "Craig Haggard",
+          "won": false
+        },
+        {
+          "name": "John Piper",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "OH-H-07|primary|D",
+      "race_id": "OH-H-07",
+      "type": "primary",
+      "party": "D",
+      "competitive": "likely",
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Brian Poindexter",
+          "won": true
+        },
+        {
+          "name": "Michael Eisner",
+          "won": false
+        },
+        {
+          "name": "Ed FitzGerald",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "MI-H-04|primary|R",
+      "race_id": "MI-H-04",
+      "type": "primary",
+      "party": "R",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Bill Huizenga",
+          "won": true
+        },
+        {
+          "name": "Philip Tanis",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "FL-H-06-special|primary|R",
+      "race_id": "FL-H-06-special",
+      "type": "primary",
+      "party": "R",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Randy Fine",
+          "won": true
+        },
+        {
+          "name": "Aaron Baker",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "NC-H-01|primary|R",
+      "race_id": "NC-H-01",
+      "type": "primary",
+      "party": "R",
+      "competitive": true,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Laurie Buckhout",
+          "won": true
+        },
+        {
+          "name": "Bobby Hanig",
+          "won": false
+        },
+        {
+          "name": "Asa Buck",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "AK-H|primary|N",
+      "race_id": "AK-H",
+      "type": "primary",
+      "party": "N",
+      "competitive": "likely",
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Nicholas Begich",
+          "won": true
+        },
+        {
+          "name": "Matt Schultz",
+          "won": false
+        },
+        {
+          "name": "Bill Hill",
+          "won": true
+        }
+      ]
+    },
+    {
+      "key": "GA-H-11|primary_runoff|R",
+      "race_id": "GA-H-11",
+      "type": "primary_runoff",
+      "party": "R",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "John Cowan",
+          "won": true
+        },
+        {
+          "name": "Rob Adkerson",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "FL-H-16|primary|R",
+      "race_id": "FL-H-16",
+      "type": "primary",
+      "party": "R",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Sydney Gruters",
+          "won": true
+        },
+        {
+          "name": "Vern Buchanan",
+          "won": false
+        },
+        {
+          "name": "Eddie Speir",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "TX-S|primary_runoff|R",
+      "race_id": "TX-S",
+      "type": "primary_runoff",
+      "party": "R",
+      "competitive": true,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Ken Paxton",
+          "won": true
+        },
+        {
+          "name": "John Cornyn",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "SC-H-04|primary|R",
+      "race_id": "SC-H-04",
+      "type": "primary",
+      "party": "R",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "William Timmons",
+          "won": true
+        },
+        {
+          "name": "David Atchley",
+          "won": false
+        },
+        {
+          "name": "Robert Lee",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "TX-H-35|primary|R",
+      "race_id": "TX-H-35",
+      "type": "primary",
+      "party": "R",
+      "competitive": true,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Carlos De La Cruz",
+          "won": true
+        },
+        {
+          "name": "John Lujan",
+          "won": true
+        },
+        {
+          "name": "Jay Furman",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "CA-H-27|primary|N",
+      "race_id": "CA-H-27",
+      "type": "primary",
+      "party": "N",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "George Whitesides",
+          "won": true
+        },
+        {
+          "name": "Jason Gibbs",
+          "won": true
+        },
+        {
+          "name": "Roberto Ramos",
+          "won": false
+        },
+        {
+          "name": "Caleb Norwood",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "CA-H-14|general|N",
+      "race_id": "CA-H-14",
+      "type": "general",
+      "party": "N",
+      "competitive": false,
+      "favorite": "Aisha Wahab",
+      "candidates": [
+        {
+          "name": "Aisha Wahab",
+          "won": null
+        },
+        {
+          "name": "Melissa Hernandez",
+          "won": null
+        }
+      ]
+    },
+    {
+      "key": "AZ-H-04|primary|D",
+      "race_id": "AZ-H-04",
+      "type": "primary",
+      "party": "D",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Greg Stanton",
+          "won": true
+        },
+        {
+          "name": "Kai Newkirk",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "AR-H-02|primary|R",
+      "race_id": "AR-H-02",
+      "type": "primary",
+      "party": "R",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "French Hill",
+          "won": true
+        },
+        {
+          "name": "Chase McDowell",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "SD-S|primary|R",
+      "race_id": "SD-S",
+      "type": "primary",
+      "party": "R",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Mike Rounds",
+          "won": true
+        },
+        {
+          "name": "Justin McNeal",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "UT-H-02|primary|R",
+      "race_id": "UT-H-02",
+      "type": "primary",
+      "party": "R",
+      "competitive": "likely",
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Blake Moore",
+          "won": true
+        },
+        {
+          "name": "Karianne Lisonbee",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "WA-H-10|primary|N",
+      "race_id": "WA-H-10",
+      "type": "primary",
+      "party": "N",
+      "competitive": "likely",
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Marilyn Strickland",
+          "won": true
+        },
+        {
+          "name": "Adam Arafat",
+          "won": false
+        },
+        {
+          "name": "Chris Chung",
+          "won": true
+        }
+      ]
+    },
+    {
+      "key": "CA-H-01|primary|N",
+      "race_id": "CA-H-01",
+      "type": "primary",
+      "party": "N",
+      "competitive": true,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Mike McGuire",
+          "won": true
+        },
+        {
+          "name": "James Gallagher",
+          "won": true
+        },
+        {
+          "name": "Audrey Denney",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "CA-H-38|primary|N",
+      "race_id": "CA-H-38",
+      "type": "primary",
+      "party": "N",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Hilda Solis",
+          "won": true
+        },
+        {
+          "name": "Pedro Casas",
+          "won": true
+        },
+        {
+          "name": "Monica Sanchez",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "CA-H-26|primary|N",
+      "race_id": "CA-H-26",
+      "type": "primary",
+      "party": "N",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Jacqui Irwin",
+          "won": true
+        },
+        {
+          "name": "Chris Espinosa",
+          "won": false
+        },
+        {
+          "name": "Samuel Gallucci",
+          "won": true
+        }
+      ]
+    },
+    {
+      "key": "GA-S|primary|R",
+      "race_id": "GA-S",
+      "type": "primary",
+      "party": "R",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Mike Collins",
+          "won": true
+        },
+        {
+          "name": "Buddy Carter",
+          "won": false
+        },
+        {
+          "name": "Derek Dooley",
+          "won": true
+        }
+      ]
+    },
+    {
+      "key": "LA-S|primary|R",
+      "race_id": "LA-S",
+      "type": "primary",
+      "party": "R",
+      "competitive": true,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Julia Letlow",
+          "won": true
+        },
+        {
+          "name": "Bill Cassidy",
+          "won": false
+        },
+        {
+          "name": "John Fleming",
+          "won": true
+        }
+      ]
+    },
+    {
+      "key": "TX-H-38|primary_runoff|R",
+      "race_id": "TX-H-38",
+      "type": "primary_runoff",
+      "party": "R",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Jon Bonck",
+          "won": true
+        },
+        {
+          "name": "Shelly deZevallos",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "FL-H-25|primary|D",
+      "race_id": "FL-H-25",
+      "type": "primary",
+      "party": "D",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Jared Evan Moskowitz",
+          "won": true
+        },
+        {
+          "name": "Oliver Larkin",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "MI-H-11|primary|D",
+      "race_id": "MI-H-11",
+      "type": "primary",
+      "party": "D",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Jeremy Moss",
+          "won": true
+        },
+        {
+          "name": "Aisha Farooqi",
+          "won": false
+        },
+        {
+          "name": "Don Ufford",
+          "won": false
+        },
+        {
+          "name": "Haley Stevens",
+          "won": false
+        },
+        {
+          "name": "John Torres",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "OR-H-04|primary|D",
+      "race_id": "OR-H-04",
+      "type": "primary",
+      "party": "D",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Val Hoyle",
+          "won": true
+        },
+        {
+          "name": "Melissa Bird",
+          "won": false
+        },
+        {
+          "name": "Dan Bahlen",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "NY-H-09|primary|D",
+      "race_id": "NY-H-09",
+      "type": "primary",
+      "party": "D",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Yvette D. Clarke",
+          "won": true
+        },
+        {
+          "name": "Joshua Bristol",
+          "won": false
+        },
+        {
+          "name": "Michael Goldfarb",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "TN-H-06|primary|R",
+      "race_id": "TN-H-06",
+      "type": "primary",
+      "party": "R",
+      "competitive": "likely",
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Johnny Garrett",
+          "won": true
+        },
+        {
+          "name": "Van Hilleary",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "MT-S|primary|R",
+      "race_id": "MT-S",
+      "type": "primary",
+      "party": "R",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Kurt Alme",
+          "won": true
+        },
+        {
+          "name": "Lee Calhoun",
+          "won": false
+        },
+        {
+          "name": "Charles A. Walking Child",
+          "won": false
+        },
+        {
+          "name": "Steve Daines",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "NE-H-03|primary|R",
+      "race_id": "NE-H-03",
+      "type": "primary",
+      "party": "R",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Adrian Smith",
+          "won": true
+        },
+        {
+          "name": "David Huebner",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "TX-H-09|primary|R",
+      "race_id": "TX-H-09",
+      "type": "primary",
+      "party": "R",
+      "competitive": true,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Alex Mealer",
+          "won": true
+        },
+        {
+          "name": "Briscoe Cain",
+          "won": true
+        },
+        {
+          "name": "Steve Stockman",
+          "won": false
+        },
+        {
+          "name": "Dan Mims",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "PA-H-07|primary|D",
+      "race_id": "PA-H-07",
+      "type": "primary",
+      "party": "D",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Bob Brooks",
+          "won": true
+        },
+        {
+          "name": "Lamont McClure",
+          "won": false
+        },
+        {
+          "name": "Ryan Crosswell",
+          "won": false
+        },
+        {
+          "name": "Carol Obando-Derstine",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "CA-H-23|primary|N",
+      "race_id": "CA-H-23",
+      "type": "primary",
+      "party": "N",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Jay Obernolte",
+          "won": true
+        },
+        {
+          "name": "Tessa Lynn Hodge",
+          "won": true
+        },
+        {
+          "name": "Pat Wallis",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "LA-H-06|primary|R",
+      "race_id": "LA-H-06",
+      "type": "primary",
+      "party": "R",
+      "competitive": false,
+      "favorite": "Blake Miguez",
+      "candidates": [
+        {
+          "name": "Blake Miguez",
+          "won": null
+        },
+        {
+          "name": "Stephen Wagley",
+          "won": null
+        },
+        {
+          "name": "Rick Edmonds",
+          "won": null
+        }
+      ]
+    },
+    {
+      "key": "TX-H-33|primary_runoff|D",
+      "race_id": "TX-H-33",
+      "type": "primary_runoff",
+      "party": "D",
+      "competitive": true,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Colin Allred",
+          "won": true
+        },
+        {
+          "name": "Julie Johnson",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "FL-H-01-special|primary|R",
+      "race_id": "FL-H-01-special",
+      "type": "primary",
+      "party": "R",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Jimmy Patronis",
+          "won": true
+        },
+        {
+          "name": "Aaron Dimmock",
+          "won": false
+        },
+        {
+          "name": "Gene Valentino",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "MA-H-04|primary|D",
+      "race_id": "MA-H-04",
+      "type": "primary",
+      "party": "D",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Jake Auchincloss",
+          "won": true
+        },
+        {
+          "name": "Jason Poulos",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "FL-H-23|primary|D",
+      "race_id": "FL-H-23",
+      "type": "primary",
+      "party": "D",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Lois Frankel",
+          "won": true
+        },
+        {
+          "name": "Victoria Doyle",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "NH-H-02|primary|D",
+      "race_id": "NH-H-02",
+      "type": "primary",
+      "party": "D",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Maggie Goodlander",
+          "won": true
+        },
+        {
+          "name": "Paige Beauchemin",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "VA-S|primary|D",
+      "race_id": "VA-S",
+      "type": "primary",
+      "party": "D",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Mark Warner",
+          "won": true
+        }
+      ]
+    },
+    {
+      "key": "TX-H-33|primary|D",
+      "race_id": "TX-H-33",
+      "type": "primary",
+      "party": "D",
+      "competitive": true,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Colin Allred",
+          "won": true
+        },
+        {
+          "name": "Julie Johnson",
+          "won": true
+        },
+        {
+          "name": "Carlos Quintanilla",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "TX-H-22|primary|R",
+      "race_id": "TX-H-22",
+      "type": "primary",
+      "party": "R",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Trever Nehls",
+          "won": true
+        },
+        {
+          "name": "Troy Nehls",
+          "won": false
+        },
+        {
+          "name": "Rebecca Clark",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "TX-H-32|primary_runoff|R",
+      "race_id": "TX-H-32",
+      "type": "primary_runoff",
+      "party": "R",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Jace Yarbrough",
+          "won": true
+        },
+        {
+          "name": "Ryan Binkley",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "WA-H-01|primary|N",
+      "race_id": "WA-H-01",
+      "type": "primary",
+      "party": "N",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Suzan DelBene",
+          "won": true
+        },
+        {
+          "name": "Hunter Gordon",
+          "won": false
+        },
+        {
+          "name": "Mary Silva",
+          "won": true
+        }
+      ]
+    },
+    {
+      "key": "CA-H-12|primary|N",
+      "race_id": "CA-H-12",
+      "type": "primary",
+      "party": "N",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Lateefah Simon",
+          "won": true
+        },
+        {
+          "name": "Jamie Joyce",
+          "won": true
+        }
+      ]
+    },
+    {
+      "key": "CA-H-18|primary|N",
+      "race_id": "CA-H-18",
+      "type": "primary",
+      "party": "N",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Zoe Lofgren",
+          "won": true
+        },
+        {
+          "name": "Luis Acevedo-Arreguin",
+          "won": false
+        },
+        {
+          "name": "Chris Demers",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "CA-H-47|primary|N",
+      "race_id": "CA-H-47",
+      "type": "primary",
+      "party": "N",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Dave Min",
+          "won": true
+        },
+        {
+          "name": "Jenny Rae Le Roux",
+          "won": true
+        },
+        {
+          "name": "Hunter Miranda",
+          "won": false
+        },
+        {
+          "name": "Michael Maxsenti",
+          "won": false
+        },
+        {
+          "name": "William Brough",
+          "won": false
+        },
+        {
+          "name": "Christopher Gonzales",
+          "won": false
+        },
+        {
+          "name": "Eric Troutman",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "CA-H-46|primary|N",
+      "race_id": "CA-H-46",
+      "type": "primary",
+      "party": "N",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Lou Correa",
+          "won": true
+        },
+        {
+          "name": "David Pan",
+          "won": true
+        },
+        {
+          "name": "Christian Mendez",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "CA-H-36|primary|N",
+      "race_id": "CA-H-36",
+      "type": "primary",
+      "party": "N",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Ted Lieu",
+          "won": true
+        },
+        {
+          "name": "Houston Brignano",
+          "won": true
+        },
+        {
+          "name": "Melissa Toomim",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "WA-H-08|primary|N",
+      "race_id": "WA-H-08",
+      "type": "primary",
+      "party": "N",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Kim Schrier",
+          "won": true
+        },
+        {
+          "name": "Trinh Ha",
+          "won": false
+        },
+        {
+          "name": "Bob Hagglund",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "IA-H-04|primary|R",
+      "race_id": "IA-H-04",
+      "type": "primary",
+      "party": "R",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Chris McGowan",
+          "won": true
+        }
+      ]
+    },
+    {
+      "key": "IL-H-13|primary|D",
+      "race_id": "IL-H-13",
+      "type": "primary",
+      "party": "D",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Nikki Budzinski",
+          "won": true
+        },
+        {
+          "name": "Dylan Blaha",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "NC-H-14|primary|R",
+      "race_id": "NC-H-14",
+      "type": "primary",
+      "party": "R",
+      "competitive": false,
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Timothy K. Moore",
+          "won": true
+        },
+        {
+          "name": "Kate Barr",
+          "won": false
+        }
+      ]
+    }
+  ]
+}
