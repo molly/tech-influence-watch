@@ -40,11 +40,6 @@ export type TaggedAd = {
   // The ad's "industry stance" tags, in codebook order. At least one on ads
   // that mention tech, none otherwise.
   stances: string[];
-  // ad_id of the template ad when this ad reuses a script across races.
-  scriptFamily: string | null;
-  // Abbreviated script with <u> around the parts that change from race to
-  // race. Only set on a family's template ad, and optional there.
-  scriptTemplate: string | null;
   // Display name of the committee's network, or null for committees
   // outside a network.
   network: string | null;

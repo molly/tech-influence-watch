@@ -11,6 +11,7 @@ import {
   adLibraryHref,
   AdLibraryParams,
   CommitteeAds,
+  FORMAT_GROUP,
   hasTag,
   NO_NETWORK_LABEL,
   STANCE_GROUP,
@@ -24,15 +25,23 @@ type GroupBy = "network" | "party";
 
 type RowGroup = {
   label: string;
-  params: AdLibraryParams;
-  // Whether a subtotal row means anything. Committees outside a network
-  // aren't a real group, so they get no total.
-  showTotal: boolean;
   committees: CommitteeAds[];
 };
 
 // Cells this dark get light text.
 const DARK_CELL = 0.45;
+
+// Tags that can't apply to some ads, and why. A row whose ads all fall under
+// one gets a blank cell rather than a zero.
+const NOT_APPLICABLE: Record<
+  string,
+  { applies: (ad: TaggedAd) => boolean; reason: string }
+> = {
+  cross_party: {
+    applies: (ad) => ad.party !== "both",
+    reason: "Doesn’t apply to committees that back both parties",
+  },
+};
 
 function groupRows(committees: CommitteeAds[], groupBy: GroupBy): RowGroup[] {
   if (groupBy === "party") {
@@ -40,8 +49,6 @@ function groupRows(committees: CommitteeAds[], groupBy: GroupBy): RowGroup[] {
     return parties
       .map((party) => ({
         label: party ? AD_PARTY_LABELS[party] : "Unknown party",
-        params: { party: party ?? undefined },
-        showTotal: party !== null,
         committees: committees.filter((c) => c.party === party),
       }))
       .filter((group) => group.committees.length);
@@ -49,8 +56,6 @@ function groupRows(committees: CommitteeAds[], groupBy: GroupBy): RowGroup[] {
   const networks = [...new Set(committees.map((c) => c.network))];
   return networks.map((network) => ({
     label: network ?? NO_NETWORK_LABEL,
-    params: { net: network ?? "none" },
-    showTotal: network !== null,
     committees: committees.filter((c) => c.network === network),
   }));
 }
@@ -58,7 +63,6 @@ function groupRows(committees: CommitteeAds[], groupBy: GroupBy): RowGroup[] {
 export function shareStyle(share: number): React.CSSProperties {
   return { "--share": share } as React.CSSProperties;
 }
-
 // The body of the column whose label is hovered, in the scroll container's
 // coordinates. Measured from the column's first and last body cells, in
 // fractional pixels so the outline sits evenly in the gaps between cells.
@@ -116,7 +120,7 @@ export default function TagHeatmap({
   const columns = codebook
     .filter(
       (entry) =>
-        entry.group !== STANCE_GROUP &&
+        ![STANCE_GROUP, FORMAT_GROUP].includes(entry.group) &&
         allAds.some((ad) => hasTag(ad, entry.tag)),
     )
     .sort((a, b) => groupOrder.indexOf(a.group) - groupOrder.indexOf(b.group));
@@ -150,6 +154,19 @@ export default function TagHeatmap({
       </th>
       <td className={styles.heatmapRowCount}>{ads.length}</td>
       {columns.map((column) => {
+        const notApplicable = NOT_APPLICABLE[column.tag];
+        if (notApplicable && !ads.some(notApplicable.applies)) {
+          return (
+            <td
+              key={column.tag}
+              className={`${styles.heatmapCell} ${styles.heatmapCellNotApplicable} ${
+                groupStarts.has(column.tag) ? styles.heatmapGroupStart : ""
+              }`}
+              title={notApplicable.reason}
+              aria-label={notApplicable.reason}
+            />
+          );
+        }
         const count = ads.filter((ad) => hasTag(ad, column.tag)).length;
         const share = count / ads.length;
         const classes = [
@@ -202,15 +219,11 @@ export default function TagHeatmap({
                 <th
                   key={column.tag}
                   scope="col"
-                  className={`${
+                  className={
                     groupStarts.has(column.tag)
                       ? styles.heatmapLaneGroupStart
-                      : ""
-                  } ${
-                    column.tag === "mentions_industry"
-                      ? styles.heatmapIndustryColumn
-                      : ""
-                  }`}
+                      : undefined
+                  }
                 >
                   <div>
                     <span
@@ -231,7 +244,7 @@ export default function TagHeatmap({
               <th />
               {columnGroups.map((group) => (
                 <th key={group.name} colSpan={group.count} scope="colgroup">
-                  {group.name}
+                  <div title={group.name}>{group.name}</div>
                 </th>
               ))}
             </tr>
@@ -252,9 +265,11 @@ export default function TagHeatmap({
                       {groupBy === "network" ? (
                         <PartyTag party={committee.party} />
                       ) : (
-                        <span className={styles.partyTag}>
-                          {committee.network ?? NO_NETWORK_LABEL}
-                        </span>
+                        committee.network && (
+                          <span className={styles.partyTag}>
+                            {committee.network}
+                          </span>
+                        )
                       )}
                     </>,
                     committee.name,
@@ -263,16 +278,6 @@ export default function TagHeatmap({
                     { cm: committee.id },
                   ),
                 )}
-                {group.showTotal &&
-                  group.committees.length > 1 &&
-                  row(
-                    `${group.label}-total`,
-                    `${group.label} total`,
-                    `${group.label} total`,
-                    group.committees.flatMap((c) => c.ads),
-                    styles.heatmapSubtotal,
-                    group.params,
-                  )}
               </Fragment>
             ))}
             {row(

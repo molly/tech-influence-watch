@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import AdsView, { adsMetadata } from "./AdsView";
 
-export function generateMetadata(): Metadata {
+export function generateMetadata(): Promise<Metadata> {
   return adsMetadata("all");
 }
 

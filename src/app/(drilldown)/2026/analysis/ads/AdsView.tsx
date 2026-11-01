@@ -7,20 +7,14 @@ import {
   NetworkLink,
 } from "@/app/components/analysis/ads/AdCardParts";
 import adStyles from "@/app/components/analysis/ads/Ads.module.css";
-import AttackAds from "@/app/components/analysis/ads/AttackAds";
 import IndustryStances, {
   StanceColumn,
 } from "@/app/components/analysis/ads/IndustryStances";
 import NetworkArms, {
   getNetworkArmPairs,
 } from "@/app/components/analysis/ads/NetworkArms";
-import ScriptTemplates, {
-  getScriptFamilies,
-} from "@/app/components/analysis/ads/ScriptTemplates";
-import SharedPlaybook from "@/app/components/analysis/ads/SharedPlaybook";
 import TagHeatmap from "@/app/components/analysis/ads/TagHeatmap";
 import Breadcrumbs from "@/app/components/Breadcrumbs";
-import PlaceholderNotice from "@/app/components/PlaceholderNotice";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import sharedStyles from "@/app/shared.module.css";
 import { AdSector, CodebookEntry, TaggedAd } from "@/app/types/AdAnalysis";
@@ -36,7 +30,6 @@ import {
   formatAdDateRange,
   getSpanExcerpts,
   groupByCommittee,
-  hasRollup,
   hasTag,
   INDUSTRY_WORD,
   LEANING_LABELS,
@@ -63,22 +56,42 @@ import { sentenceCase } from "@/app/utils/titlecase";
 
 import styles from "./page.module.css";
 
-export function adsMetadata(sector: Sector): Metadata {
+// How the sectors are named in the metadata description, written out and
+// abbreviated.
+const SECTOR_NAMES: Record<AdSector, { long: string; short: string }> = {
+  crypto: { long: "crypto", short: "crypto" },
+  ai: { long: "artificial intelligence", short: "AI" },
+};
+
+export async function adsMetadata(sector: Sector): Promise<Metadata> {
+  const ads = (await getTaggedAds()).filter((ad) =>
+    adMatchesSector(ad.sector, sector),
+  );
+  const committees = groupByCommittee(ads).length;
+  const races = new Set(ads.map((ad) => ad.race)).size;
+  const names = adSectorsForView(sector).map((s) => SECTOR_NAMES[s]);
   return customMetadata({
-    title: `What ${humanizeSector(sector, { abbrev: true, lowercase: true })} super PAC ads say`,
-    description: `Transcripts and themes of Google ads run by ${humanizeSector(
-      sector,
-      { hyphen: true, abbrev: true, lowercase: true },
-    )}focused super PACs, and how rarely they mention the industry paying for them`,
+    title: `${humanizeSector(sector, { abbrev: true })} super PAC ads`,
+    description: `Tech Influence Watch has transcribed and tagged ${pluralize(
+      ads.length,
+      "ad",
+      { includeValue: true },
+    )} from ${humanizeNumber(committees)} ${names
+      .map((n) => n.long)
+      .join(" and ")} ${pluralize(committees, "PAC")} across ${pluralize(
+      races,
+      "race",
+      { includeValue: true },
+    )}. ${sentenceCase(
+      humanizeOneIn(count(ads, mentionsIndustry), ads.length),
+    )} ads from ${names
+      .map((n) => n.short)
+      .join(" or ")} PACs mention the industry paying for them.`,
   });
 }
 
 function count(ads: TaggedAd[], predicate: (ad: TaggedAd) => boolean) {
   return ads.filter(predicate).length;
-}
-
-function byCommitteeName(committees: CommitteeAds[], name: string) {
-  return committees.find((c) => c.name === name)?.ads ?? [];
 }
 
 // A committee's name, linked to its page when it's among the committees with
@@ -95,10 +108,6 @@ function CommitteeLink({
     return <>{name}</>;
   }
   return <Link href={`/2026/committees/${committee.id}`}>{name}</Link>;
-}
-
-function attacks(ads: TaggedAd[]) {
-  return count(ads, (ad) => hasRollup(ad, "attack"));
 }
 
 function Lede({
@@ -527,8 +536,8 @@ function IndustryMentions({
         </Link>{" "}
         {ltfCount} ads, {humanizeNumber(mentioned.length)}{" "}
         {pluralize(mentioned.length, "mentions", { plural: "mention" })} AI or
-        heavily AI-linked companies like Palantir, whose surveillance software
-        is built on AI. All {humanizeNumber(mentioned.length)} cast the industry
+        heavily AI-linked companies Palantir, whose surveillance software is
+        built on AI. All {humanizeNumber(mentioned.length)} cast the industry
         negatively, even though Palantir co-founder{" "}
         <Link href="/2026/individuals/joe-lonsdale">Joe Lonsdale</Link> is among
         Leading the Future&rsquo;s backers.
@@ -552,7 +561,7 @@ function IndustryMentions({
   return (
     <div className={adStyles.stanceColumn}>
       <h3 className={adStyles.stanceTitle}>{heading}</h3>
-      <p className={adStyles.note}>{note}</p>
+      <p className={styles.sectionCopy}>{note}</p>
       <div className={adStyles.videoRow}>
         {mentioned.map((ad) => (
           <AdVideoCard
@@ -567,88 +576,8 @@ function IndustryMentions({
   );
 }
 
-function AttackNote({
-  sector,
-  ads,
-  committees,
-}: {
-  sector: Sector;
-  ads: TaggedAd[];
-  committees: CommitteeAds[];
-}) {
-  const thinkBig = attacks(byCommitteeName(committees, "Think Big"));
-  if (sector === "crypto") {
-    return (
-      <>
-        Crypto PACs mostly run positive ads. Their attacks come almost entirely
-        from FairShake and Defend American Jobs. Click a race to read them.
-      </>
-    );
-  }
-  if (sector === "ai") {
-    return (
-      <>
-        Think Big, Leading the Future&rsquo;s Democratic arm, ran{" "}
-        {humanizeNumber(thinkBig)} of the AI PACs&rsquo;{" "}
-        {pluralize(attacks(ads), "attack ad", {
-          includeValue: true,
-          humanize: true,
-        })}
-        , all against one candidate, Alex Bores. Click a race to read them.
-      </>
-    );
-  }
-  return (
-    <>
-      Most of these ads promote a candidate. The exceptions are concentrated:
-      Think Big, Leading the Future&rsquo;s Democratic arm, ran all{" "}
-      {humanizeNumber(thinkBig)} of its attacks against one candidate, Alex
-      Bores. Click a race to read the attacks.
-    </>
-  );
-}
-
-function PhraseNote({ ads }: { ads: TaggedAd[] }) {
-  const phrase = /complete and total endorsement/i;
-  const matching = ads.filter((ad) => phrase.test(ad.transcript));
-  const intro =
-    "Committees reuse one script across many races, swapping only the candidate.";
-  if (matching.length === 0) {
-    return <>{intro}</>;
-  }
-  const byCommittee = new Map<string, number>();
-  for (const ad of matching) {
-    byCommittee.set(ad.committee, (byCommittee.get(ad.committee) ?? 0) + 1);
-  }
-  const list = [...byCommittee.entries()]
-    .sort((a, b) => b[1] - a[1])
-    .map(([committee, n]) => `${committee} (${n})`)
-    .join(", ");
-  return (
-    <>
-      {intro} Trump&rsquo;s phrase &ldquo;complete and total endorsement&rdquo;
-      alone appears in{" "}
-      {pluralize(matching.length, "ad", { includeValue: true })} from{" "}
-      {pluralize(byCommittee.size, "PAC", { includeValue: true })}: {list}.
-    </>
-  );
-}
-
-function SectionTitle({
-  children,
-  aside,
-}: {
-  children: React.ReactNode;
-  aside?: React.ReactNode;
-}) {
-  return (
-    <h2 className={sharedStyles.sectionTitle}>
-      {children}
-      {aside && (
-        <span className={sharedStyles.sectionTitleAmount}>{aside}</span>
-      )}
-    </h2>
-  );
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return <h2 className={sharedStyles.sectionTitle}>{children}</h2>;
 }
 
 async function AdsAnalysis({ sector }: { sector: Sector }) {
@@ -657,43 +586,26 @@ async function AdsAnalysis({ sector }: { sector: Sector }) {
   const themes = themeEntries(codebook);
   const ads = allAds.filter((ad) => adMatchesSector(ad.sector, sector));
   const committees = groupByCommittee(ads);
-  const mentionCount = count(ads, mentionsIndustry);
   const pairs = getNetworkArmPairs(committees);
-  const families = getScriptFamilies(ads);
-  const firstDate = allAds.map((ad) => ad.start).sort()[0];
-  const lastDate = allAds
-    .map((ad) => ad.end)
-    .sort()
-    .reverse()[0];
 
   return (
     <>
       <section className={styles.hero}>
         <div>
           <Lede sector={sector} ads={ads} committees={committees} />
-          <p className={styles.scope}>
-            <span className={styles.scopeLabel}>
-              Not every ad these PACs ran is tracked.
-            </span>{" "}
-            These are ads from Google&rsquo;s Ads Transparency Center (YouTube,
-            Search, display), {formatAdDateRange(firstDate, lastDate)},{" "}
-            {lastDate.slice(0, 4)}. TV, streaming, mail, and other social
-            platforms aren&rsquo;t included. Each ad is hand-tagged against a{" "}
-            {codebook.length}-code codebook and can carry several tags.
-          </p>
+          <AdsScopeNote ads={allAds} codebookSize={codebook.length} />
         </div>
-        <StatCard sector={sector} ads={ads} committees={committees} />
+        <div>
+          <StatCard sector={sector} ads={ads} committees={committees} />
+          <Link className={styles.statLink} href={adLibraryHref(sector)}>
+            Browse all {pluralize(ads.length, "ad", { includeValue: true })} and
+            transcripts →
+          </Link>
+        </div>
       </section>
 
       <section className={styles.section}>
-        <SectionTitle
-          aside={`${mentionCount} of ${ads.length} ads do · ${humanizePercentage(
-            mentionCount,
-            ads.length,
-          )}`}
-        >
-          Do the ads mention the industry?
-        </SectionTitle>
+        <SectionTitle>Do the ads mention the industry?</SectionTitle>
         <IndustryStances
           columns={stanceColumns(ads, sector, stanceEntries(codebook))}
           sector={sector}
@@ -704,34 +616,21 @@ async function AdsAnalysis({ sector }: { sector: Sector }) {
 
       {pairs.length > 0 && (
         <section className={styles.section}>
-          <SectionTitle aside="Democratic vs. Republican arm of each network">
-            Same money, different messages
-          </SectionTitle>
-          <p className={adStyles.note}>
-            Each network funds a Democratic and a Republican super PAC. The two
-            arms run nearly opposite campaigns, with Trump endorsements and
-            border ads on one side and anti-MAGA, Medicare and ICE messages on
-            the other. Top themes by share of each arm&rsquo;s ads. Bold marks a
-            gap of 20 points or more.
+          <SectionTitle>Telling each side what it wants to hear</SectionTitle>
+          <p className={styles.sectionCopy}>
+            The super PAC networks will run whatever message they think will win
+            the race. Their Republican arms run ads about Trump&rsquo;s
+            endorsement and &ldquo;illegals&rdquo;. The Democratic arms, funded
+            by the same networks, run ads against MAGA and ICE.{" "}
+            {humanizeSector(sector)} {sector === "all" ? "are" : "is"} rarely
+            mentioned.
           </p>
           <NetworkArms pairs={pairs} themes={themes} sector={sector} />
         </section>
       )}
 
       <section className={styles.section}>
-        <SectionTitle aside="Ads that are mainly about attacking an opponent">
-          Who goes negative
-        </SectionTitle>
-        <p className={`${adStyles.note} ${styles.noteBeforeContent}`}>
-          <AttackNote sector={sector} ads={ads} committees={committees} />
-        </p>
-        <AttackAds committees={committees} sector={sector} />
-      </section>
-
-      <section className={styles.section}>
-        <SectionTitle aside="Ads carrying each tag, by committee">
-          What they talk about instead
-        </SectionTitle>
+        <SectionTitle>What they talk about instead</SectionTitle>
         <p className={adStyles.note}>
           Each cell counts a committee&rsquo;s ads that carry the tag, shaded by
           share of that committee&rsquo;s ads. Hover a column label for its
@@ -745,80 +644,60 @@ async function AdsAnalysis({ sector }: { sector: Sector }) {
       </section>
 
       <section className={styles.section}>
-        <SectionTitle aside="FairShake vs. Leading the Future">
-          The shared playbook
-        </SectionTitle>
-        <div className={adStyles.playbook}>
-          <SharedPlaybook
-            adsA={allAds.filter((ad) => ad.network === "FairShake")}
-            adsB={allAds.filter((ad) => ad.network === "Leading the Future")}
-            nameA="FairShake"
-            nameB="Leading the Future"
-            themes={themes}
-          />
-          <aside
-            className={`${sharedStyles.noteCard} ${adStyles.playbookAside}`}
-          >
-            <span className={sharedStyles.noteLabel}>
-              Shared operatives, similar strategy
-            </span>
-            <PlaceholderNotice>
-              Copy needed: who runs both FairShake and Leading the Future, the
-              shared donors, and why their ads look alike. Source it to earlier
-              reporting, and point the link below at that reporting.
-            </PlaceholderNotice>
-            <PlaceholderNotice inline>
-              Read more about the shared operation →
-            </PlaceholderNotice>
-          </aside>
-        </div>
-        {families.length > 0 && (
-          <>
-            <h3 className={`${adStyles.subheading} ${styles.mentionsHeading}`}>
-              Same script, different candidate
-            </h3>
-            <p className={adStyles.note}>
-              <PhraseNote ads={ads} />
-            </p>
-            <ScriptTemplates families={families} />
-          </>
-        )}
-      </section>
-
-      <section className={styles.section}>
-        <SectionTitle
-          aside={`${pluralize(ads.length, "ad", { includeValue: true })}, full transcripts`}
-        >
-          Read the ads
-        </SectionTitle>
+        <SectionTitle>Read the ads</SectionTitle>
         <div className={styles.libraryCta}>
-          <p className={`${adStyles.note} ${sharedStyles.noMargin}`}>
-            Search and filter every tagged ad by network, party, committee or
-            theme, with links to each ad on Google.
+          <p className={adStyles.note}>
+            Search and filter every tagged ad by network, party, committee, or
+            theme.
           </p>
           <Link className={styles.libraryButton} href={adLibraryHref(sector)}>
             Open the ad library →
           </Link>
         </div>
       </section>
-
-      <AdsSourceNote />
     </>
   );
 }
 
-export function AdsSourceNote() {
+// What the tracked ads cover. Pass every tagged ad, not just the sector's, so
+// the date range matches across views.
+export function AdsScopeNote({
+  ads,
+  codebookSize,
+}: {
+  ads: TaggedAd[];
+  codebookSize: number;
+}) {
+  const firstDate = ads.map((ad) => ad.start).sort()[0];
+  const lastDate = ads
+    .map((ad) => ad.end)
+    .sort()
+    .reverse()[0];
   return (
-    <p className={styles.source}>
-      Transcripts are automated and lightly corrected, so names are sometimes
-      misspelled as spoken. Tags were set by keyword and then checked by hand.{" "}
-      <span className="italic">Mentions industry</span> means the ad names AI
-      (for AI PACs) or crypto/digital assets (for crypto PACs). Party is the
-      side each committee backs, and ads for a candidate from the other party
-      are tagged <span className="italic">Other party&rsquo;s candidate</span>.
-      FairShake and Public First are each network&rsquo;s lead committee and
-      spend for both parties.
-    </p>
+    <div className={sharedStyles.noteCard}>
+      <p>
+        <span className={sharedStyles.noteLabel}>
+          Not every ad these PACs ran is tracked.
+        </span>{" "}
+        These are ads from Google&rsquo;s Ads Transparency Center (YouTube,
+        Search, display), {formatAdDateRange(firstDate, lastDate)},{" "}
+        {lastDate.slice(0, 4)}. TV, streaming, mail, and other social platforms
+        aren&rsquo;t included.
+      </p>
+      <p>
+        Each ad is hand-tagged against a {codebookSize}
+        -code{" "}
+        <a
+          href="https://github.com/molly/tech-influence-watch/blob/main/src/app/data/codebook.csv"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          codebook
+        </a>{" "}
+        and can carry several tags. Ads are automatically transcribed and then
+        hand-corrected, but some misspellings or errors may remain.
+      </p>
+    </div>
   );
 }
 
@@ -841,7 +720,7 @@ export default function AdsView({ sector }: { sector: Sector }) {
       <div className={sharedStyles.fullWidthHeader}>
         <section className={sharedStyles.header}>
           <Breadcrumbs crumbs={["Analysis", "Political ads"]} />
-          <h1 className={sharedStyles.title}>What the ads say</h1>
+          <h1 className={sharedStyles.title}>Political ads</h1>
         </section>
       </div>
       <div className={sharedStyles.main}>

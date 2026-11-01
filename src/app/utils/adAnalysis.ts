@@ -104,8 +104,10 @@ export function tagShare(ads: TaggedAd[], tag: string): number {
   return ads.filter((ad) => hasTag(ad, tag)).length / ads.length;
 }
 
-// Codebook group for the stance tags, at least one per ad that mentions tech.
+// Codebook groups
 export const STANCE_GROUP = "industry stance";
+export const TECH_GROUP = "tech";
+export const FORMAT_GROUP = "format";
 
 // Format tags describe what kind of ad it is rather than what it's about, so
 // they're left out of theme comparisons, along with the stances.

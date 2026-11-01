@@ -359,6 +359,10 @@
     font-style: normal;
     color: var(--main-text);
   }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
 }
 
 @media (max-width: 768px) {

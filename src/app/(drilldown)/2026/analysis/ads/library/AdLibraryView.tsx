@@ -17,7 +17,7 @@ import { humanizeList, humanizeNumber } from "@/app/utils/humanize";
 import { customMetadata } from "@/app/utils/metadata";
 import { humanizeSector, sectorHref } from "@/app/utils/sector";
 
-import { AdsSourceNote } from "../AdsView";
+import { AdsScopeNote } from "../AdsView";
 import styles from "../page.module.css";
 
 const SECTOR_WORDS = { crypto: "crypto", ai: "AI" };
@@ -25,7 +25,7 @@ const SECTOR_WORDS = { crypto: "crypto", ai: "AI" };
 export function adLibraryMetadata(sector: Sector): Metadata {
   return customMetadata({
     title: `${humanizeSector(sector, { abbrev: true })} super PAC ad library`,
-    description: `Searchable transcripts of Google ads run by ${humanizeSector(
+    description: `Searchable transcripts of ads run by ${humanizeSector(
       sector,
       { hyphen: true, abbrev: true, lowercase: true },
     )}focused super PACs, tagged by theme`,
@@ -39,30 +39,33 @@ async function AdLibraryContent({
   sector: Sector;
   params: AdLibraryParams;
 }) {
-  const ads = (await getTaggedAds()).filter((ad) =>
-    adMatchesSector(ad.sector, sector),
-  );
+  const allAds = await getTaggedAds();
+  const codebook = getCodebook();
+  const ads = allAds.filter((ad) => adMatchesSector(ad.sector, sector));
   const committees = new Set(ads.map((ad) => ad.committeeId)).size;
   const races = new Set(ads.map((ad) => ad.race)).size;
   const sectors = adSectorsForView(sector).map((s) => SECTOR_WORDS[s]);
   return (
     <>
-      <p className={styles.libraryLede}>
-        Every Google ad we&rsquo;ve tagged: {ads.length} ads from{" "}
-        {humanizeNumber(committees)} {humanizeList(sectors)} super PACs across{" "}
-        {races} races. Filter by network, party, committee or theme, or search
-        the transcripts.{" "}
-        <Link href={sectorHref("/2026/analysis/ads", sector)}>
-          Read the analysis →
-        </Link>
-      </p>
+      <div className={styles.libraryIntro}>
+        <p className={styles.libraryLede}>
+          Tech Influence Watch has transcribed and tagged {ads.length} ads from{" "}
+          {humanizeNumber(committees)} {humanizeList(sectors)} super PACs across{" "}
+          {races} races.{" "}
+          <Link href={sectorHref("/2026/analysis/ads", sector)}>
+            Read the analysis →
+          </Link>
+        </p>
+        <div className={styles.libraryScope}>
+          <AdsScopeNote ads={allAds} codebookSize={codebook.length} />
+        </div>
+      </div>
       <AdLibrary
         ads={ads}
-        codebook={getCodebook()}
+        codebook={codebook}
         sector={sector}
         initial={params}
       />
-      <AdsSourceNote />
     </>
   );
 }

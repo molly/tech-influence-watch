@@ -1,59 +1,55 @@
 tag,label,group,definition,rollups,notes
 trump_endorsed,Trump endorsed,endorsement,,,
 trump_aligned,Trump-aligned,endorsement,"“Trump conservative” or will stand with Trump, but no explicit Trump endorsement.",,"No endorsement claimed; if there is one, use trump_endorsed."
-other_endorsed,Other endorsement,endorsement,Other politician or group endorses the candidate.,,"Not Trump, a party or a union; those have their own tags."
 party_endorsed,Party endorsement,endorsement,Endorsed by a party organization.,,
 union_endorsed,Union endorsed,endorsement,Endorsed by one or more unions.,,Includes labor federations.
-stand_up_to_trump,Stand up to Trump,partisan frame,"Opposes Trump or his policies by name, “stand up to Trump”.",,
-anti_maga,Anti-MAGA,partisan frame,"Candidate fights “MAGA”, or rival fails to.",,"Trump isn’t the subject; if he is, use stand_up_to_trump."
+other_endorsed,Other endorsement,endorsement,Other politician or group endorses the candidate.,,"Not Trump, a party or a union; those have their own tags."
 anti_left,Anti-left,partisan frame,"“Radical left”, “Washington liberals”, “woke mob”.",,Republican frame.
+conservative_values,“Conservative values”,partisan frame,"“Conservative values”, faith, “our freedoms”, Second Amendment.",,Includes “constitutional freedoms” and “protect our freedoms” when framed against government overreach.
 bipartisan,Bipartisan,partisan frame,Candidate works across the aisle.,,Must be explicit.
-tax_cuts,Tax cuts,economy,Candidate supports tax cuts.,economy,
+anti_maga,Anti-MAGA,partisan frame,"Candidate fights “MAGA”, or rival fails to.",,"Trump isn’t the subject; if he is, use stand_up_to_trump."
+stand_up_to_trump,Stand up to Trump,partisan frame,"Opposes Trump or his policies by name, “stand up to Trump”.",,
 cost_of_living,Cost of living,economy,"Costs are too high and the candidate will lower them, or rival will not.",economy,
+tax_cuts,Tax cuts,economy,Candidate supports tax cuts.,economy,
 housing,Housing,economy,"Housing costs, rent prices, evictions.",economy,
+social_security,Social Security,economy,Defending or expanding Social Security.,,
 wages,Wages,economy,"Increasing wages, raising the minimum wage.",economy,
 economy_other,Other economy,economy,Candidate will generally strengthen the economy.,economy,Catch-all for economic messages the other economy tags don’t cover.
-social_security,Social Security,economy,Defending or expanding Social Security.,,
-healthcare_other,Other health care,health,Candidate will generally improve healthcare.,health,Not Medicare or drug prices; those have their own tags.
 medicare,Medicare,health,Defending or expanding Medicare.,health,Any mention of Medicare counts.
 drug_prices,Drug prices,health,"Reduce or cap drug prices, stand up to Big Pharma.",economy;health,
-billionaires,Billionaires,elites,Mentions billionaires or the ultra-wealthy.,,
+healthcare_other,Other healthcare,health,Candidate will generally improve healthcare.,health,Not Medicare or drug prices; those have their own tags.
+border_immigration,Border / immigration,immigration,"“Secure the border”, “illegals”, deportation.",,
+ice,ICE,immigration,Mentions ICE by name.,,"ICE named explicitly, in either direction."
 corporate_greed,Corporate greed,elites,"Wall Street, Big Tech, Big Pharma, price-gouging.",,No billionaire language; that’s billionaires.
 anti_corruption,Anti-corruption,elites,"“Work for you, not insiders”, Congressional stock trading bans.",,
-ice,ICE,immigration,Mentions ICE by name.,,"ICE named explicitly, in either direction."
-border_immigration,Border / immigration,immigration,"“Secure the border”, “illegals”, deportation.",,
-public_safety,Public safety,other policy,"Law enforcement, gun violence.",,
+billionaires,Billionaires,elites,Mentions billionaires or the ultra-wealthy.,,
+innovation,“Innovation”,tech,"“Unleash American innovation”, promotes tech development and investment.",,
+ai_safety,AI safety,tech,AI needs to be regulated.,,
+ai_jobs,AI & jobs,tech,AI threatens jobs and workers.,economy,
+mentions_industry,Mentions industry,tech,"Ad mentions the sponsor’s industry: crypto or digital assets for crypto PACs, AI for AI PACs.",,
+mentions_tech,Mentions tech,tech,"“Big Tech”, specific tech companies or executives, or mentions tech broadly.",,Includes AI or crypto when it isn’t the sponsor’s industry. Mutually exclusive with mentions_industry.
 democracy_rights,Democracy / rights,other policy,"“Defend democracy”; protect civil, voting rights.",,"Generic “freedom” or “constitutional freedoms” framed against government overreach goes to conservative_values. Tag bare “our rights” by the rest of the ad, not the sponsor’s party."
+national_security,National security,other policy,"Candidate supports military, “stand up to China”, believes America must lead other countries in tech development.",,
 womens_rights,Women’s rights,other policy,"Reproductive freedom, maternal rights, Roe v. Wade.",,
-union,Union ties,biography/identity,Union member.,,
-veteran,Veteran,biography/identity,Served in the military.,,
-business_owner,Business owner,biography/identity,"Built or ran a business, “businessman”.",,
-humble_origins,Humble origins,biography/identity,"Worked through school, held blue-collar jobs, raised by single parent, “self-made”.",,Also counts parents with ordinary jobs.
-family,Family,biography/identity,"Emphasizes that candidate is a mother/father/wife/husband, “family man”.",,
-conservative_values,Conservative values,biography/identity,"Faith, “our freedoms”, Second Amendment.",,Includes “constitutional freedoms” and “protect our freedoms” when framed against government overreach.
-rural_roots,Rural roots,biography/identity,"Farmer, rancher, rural origins.",,
-energy,Energy,other policy,"“Energy dominance”, oil and gas policy.",,
-deregulation,Deregulation,other policy,Regulations should be cut.,economy,
 infrastructure,Infrastructure,other policy,"Candidate brings federal money home; roads, hospitals.",economy,
+energy,Energy,other policy,"“Energy dominance”, oil and gas policy.",,
 rural_policy,Rural policy,other policy,"Candidate fights for farmers, ranchers, and rural communities.",,
-national_security,National security,tech/security,"Candidate supports military, “stand up to China”, believes America must lead other countries in tech development.",,
-innovation,Innovation,tech/security,"“Unleash American innovation”, promotes tech development and investment.
-
-",,
-ai_safety,AI safety,tech/security,AI needs to be regulated.,,
-ai_jobs,AI & jobs,tech/security,AI threatens jobs and workers.,economy,
-kids_safety,Kids’ safety online,tech/security,AI threatens child safety.,,
-attack_record,Attack: record,tone,Criticizes opponent’s voting record or policy positions.,attack,Ad is primarily negative about the opponent.
-attack_money,Attack: money,tone,Opponent is bought by donors or dark money.,attack,Ad is primarily negative about the opponent.
-attack_character,Attack: character,tone,"Opponent is corrupt, hypocritical, scandal-tainted, an outsider, or hiding their true beliefs.",attack,Ad is primarily negative about the opponent.
-attack_other,Attack: other,tone,,attack,"Ad is primarily negative about the opponent, on a line the other attack tags don’t cover."
-issue_ad,Issue ad,format,Ad asks viewers to call or thank their representative rather than vote.,,
-influencer_video,Influencer video,format,Ad is a long-form creator video.,,
-mentions_industry,Mentions industry,format,"Ad mentions the sponsor’s industry: crypto or digital assets for crypto PACs, AI for AI PACs.",,
-mentions_tech,Mentions tech,format,"“Big Tech”, specific tech companies or executives, or mentions tech broadly.",,Includes AI or crypto when it isn’t the sponsor’s industry. Mutually exclusive with mentions_industry.
-cross_party,Other party’s candidate,format,Ad backs a candidate from the other party than the committee’s.,,
+public_safety,Public safety,other policy,"Law enforcement, gun violence.",,
+deregulation,Deregulation,other policy,Regulations should be cut.,economy,
 stance_promote,Promotes the industry,industry stance,,,
 stance_lead,AI as a national asset,industry stance,AI development is a race America must win.,,
 stance_safeguards,AI needs safeguards,industry stance,"AI can be a risk to people, jobs, or security; candidate wants rules.",,
 stance_villain,Tech as the opponent,industry stance,Big Tech is the enemy: us vs. them.,,
 stance_tainted,Opponent tied to tech,industry stance,Rival is bought by tech money or tied to tech companies.,,
+humble_origins,Humble origins,candidate identity,"Worked through school, held blue-collar jobs, raised by single parent, “self-made”.",,Also counts parents with ordinary jobs.
+business_owner,Business owner,candidate identity,"Built or ran a business, “businessman”.",,
+veteran,Veteran,candidate identity,Served in the military.,,
+family,Family,candidate identity,"Emphasizes that candidate is a mother/father/wife/husband, “family man”.",,
+rural_roots,Rural roots,candidate identity,"Farmer, rancher, rural origins.",,
+union,Union ties,candidate identity,Union member.,,
+attack_character,Attacks character,attack,"Opponent is corrupt, hypocritical, scandal-tainted, an outsider, or hiding their true beliefs.",attack,Ad is primarily negative about the opponent.
+attack_money,Attacks funding,attack,Opponent is bought by donors or dark money.,attack,Ad is primarily negative about the opponent.
+attack_record,Attacks record,attack,Criticizes opponent’s voting record or policy positions.,attack,Ad is primarily negative about the opponent.
+issue_ad,Issue ad,format,Ad asks viewers to call or thank their representative rather than vote.,,
+influencer_video,Influencer video,format,Ad is a long-form creator video.,,
+cross_party,Other party’s candidate,format,Ad backs a candidate from the other party than the committee’s.,,

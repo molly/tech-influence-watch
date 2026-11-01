@@ -78,12 +78,6 @@
   white-space: nowrap;
 }
 
-.inlineWho {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-
 .videoCardQuote mark,
 .transcript mark {
   background: var(--color-lime-50);
@@ -445,6 +439,15 @@ a.stanceRow:focus-visible {
   margin-top: 0.5rem;
 }
 
+/* Each network's title, ad pair, chart header and chart rows share rows with
+   the networks beside it, so their charts line up. */
+.networkArm {
+  display: grid;
+  grid-row: span 4;
+  grid-template-rows: subgrid;
+  row-gap: 0;
+}
+
 .divergeHeadRow,
 .divergeRow {
   display: grid;
@@ -458,6 +461,8 @@ a.stanceRow:focus-visible {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  /* Sit on the rule when a neighboring network's header is taller. */
+  align-content: flex-end;
   gap: 0.125rem 0.4rem;
   padding: 0.75rem 0 0.5rem;
   border-bottom: 1px solid var(--card-border);
@@ -500,16 +505,12 @@ a.stanceRow:focus-visible {
 
 .divergeValue {
   justify-content: flex-end;
-  color: var(--secondary-text);
+  color: var(--main-text);
+  font-weight: 600;
 }
 
 .divergeValueRight {
   justify-content: flex-start;
-}
-
-.divergeValueNotable {
-  color: var(--main-text);
-  font-weight: 600;
 }
 
 .divergeLabel {
@@ -534,19 +535,6 @@ a.stanceRow:focus-visible {
 .divergeBarLeft i {
   left: auto;
   right: 0;
-}
-
-/* ── Attack ads ────────────────────────────────────────────────────── */
-
-.attackRaces {
-  font-family: var(--font-serif);
-  font-style: italic;
-
-  a {
-    font-family: var(--font-sans);
-    font-style: normal;
-    font-weight: 500;
-  }
 }
 
 /* ── Tag heatmap ───────────────────────────────────────────────────── */
@@ -581,6 +569,16 @@ a.stanceRow:focus-visible {
   color: var(--secondary-text);
   text-align: left;
   white-space: nowrap;
+
+  /* No width of its own, so a long label like "immigration" over two
+     columns doesn't widen them; it's cut off with an ellipsis instead, and
+     its title shows the full name. */
+  div {
+    width: 0;
+    min-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 .heatmapColumnGroups th:nth-child(-n + 2) {
@@ -643,11 +641,6 @@ a.stanceRow:focus-visible {
 
 .heatmapColumnTags .heatmapLaneGroupStart div {
   border-left-color: var(--secondary-text);
-}
-
-.heatmapColumnTags .heatmapIndustryColumn span {
-  color: var(--link-text);
-  font-weight: 700;
 }
 
 .heatmapGroupRow th {
@@ -727,15 +720,14 @@ a.stanceRow:focus-visible {
   background: var(--card-background);
 }
 
-.heatmapGroupStart {
-  border-left: 1px solid var(--card-border) !important;
+/* A tag that can't apply to the row, as opposed to one that applies zero
+   times. */
+.heatmapCellNotApplicable {
+  background: none;
 }
 
-.heatmapSubtotal .heatmapRowLabel {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-weight: 400;
-  color: var(--secondary-text);
+.heatmapGroupStart {
+  border-left: 1px solid var(--card-border) !important;
 }
 
 /* Rules above each network and above the grand total. In collapsed tables a
@@ -777,89 +769,6 @@ a.stanceRow:focus-visible {
       var(--card-background)
     );
   }
-}
-
-/* ── Shared playbook ───────────────────────────────────────────────── */
-
-.playbook {
-  display: grid;
-  grid-template-columns: minmax(0, 2.4fr) minmax(15rem, 1fr);
-  gap: 2.5rem;
-  margin-top: 1rem;
-}
-
-.playbookTables {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
-  gap: 1.75rem;
-}
-
-.playbookTitle {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1.125rem;
-  margin: 0;
-}
-
-.playbookAside {
-  align-self: start;
-}
-
-/* ── Script templates ──────────────────────────────────────────────── */
-
-.template {
-  display: grid;
-  grid-template-columns: minmax(14rem, 1fr) minmax(0, 2.6fr);
-  gap: 1.5rem;
-  padding: 1.125rem 0;
-  border-bottom: 1px solid var(--table-color);
-}
-
-.templateCommittee {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  margin: 0 0 0.25rem;
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1.2rem;
-}
-
-.templateScript {
-  margin: 0.4rem 0 0;
-  font-size: 0.875rem;
-  line-height: 1.45;
-
-  u {
-    text-decoration: none;
-    border-bottom: 1.5px dashed var(--tertiary-text);
-    color: var(--secondary-text);
-  }
-}
-
-.templateStrip {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
-  gap: 0.6rem;
-
-  figure {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-    margin: 0;
-  }
-
-  figcaption {
-    font-size: 0.75rem;
-    line-height: 1.3;
-    color: var(--secondary-text);
-  }
-}
-
-.templateName {
-  display: block;
-  font-weight: 600;
-  color: var(--main-text);
 }
 
 /* ── Ad library ────────────────────────────────────────────────────── */
@@ -1046,7 +955,6 @@ a.stanceRow:focus-visible {
   gap: 0.4rem;
 }
 
-.stanceLabel,
 .excerptLabel {
   margin-right: 0.25rem;
   font-size: 0.75rem;
@@ -1066,11 +974,6 @@ a.stanceRow:focus-visible {
 
 .tag:hover {
   border-color: var(--main-text);
-}
-
-.tagIndustry {
-  border-color: var(--color-lime-600);
-  color: var(--link-text);
 }
 
 /* The tag has spans, so hovering it highlights them in the transcript. */
@@ -1116,16 +1019,6 @@ a.stanceRow:focus-visible {
 }
 
 /* ── Responsive / dark ─────────────────────────────────────────────── */
-
-@media (max-width: 900px) {
-  .playbook {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .template {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
 
 @media (max-width: 768px) {
   .libraryAds {

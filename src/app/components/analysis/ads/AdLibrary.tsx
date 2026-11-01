@@ -4,10 +4,10 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import sharedStyles from "@/app/shared.module.css";
-import { AdParty, CodebookEntry, TaggedAd } from "@/app/types/AdAnalysis";
+import { CodebookEntry, TaggedAd } from "@/app/types/AdAnalysis";
+import { Party } from "@/app/types/Elections";
 import { Sector } from "@/app/types/Sector";
 import {
-  AD_PARTY_LABELS,
   AD_SECTOR_LABELS,
   AdLibraryParams,
   describeCommittee,
@@ -22,7 +22,9 @@ import {
   NO_NETWORK_LABEL,
 } from "@/app/utils/adAnalysis";
 import { pluralize } from "@/app/utils/humanize";
+import { getFullPartyName } from "@/app/utils/party";
 import { getRaceHeadline } from "@/app/utils/races";
+import { sentenceCase } from "@/app/utils/titlecase";
 
 import {
   AdMeta,
@@ -90,13 +92,17 @@ export default function AdLibrary({
   const labelsFor = (s: Sector) => labelsBySector[s];
   const labels = labelsFor(sector);
   const networks = [...new Set(committees.map((c) => c.network))];
+  // Parties of the candidates the ads support or oppose.
+  const parties = Object.values(Party).filter((p) =>
+    ads.some((ad) => ad.supportsParty === p || ad.opposesParty === p),
+  );
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     const list = ads.filter(
       (ad) =>
         (!network || (ad.network ?? "none") === network) &&
-        (!party || ad.party === party) &&
+        (!party || ad.supportsParty === party || ad.opposesParty === party) &&
         (!committee || ad.committeeId === committee) &&
         (!tag || matchesTagFilter(ad, tag)) &&
         (!q ||
@@ -161,7 +167,7 @@ export default function AdLibrary({
           </select>
         </label>
         <label>
-          <span className={styles.controlLabel}>Committee party</span>
+          <span className={styles.controlLabel}>Candidate party</span>
           <select
             value={party}
             onChange={(e) => {
@@ -170,9 +176,9 @@ export default function AdLibrary({
             }}
           >
             <option value="">All parties</option>
-            {(["rep", "dem", "both"] as AdParty[]).map((p) => (
+            {parties.map((p) => (
               <option key={p} value={p}>
-                {AD_PARTY_LABELS[p]}
+                {getFullPartyName(p, false)}
               </option>
             ))}
           </select>
@@ -226,7 +232,7 @@ export default function AdLibrary({
                 return null;
               }
               return (
-                <optgroup key={group} label={group}>
+                <optgroup key={group} label={sentenceCase(group)}>
                   {entries.map((entry) => (
                     <option key={entry.tag} value={entry.tag}>
                       {entry.label} ({entry.count})
@@ -386,46 +392,37 @@ export default function AdLibrary({
                     </p>
                   )}
                   <div className={styles.libraryAdTags}>
-                    {ad.stances.length > 0 && (
-                      <span className={styles.stanceLabel}>
-                        {ad.stances
-                          .map((s) => labelsFor(ad.sector)[s])
-                          .join(", ")}{" "}
-                        ·
-                      </span>
-                    )}
-                    {ad.tags
-                      .filter((t) => !ad.stances.includes(t))
-                      .map((t) => {
-                        const hasSpans = Boolean(ad.spans[t]);
-                        const showPreview = () => {
-                          if (hasSpans) {
-                            setPreview({ id: ad.id, tag: t });
-                          }
-                        };
-                        return (
-                          <button
-                            key={t}
-                            type="button"
-                            aria-pressed={t === tag}
-                            className={`${styles.tag} ${
-                              t === tag ? styles.tagActive : ""
-                            } ${t === "mentions_industry" ? styles.tagIndustry : ""} ${
-                              hasSpans ? styles.tagHasSpans : ""
-                            }`}
-                            onClick={() => {
-                              setTag(t === tag ? "" : t);
-                              reset();
-                            }}
-                            onMouseEnter={showPreview}
-                            onFocus={showPreview}
-                            onMouseLeave={() => setPreview(null)}
-                            onBlur={() => setPreview(null)}
-                          >
-                            {labelsFor(ad.sector)[t]}
-                          </button>
-                        );
-                      })}
+                    {[
+                      ...ad.stances,
+                      ...ad.tags.filter((t) => !ad.stances.includes(t)),
+                    ].map((t) => {
+                      const hasSpans = Boolean(ad.spans[t]);
+                      const showPreview = () => {
+                        if (hasSpans) {
+                          setPreview({ id: ad.id, tag: t });
+                        }
+                      };
+                      return (
+                        <button
+                          key={t}
+                          type="button"
+                          aria-pressed={t === tag}
+                          className={`${styles.tag} ${
+                            t === tag ? styles.tagActive : ""
+                          } ${hasSpans ? styles.tagHasSpans : ""}`}
+                          onClick={() => {
+                            setTag(t === tag ? "" : t);
+                            reset();
+                          }}
+                          onMouseEnter={showPreview}
+                          onFocus={showPreview}
+                          onMouseLeave={() => setPreview(null)}
+                          onBlur={() => setPreview(null)}
+                        >
+                          {labelsFor(ad.sector)[t]}
+                        </button>
+                      );
+                    })}
                   </div>
                   <div className={styles.libraryAdLinks}>
                     {(isLong || filterSpans.length > 0) && (

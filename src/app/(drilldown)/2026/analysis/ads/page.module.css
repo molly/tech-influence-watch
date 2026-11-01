@@ -14,27 +14,28 @@
   text-wrap: pretty;
 }
 
-.scope {
-  max-width: 62ch;
-  margin: 0;
-  padding-top: 0.7rem;
-  border-top: 1px solid var(--table-color);
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 0.875rem;
-  line-height: 1.6;
-  color: var(--secondary-text);
-}
-
-.scopeLabel {
-  font-family: var(--font-sans);
-  font-style: normal;
-  font-weight: 600;
-  color: var(--main-text);
-}
-
 .statCard {
   padding: 1.375rem 1.5rem 1.25rem;
+}
+
+.statLink {
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding-bottom: 0.25rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--main-text);
+  border-bottom: 2px solid var(--accent-on-light);
+}
+
+.statLink:hover {
+  color: var(--link-text-hover);
+  text-decoration: none;
+}
+
+.statLink:focus-visible {
+  outline: 2px solid var(--main-text);
+  outline-offset: 2px;
 }
 
 .statValue {
@@ -92,39 +93,37 @@
   color: var(--secondary-text);
 }
 
+/* Body copy introducing a section, as opposed to a chart's explanatory note. */
+.sectionCopy {
+  max-width: 62ch;
+  margin: 0.5rem 0 1rem;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
 .section {
   margin-top: 2.75rem;
 }
 
-.mentionsHeading {
-  margin-top: 1.75rem;
-}
-
-.noteBeforeContent {
-  margin-bottom: 1rem;
-}
-
 .libraryCta {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem 2rem;
-  padding: 1rem 0 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
 }
 
 .libraryButton {
-  padding: 0.6rem 1.125rem;
-  font-size: 0.875rem;
+  padding: 0.875rem 1.5rem;
+  font-size: 1rem;
   font-weight: 600;
-  color: var(--main-text);
-  background: var(--background);
+  color: var(--background);
+  background: var(--main-text);
   border: 1px solid var(--main-text);
 }
 
 .libraryButton:hover {
-  color: var(--background);
-  background: var(--main-text);
+  color: var(--main-text);
+  background: var(--background);
   text-decoration: none;
 }
 
@@ -133,26 +132,36 @@
   outline-offset: 2px;
 }
 
-.source {
-  max-width: 90ch;
-  margin-top: 2.25rem;
-  padding-top: 0.875rem;
-  border-top: 1px solid var(--table-color);
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 0.8rem;
-  line-height: 1.6;
-  color: var(--secondary-text);
+.libraryIntro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 27.5rem;
+  gap: 3rem;
+  align-items: start;
 }
 
 .libraryLede {
   composes: headerSubtitle from "@/app/shared.module.css";
 }
 
+/* Lines up with the top of the lede, which keeps headerSubtitle's margin. */
+.libraryScope {
+  padding-top: 1rem;
+}
+
 @media (max-width: 1100px) {
   .hero {
     grid-template-columns: minmax(0, 1fr);
     gap: 1.5rem;
+  }
+
+  /* Stacked, the lede's bottom margin already spaces the two. */
+  .libraryIntro {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .libraryScope {
+    padding-top: 0;
   }
 
   .statCard {

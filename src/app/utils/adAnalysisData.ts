@@ -304,8 +304,6 @@ export const getTaggedAds = cache(async (): Promise<TaggedAd[]> => {
       supportsParty: getCandidateParty(elections, row.race, row.supports),
       opposesParty: getCandidateParty(elections, row.race, row.opposes),
       stances: parseStances(row, stanceTags),
-      scriptFamily: row.script_family || null,
-      scriptTemplate: row.script_template || null,
       network: getNetworkName(committee),
       party: getParty(committee, row),
       video: videos.get(row.ad_id) ?? null,
