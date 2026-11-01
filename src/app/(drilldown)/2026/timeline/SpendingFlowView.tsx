@@ -40,10 +40,11 @@ export default function SpendingFlowView({ sector }: { sector: Sector }) {
             <div>
               <h1 className={sharedStyles.title}>Spending over time</h1>
               <p className={sharedStyles.headerSubtitle}>
-                Track{" "}
-                {humanizeSector(sector, { context: "industry", lowercase: true })}{" "}
-                spending in federal elections, and see which races are drawing
-                attention — and when.
+                Where{" "}
+                {humanizeSector(sector, {
+                  lowercase: true,
+                })}{" "}
+                PACs are spending in federal elections, and when.
               </p>
             </div>
             <div className={styles.mastMeta}>2026 election cycle</div>

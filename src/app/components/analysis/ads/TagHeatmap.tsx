@@ -4,10 +4,17 @@ import Link from "next/link";
 import { Fragment, useState } from "react";
 
 import SegmentedControl from "@/app/(drilldown)/2026/timeline/SegmentedControl";
-import { AdParty, CodebookEntry, TaggedAd } from "@/app/types/AdAnalysis";
+import sharedStyles from "@/app/shared.module.css";
+import {
+  AdParty,
+  AdSector,
+  CodebookEntry,
+  TaggedAd,
+} from "@/app/types/AdAnalysis";
 import { Sector } from "@/app/types/Sector";
 import {
   AD_PARTY_LABELS,
+  AD_SECTOR_LABELS,
   adLibraryHref,
   AdLibraryParams,
   CommitteeAds,
@@ -16,7 +23,7 @@ import {
   NO_NETWORK_LABEL,
   STANCE_GROUP,
 } from "@/app/utils/adAnalysis";
-import { humanizePercentage } from "@/app/utils/humanize";
+import { humanizePercentage, pluralize } from "@/app/utils/humanize";
 
 import { PartyTag } from "./AdCardParts";
 import styles from "./Ads.module.css";
@@ -60,6 +67,20 @@ function groupRows(committees: CommitteeAds[], groupBy: GroupBy): RowGroup[] {
   }));
 }
 
+function SectorBadge({ sector }: { sector: AdSector }) {
+  return (
+    <span className={`${sharedStyles.sectorBadge} ${styles.heatmapSectorBadge}`}>
+      {AD_SECTOR_LABELS[sector]}
+    </span>
+  );
+}
+
+// The one sector every committee in the list belongs to, if there is one.
+function soleSector(committees: CommitteeAds[]): AdSector | null {
+  const sectors = new Set(committees.map((c) => c.sector));
+  return sectors.size === 1 ? committees[0].sector : null;
+}
+
 export function shareStyle(share: number): React.CSSProperties {
   return { "--share": share } as React.CSSProperties;
 }
@@ -75,8 +96,11 @@ function columnBox(label: HTMLElement): ColumnBox | null {
   if (!th || !table || !wrap) {
     return null;
   }
-  // Group heading rows are a single spanning cell.
-  const rows = [...table.tBodies[0].rows].filter((r) => r.cells.length > 1);
+  // Group heading rows are a single spanning cell, and the copy of the total
+  // row for the other screen width isn't rendered.
+  const rows = [...table.tBodies[0].rows].filter(
+    (r) => r.cells.length > 1 && r.getClientRects().length > 0,
+  );
   const first = rows[0]?.cells[th.cellIndex];
   const last = rows[rows.length - 1]?.cells[th.cellIndex];
   if (!first || !last) {
@@ -113,6 +137,8 @@ export default function TagHeatmap({
 }) {
   const [groupBy, setGroupBy] = useState<GroupBy>("network");
   const [hoveredColumn, setHoveredColumn] = useState<ColumnBox | null>(null);
+  // Narrow screens show one column group at a time.
+  const [pickedGroup, setPickedGroup] = useState<string | null>(null);
   const allAds = committees.flatMap((c) => c.ads);
   // Keep each codebook group's columns together, in order of first appearance.
   const groupOrder = [...new Set(codebook.map((entry) => entry.group))];
@@ -133,6 +159,14 @@ export default function TagHeatmap({
       columnGroups.push({ name: column.group, count: 1 });
     }
   }
+  const activeGroup =
+    columnGroups.find((group) => group.name === pickedGroup)?.name ??
+    columnGroups[0]?.name;
+  const otherGroup = (column: CodebookEntry) =>
+    column.group === activeGroup ? "" : styles.heatmapOtherGroup;
+  // Sector labels only tell committees apart when there's more than one
+  // sector on the chart.
+  const showSectors = soleSector(committees) === null;
   const groupStarts = new Set<string>();
   let index = 0;
   for (const group of columnGroups) {
@@ -142,15 +176,23 @@ export default function TagHeatmap({
 
   const row = (
     key: string,
-    name: React.ReactNode,
     label: string,
+    tags: React.ReactNode,
     ads: TaggedAd[],
     className: string,
     params: AdLibraryParams,
   ) => (
     <tr key={key} className={className}>
       <th scope="row" className={styles.heatmapRowLabel}>
-        {name}
+        {label}
+        {/* On narrow screens the tags and ad count share a line below the
+            name. */}
+        <span className={styles.heatmapRowMeta}>
+          {tags}
+          <span className={styles.heatmapRowCountStacked}>
+            ({pluralize(ads.length, "ad", { includeValue: true })} total)
+          </span>
+        </span>
       </th>
       <td className={styles.heatmapRowCount}>{ads.length}</td>
       {columns.map((column) => {
@@ -161,7 +203,7 @@ export default function TagHeatmap({
               key={column.tag}
               className={`${styles.heatmapCell} ${styles.heatmapCellNotApplicable} ${
                 groupStarts.has(column.tag) ? styles.heatmapGroupStart : ""
-              }`}
+              } ${otherGroup(column)}`}
               title={notApplicable.reason}
               aria-label={notApplicable.reason}
             />
@@ -174,6 +216,7 @@ export default function TagHeatmap({
           groupStarts.has(column.tag) ? styles.heatmapGroupStart : "",
           share > DARK_CELL ? styles.heatmapCellDark : "",
           count ? "" : styles.heatmapCellEmpty,
+          otherGroup(column),
         ].join(" ");
         if (!count) {
           return <td key={column.tag} className={classes} />;
@@ -208,6 +251,19 @@ export default function TagHeatmap({
           value={groupBy}
           onChange={setGroupBy}
         />
+        {activeGroup && (
+          <div className={styles.heatmapGroupPicker}>
+            <SegmentedControl
+              label="Tags about:"
+              options={columnGroups.map((group) => ({
+                value: group.name,
+                label: group.name,
+              }))}
+              value={activeGroup}
+              onChange={setPickedGroup}
+            />
+          </div>
+        )}
       </div>
       <div className={styles.heatmapWrap}>
         <table className={styles.heatmap}>
@@ -219,11 +275,11 @@ export default function TagHeatmap({
                 <th
                   key={column.tag}
                   scope="col"
-                  className={
+                  className={`${
                     groupStarts.has(column.tag)
                       ? styles.heatmapLaneGroupStart
-                      : undefined
-                  }
+                      : ""
+                  } ${otherGroup(column)}`}
                 >
                   <div>
                     <span
@@ -250,42 +306,63 @@ export default function TagHeatmap({
             </tr>
           </thead>
           <tbody>
-            {groupRows(committees, groupBy).map((group) => (
-              <Fragment key={group.label}>
-                <tr className={styles.heatmapGroupRow}>
-                  <th colSpan={columns.length + 2} scope="rowgroup">
-                    {group.label}
-                  </th>
-                </tr>
-                {group.committees.map((committee) =>
-                  row(
-                    committee.id,
-                    <>
-                      {committee.name}
-                      {groupBy === "network" ? (
-                        <PartyTag party={committee.party} />
-                      ) : (
-                        committee.network && (
-                          <span className={styles.partyTag}>
-                            {committee.network}
-                          </span>
-                        )
-                      )}
-                    </>,
-                    committee.name,
-                    committee.ads,
-                    "",
-                    { cm: committee.id },
-                  ),
-                )}
-              </Fragment>
-            ))}
+            {/* The total leads on narrow screens and closes the table on wide
+                ones; each copy is hidden at the other width. */}
+            {row(
+              "all-top",
+              "All committees",
+              null,
+              allAds,
+              `${styles.heatmapTotal} ${styles.heatmapTotalTop}`,
+              {},
+            )}
+            {groupRows(committees, groupBy).map((group) => {
+              // A network's sector goes on its heading when all its
+              // committees share one, and on each committee otherwise.
+              const groupSector =
+                showSectors && groupBy === "network"
+                  ? soleSector(group.committees)
+                  : null;
+              return (
+                <Fragment key={group.label}>
+                  <tr className={styles.heatmapGroupRow}>
+                    <th colSpan={columns.length + 2} scope="rowgroup">
+                      {group.label}
+                      {groupSector && <SectorBadge sector={groupSector} />}
+                    </th>
+                  </tr>
+                  {group.committees.map((committee) =>
+                    row(
+                      committee.id,
+                      committee.name,
+                      <>
+                        {groupBy === "network" ? (
+                          <PartyTag party={committee.party} />
+                        ) : (
+                          committee.network && (
+                            <span className={styles.partyTag}>
+                              {committee.network}
+                            </span>
+                          )
+                        )}
+                        {showSectors && !groupSector && (
+                          <SectorBadge sector={committee.sector} />
+                        )}
+                      </>,
+                      committee.ads,
+                      "",
+                      { cm: committee.id },
+                    ),
+                  )}
+                </Fragment>
+              );
+            })}
             {row(
               "all",
               "All committees",
-              "All committees",
+              null,
               allAds,
-              styles.heatmapTotal,
+              `${styles.heatmapTotal} ${styles.heatmapTotalBottom}`,
               {},
             )}
           </tbody>

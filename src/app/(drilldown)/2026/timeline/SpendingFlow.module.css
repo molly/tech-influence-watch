@@ -175,7 +175,9 @@
   position: relative;
   background: var(--card-background);
   border: 1px solid var(--card-border);
-  padding: 0.5rem 0.5rem 0;
+  /* Room below the map for the legend, so it covers less of the
+     southern states. */
+  padding: 0.5rem 0.5rem 10rem;
 }
 
 .map {
@@ -1482,7 +1484,6 @@
     padding-top: 0.75rem;
   }
 
-
   .filtersToggle {
     display: flex;
   }
@@ -1516,6 +1517,11 @@
   /* Its only control moves into the filters on mobile. */
   .mapBar {
     display: none;
+  }
+
+  /* The legend sits below the map here, so it needs no extra room. */
+  .mapBox {
+    padding-bottom: 0;
   }
 
   .mapLegend {
@@ -1662,5 +1668,4 @@
     background: none;
     color: var(--secondary-text);
   }
-
 }

@@ -6,14 +6,6 @@
   margin-bottom: 1.5rem;
 }
 
-.lede {
-  max-width: 62ch;
-  margin: 0 0 1rem;
-  font-size: 1.125rem;
-  line-height: 1.55;
-  text-wrap: pretty;
-}
-
 .statCard {
   padding: 1.375rem 1.5rem 1.25rem;
 }

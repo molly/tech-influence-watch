@@ -296,7 +296,6 @@ export default function SpendingFlow({
     setPlaying(true);
   };
 
-
   // Shown at the top of the screen once the main timeline scrolls away, and
   // in the race panel when it covers the timeline on narrow screens.
   const compactTimeline = (
@@ -406,16 +405,21 @@ export default function SpendingFlow({
                 </div>
               ))}
               <div className={styles.mapLegendNote}>
-                <span>Circle size = 2026 spending through the selected week</span>
-                {!reducedMotion && (
-                  <span className={styles.mapLegendItem}>
-                    <svg width="22" height="22" aria-hidden={true}>
-                      <circle className={styles.legendPingDot} cx="11" cy="11" r="4" />
-                      <circle className={styles.legendPingRing} cx="11" cy="11" r="9" />
-                    </svg>
-                    Ping = a new expenditure, sized by amount
-                  </span>
-                )}
+                <span>
+                  Circle sizes reflect 2026 spending through the selected week.
+                  {!reducedMotion && (
+                    <span>
+                      {" "}
+                      Pings indicate new expenditures and are sized by amount.
+                    </span>
+                  )}
+                </span>
+                <span>
+                  Recent weeks may have incomplete data. Large expenditures must
+                  be reported within 48 hours (24 hours close to an election),
+                  but smaller ones may not appear until the PAC&rsquo;s next
+                  monthly or quarterly filing.
+                </span>
               </div>
             </div>
           </div>

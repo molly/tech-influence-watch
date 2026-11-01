@@ -127,7 +127,7 @@ function Lede({
     const fairShake = crypto.filter((ad) => ad.network === "FairShake");
     const all = crossParty && humanizeNumber(crossParty.mentioned.length);
     return (
-      <p className={styles.lede}>
+      <p className={sharedStyles.headerSubtitle}>
         <span className="bold">
           Only {humanizeNumber(cryptoMentions)} of the {crypto.length} ads run
           by crypto super PACs this cycle{" "}
@@ -165,7 +165,7 @@ function Lede({
       (ad) => hasTag(ad, "issue_ad"),
     );
     return (
-      <p className={styles.lede}>
+      <p className={sharedStyles.headerSubtitle}>
         Tech Influence Watch tracks {ai.length} ads from AI super PACs.{" "}
         <span className="bold">
           <NetworkLink name="Leading the Future" /> mentions AI in{" "}
@@ -188,7 +188,7 @@ function Lede({
 
   const races = new Set(ads.map((ad) => ad.race)).size;
   return (
-    <p className={styles.lede}>
+    <p className={sharedStyles.headerSubtitle}>
       Tech Influence Watch has transcribed and tagged {ads.length} ads from{" "}
       {humanizeNumber(committees.length)} crypto and artificial intelligence{" "}
       {pluralize(committees.length, "PAC")} across {races} races.{" "}

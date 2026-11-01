@@ -126,6 +126,14 @@
   background-color: var(--color-neutral-200);
 }
 
+/* Matches heroWithStat's breakpoint, where its stat card stacks last and
+   would otherwise sit flush against the strategy cards. */
+@media (max-width: 575px) {
+  .strategyCards {
+    margin-top: 2rem;
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   .segSafe {
     background-color: var(--color-neutral-200);
