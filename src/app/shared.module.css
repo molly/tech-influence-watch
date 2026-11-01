@@ -48,6 +48,7 @@
 .heroWithStat {
   display: grid;
   grid-template-columns: 1fr 20rem;
+  align-items: start;
 
   .headerSubtitle {
     margin-right: 1rem;

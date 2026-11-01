@@ -1,6 +1,5 @@
 .heroWithStat {
   composes: heroWithStat from "@/app/shared.module.css";
-  align-items: start;
   margin-bottom: 2rem;
 }
 

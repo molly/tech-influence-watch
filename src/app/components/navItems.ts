@@ -50,18 +50,24 @@ export const NAV_ITEMS: NavItem[] = [
     ],
   },
   {
-    id: "analysis",
-    label: "Analysis",
+    id: "trump",
+    label: "Trump",
     children: [
       { label: "Quid pro quo", href: "/analysis/quidproquo" },
       { label: "Contributions to Trump", href: "/analysis/trump" },
+    ],
+  },
+  {
+    id: "analysis",
+    label: "Analysis",
+    children: [
       {
         label: "Battlegrounds and safe seats",
         href: "/2026/analysis/battlegrounds",
         useSector: true,
       },
       {
-        label: "What the ads say",
+        label: "Political ads",
         href: "/2026/analysis/ads",
         useSector: true,
       },

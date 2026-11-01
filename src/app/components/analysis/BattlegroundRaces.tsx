@@ -41,27 +41,27 @@ const CATEGORIES: {
 }[] = [
   {
     key: "competitive",
-    title: "Competitive contests",
-    barLabel: "Competitive contests",
-    phrase: "went into competitive contests",
-  },
-  {
-    key: "likely",
-    title: "Backing a likely winner",
-    barLabel: "Likely winners",
-    phrase: "backed a likely winner",
-  },
-  {
-    key: "safe",
-    title: "Backing the safe bet",
-    barLabel: "Safe bets",
-    phrase: "backed the safe bet",
+    title: "Competitive races",
+    barLabel: "Competitive races",
+    phrase: "has gone into competitive races",
   },
   {
     key: "underdog",
     title: "Backing the underdog",
     barLabel: "Underdogs",
-    phrase: "backed the underdog",
+    phrase: "has backed the underdog",
+  },
+  {
+    key: "likely",
+    title: "Backing a likely winner",
+    barLabel: "Likely winners",
+    phrase: "has backed a likely winner",
+  },
+  {
+    key: "safe",
+    title: "Backing the safe bet",
+    barLabel: "Safe bets",
+    phrase: "has backed the safe bet",
   },
   {
     key: "unclassified",
@@ -456,15 +456,8 @@ function ContestTable({
     <table className={tableStyles.superPacTable}>
       <thead>
         <tr className={tableStyles.superPacTableHeader}>
-          <th className="text-cell">Contest</th>
-          {general ? (
-            <RatingHeader />
-          ) : (
-            <RatingHeader
-              label="General rating"
-              note="This rates the November general election. It shows how safe the seat is for the party, not how close the primary was."
-            />
-          )}
+          <th className="text-cell">Race</th>
+          {general && <RatingHeader />}
           <th className="number-cell">Spent</th>
         </tr>
       </thead>
@@ -482,13 +475,15 @@ function ContestTable({
               </div>
               <TargetLines pieces={row.pieces} />
             </td>
-            <td className="center-cell">
-              {COOK_RATINGS[row.raceId] ? (
-                <RaceRatingChip raceId={row.raceId} />
-              ) : (
-                <span className={tableStyles.nilCell}>—</span>
-              )}
-            </td>
+            {general && (
+              <td className="center-cell">
+                {COOK_RATINGS[row.raceId] ? (
+                  <RaceRatingChip raceId={row.raceId} />
+                ) : (
+                  <span className={tableStyles.nilCell}>—</span>
+                )}
+              </td>
+            )}
             <td className="number-cell">{currency(row.amount)}</td>
           </tr>
         ))}
@@ -536,15 +531,18 @@ function StrategyCard({
   );
   const supported = describeByParty(pieces, "support");
   const opposed = describeByParty(pieces, "oppose");
-  const contestName = (row: ContestRow) =>
-    `${raceName(row.raceId)} ${contestLabel(row.type, row.party).toLowerCase()}`;
+  const contestLink = (row: ContestRow) => (
+    <Link href={`/2026/elections/${row.raceId}`}>
+      {raceName(row.raceId)} {contestLabel(row.type, row.party).toLowerCase()}
+    </Link>
+  );
 
   return (
     <section className={styles.strategyCard}>
       <h2 className={sharedStyles.sectionTitle}>
         {humanizeSector(sector, { abbrev: true })} PAC strategy
         <span className={sharedStyles.sectionTitleAmount}>
-          {currency(total)} in {groupByContest(pieces).length} contests
+          {currency(total)} in {groupByContest(pieces).length} races
         </span>
       </h2>
       <div className={patternStyles.patterns}>
@@ -554,7 +552,13 @@ function StrategyCard({
             return null;
           }
           const amount = sum(categoryPieces);
-          const top = groupByContest(categoryPieces)[0];
+          const contests = groupByContest(categoryPieces);
+          const top = contests[0];
+          // Name the single contest instead of calling it the largest
+          const onlyContest =
+            contests.length === 1 &&
+            c.key !== "safe" &&
+            c.key !== "unclassified";
           return (
             <div key={c.key} className={patternStyles.pattern}>
               <div className={patternStyles.label}>{c.barLabel}</div>
@@ -562,13 +566,26 @@ function StrategyCard({
                 {sentenceCase(pctText(amount, total))} {c.phrase}
               </span>
               <p className={patternStyles.description}>
-                {currency(amount)} in all
+                {currency(amount)}
+                {!onlyContest && " in all"}
                 {c.key === "safe" &&
                   incumbentSafe > 0 &&
                   `, ${currency(incumbentSafe)} of it supporting incumbents`}
-                {c.key === "unclassified"
-                  ? ", still being reviewed."
-                  : `. The largest was the ${contestName(top)}, at ${currency(top.amount)}.`}
+                {c.key === "unclassified" ? (
+                  ", still being reviewed."
+                ) : c.key === "safe" ? (
+                  "."
+                ) : onlyContest ? (
+                  <>, all in the {contestLink(top)}.</>
+                ) : (
+                  <>
+                    . The largest is the {contestLink(top)}, at{" "}
+                    {currency(top.amount)}
+                    {top.amount / amount > 0.5
+                      ? `, which accounts for ${pctText(top.amount, amount)} of the competitive spending from ${humanizeSector(sector, { abbrev: true, lowercase: true })} PACs.`
+                      : "."}
+                  </>
+                )}
               </p>
             </div>
           );
@@ -581,7 +598,7 @@ function StrategyCard({
             </span>
             {opposed && (
               <p className={patternStyles.description}>
-                They also spent {opposed}.
+                They have also spent {opposed}.
               </p>
             )}
           </div>
@@ -642,7 +659,7 @@ function SplitBar({
       <div
         className={`${barStyles.track} ${styles.splitBar}`}
         role="img"
-        aria-label={`Spending by how competitive the contest was: ${segments
+        aria-label={`Spending by how competitive the race was: ${segments
           .map(describe)
           .join(
             "; ",
@@ -727,24 +744,20 @@ function SectorContent({
             <span className={sharedStyles.highlightFigure}>
               {pct(competitive, total)}%
             </span>{" "}
-            went into genuinely competitive contests and{" "}
+            has gone into genuinely competitive races and{" "}
             <span className={sharedStyles.highlightFigure}>
               {pct(safe, total)}%
             </span>{" "}
-            went behind the candidate who was already the safe bet. Another{" "}
-            {pctText(likely, total)} backed a likely but not certain winner, and{" "}
-            {pctText(underdog, total)} backed the underdog.
-            {safe > 0 &&
-              ` ${sentenceCase(pctText(safePrimary, safe))} of the safe-bet money was spent in primaries.`}
-            {unclassified > 0 &&
-              ` The remaining ${pct(unclassified, total)}% is in contests not yet classified.`}
+            has gone behind a candidate who was already the safe bet. Another{" "}
+            {pctText(likely, total)} has backed likely but not certain winners,
+            and {pctText(underdog, total)} has backed an underdog.
           </p>
           {showTopCompetitive && (
             <p className={sharedStyles.headerSubtitle}>
               The {raceName(topCompetitive.raceId)} election alone accounts for{" "}
               {currency(topCompetitive.amount)}, or{" "}
               {pct(topCompetitive.amount, competitive)}% of the competitive
-              total. Without it, competitive contests got{" "}
+              total. Without it, competitive races have gotten{" "}
               {pct(
                 competitive - topCompetitive.amount,
                 total - topCompetitive.amount,
@@ -769,22 +782,44 @@ function SectorContent({
           <div className={sharedStyles.noteCard}>
             <span className={sharedStyles.noteLabel}>Note:</span> general
             elections are classified with the Cook Political Report&rsquo;s
-            ratings as of {formatDateFromString(COOK_RATINGS_AS_OF.senate)}{" "}
-            (Senate) and {formatDateFromString(COOK_RATINGS_AS_OF.house)}{" "}
-            (House): Toss-up and Lean races count as competitive, and money
-            helping the favored party backs a likely winner in a Likely seat and
-            the safe bet in a Solid one. Cook doesn&rsquo;t rate primaries,
-            generals between two members of the same party, or special elections
-            decided before these ratings, so those were reviewed by hand the
-            same way. In them, the favorite is the candidate who won, or for
-            contests that haven&rsquo;t happened yet, the candidate expected to
-            win.
+            ratings as of {formatDateFromString(COOK_RATINGS_AS_OF.senate)} (
+            <a
+              href="https://www.cookpolitical.com/ratings/senate-race-ratings"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Senate
+            </a>
+            ) and {formatDateFromString(COOK_RATINGS_AS_OF.house)} (
+            <a
+              href="https://www.cookpolitical.com/ratings/house-race-ratings"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              House
+            </a>
+            ). Competitive races are those rated &ldquo;Toss-up&rdquo; or
+            &ldquo;Lean&rdquo;. Likely races are those rated
+            &ldquo;Likely&rdquo; or &ldquo;Solid&rdquo;.
+            <p>
+              Cook doesn&rsquo;t rate primaries, generals between two members of
+              the same party, so these were rated based on poll data.
+            </p>
           </div>
         </div>
         <MoneyCard
-          topText="Spent backing the safe bet"
+          topText="Backing the winners"
           amount={currency(safe)}
-          bottomText={`across ${groupByContest(piecesIn("safe")).length} contests`}
+          bottomText={
+            <span>
+              has been spent on projected &ldquo;safe&rdquo; candidates in{" "}
+              {groupByContest(piecesIn("safe")).length} races, illustrating the
+              PACs&rsquo;{" "}
+              <a href="https://www.citationneeded.news/issue-111/">
+                &ldquo;back the winners&rdquo; strategy.
+              </a>
+            </span>
+          }
         />
       </section>
       <div className={styles.strategyCards}>
@@ -799,7 +834,7 @@ function SectorContent({
             <h2 className={sharedStyles.sectionTitle}>
               {c.title}
               <span className={sharedStyles.sectionTitleAmount}>
-                {rows.length} {rows.length === 1 ? "contest" : "contests"}
+                {rows.length} {rows.length === 1 ? "race" : "races"}
               </span>
             </h2>
             {ROUNDS.map((round) => {
@@ -816,7 +851,7 @@ function SectorContent({
                     <span className={sharedStyles.sectionTitleAmount}>
                       {currency(sum(roundRows.flatMap((row) => row.pieces)))} in{" "}
                       {roundRows.length}{" "}
-                      {roundRows.length === 1 ? "contest" : "contests"}
+                      {roundRows.length === 1 ? "race" : "races"}
                     </span>
                   </h3>
                   <ContestTable rows={roundRows} general={round.general} />
@@ -843,7 +878,7 @@ export function BattlegroundRacesSkeleton() {
         </div>
         <MoneyCardSkeleton />
       </section>
-      <h2 className={sharedStyles.sectionTitle}>Competitive contests</h2>
+      <h2 className={sharedStyles.sectionTitle}>Competitive races</h2>
       {Array.from({ length: 10 }).map((_, i) => (
         <Skeleton key={i} width="100%" />
       ))}
