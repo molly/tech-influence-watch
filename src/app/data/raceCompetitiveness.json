@@ -1,42 +1,6 @@
 {
   "contests": [
     {
-      "key": "FL-H-06-special|general|N",
-      "race_id": "FL-H-06-special",
-      "type": "general",
-      "party": "N",
-      "competitive": "likely",
-      "favorite": "",
-      "candidates": [
-        {
-          "name": "Randy Fine",
-          "won": true
-        },
-        {
-          "name": "Joshua Weil",
-          "won": false
-        }
-      ]
-    },
-    {
-      "key": "FL-H-01-special|general|N",
-      "race_id": "FL-H-01-special",
-      "type": "general",
-      "party": "N",
-      "competitive": "likely",
-      "favorite": "",
-      "candidates": [
-        {
-          "name": "Jimmy Patronis",
-          "won": true
-        },
-        {
-          "name": "Gay Valimont",
-          "won": false
-        }
-      ]
-    },
-    {
       "key": "NY-H-12|primary|D",
       "race_id": "NY-H-12",
       "type": "primary",
@@ -571,6 +535,24 @@
       ]
     },
     {
+      "key": "FL-H-06-special|general|N",
+      "race_id": "FL-H-06-special",
+      "type": "general",
+      "party": "N",
+      "competitive": "likely",
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Randy Fine",
+          "won": true
+        },
+        {
+          "name": "Joshua Weil",
+          "won": false
+        }
+      ]
+    },
+    {
       "key": "GA-H-14|primary|R",
       "race_id": "GA-H-14",
       "type": "primary",
@@ -1093,6 +1075,24 @@
       ]
     },
     {
+      "key": "CA-H-14|general|N",
+      "race_id": "CA-H-14",
+      "type": "general",
+      "party": "N",
+      "competitive": false,
+      "favorite": "Aisha Wahab",
+      "candidates": [
+        {
+          "name": "Aisha Wahab",
+          "won": null
+        },
+        {
+          "name": "Melissa Hernandez",
+          "won": null
+        }
+      ]
+    },
+    {
       "key": "MD-H-06|primary|D",
       "race_id": "MD-H-06",
       "type": "primary",
@@ -1371,24 +1371,6 @@
       ]
     },
     {
-      "key": "CA-H-14|general|N",
-      "race_id": "CA-H-14",
-      "type": "general",
-      "party": "N",
-      "competitive": false,
-      "favorite": "Aisha Wahab",
-      "candidates": [
-        {
-          "name": "Aisha Wahab",
-          "won": null
-        },
-        {
-          "name": "Melissa Hernandez",
-          "won": null
-        }
-      ]
-    },
-    {
       "key": "AZ-H-04|primary|D",
       "race_id": "AZ-H-04",
       "type": "primary",
@@ -1606,6 +1588,24 @@
         },
         {
           "name": "Shelly deZevallos",
+          "won": false
+        }
+      ]
+    },
+    {
+      "key": "FL-H-01-special|general|N",
+      "race_id": "FL-H-01-special",
+      "type": "general",
+      "party": "N",
+      "competitive": "likely",
+      "favorite": "",
+      "candidates": [
+        {
+          "name": "Jimmy Patronis",
+          "won": true
+        },
+        {
+          "name": "Gay Valimont",
           "won": false
         }
       ]
