@@ -118,12 +118,6 @@ export default function GoogleAd({
           </div>
         )}
         <div className={styles.adDetailsGroup}>
-          {/* TEMPORARY: ad IDs, for finding duplicates to merge in
-              /admin/edit/ads. Delete this block (and .adDebugId) when done. */}
-          <div className={styles.adDebugId}>
-            {ad.ad_id}
-            {ad.variantCount && ` (merged: ${ad.variantCount})`}
-          </div>
           {ad.date_range_start && ad.date_range_end && (
             <div>
               <b>Shown:</b> {formatDateFromString(ad.date_range_start)} &ndash;{" "}

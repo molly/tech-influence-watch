@@ -578,14 +578,6 @@
   font-size: 4rem;
 }
 
-/* TEMPORARY: see the matching note in GoogleAd.tsx. Delete both together. */
-.adDebugId {
-  font-family: monospace;
-  font-size: 0.8rem;
-  color: var(--secondary-text);
-  user-select: all;
-}
-
 .adDetailsWrapper {
   display: flex;
   flex-wrap: wrap;
