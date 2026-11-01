@@ -256,6 +256,21 @@ export const humanizeActiveRaces = (raceIds: string[]): string => {
   return clauses.join(" and ");
 };
 
+// The raceDetails and outsideSpending document holding a race, matching the
+// backend's race_utils._shard_doc_name: House races shard by the district's
+// last digit, everything else goes to shard 0. raceId is the short form
+// ("H-07", "S-special").
+export function getShardDocName(state: string, raceId: string): string {
+  const parts = raceId.split("-");
+  if (parts[0] === "H" && parts.length > 1) {
+    const district = parseInt(parts[1], 10);
+    if (!isNaN(district)) {
+      return `${state}_${district % 10}`;
+    }
+  }
+  return `${state}_0`;
+}
+
 export const getStateFromRaceId = (raceId?: string) => {
   if (!raceId) {
     return "";

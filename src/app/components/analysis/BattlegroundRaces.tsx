@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Fragment } from "react";
 
 import { fetchAllStateElections, fetchConstant } from "@/app/actions/fetch";
 import { CommitteeLink } from "@/app/components/CommitteeLink";
@@ -624,68 +625,97 @@ interface SplitSegment {
   className: string;
 }
 
-// The lead paragraph's split as one proportional bar. The annotation brackets
-// the start of the bar, so it marks a contest within the first segment.
-function SplitBar({
-  segments,
-  total,
-  annotation,
-}: {
+interface SplitRow {
+  key: string;
+  label: string;
+  // The row's total, as shown under its label
+  totalLabel: string;
   segments: SplitSegment[];
-  total: number;
+  // How each segment reads in the bar's accessible description
+  describe: (segment: { label: string; amount: number }) => string;
+  // Brackets the start of the bar, so it marks a contest within the first
+  // segment
   annotation?: { label: string; amount: number };
+}
+
+// The category split as proportional bars, one per measure (dollars, races),
+// with one legend for both
+function SplitBars({
+  rows,
+  legend,
+  children,
+}: {
+  rows: SplitRow[];
+  legend: { key: string; label: string; value: string; className: string }[];
+  children?: React.ReactNode;
 }) {
-  const describe = (s: { label: string; amount: number }) =>
-    `${s.label} ${currency(s.amount)}, ${pctText(s.amount, total)}`;
   return (
     <div className={styles.splitBlock}>
-      {annotation && (
-        <div className={styles.splitAnnotationRow} aria-hidden="true">
-          <div
-            className={styles.splitAnnotation}
-            style={{ flexGrow: annotation.amount }}
-          >
-            <div className={styles.splitAnnotationLabel}>
-              {annotation.label}: {currency(annotation.amount)} (
-              {pctText(annotation.amount, total)} of all spending)
+      {rows.map((row) => {
+        const total = row.segments.reduce((t, s) => t + s.amount, 0);
+        return (
+          <Fragment key={row.key}>
+            {row.annotation && (
+              <>
+                <div />
+                <div className={styles.splitAnnotationRow} aria-hidden="true">
+                  <div
+                    className={styles.splitAnnotation}
+                    style={{ flexGrow: row.annotation.amount }}
+                  >
+                    <div className={styles.splitAnnotationLabel}>
+                      {row.annotation.label}: {currency(row.annotation.amount)}{" "}
+                      ({pctText(row.annotation.amount, total)} of all spending)
+                    </div>
+                    <div className={styles.splitAnnotationBracket} />
+                  </div>
+                  <div
+                    className={styles.splitAnnotationSpacer}
+                    style={{ flexGrow: total - row.annotation.amount }}
+                  />
+                </div>
+              </>
+            )}
+            <div className={styles.splitLabel}>
+              <div className={patternStyles.label}>{row.label}</div>
+              <div className={styles.splitTotal}>{row.totalLabel}</div>
             </div>
-            <div className={styles.splitAnnotationBracket} />
-          </div>
-          <div
-            className={styles.splitAnnotationSpacer}
-            style={{ flexGrow: total - annotation.amount }}
-          />
+            <div
+              className={`${barStyles.track} ${styles.splitBar}`}
+              role="img"
+              aria-label={`${row.label} by how competitive the race was: ${row.segments
+                .map(row.describe)
+                .join("; ")}${
+                row.annotation
+                  ? `. Of that, ${row.describe(row.annotation)}`
+                  : ""
+              }`}
+            >
+              {row.segments.map((s) => (
+                <div
+                  key={s.key}
+                  className={`${barStyles.segment} ${s.className}`}
+                  style={{ flexGrow: s.amount }}
+                />
+              ))}
+            </div>
+          </Fragment>
+        );
+      })}
+      <div />
+      <div>
+        <div className={legendStyles.barLegend}>
+          {legend.map((item) => (
+            <div key={item.key} className={legendStyles.barLegendItem}>
+              <span
+                className={`${legendStyles.barLegendSwatch} ${item.className}`}
+              />
+              <span className={legendStyles.barLegendName}>{item.label}</span>
+              <span className={legendStyles.barLegendValue}>{item.value}</span>
+            </div>
+          ))}
         </div>
-      )}
-      <div
-        className={`${barStyles.track} ${styles.splitBar}`}
-        role="img"
-        aria-label={`Spending by how competitive the race was: ${segments
-          .map(describe)
-          .join(
-            "; ",
-          )}${annotation ? `. Of that, ${describe(annotation)}` : ""}`}
-      >
-        {segments.map((s) => (
-          <div
-            key={s.key}
-            className={`${barStyles.segment} ${s.className}`}
-            style={{ flexGrow: s.amount }}
-          />
-        ))}
-      </div>
-      <div className={legendStyles.barLegend}>
-        {segments.map((s) => (
-          <div key={s.key} className={legendStyles.barLegendItem}>
-            <span
-              className={`${legendStyles.barLegendSwatch} ${s.className}`}
-            />
-            <span className={legendStyles.barLegendName}>{s.label}</span>
-            <span className={legendStyles.barLegendValue}>
-              {currency(s.amount)} · {pctText(s.amount, total)}
-            </span>
-          </div>
-        ))}
+        {children}
       </div>
     </div>
   );
@@ -725,12 +755,61 @@ function SectorContent({
     (c) => piecesIn(c.key).length > 0,
   );
 
-  const splitSegments: SplitSegment[] = visibleCategories.map((c) => ({
+  // A race with money on both sides of a category line counts in both, as it
+  // does in the tables below, so the race bar adds up
+  const raceCounts = Object.fromEntries(
+    visibleCategories.map((c) => [
+      c.key,
+      groupByContest(piecesIn(c.key)).length,
+    ]),
+  ) as Record<Category, number>;
+  const raceTotal = Object.values(raceCounts).reduce((t, n) => t + n, 0);
+  const segmentsBy = (amountOf: (c: Category) => number) =>
+    visibleCategories.map((c) => ({
+      key: c.key,
+      label: c.barLabel,
+      amount: amountOf(c.key),
+      className: SEGMENT_CLASSES[c.key],
+    }));
+  const splitRows: SplitRow[] = [
+    {
+      key: "dollars",
+      label: "Dollars",
+      totalLabel: currency(total),
+      segments: segmentsBy((c) => sum(piecesIn(c))),
+      describe: (s) =>
+        `${s.label} ${currency(s.amount)}, ${pctText(s.amount, total)}`,
+      // Marked even when the paragraph doesn't call it out, so its share of
+      // the competitive segment is visible
+      annotation: topCompetitive
+        ? {
+            label: raceName(topCompetitive.raceId),
+            amount: topCompetitive.amount,
+          }
+        : undefined,
+    },
+    {
+      key: "races",
+      label: "Races",
+      totalLabel: `${raceTotal} ${raceTotal === 1 ? "race" : "races"}`,
+      segments: segmentsBy((c) => raceCounts[c]),
+      describe: (s) => `${s.label} ${s.amount}, ${pctText(s.amount, raceTotal)}`,
+    },
+  ];
+  const splitLegend = visibleCategories.map((c) => ({
     key: c.key,
     label: c.barLabel,
-    amount: sum(piecesIn(c.key)),
+    value: `${currency(sum(piecesIn(c.key)))} · ${raceCounts[c.key]} ${
+      raceCounts[c.key] === 1 ? "race" : "races"
+    }`,
     className: SEGMENT_CLASSES[c.key],
   }));
+  // "Safe bets are 61% of races but 18% of dollars"
+  const shareComparison = (c: Category) =>
+    `are ${pctText(raceCounts[c], raceTotal)} of races but ${pctText(
+      sum(piecesIn(c)),
+      total,
+    )} of dollars`;
 
   return (
     <>
@@ -766,20 +845,6 @@ function SectorContent({
               % of the money.
             </p>
           )}
-          <SplitBar
-            segments={splitSegments}
-            total={total}
-            // Marked even when the paragraph doesn't call it out, so its share
-            // of the competitive segment is visible
-            annotation={
-              topCompetitive
-                ? {
-                    label: raceName(topCompetitive.raceId),
-                    amount: topCompetitive.amount,
-                  }
-                : undefined
-            }
-          />
           <div className={sharedStyles.noteCard}>
             <span className={sharedStyles.noteLabel}>Note:</span> general
             elections are classified with the Cook Political Report&rsquo;s
@@ -822,6 +887,30 @@ function SectorContent({
             </span>
           }
         />
+      </section>
+      <section className={styles.moneySplit}>
+        <h2 className={sharedStyles.sectionTitle}>
+          Where the money went
+          <span className={sharedStyles.sectionTitleAmount}>
+            {currency(total)} · {raceTotal} races
+          </span>
+        </h2>
+        {competitive > total / 2 && raceCounts.safe > raceTotal / 2 && (
+          <p className={sharedStyles.subtitle}>
+            Most dollars went to a few battlegrounds. Most races were safe
+            seats.
+          </p>
+        )}
+        <SplitBars rows={splitRows} legend={splitLegend}>
+          {raceCounts.safe > 0 && raceCounts.competitive > 0 && (
+            <p className={styles.splitComparison}>
+              <span className="bold">Safe bets</span>{" "}
+              {shareComparison("safe")};{" "}
+              <span className="bold">competitive races</span>{" "}
+              {shareComparison("competitive")}.
+            </p>
+          )}
+        </SplitBars>
       </section>
       <div className={styles.strategyCards}>
         {strategySectors.map((s) => (

@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import { STATES_BY_ABBR } from "@/app/data/states";
 import { db } from "@/app/lib/db";
 import { Party, RaceType } from "@/app/types/Elections";
+import { getShardDocName } from "@/app/utils/races";
 
 import styles from "../../admin.module.css";
 import { markRaceSummariesStale } from "./invalidatePipeline";
@@ -33,21 +34,6 @@ interface RaceFormData {
   party?: Party;
   date?: string;
   candidates: CandidateFormData[];
-}
-
-function shardIndex(raceId: string): number {
-  const parts = raceId.split("-");
-  if (parts[0] === "H" && parts.length > 1) {
-    const district = parseInt(parts[1], 10);
-    if (!isNaN(district)) {
-      return district % 10;
-    }
-  }
-  return 0;
-}
-
-function shardDocName(state: string, raceId: string): string {
-  return `${state}_${shardIndex(raceId)}`;
 }
 
 export default function RaceDetailsEditor() {
@@ -161,7 +147,7 @@ export default function RaceDetailsEditor() {
 
   const fetchManualRacesForRaceId = async (state: string, raceIdToFetch: string) => {
     try {
-      const docRef = doc(db, "raceDetails", shardDocName(state, raceIdToFetch));
+      const docRef = doc(db, "raceDetails", getShardDocName(state, raceIdToFetch));
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         const existingData = docSnap.data();
@@ -238,7 +224,7 @@ export default function RaceDetailsEditor() {
 
     try {
       // Fetch existing raceDetails for the state (correct shard)
-      const docRef = doc(db, "raceDetails", shardDocName(selectedState, raceId));
+      const docRef = doc(db, "raceDetails", getShardDocName(selectedState, raceId));
       const docSnap = await getDoc(docRef);
       const existingData = docSnap.exists() ? docSnap.data() : {};
 

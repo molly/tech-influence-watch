@@ -69,9 +69,18 @@ type OutsideSpending = {
   ai_support_total?: number;
   crypto_oppose_total?: number;
   ai_oppose_total?: number;
+};
+
+// The rows behind a candidate's OutsideSpending totals. They're kept in the
+// outsideSpending collection rather than on the summary, since they're nearly
+// all of raceDetails' size and most pages only need the totals.
+export type OutsideSpendingRows = {
   support: OutsideSpendingRow[];
   oppose: OutsideSpendingRow[];
 };
+
+// One race's rows, keyed by candidate name as in ElectionGroup.candidates.
+export type RaceOutsideSpendingRows = Record<string, OutsideSpendingRows>;
 
 export type CandidateSummary = {
   common_name: string;

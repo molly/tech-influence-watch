@@ -84,6 +84,11 @@
   border: 1px solid var(--color-neutral-800);
 }
 
+/* No outline: the bar is just the fill */
+.track.unoutlined {
+  border: none;
+}
+
 /* Single-color fill (HorizontalPartyBars) */
 .fill {
   height: 100%;
@@ -171,5 +176,9 @@
   .fill {
     position: relative;
     z-index: 1;
+  }
+
+  .track.unoutlined::after {
+    content: none;
   }
 }

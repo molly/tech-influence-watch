@@ -2,11 +2,7 @@ import fs from "fs";
 import path from "path";
 import { cache } from "react";
 
-import {
-  fetchAllStateElections,
-  fetchConstant,
-  fetchGoogleAds,
-} from "@/app/actions/fetch";
+import { fetchConstant, fetchGoogleAds } from "@/app/actions/fetch";
 import { NETWORKS } from "@/app/data/networks";
 import {
   AdParty,
@@ -16,7 +12,7 @@ import {
 } from "@/app/types/AdAnalysis";
 import { Ad, AdGroup, AdVideo } from "@/app/types/Ads";
 import { CommitteeConstant } from "@/app/types/Committee";
-import { ElectionsByState, Party } from "@/app/types/Elections";
+import { Party } from "@/app/types/Elections";
 
 import {
   getRollups,
@@ -26,7 +22,6 @@ import {
 } from "./adAnalysis";
 import { mergeAdVariants } from "./ads";
 import { isError } from "./errors";
-import { getStateFromRaceId } from "./races";
 
 const DATA_DIR = path.join(process.cwd(), "src/app/data");
 
@@ -124,21 +119,29 @@ function getParty(
   return null;
 }
 
-// The transcript CSV names candidates as the race data does.
-function getCandidateParty(
-  elections: Record<string, ElectionsByState>,
-  raceId: string,
-  name: string | null,
+// The backend's ad_messaging copies each candidate's party from raceDetails
+// into the CSV, so these pages don't have to load every race to look it up.
+const PARTIES = new Set<string>(Object.values(Party));
+
+function parseCandidateParty(
+  row: Record<string, string>,
+  column: "supports_party" | "opposes_party",
 ): Party | null {
-  if (!name) {
+  if (!(column in row)) {
+    throw new Error(
+      `transcripts_enriched.csv has no ${column} column; run the backend's commands.ad_messaging`,
+    );
+  }
+  const party = row[column];
+  if (!party) {
     return null;
   }
-  const state = getStateFromRaceId(raceId);
-  const group = elections[state]?.[raceId.slice(state.length + 1)];
-  const candidate = group?.races
-    .flatMap((race) => race.candidates)
-    .find((c) => c.name === name);
-  return candidate?.party ?? null;
+  if (!PARTIES.has(party)) {
+    throw new Error(
+      `transcripts_enriched.csv: ad ${row.ad_id} has ${column} "${party}"; expected one of ${[...PARTIES].join(", ")}`,
+    );
+  }
+  return party as Party;
 }
 
 function getNetworkName(committee: CommitteeConstant | undefined) {
@@ -260,15 +263,11 @@ function parseSpans(
 }
 
 export const getTaggedAds = cache(async (): Promise<TaggedAd[]> => {
-  const [committeeData, electionsData, videos] = await Promise.all([
+  const [committeeData, videos] = await Promise.all([
     fetchConstant<Record<string, CommitteeConstant>>("committees"),
-    fetchAllStateElections(),
     getAdVideos(),
   ]);
   const committees = committeeData ?? {};
-  const elections = isError(electionsData)
-    ? {}
-    : (electionsData as Record<string, ElectionsByState>);
   const codebook = getCodebook();
   const tags = codebook.map((entry) => entry.tag);
   const stanceTags = codebook
@@ -301,8 +300,8 @@ export const getTaggedAds = cache(async (): Promise<TaggedAd[]> => {
       spans: parseSpans(row, adTags),
       supports: row.supports || null,
       opposes: row.opposes || null,
-      supportsParty: getCandidateParty(elections, row.race, row.supports),
-      opposesParty: getCandidateParty(elections, row.race, row.opposes),
+      supportsParty: parseCandidateParty(row, "supports_party"),
+      opposesParty: parseCandidateParty(row, "opposes_party"),
       stances: parseStances(row, stanceTags),
       network: getNetworkName(committee),
       party: getParty(committee, row),

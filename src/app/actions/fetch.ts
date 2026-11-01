@@ -42,6 +42,7 @@ import {
   ElectionsByState,
   OppositionConstant,
   RaceInsight,
+  RaceOutsideSpendingRows,
 } from "../types/Elections";
 import {
   CommitteeTotalExpenditures,
@@ -64,6 +65,7 @@ import {
 import { MapData } from "../types/MapData";
 import { QPQ } from "../types/Qpq";
 import { Sector } from "../types/Sector";
+import { getShardDocName, getStateFromRaceId } from "../utils/races";
 import {
   getCommitteeIdsForSector,
   getCompanyIdsForSector,
@@ -898,6 +900,39 @@ export const fetchAllStateElections = cache(
     }
   },
 );
+
+// Outside spending rows for each full race id ("CA-H-33"), reading only the
+// outsideSpending shards those races live in. A race with no rows is left out.
+export async function fetchOutsideSpendingRows(
+  raceIds: string[],
+): Promise<Record<string, RaceOutsideSpendingRows> | ErrorType> {
+  const locations = raceIds.map((raceId) => {
+    const state = getStateFromRaceId(raceId);
+    const shortRaceId = raceId.slice(state.length + 1);
+    return { raceId, shortRaceId, shard: getShardDocName(state, shortRaceId) };
+  });
+  try {
+    const shardNames = [...new Set(locations.map((l) => l.shard))];
+    const snapshots = await Promise.all(
+      shardNames.map((name) => getDoc(doc(db, "outsideSpending", name))),
+    );
+    const shards: Record<string, Record<string, RaceOutsideSpendingRows>> = {};
+    snapshots.forEach((snapshot, i) => {
+      shards[shardNames[i]] = snapshot.exists()
+        ? serializeFirestore(snapshot.data())
+        : {};
+    });
+    const rows: Record<string, RaceOutsideSpendingRows> = {};
+    for (const { raceId, shortRaceId, shard } of locations) {
+      if (shortRaceId in shards[shard]) {
+        rows[raceId] = shards[shard][shortRaceId];
+      }
+    }
+    return rows;
+  } catch (e) {
+    return { error: true };
+  }
+}
 
 export const fetchStateElections = cache(
   async (stateAbbr: string): Promise<ElectionsByState | ErrorType> => {

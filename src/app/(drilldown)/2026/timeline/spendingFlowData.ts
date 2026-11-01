@@ -4,6 +4,7 @@ import {
   fetchAllExpenditures,
   fetchAllStateElections,
   fetchConstant,
+  fetchOutsideSpendingRows,
   fetchPipelineLastRun,
 } from "@/app/actions/fetch";
 import districtCentroids from "@/app/data/districtCentroids.json";
@@ -13,6 +14,7 @@ import {
   OppositionConstant,
   OutsideSpendingRow,
   Race,
+  RaceOutsideSpendingRows,
   RaceType,
 } from "@/app/types/Elections";
 import type { Expenditure } from "@/app/types/Expenditures";
@@ -134,6 +136,7 @@ function getOutOfRaceStatus(races: Race[], name: string): string | null {
 // drew tech spending, such as a primary loser targeted by a tech PAC.
 function getRaceCandidates(
   elections: Record<string, ElectionsByState>,
+  outsideRows: RaceOutsideSpendingRows,
   raceId: string,
   techCandidates: Set<string>,
 ): Pick<FlowRace, "candidates" | "outsideTotal" | "generalDate"> {
@@ -143,9 +146,9 @@ function getRaceCandidates(
     return { candidates: [], outsideTotal: [], generalDate: null };
   }
   const outsideTotal = weeklyAmounts(
-    Object.values(group.candidates).flatMap((summary) => [
-      ...(summary.outside_spending?.support ?? []),
-      ...(summary.outside_spending?.oppose ?? []),
+    Object.values(outsideRows).flatMap((rows) => [
+      ...rows.support,
+      ...rows.oppose,
     ]),
   );
   const races = group.races.filter((race) => !race.canceled);
@@ -171,6 +174,7 @@ function getRaceCandidates(
       }
       seen.add(c.name);
       const summary = group.candidates[c.name];
+      const rows = outsideRows[c.name];
       candidates.push({
         name: c.name,
         party: c.party,
@@ -183,10 +187,8 @@ function getRaceCandidates(
           date: report.date,
           receipts: report.receipts,
         })),
-        outsideFor: weeklyAmounts(summary?.outside_spending?.support ?? []),
-        outsideAgainst: weeklyAmounts(
-          summary?.outside_spending?.oppose ?? [],
-        ),
+        outsideFor: weeklyAmounts(rows?.support ?? []),
+        outsideAgainst: weeklyAmounts(rows?.oppose ?? []),
       });
     }
   }
@@ -267,6 +269,16 @@ export async function fetchSpendingFlowData(
     names.add(e.candidate);
     techCandidates.set(e.raceId, names);
   }
+  const outsideRowsData = await fetchOutsideSpendingRows([
+    ...techCandidates.keys(),
+  ]);
+  if (isError(outsideRowsData)) {
+    return outsideRowsData as ErrorType;
+  }
+  const outsideRows = outsideRowsData as Record<
+    string,
+    RaceOutsideSpendingRows
+  >;
   for (const [raceId, names] of techCandidates) {
     const [state, office] = raceId.split("-");
     const special = raceId.endsWith("-special");
@@ -280,7 +292,12 @@ export async function fetchSpendingFlowData(
         office === "H" && CENTROIDS[districtKey]
           ? [CENTROIDS[districtKey][0], CENTROIDS[districtKey][1]]
           : null,
-      ...getRaceCandidates(elections, raceId, names),
+      ...getRaceCandidates(
+        elections,
+        outsideRows[raceId] ?? {},
+        raceId,
+        names,
+      ),
     };
   }
 

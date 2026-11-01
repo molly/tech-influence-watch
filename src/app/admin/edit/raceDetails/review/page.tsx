@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { STATES_BY_ABBR } from "@/app/data/states";
 import { db } from "@/app/lib/db";
 import { ElectionsByState, Race } from "@/app/types/Elections";
+import { getShardDocName } from "@/app/utils/races";
 
 import styles from "../../../admin.module.css";
 import { markRaceSummariesStale } from "../invalidatePipeline";
@@ -22,21 +23,6 @@ interface RaceConflict {
 interface ConflictGroup {
   state: string;
   raceId: string;
-}
-
-function shardIndex(raceId: string): number {
-  const parts = raceId.split("-");
-  if (parts[0] === "H" && parts.length > 1) {
-    const district = parseInt(parts[1], 10);
-    if (!isNaN(district)) {
-      return district % 10;
-    }
-  }
-  return 0;
-}
-
-function shardDocName(state: string, raceId: string): string {
-  return `${state}_${shardIndex(raceId)}`;
 }
 
 async function fetchConflicts(): Promise<RaceConflict[]> {
@@ -159,7 +145,7 @@ export default function RaceReviewPage() {
 
     setSaveState("pending");
     try {
-      const docRef = doc(db, "raceDetails", shardDocName(selectedConflict.state, selectedConflict.raceId));
+      const docRef = doc(db, "raceDetails", getShardDocName(selectedConflict.state, selectedConflict.raceId));
       const docSnap = await getDoc(docRef);
       const existingData = docSnap.exists() ? docSnap.data() : {};
       const raceGroup = existingData[selectedConflict.raceId] || {};
@@ -223,7 +209,7 @@ export default function RaceReviewPage() {
           break;
       }
 
-      const docRef = doc(db, "raceDetails", shardDocName(conflict.state, conflict.raceId));
+      const docRef = doc(db, "raceDetails", getShardDocName(conflict.state, conflict.raceId));
       const updates: Record<string, unknown> = {
         [`${conflict.raceId}.races`]: newRaces,
         [`${conflict.raceId}.lastReviewed`]: Date.now(),

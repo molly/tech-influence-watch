@@ -21,10 +21,14 @@ export function HorizontalBars({
   items,
   max: maxProp,
   showPct,
+  outlined = true,
 }: {
   items: HorizontalBarItem[];
   max?: number;
   showPct?: boolean;
+  // Outline the full track, so each bar reads as a share of the max. Turn off
+  // when the bars only compare amounts with each other.
+  outlined?: boolean;
 }) {
   const max = maxProp ?? Math.max(...items.map((i) => i.value), 0);
   return (
@@ -48,7 +52,7 @@ export function HorizontalBars({
               <div className={styles.subtitle}>{item.subtitle}</div>
             )}
             <div
-              className={styles.track}
+              className={`${styles.track}${outlined ? "" : ` ${styles.unoutlined}`}`}
               role="img"
               aria-label={
                 item.ariaLabel ?? `${item.label}: ${item.displayValue}`
