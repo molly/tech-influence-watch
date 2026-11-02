@@ -1,0 +1,182 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem 1rem;
+}
+
+/* Fixed width so screenshots come out the same size every time */
+.graphic {
+  box-sizing: border-box;
+  min-width: 0;
+  width: 100%;
+  max-width: 48rem;
+  margin: 0;
+  padding: 1.5rem;
+  background: var(--background);
+  border: 1px solid var(--card-border);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 2.25rem;
+  font-weight: 800;
+  line-height: 1;
+  margin: 0;
+}
+
+.subtitle {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--secondary-text);
+  margin: 0.5rem 0 1rem;
+}
+
+/* The four columns don't fit on a phone, so scroll them inside the frame */
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.table {
+  margin-bottom: 0.75rem;
+  min-width: 36rem;
+  border-top: 1px solid var(--divider-color);
+
+  th {
+    text-transform: uppercase;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  td {
+    vertical-align: top;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+}
+
+.raceCell {
+  font-weight: 600;
+}
+
+.moneyColumn {
+  width: 30%;
+}
+
+.source {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.78rem;
+  color: var(--secondary-text);
+  line-height: 1.5;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.25rem;
+  margin-bottom: 1rem;
+  font-size: 0.8rem;
+  color: var(--secondary-text);
+}
+
+.panels {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+  padding-top: 1rem;
+  margin-bottom: 1.25rem;
+  border-top: 1px solid var(--divider-color);
+}
+
+.panelTitle {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1;
+  margin: 0;
+}
+
+.panelSubtitle {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0.25rem 0 1rem;
+}
+
+@media (max-width: 36rem) {
+  .panels {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.strip {
+  border-top: 1px solid var(--divider-color);
+  padding-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.stripSvg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.stripGrid {
+  stroke: var(--card-border);
+  stroke-width: 1;
+}
+
+/* Filled by the global party classes */
+.stripDot {
+  stroke: var(--background);
+  stroke-width: 1;
+}
+
+.stripMedian {
+  stroke: var(--main-text);
+  stroke-width: 2;
+}
+
+/* A halo in the background color keeps labels readable over gridlines */
+.stripLabel {
+  font-size: 0.8rem;
+  fill: var(--main-text);
+  paint-order: stroke;
+  stroke: var(--background);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+
+.stripLeader {
+  stroke: var(--main-text);
+  stroke-width: 1;
+}
+
+/* The chart scales down with the frame, so enlarge the labels to keep them
+   readable on phones */
+@media (max-width: 36rem) {
+  .stripLabel {
+    font-size: 1.2rem;
+  }
+}
+
+/* Zero-width anchors spaced evenly across the plot, with each label centered
+   on its anchor */
+.stripAxis {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0.375rem 1.25rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.stripTick {
+  width: 0;
+  display: flex;
+  justify-content: center;
+  white-space: nowrap;
+}

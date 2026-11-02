@@ -9,10 +9,15 @@ import {
   CommitteeDetails,
 } from "@/app/types/Committee";
 import {
+  Contributions,
   RecentContribution,
   RecipientDetails,
 } from "@/app/types/Contributions";
 import { isSuperOrHybridPac } from "@/app/utils/committees";
+import {
+  getDonorCommitteeIds,
+  isCommitteeDonorWithoutId,
+} from "@/app/utils/donorDescriptions";
 
 import styles from "../../admin.module.css";
 
@@ -129,6 +134,12 @@ export default function ConstantsEditor() {
   const [incompleteCommittees, setIncompleteCommittees] = useState<
     Array<[string, string]>
   >([]);
+  // Committee donors with no FEC committee ID, described by name in
+  // constants/donorDescriptions.
+  const [donorDescriptions, setDonorDescriptions] = useState<
+    Record<string, string>
+  >({});
+  const [donorNames, setDonorNames] = useState<string[]>([]);
 
   useEffect(() => {
     (async () => {
@@ -141,6 +152,8 @@ export default function ConstantsEditor() {
           superPacsSnap,
           recentSnap,
           committeeDocs,
+          donorDescriptionsSnap,
+          contributionDocs,
           ...recipientShards
         ] = await Promise.all([
           getDoc(doc(db, "constants", "allCommittees")),
@@ -149,6 +162,8 @@ export default function ConstantsEditor() {
           getDoc(doc(db, "allCommittees", "superPacs")),
           getDoc(doc(db, "contributions", "recent")),
           getDocs(collection(db, "committees")),
+          getDoc(doc(db, "constants", "donorDescriptions")),
+          getDocs(collection(db, "contributions")),
           ...shardIds.map((d) =>
             getDoc(doc(db, "allRecipients", `recipients_${d}`)),
           ),
@@ -256,6 +271,38 @@ export default function ConstantsEditor() {
           }
         }
 
+        // Committee donors on committee pages. Those with an FEC committee ID
+        // are described in allCommittees like any other committee; those
+        // without one are described by name.
+        const savedDonorDescriptions: Record<string, string> =
+          donorDescriptionsSnap.exists()
+            ? (donorDescriptionsSnap.data() as Record<string, string>)
+            : {};
+        const donorNameSet = new Set(Object.keys(savedDonorDescriptions));
+        for (const contributionDoc of contributionDocs.docs) {
+          const groups = (contributionDoc.data() as Contributions).groups ?? [];
+          for (const group of groups) {
+            if (!group.company || group.company === "OMITTED") {
+              continue;
+            }
+            for (const id of getDonorCommitteeIds(group.contributions)) {
+              addName(id, group.company);
+            }
+            if (isCommitteeDonorWithoutId(group.contributions)) {
+              donorNameSet.add(group.company.toUpperCase());
+            }
+          }
+        }
+        setDonorDescriptions(savedDonorDescriptions);
+        // Donors missing a description first, so they're easy to find.
+        setDonorNames(
+          [...donorNameSet].sort(
+            (a, b) =>
+              Number(!!savedDonorDescriptions[a]) -
+                Number(!!savedDonorDescriptions[b]) || a.localeCompare(b),
+          ),
+        );
+
         // Build editable entries for every committee with existing metadata
         // plus every committee named anywhere, so each can be filled in.
         const entryIds = new Set([
@@ -340,9 +387,15 @@ export default function ConstantsEditor() {
           affiliationData[entry.committeeId] = aff;
         }
       }
+      const donorDescriptionData = Object.fromEntries(
+        Object.entries(donorDescriptions)
+          .map(([name, description]) => [name, description.trim()])
+          .filter(([, description]) => description),
+      );
       await Promise.all([
         setDoc(doc(db, "constants", "allCommittees"), committeeData),
         setDoc(doc(db, "constants", "committeeAffiliations"), affiliationData),
+        setDoc(doc(db, "constants", "donorDescriptions"), donorDescriptionData),
       ]);
       setSaveState("success");
     } catch {
@@ -487,6 +540,50 @@ export default function ConstantsEditor() {
                   </tr>
                 );
               })}
+            </tbody>
+          </table>
+        </section>
+      )}
+      {donorNames.length > 0 && (
+        <section className={styles.editorCard}>
+          <h2>
+            Committee donors without an FEC ID (
+            {donorNames.filter((name) => !donorDescriptions[name]).length}{" "}
+            missing descriptions)
+          </h2>
+          <p className={styles.marginBottom05}>
+            These committees donated to a tracked committee but have no FEC
+            committee ID, usually because they&apos;re state committees.
+            Descriptions are matched by name and saved to
+            constants/donorDescriptions.
+          </p>
+          <table className={styles.constantsTable}>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {donorNames.map((name) => (
+                <tr key={name} className={styles.verticalAlignTop}>
+                  <td>{name}</td>
+                  <td>
+                    <input
+                      type="text"
+                      className={`${styles.editorInput} ${styles.minWidth250}`}
+                      value={donorDescriptions[name] ?? ""}
+                      onChange={(e) =>
+                        setDonorDescriptions((prev) => ({
+                          ...prev,
+                          [name]: e.target.value,
+                        }))
+                      }
+                      placeholder="Description (optional)"
+                    />
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </section>

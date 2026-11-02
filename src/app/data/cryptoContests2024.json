@@ -1,0 +1,452 @@
+[
+  {
+    "race_id": "OH-S",
+    "type": "general",
+    "party": "R",
+    "amount": 40134927
+  },
+  {
+    "race_id": "MI-S",
+    "type": "general",
+    "party": "D",
+    "amount": 10046680
+  },
+  {
+    "race_id": "CA-S",
+    "type": "primary",
+    "party": "D",
+    "amount": 10044813
+  },
+  {
+    "race_id": "AZ-S",
+    "type": "general",
+    "party": "D",
+    "amount": 10039655
+  },
+  {
+    "race_id": "VA-H-10",
+    "type": "primary",
+    "party": "D",
+    "amount": 3954591
+  },
+  {
+    "race_id": "WV-S",
+    "type": "primary",
+    "party": "R",
+    "amount": 3025544
+  },
+  {
+    "race_id": "IN-S",
+    "type": "primary",
+    "party": "R",
+    "amount": 3009467
+  },
+  {
+    "race_id": "CA-H-45",
+    "type": "general",
+    "party": "R",
+    "amount": 2791716
+  },
+  {
+    "race_id": "NC-H-01",
+    "type": "primary",
+    "party": "D",
+    "amount": 2280605
+  },
+  {
+    "race_id": "CO-H-08",
+    "type": "general",
+    "party": "D",
+    "amount": 2195414
+  },
+  {
+    "race_id": "NY-H-16",
+    "type": "primary",
+    "party": "D",
+    "amount": 2078023
+  },
+  {
+    "race_id": "NY-H-18",
+    "type": "primary",
+    "party": "D",
+    "amount": 1987660
+  },
+  {
+    "race_id": "UT-S",
+    "type": "primary",
+    "party": "R",
+    "amount": 1969022
+  },
+  {
+    "race_id": "AK-H-01",
+    "type": "general",
+    "party": "D",
+    "amount": 1927706
+  },
+  {
+    "race_id": "SC-H-04",
+    "type": "primary",
+    "party": "R",
+    "amount": 1859957
+  },
+  {
+    "race_id": "CA-H-40",
+    "type": "general",
+    "party": "R",
+    "amount": 1813799
+  },
+  {
+    "race_id": "NV-H-04",
+    "type": "general",
+    "party": "D",
+    "amount": 1725542
+  },
+  {
+    "race_id": "AL-H-02",
+    "type": "primary",
+    "party": "D",
+    "amount": 1723976
+  },
+  {
+    "race_id": "AZ-H-06",
+    "type": "general",
+    "party": "R",
+    "amount": 1625297
+  },
+  {
+    "race_id": "OR-H-05",
+    "type": "general",
+    "party": "R",
+    "amount": 1514369
+  },
+  {
+    "race_id": "WA-H-06",
+    "type": "primary",
+    "party": "D",
+    "amount": 1491153
+  },
+  {
+    "race_id": "MO-H-01",
+    "type": "primary",
+    "party": "D",
+    "amount": 1406523
+  },
+  {
+    "race_id": "AZ-H-03",
+    "type": "primary",
+    "party": "D",
+    "amount": 1367647
+  },
+  {
+    "race_id": "MA-S",
+    "type": "primary",
+    "party": "R",
+    "amount": 1334293
+  },
+  {
+    "race_id": "CA-H-22",
+    "type": "general",
+    "party": "R",
+    "amount": 1306862
+  },
+  {
+    "race_id": "CA-H-27",
+    "type": "general",
+    "party": "R",
+    "amount": 1012931
+  },
+  {
+    "race_id": "MI-H-13",
+    "type": "primary",
+    "party": "D",
+    "amount": 1010142
+  },
+  {
+    "race_id": "MN-H-02",
+    "type": "general",
+    "party": "D",
+    "amount": 973501
+  },
+  {
+    "race_id": "TX-H-32",
+    "type": "primary",
+    "party": "D",
+    "amount": 961800
+  },
+  {
+    "race_id": "IA-H-03",
+    "type": "general",
+    "party": "R",
+    "amount": 927418
+  },
+  {
+    "race_id": "AL-H-02",
+    "type": "primary_runoff",
+    "party": "D",
+    "amount": 908133
+  },
+  {
+    "race_id": "NY-H-03",
+    "type": "primary",
+    "party": "D",
+    "amount": 902176
+  },
+  {
+    "race_id": "VA-H-07",
+    "type": "primary",
+    "party": "D",
+    "amount": 889852
+  },
+  {
+    "race_id": "GA-H-03",
+    "type": "primary",
+    "party": "R",
+    "amount": 857850
+  },
+  {
+    "race_id": "IL-H-17",
+    "type": "general",
+    "party": "D",
+    "amount": 817169
+  },
+  {
+    "race_id": "MA-S",
+    "type": "general",
+    "party": "R",
+    "amount": 776977
+  },
+  {
+    "race_id": "WI-H-01",
+    "type": "general",
+    "party": "R",
+    "amount": 764206
+  },
+  {
+    "race_id": "WV-H-02",
+    "type": "primary",
+    "party": "R",
+    "amount": 726377
+  },
+  {
+    "race_id": "TX-H-12",
+    "type": "primary_runoff",
+    "party": "R",
+    "amount": 725091
+  },
+  {
+    "race_id": "AZ-H-08",
+    "type": "primary",
+    "party": "R",
+    "amount": 582915
+  },
+  {
+    "race_id": "IL-H-13",
+    "type": "general",
+    "party": "D",
+    "amount": 582374
+  },
+  {
+    "race_id": "NC-H-08",
+    "type": "primary",
+    "party": "R",
+    "amount": 530840
+  },
+  {
+    "race_id": "CA-H-34",
+    "type": "general",
+    "party": "D",
+    "amount": 511329
+  },
+  {
+    "race_id": "MT-H-02",
+    "type": "primary",
+    "party": "R",
+    "amount": 509959
+  },
+  {
+    "race_id": "NC-H-14",
+    "type": "primary",
+    "party": "R",
+    "amount": 506553
+  },
+  {
+    "race_id": "IN-H-08",
+    "type": "primary",
+    "party": "R",
+    "amount": 504020
+  },
+  {
+    "race_id": "GA-H-03",
+    "type": "primary_runoff",
+    "party": "R",
+    "amount": 450562
+  },
+  {
+    "race_id": "AZ-H-01",
+    "type": "primary",
+    "party": "D",
+    "amount": 415300
+  },
+  {
+    "race_id": "MO-H-03",
+    "type": "primary",
+    "party": "R",
+    "amount": 257694
+  },
+  {
+    "race_id": "NJ-H-05",
+    "type": "primary",
+    "party": "D",
+    "amount": 242791
+  },
+  {
+    "race_id": "NJ-H-08",
+    "type": "primary",
+    "party": "D",
+    "amount": 215063
+  },
+  {
+    "race_id": "OK-H-04",
+    "type": "primary",
+    "party": "R",
+    "amount": 212498
+  },
+  {
+    "race_id": "MD-H-02",
+    "type": "primary",
+    "party": "D",
+    "amount": 209387
+  },
+  {
+    "race_id": "NY-H-15",
+    "type": "primary",
+    "party": "D",
+    "amount": 173231
+  },
+  {
+    "race_id": "NY-H-10",
+    "type": "primary",
+    "party": "D",
+    "amount": 150853
+  },
+  {
+    "race_id": "NE-H-01",
+    "type": "primary",
+    "party": "R",
+    "amount": 126740
+  },
+  {
+    "race_id": "NC-H-10",
+    "type": "primary",
+    "party": "R",
+    "amount": 126626
+  },
+  {
+    "race_id": "SD-H-01",
+    "type": "primary",
+    "party": "R",
+    "amount": 124736
+  },
+  {
+    "race_id": "MN-H-06",
+    "type": "primary",
+    "party": "R",
+    "amount": 118034
+  },
+  {
+    "race_id": "NC-H-13",
+    "type": "primary",
+    "party": "D",
+    "amount": 116161
+  },
+  {
+    "race_id": "DE-H-01",
+    "type": "primary",
+    "party": "D",
+    "amount": 112913
+  },
+  {
+    "race_id": "NV-H-04",
+    "type": "primary",
+    "party": "D",
+    "amount": 110654
+  },
+  {
+    "race_id": "CA-H-40",
+    "type": "primary",
+    "party": "R",
+    "amount": 110414
+  },
+  {
+    "race_id": "CA-H-17",
+    "type": "general",
+    "party": "D",
+    "amount": 108545
+  },
+  {
+    "race_id": "MI-H-04",
+    "type": "general",
+    "party": "R",
+    "amount": 107352
+  },
+  {
+    "race_id": "VA-H-10",
+    "type": "general",
+    "party": "D",
+    "amount": 106947
+  },
+  {
+    "race_id": "AR-H-02",
+    "type": "general",
+    "party": "R",
+    "amount": 106888
+  },
+  {
+    "race_id": "KY-H-06",
+    "type": "primary",
+    "party": "R",
+    "amount": 106708
+  },
+  {
+    "race_id": "CO-H-07",
+    "type": "primary",
+    "party": "D",
+    "amount": 88256
+  },
+  {
+    "race_id": "CO-H-08",
+    "type": "primary",
+    "party": "D",
+    "amount": 75515
+  },
+  {
+    "race_id": "IA-H-03",
+    "type": "primary",
+    "party": "R",
+    "amount": 71866
+  },
+  {
+    "race_id": "NY-H-26",
+    "type": "special",
+    "party": "D",
+    "amount": 68985
+  },
+  {
+    "race_id": "NY-H-05",
+    "type": "primary",
+    "party": "D",
+    "amount": 46160
+  },
+  {
+    "race_id": "PA-S",
+    "type": "general",
+    "party": "R",
+    "amount": 34969
+  },
+  {
+    "race_id": "TX-S",
+    "type": "general",
+    "party": "R",
+    "amount": 29969
+  }
+]

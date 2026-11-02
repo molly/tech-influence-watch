@@ -160,6 +160,7 @@ export function mergeAdVariants(ads: Ad[]): Ad[] {
           .sort()
           .reverse()[0],
         variantCount: group.length,
+        variantIds: group.map((variant) => variant.ad_id),
       },
     ];
   });

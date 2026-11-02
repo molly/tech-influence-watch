@@ -20,6 +20,7 @@ import TechSectorBreakdown from "./components/home/TechSectorBreakdown";
 import TotalCompanySpending from "./components/home/TotalCompanySpending";
 import TotalExpenditures from "./components/home/TotalExpenditures";
 import TotalRaised from "./components/home/TotalRaised";
+import WhatTechMoneyBought from "./components/home/WhatTechMoneyBought";
 import InfluencedRaces from "./components/InfluencedRaces";
 import { MoneyCardSkeleton } from "./components/MoneyCard";
 import SuperPACsByReceipts from "./components/PACsByReceipts";
@@ -56,6 +57,7 @@ export default async function HomeView({ sector }: { sector: Sector }) {
             </Link>
           </span>
         </span>
+        {sector === "all" && <WhatTechMoneyBought />}
         <div className={styles.columns}>
           <div className={styles.mainColumn}>
             <div className={styles.order1}>

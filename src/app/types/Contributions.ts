@@ -24,6 +24,7 @@ export type SingleContribution = {
   | "contributor_name"
   | "contributor_occupation"
   | "contributor_employer"
+  | "contributor_id"
   | "contribution_receipt_amount"
   | "contribution_receipt_date"
   | "entity_type"
@@ -54,6 +55,7 @@ export type RollupContribution = {
   | "contributor_name"
   | "contributor_occupation"
   | "contributor_employer"
+  | "contributor_id"
   | "entity_type"
 >;
 

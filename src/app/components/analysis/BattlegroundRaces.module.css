@@ -79,11 +79,24 @@
   margin: 0;
 }
 
-/* Bracket over the part of the bar that one contest accounts for. Pulled
-   toward its bar, against the grid's row gap. */
+/* Bracket over the part of the bar that one contest accounts for */
 .splitAnnotationRow {
   display: flex;
+}
+
+/* Pulled toward its bar, against the grid's row gap */
+.splitAnnotationAbove {
   margin-bottom: -0.75rem;
+}
+
+/* Only on narrow screens, where it replaces the one above */
+.splitAnnotationBelow {
+  display: none;
+  margin-top: -0.5rem;
+}
+
+.splitAnnotationBelow .splitAnnotationLabel {
+  margin: 0.125rem 0 0;
 }
 
 /* Zero basis so the spans split by amount alone, not the label's width */
@@ -151,9 +164,18 @@
     margin-top: 2rem;
   }
 
-  /* Labels stack above their bars */
+  /* Labels stack above their bars, and the bracket moves under its bar */
   .splitBlock {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .splitSpacer,
+  .splitAnnotationAbove {
+    display: none;
+  }
+
+  .splitAnnotationBelow {
+    display: flex;
   }
 
   .splitLabel {
@@ -176,4 +198,15 @@
   .segUnclassified {
     background-color: var(--color-neutral-700);
   }
+}
+
+.footnoteSection {
+  margin-top: 2rem;
+  font-size: 0.9rem;
+  color: var(--secondary-text);
+}
+
+.footnote {
+  font-family: var(--font-serif);
+  font-style: italic;
 }

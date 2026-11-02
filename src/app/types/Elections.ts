@@ -1,4 +1,4 @@
-import { Candidate, ScheduleE } from "./FECTypes";
+import { Candidate } from "./FECTypes";
 import { BESector } from "./Sector";
 
 export enum Party {
@@ -42,25 +42,22 @@ export enum RaceType {
   Special = "special",
 }
 
-// One independent expenditure for or against a candidate, as stored by the
-// backend's outside_spending.py (SCHEDULE_E_FIELDS).
-export type OutsideSpendingRow = Pick<
-  ScheduleE,
-  | "expenditure_amount"
-  | "expenditure_date"
-  | "dissemination_date"
-  | "expenditure_description"
-  | "support_oppose_indicator"
-  | "candidate_id"
-  | "category_code"
-  | "category_code_full"
-  | "committee_id"
-  | "pdf_url"
-  | "transaction_id"
-> & {
-  subrace?: string;
-  source?: "electioneering";
-};
+// A candidate's outside spending totaled by date and subrace, from the
+// backend's outside_spending.sum_by_date. Kept in the outsideSpendingByDate
+// collection rather than on the summary, so pages that read every race don't
+// load it.
+export type OutsideSpendingByDate = {
+  date: string;
+  subrace: string | null;
+  amount: number;
+}[];
+
+// One race's totals by date, keyed by candidate name as in
+// ElectionGroup.candidates.
+export type RaceOutsideSpendingByDate = Record<
+  string,
+  { support: OutsideSpendingByDate; oppose: OutsideSpendingByDate }
+>;
 
 type OutsideSpending = {
   support_total: number;
@@ -70,17 +67,6 @@ type OutsideSpending = {
   crypto_oppose_total?: number;
   ai_oppose_total?: number;
 };
-
-// The rows behind a candidate's OutsideSpending totals. They're kept in the
-// outsideSpending collection rather than on the summary, since they're nearly
-// all of raceDetails' size and most pages only need the totals.
-export type OutsideSpendingRows = {
-  support: OutsideSpendingRow[];
-  oppose: OutsideSpendingRow[];
-};
-
-// One race's rows, keyed by candidate name as in ElectionGroup.candidates.
-export type RaceOutsideSpendingRows = Record<string, OutsideSpendingRows>;
 
 export type CandidateSummary = {
   common_name: string;

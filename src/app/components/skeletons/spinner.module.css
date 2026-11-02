@@ -1,0 +1,33 @@
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ring {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 0.25rem solid var(--card-border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.label {
+  color: var(--secondary-text);
+  font-size: 0.9rem;
+}
+
+/* The label still says it's loading, so the ring can sit still. */
+@media (prefers-reduced-motion: reduce) {
+  .ring {
+    animation: none;
+  }
+}

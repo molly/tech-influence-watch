@@ -256,7 +256,7 @@ export const humanizeActiveRaces = (raceIds: string[]): string => {
   return clauses.join(" and ");
 };
 
-// The raceDetails and outsideSpending document holding a race, matching the
+// The raceDetails document holding a race, matching the
 // backend's race_utils._shard_doc_name: House races shard by the district's
 // last digit, everything else goes to shard 0. raceId is the short form
 // ("H-07", "S-special").

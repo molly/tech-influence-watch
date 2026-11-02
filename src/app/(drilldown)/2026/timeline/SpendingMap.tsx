@@ -91,7 +91,7 @@ export default function SpendingMap({
   selectedId,
   onSelect,
   pings,
-  label,
+  throughDate,
   techLabel,
 }: {
   items: MapItem[];
@@ -99,7 +99,7 @@ export default function SpendingMap({
   selectedId: string | null;
   onSelect: (raceId: string) => void;
   pings: PingBatch[];
-  label: string;
+  throughDate: string;
   techLabel: string;
 }) {
   const { states, mesh } = useStateShapes();
@@ -216,7 +216,7 @@ export default function SpendingMap({
         viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
         className={styles.mapSvg}
         role="group"
-        aria-label={`Map of races with ${techLabel} spending, ${label}`}
+        aria-label={`Map of races with ${techLabel} spending through ${throughDate}`}
         onClick={selectNearest}
       >
         <g>
@@ -296,7 +296,7 @@ export default function SpendingMap({
           <div className={styles.mapTooltipTitle}>{getRaceLabel(hovered.race)}</div>
           <div className={styles.mapTooltipSub}>
             U.S. {hovered.race.office === "S" ? "Senate" : "House"} ·{" "}
-            {formatCompact(Math.round(hovered.totals.total))} in {label}
+            {formatCompact(Math.round(hovered.totals.total))} through {throughDate}
           </div>
           {DIRECTIONS.map(({ key, phrase }) => (
             <div key={key} className={styles.mapTooltipRow}>

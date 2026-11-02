@@ -10,8 +10,15 @@ import {
 import styles from "@/app/components/chloroplethMap.module.css";
 
 import Legend from "../Legend";
+import Spinner from "./Spinner";
 
-export default function USMapSkeleton() {
+export default function USMapSkeleton({
+  showLegend = true,
+  showSpinner = false,
+}: {
+  showLegend?: boolean;
+  showSpinner?: boolean;
+}) {
   const us: Topology<
     Objects<GeoJsonProperties>
   > = require("@/app/data/counties-albers-10m.json");
@@ -31,7 +38,9 @@ export default function USMapSkeleton() {
         viewBox="0 0 1000 620"
         strokeOpacity={0.2}
       >
-        <Legend fillClassNames={getFillClassNames(domain)} domain={domain} />
+        {showLegend && (
+          <Legend fillClassNames={getFillClassNames(domain)} domain={domain} />
+        )}
         <g>
           {data.map((d) => {
             return (
@@ -44,6 +53,11 @@ export default function USMapSkeleton() {
           })}
         </g>
       </svg>
+      {showSpinner && (
+        <div className={styles.skeletonOverlay}>
+          <Spinner />
+        </div>
+      )}
     </div>
   );
 }

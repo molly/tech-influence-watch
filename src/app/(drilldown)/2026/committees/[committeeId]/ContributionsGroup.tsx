@@ -1,8 +1,8 @@
-import { useMemo } from "react";
-
+import { fetchConstant } from "@/app/actions/fetch";
 import Claimed from "@/app/components/individualOrCompany/Claimed";
 import MaybeLink from "@/app/components/MaybeLink";
 import { ContributionsGroup as ContributionsGroupType } from "@/app/types/Contributions";
+import { getDonorDescription } from "@/app/utils/donorDescriptions";
 import { getDonorDetails, IndividualDonorType } from "@/app/utils/donorDetails";
 import { titlecaseCompany } from "@/app/utils/titlecase";
 import { formatCurrency } from "@/app/utils/utils";
@@ -10,24 +10,17 @@ import { formatCurrency } from "@/app/utils/utils";
 import Contribution from "./Contribution";
 import styles from "./page.module.css";
 
-export default function ContributionsGroup({
+export default async function ContributionsGroup({
   donorGroup,
 }: {
   donorGroup: ContributionsGroupType;
 }) {
-  const isIndividual = useMemo(
-    () =>
-      donorGroup.contributions.every(
-        (c) =>
-          c.contributor_last_name !== "" &&
-          c.contributor_name === donorGroup.company,
-      ),
-    [donorGroup.contributions, donorGroup.company],
+  const isIndividual = donorGroup.contributions.every(
+    (c) =>
+      c.contributor_last_name !== "" &&
+      c.contributor_name === donorGroup.company,
   );
-  const isClaimed = useMemo(
-    () => donorGroup.contributions.every((c) => c.claimed),
-    [donorGroup.contributions],
-  );
+  const isClaimed = donorGroup.contributions.every((c) => c.claimed);
 
   let name: string = titlecaseCompany(donorGroup.company || "");
   if (isIndividual) {
@@ -56,6 +49,17 @@ export default function ContributionsGroup({
     return <Contribution contribution={donor} groupName={name} />;
   }
 
+  const [allCommittees, donorDescriptions] = await Promise.all([
+    fetchConstant<Record<string, string>>("allCommittees"),
+    fetchConstant<Record<string, string>>("donorDescriptions"),
+  ]);
+  const donorDescription = getDonorDescription(
+    donorGroup.contributions,
+    donorGroup.company,
+    allCommittees ?? {},
+    donorDescriptions ?? {},
+  );
+
   return (
     <div className={styles.donorRow}>
       <div className={styles.donorSummary}>
@@ -67,6 +71,9 @@ export default function ContributionsGroup({
           {formatCurrency(donorGroup.total)}
         </span>
       </div>
+      {donorDescription && (
+        <div className="secondary smaller">{donorDescription}</div>
+      )}
       <div className={styles.contributionsContainer}>
         {donorGroup.contributions.map((donor, ind) => (
           <Contribution

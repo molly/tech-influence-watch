@@ -72,9 +72,12 @@ function Embed({ url }: { url: string }) {
 export default function GoogleAd({
   ad,
   committees,
+  libraryHref,
 }: {
   ad: GoogleAdType;
   committees: Record<string, CommitteeConstant>;
+  // Set when the ad has a reviewed entry in our ad library.
+  libraryHref?: string;
 }) {
   const name = ad.fec_id in committees ? committees[ad.fec_id].name : ad.fec_id;
 
@@ -170,6 +173,12 @@ export default function GoogleAd({
         </div>
       </div>
       <div className={styles.moreDetails}>
+        {libraryHref && (
+          <>
+            <Link href={libraryHref}>Transcript and tags in our ad library</Link>{" "}
+            &middot;{" "}
+          </>
+        )}
         <a href={ad.ad_url}>
           More details in Google&rsquo;s Ad Transparency Center
         </a>

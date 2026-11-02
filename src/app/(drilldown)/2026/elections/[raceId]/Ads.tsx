@@ -1,9 +1,11 @@
 import { fetchAdsByRace, fetchConstant } from "@/app/actions/fetch";
 import ErrorText from "@/app/components/ErrorText";
 import sharedStyles from "@/app/shared.module.css";
-import { Ad } from "@/app/types/Ads";
+import { Ad, GoogleAd as GoogleAdType } from "@/app/types/Ads";
 import { CommitteeConstant } from "@/app/types/Committee";
 import { Sector } from "@/app/types/Sector";
+import { adLibraryHref, adMatchesSector } from "@/app/utils/adAnalysis";
+import { getTaggedAds } from "@/app/utils/adAnalysisData";
 import { isError } from "@/app/utils/errors";
 import { getCommitteeIdsForSector, humanizeSector } from "@/app/utils/sector";
 
@@ -18,9 +20,10 @@ export default async function Ads({
   raceId: string;
   sector: Sector;
 }) {
-  const [adsData, committeeConstantData] = await Promise.all([
+  const [adsData, committeeConstantData, taggedAds] = await Promise.all([
     fetchAdsByRace(raceId),
     fetchConstant("committees"),
+    getTaggedAds(),
   ]);
 
   if (isError(adsData)) {
@@ -56,11 +59,32 @@ export default async function Ads({
     (ad) => ad.type === "google" && ad.variantCount,
   );
 
+  // Only reviewed ads are in the library, and a merged group's entry is
+  // keyed by whichever cut is longest, so check every id in the group.
+  const libraryIds = new Set(
+    taggedAds
+      .filter((tagged) => adMatchesSector(tagged.sector, sector))
+      .map((tagged) => tagged.id),
+  );
+  const getLibraryHref = (ad: GoogleAdType) => {
+    const id = (ad.variantIds ?? [ad.ad_id]).find((variantId) =>
+      libraryIds.has(variantId),
+    );
+    return id ? adLibraryHref(sector, { id }) : undefined;
+  };
+
   return (
     <>
       {ads.map((ad) => {
         if (ad.type === "google") {
-          return <GoogleAd ad={ad} committees={committees} key={ad.ad_id} />;
+          return (
+            <GoogleAd
+              ad={ad}
+              committees={committees}
+              libraryHref={getLibraryHref(ad)}
+              key={ad.ad_id}
+            />
+          );
         }
         return <ImageAd ad={ad} committees={committees} key={ad.src} />;
       })}

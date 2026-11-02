@@ -379,7 +379,7 @@ export default function SpendingFlow({
                 selectedId={selectedId}
                 onSelect={setSelectedId}
                 pings={pings}
-                label={throughLabel}
+                throughDate={throughDate}
                 techLabel={techLabel}
               />
               <div className={styles.mapDate}>

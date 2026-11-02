@@ -42,9 +42,9 @@ const CATEGORIES: {
 }[] = [
   {
     key: "competitive",
-    title: "Competitive races",
-    barLabel: "Competitive races",
-    phrase: "has gone into competitive races",
+    title: "Competitive",
+    barLabel: "Competitive",
+    phrase: "has gone into competitive contests",
   },
   {
     key: "underdog",
@@ -304,6 +304,16 @@ function getPieces(
   return pieces;
 }
 
+// Contests (each primary or general round of a race) with spending by one
+// sector's PACs, as counted in the strategy cards, largest first
+export function getContests(
+  elections: Record<string, ElectionsByState>,
+  committees: Record<string, CommitteeConstant>,
+  sector: Sector,
+): ContestRow[] {
+  return groupByContest(getPieces(elections, committees, sector));
+}
+
 function sum(pieces: Piece[]) {
   return pieces.reduce((total, piece) => total + piece.amount, 0);
 }
@@ -347,7 +357,7 @@ const ROUNDS = [
   { title: "Primaries", general: false },
 ];
 
-interface ContestRow {
+export interface ContestRow {
   key: string;
   raceId: string;
   type: string;
@@ -544,7 +554,7 @@ function StrategyCard({
       <h2 className={sharedStyles.sectionTitle}>
         {humanizeSector(sector, { abbrev: true })} PAC strategy
         <span className={sharedStyles.sectionTitleAmount}>
-          {currency(total)} in {groupByContest(pieces).length} races
+          {currency(total)} in {groupByContest(pieces).length} contests
         </span>
       </h2>
       <div className={patternStyles.patterns}>
@@ -618,6 +628,39 @@ const SEGMENT_CLASSES: Record<Category, string> = {
   unclassified: styles.segUnclassified,
 };
 
+export interface CategorySplit {
+  key: Category;
+  label: string;
+  className: string;
+  amount: number;
+  contests: number;
+}
+
+// Spending and contest counts by how competitive the contest was, leaving out
+// categories with no spending. A contest with money on both sides of a
+// category line counts in both, as it does in the tables, so the contest bar
+// adds up
+function splitByCategory(pieces: Piece[]): CategorySplit[] {
+  return CATEGORIES.map((c) => {
+    const inCategory = pieces.filter((p) => p.category === c.key);
+    return {
+      key: c.key,
+      label: c.barLabel,
+      className: SEGMENT_CLASSES[c.key],
+      amount: sum(inCategory),
+      contests: groupByContest(inCategory).length,
+    };
+  }).filter((c) => c.contests > 0);
+}
+
+export function getCategorySplit(
+  elections: Record<string, ElectionsByState>,
+  committees: Record<string, CommitteeConstant>,
+  sector: Sector,
+): CategorySplit[] {
+  return splitByCategory(getPieces(elections, committees, sector));
+}
+
 interface SplitSegment {
   key: string;
   label: string;
@@ -638,7 +681,48 @@ interface SplitRow {
   annotation?: { label: string; amount: number };
 }
 
-// The category split as proportional bars, one per measure (dollars, races),
+// A bracket over the start of a bar, marking how much of it one contest
+// accounts for. It sits above the bar, or below it on narrow screens, where the
+// bar's label takes the space above.
+function SplitAnnotation({
+  annotation,
+  total,
+  className,
+  below = false,
+}: {
+  annotation: { label: string; amount: number };
+  total: number;
+  className: string;
+  below?: boolean;
+}) {
+  const label = (
+    <div className={styles.splitAnnotationLabel}>
+      {annotation.label}: {currency(annotation.amount)} (
+      {pctText(annotation.amount, total)} of all spending)
+    </div>
+  );
+  return (
+    <div
+      className={`${styles.splitAnnotationRow} ${className}`}
+      aria-hidden="true"
+    >
+      <div
+        className={styles.splitAnnotation}
+        style={{ flexGrow: annotation.amount }}
+      >
+        {!below && label}
+        <div className={styles.splitAnnotationBracket} />
+        {below && label}
+      </div>
+      <div
+        className={styles.splitAnnotationSpacer}
+        style={{ flexGrow: total - annotation.amount }}
+      />
+    </div>
+  );
+}
+
+// The category split as proportional bars, one per measure (dollars, contests),
 // with one legend for both
 function SplitBars({
   rows,
@@ -657,23 +741,12 @@ function SplitBars({
           <Fragment key={row.key}>
             {row.annotation && (
               <>
-                <div />
-                <div className={styles.splitAnnotationRow} aria-hidden="true">
-                  <div
-                    className={styles.splitAnnotation}
-                    style={{ flexGrow: row.annotation.amount }}
-                  >
-                    <div className={styles.splitAnnotationLabel}>
-                      {row.annotation.label}: {currency(row.annotation.amount)}{" "}
-                      ({pctText(row.annotation.amount, total)} of all spending)
-                    </div>
-                    <div className={styles.splitAnnotationBracket} />
-                  </div>
-                  <div
-                    className={styles.splitAnnotationSpacer}
-                    style={{ flexGrow: total - row.annotation.amount }}
-                  />
-                </div>
+                <div className={styles.splitSpacer} />
+                <SplitAnnotation
+                  annotation={row.annotation}
+                  total={total}
+                  className={styles.splitAnnotationAbove}
+                />
               </>
             )}
             <div className={styles.splitLabel}>
@@ -699,10 +772,18 @@ function SplitBars({
                 />
               ))}
             </div>
+            {row.annotation && (
+              <SplitAnnotation
+                annotation={row.annotation}
+                total={total}
+                className={styles.splitAnnotationBelow}
+                below
+              />
+            )}
           </Fragment>
         );
       })}
-      <div />
+      <div className={styles.splitSpacer} />
       <div>
         <div className={legendStyles.barLegend}>
           {legend.map((item) => (
@@ -751,17 +832,12 @@ function SectorContent({
   })}focused super PACs`;
   const strategySectors: ("crypto" | "ai")[] =
     sector === "all" ? ["crypto", "ai"] : [sector];
-  const visibleCategories = CATEGORIES.filter(
-    (c) => piecesIn(c.key).length > 0,
+  const split = splitByCategory(pieces);
+  const visibleCategories = CATEGORIES.filter((c) =>
+    split.some((s) => s.key === c.key),
   );
-
-  // A race with money on both sides of a category line counts in both, as it
-  // does in the tables below, so the race bar adds up
   const raceCounts = Object.fromEntries(
-    visibleCategories.map((c) => [
-      c.key,
-      groupByContest(piecesIn(c.key)).length,
-    ]),
+    split.map((s) => [s.key, s.contests]),
   ) as Record<Category, number>;
   const raceTotal = Object.values(raceCounts).reduce((t, n) => t + n, 0);
   const segmentsBy = (amountOf: (c: Category) => number) =>
@@ -789,24 +865,25 @@ function SectorContent({
         : undefined,
     },
     {
-      key: "races",
-      label: "Races",
-      totalLabel: `${raceTotal} ${raceTotal === 1 ? "race" : "races"}`,
+      key: "contests",
+      label: "Contests",
+      totalLabel: `${raceTotal} ${raceTotal === 1 ? "contest" : "contests"}`,
       segments: segmentsBy((c) => raceCounts[c]),
-      describe: (s) => `${s.label} ${s.amount}, ${pctText(s.amount, raceTotal)}`,
+      describe: (s) =>
+        `${s.label} ${s.amount}, ${pctText(s.amount, raceTotal)}`,
     },
   ];
   const splitLegend = visibleCategories.map((c) => ({
     key: c.key,
     label: c.barLabel,
     value: `${currency(sum(piecesIn(c.key)))} · ${raceCounts[c.key]} ${
-      raceCounts[c.key] === 1 ? "race" : "races"
+      raceCounts[c.key] === 1 ? "contest" : "contests"
     }`,
     className: SEGMENT_CLASSES[c.key],
   }));
-  // "Safe bets are 61% of races but 18% of dollars"
+  // "Safe bets are 61% of contests but 18% of dollars"
   const shareComparison = (c: Category) =>
-    `are ${pctText(raceCounts[c], raceTotal)} of races but ${pctText(
+    `are ${pctText(raceCounts[c], raceTotal)} of contests but ${pctText(
       sum(piecesIn(c)),
       total,
     )} of dollars`;
@@ -824,7 +901,7 @@ function SectorContent({
             <span className={sharedStyles.highlightFigure}>
               {pct(competitive, total)}%
             </span>{" "}
-            has gone into genuinely competitive races and{" "}
+            has gone into genuinely competitive contests&dagger; and{" "}
             <span className={sharedStyles.highlightFigure}>
               {pct(safe, total)}%
             </span>{" "}
@@ -837,7 +914,7 @@ function SectorContent({
               The {raceName(topCompetitive.raceId)} election alone accounts for{" "}
               {currency(topCompetitive.amount)}, or{" "}
               {pct(topCompetitive.amount, competitive)}% of the competitive
-              total. Without it, competitive races have gotten{" "}
+              total. Without it, competitive contests have gotten{" "}
               {pct(
                 competitive - topCompetitive.amount,
                 total - topCompetitive.amount,
@@ -864,8 +941,8 @@ function SectorContent({
             >
               House
             </a>
-            ). Competitive races are those rated &ldquo;Toss-up&rdquo; or
-            &ldquo;Lean&rdquo;. Likely races are those rated
+            ). Competitive contests are those rated &ldquo;Toss-up&rdquo; or
+            &ldquo;Lean&rdquo;. Likely contests are those rated
             &ldquo;Likely&rdquo; or &ldquo;Solid&rdquo;.
             <p>
               Cook doesn&rsquo;t rate primaries, generals between two members of
@@ -879,8 +956,8 @@ function SectorContent({
           bottomText={
             <span>
               has been spent on projected &ldquo;safe&rdquo; candidates in{" "}
-              {groupByContest(piecesIn("safe")).length} races, illustrating the
-              PACs&rsquo;{" "}
+              {groupByContest(piecesIn("safe")).length} contests
+              <sup>&dagger;</sup>, illustrating the PACs&rsquo;{" "}
               <a href="https://www.citationneeded.news/issue-111/">
                 &ldquo;back the winners&rdquo; strategy.
               </a>
@@ -892,21 +969,20 @@ function SectorContent({
         <h2 className={sharedStyles.sectionTitle}>
           Where the money went
           <span className={sharedStyles.sectionTitleAmount}>
-            {currency(total)} · {raceTotal} races
+            {currency(total)} · {raceTotal} contests<sup>&dagger;</sup>
           </span>
         </h2>
         {competitive > total / 2 && raceCounts.safe > raceTotal / 2 && (
           <p className={sharedStyles.subtitle}>
-            Most dollars went to a few battlegrounds. Most races were safe
+            Most dollars went to a few battlegrounds. Most contests were safe
             seats.
           </p>
         )}
         <SplitBars rows={splitRows} legend={splitLegend}>
           {raceCounts.safe > 0 && raceCounts.competitive > 0 && (
             <p className={styles.splitComparison}>
-              <span className="bold">Safe bets</span>{" "}
-              {shareComparison("safe")};{" "}
-              <span className="bold">competitive races</span>{" "}
+              <span className="bold">Safe bets</span> {shareComparison("safe")};{" "}
+              <span className="bold">competitive contests</span>{" "}
               {shareComparison("competitive")}.
             </p>
           )}
@@ -924,7 +1000,7 @@ function SectorContent({
             <h2 className={sharedStyles.sectionTitle}>
               {c.title}
               <span className={sharedStyles.sectionTitleAmount}>
-                {rows.length} {rows.length === 1 ? "race" : "races"}
+                {rows.length} {rows.length === 1 ? "contest" : "contests"}
               </span>
             </h2>
             {ROUNDS.map((round) => {
@@ -941,7 +1017,7 @@ function SectorContent({
                     <span className={sharedStyles.sectionTitleAmount}>
                       {currency(sum(roundRows.flatMap((row) => row.pieces)))} in{" "}
                       {roundRows.length}{" "}
-                      {roundRows.length === 1 ? "race" : "races"}
+                      {roundRows.length === 1 ? "contest" : "contests"}
                     </span>
                   </h3>
                   <ContestTable rows={roundRows} general={round.general} />
@@ -951,6 +1027,14 @@ function SectorContent({
           </section>
         );
       })}
+      <div className={styles.footnoteSection}>
+        <sup>&dagger;</sup>
+        <span className={styles.footnote}>
+          Each primary, runoff, and general election is counted as a separate
+          contest, so a seat where PACs spent in both the primary and the
+          general counts twice.
+        </span>
+      </div>
     </>
   );
 }
@@ -968,7 +1052,7 @@ export function BattlegroundRacesSkeleton() {
         </div>
         <MoneyCardSkeleton />
       </section>
-      <h2 className={sharedStyles.sectionTitle}>Competitive races</h2>
+      <h2 className={sharedStyles.sectionTitle}>Competitive contests</h2>
       {Array.from({ length: 10 }).map((_, i) => (
         <Skeleton key={i} width="100%" />
       ))}

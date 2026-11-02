@@ -42,7 +42,7 @@ import {
   ElectionsByState,
   OppositionConstant,
   RaceInsight,
-  RaceOutsideSpendingRows,
+  RaceOutsideSpendingByDate,
 } from "../types/Elections";
 import {
   CommitteeTotalExpenditures,
@@ -65,7 +65,6 @@ import {
 import { MapData } from "../types/MapData";
 import { QPQ } from "../types/Qpq";
 import { Sector } from "../types/Sector";
-import { getShardDocName, getStateFromRaceId } from "../utils/races";
 import {
   getCommitteeIdsForSector,
   getCompanyIdsForSector,
@@ -901,38 +900,33 @@ export const fetchAllStateElections = cache(
   },
 );
 
-// Outside spending rows for each full race id ("CA-H-33"), reading only the
-// outsideSpending shards those races live in. A race with no rows is left out.
-export async function fetchOutsideSpendingRows(
-  raceIds: string[],
-): Promise<Record<string, RaceOutsideSpendingRows> | ErrorType> {
-  const locations = raceIds.map((raceId) => {
-    const state = getStateFromRaceId(raceId);
-    const shortRaceId = raceId.slice(state.length + 1);
-    return { raceId, shortRaceId, shard: getShardDocName(state, shortRaceId) };
-  });
-  try {
-    const shardNames = [...new Set(locations.map((l) => l.shard))];
-    const snapshots = await Promise.all(
-      shardNames.map((name) => getDoc(doc(db, "outsideSpending", name))),
-    );
-    const shards: Record<string, Record<string, RaceOutsideSpendingRows>> = {};
-    snapshots.forEach((snapshot, i) => {
-      shards[shardNames[i]] = snapshot.exists()
-        ? serializeFirestore(snapshot.data())
-        : {};
-    });
-    const rows: Record<string, RaceOutsideSpendingRows> = {};
-    for (const { raceId, shortRaceId, shard } of locations) {
-      if (shortRaceId in shards[shard]) {
-        rows[raceId] = shards[shard][shortRaceId];
+// Outside spending totaled by date for every race, keyed by full race id
+// ("CA-H-33"). A race with no outside spending is left out.
+export const fetchAllOutsideSpendingByDate = cache(
+  async (): Promise<Record<string, RaceOutsideSpendingByDate> | ErrorType> => {
+    const data = await fetchCollection("outsideSpendingByDate");
+    if (isError(data)) {
+      return data as ErrorType;
+    }
+    const byRace: Record<string, RaceOutsideSpendingByDate> = {};
+    for (const shardDoc of data as DocumentData[]) {
+      const lastUnderscore = shardDoc.id.lastIndexOf("_");
+      const state =
+        lastUnderscore !== -1 &&
+        /^\d$/.test(shardDoc.id.slice(lastUnderscore + 1))
+          ? shardDoc.id.slice(0, lastUnderscore)
+          : shardDoc.id;
+      const races = serializeFirestore(shardDoc.data()) as Record<
+        string,
+        RaceOutsideSpendingByDate
+      >;
+      for (const [raceId, race] of Object.entries(races)) {
+        byRace[`${state}-${raceId}`] = race;
       }
     }
-    return rows;
-  } catch (e) {
-    return { error: true };
-  }
-}
+    return byRace;
+  },
+);
 
 export const fetchStateElections = cache(
   async (stateAbbr: string): Promise<ElectionsByState | ErrorType> => {

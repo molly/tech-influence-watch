@@ -75,6 +75,10 @@ export type GoogleAd = {
   // Number of ads folded into this one by mergeAdVariants, counting itself.
   // Absent on unmerged ads.
   variantCount?: number;
+  // The ad_id of every ad folded into this one, itself included. The ad
+  // library keys a group by its longest cut, which needn't be the primary.
+  // Absent on unmerged ads.
+  variantIds?: string[];
 } & GoogleAdConstant;
 
 export type ImageAd = {

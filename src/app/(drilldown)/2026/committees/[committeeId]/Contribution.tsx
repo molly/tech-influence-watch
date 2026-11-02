@@ -4,6 +4,10 @@ import { fetchConstant } from "@/app/actions/fetch";
 import Claimed from "@/app/components/individualOrCompany/Claimed";
 import MaybeLink from "@/app/components/MaybeLink";
 import { Contribution as ContributionType } from "@/app/types/Contributions";
+import {
+  getDonorDescription,
+  getDonorGroupName,
+} from "@/app/utils/donorDescriptions";
 import { titlecaseCompany } from "@/app/utils/titlecase";
 import { formatCurrency, formatDateFromString } from "@/app/utils/utils";
 
@@ -177,10 +181,13 @@ export default async function Contribution({
   isSubRow?: boolean;
   groupName?: string;
 }) {
-  let [COMPANY_ALIASES, INDIVIDUAL_EMPLOYERS] = await Promise.all([
-    fetchConstant<Record<string, string>>("companyAliases") || {},
-    fetchConstant<string[]>("individualEmployers") || [],
-  ]);
+  let [COMPANY_ALIASES, INDIVIDUAL_EMPLOYERS, allCommittees, donorDescriptions] =
+    await Promise.all([
+      fetchConstant<Record<string, string>>("companyAliases") || {},
+      fetchConstant<string[]>("individualEmployers") || [],
+      fetchConstant<Record<string, string>>("allCommittees"),
+      fetchConstant<Record<string, string>>("donorDescriptions"),
+    ]);
 
   const donorDetails = getDonorDetails(
     contribution,
@@ -285,12 +292,22 @@ export default async function Contribution({
       );
     }
 
+    const donorDescription = getDonorDescription(
+      [contribution],
+      getDonorGroupName(contribution, COMPANY_ALIASES ?? {}),
+      allCommittees ?? {},
+      donorDescriptions ?? {},
+    );
+
     return (
       <div className={styles.donorRow}>
         <div className={styles.donorSummary}>
           {donorIdentifier}
           <ContributionAmount contribution={contribution} />
         </div>
+        {donorDescription && (
+          <div className="secondary smaller">{donorDescription}</div>
+        )}
         {contribution.description && (
           <div className={styles.contributionDescription}>
             {contribution.description}

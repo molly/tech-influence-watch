@@ -2,9 +2,9 @@ import { DateTime } from "luxon";
 
 import {
   fetchAllExpenditures,
+  fetchAllOutsideSpendingByDate,
   fetchAllStateElections,
   fetchConstant,
-  fetchOutsideSpendingRows,
   fetchPipelineLastRun,
 } from "@/app/actions/fetch";
 import districtCentroids from "@/app/data/districtCentroids.json";
@@ -12,9 +12,9 @@ import type { CommitteeConstant } from "@/app/types/Committee";
 import {
   ElectionsByState,
   OppositionConstant,
-  OutsideSpendingRow,
+  OutsideSpendingByDate,
   Race,
-  RaceOutsideSpendingRows,
+  RaceOutsideSpendingByDate,
   RaceType,
 } from "@/app/types/Elections";
 import type { Expenditure } from "@/app/types/Expenditures";
@@ -75,25 +75,19 @@ function getDirection(
   return { direction: "U", beneficiary };
 }
 
-// Bin independent expenditures by week, keeping only those dated within the
-// timeline. E-filed reports often carry only a dissemination date.
-function weeklyAmounts(rows: OutsideSpendingRow[]): WeeklyAmounts {
+// Bin outside spending by week, keeping only what's dated within the
+// timeline.
+function weeklyAmounts(byDate: OutsideSpendingByDate): WeeklyAmounts {
   const byWeek = new Map<string, WeeklyAmounts[number]>();
-  for (const row of rows) {
-    const date = row.expenditure_date ?? row.dissemination_date;
-    if (
-      !date ||
-      date < FLOW_START_DATE ||
-      date > FLOW_END_DATE ||
-      !row.expenditure_amount
-    ) {
+  for (const { date, subrace, amount } of byDate) {
+    if (date < FLOW_START_DATE || date > FLOW_END_DATE) {
       continue;
     }
     const week = getWeekIndex(date);
-    const stage = row.subrace === "general" ? "general" : "primary";
+    const stage = subrace === "general" ? "general" : "primary";
     const key = `${week}-${stage}`;
     const entry = byWeek.get(key) ?? [week, 0, stage];
-    entry[1] += row.expenditure_amount;
+    entry[1] += amount;
     byWeek.set(key, entry);
   }
   return [...byWeek.values()].sort((a, b) => a[0] - b[0]);
@@ -136,7 +130,7 @@ function getOutOfRaceStatus(races: Race[], name: string): string | null {
 // drew tech spending, such as a primary loser targeted by a tech PAC.
 function getRaceCandidates(
   elections: Record<string, ElectionsByState>,
-  outsideRows: RaceOutsideSpendingRows,
+  outsideByDate: RaceOutsideSpendingByDate,
   raceId: string,
   techCandidates: Set<string>,
 ): Pick<FlowRace, "candidates" | "outsideTotal" | "generalDate"> {
@@ -146,9 +140,9 @@ function getRaceCandidates(
     return { candidates: [], outsideTotal: [], generalDate: null };
   }
   const outsideTotal = weeklyAmounts(
-    Object.values(outsideRows).flatMap((rows) => [
-      ...rows.support,
-      ...rows.oppose,
+    Object.values(outsideByDate).flatMap((byDate) => [
+      ...byDate.support,
+      ...byDate.oppose,
     ]),
   );
   const races = group.races.filter((race) => !race.canceled);
@@ -174,7 +168,7 @@ function getRaceCandidates(
       }
       seen.add(c.name);
       const summary = group.candidates[c.name];
-      const rows = outsideRows[c.name];
+      const byDate = outsideByDate[c.name];
       candidates.push({
         name: c.name,
         party: c.party,
@@ -187,8 +181,8 @@ function getRaceCandidates(
           date: report.date,
           receipts: report.receipts,
         })),
-        outsideFor: weeklyAmounts(rows?.support ?? []),
-        outsideAgainst: weeklyAmounts(rows?.oppose ?? []),
+        outsideFor: weeklyAmounts(byDate?.support ?? []),
+        outsideAgainst: weeklyAmounts(byDate?.oppose ?? []),
       });
     }
   }
@@ -204,22 +198,36 @@ function getRaceCandidates(
 export async function fetchSpendingFlowData(
   sector: Sector,
 ): Promise<SpendingFlowData | ErrorType> {
-  const [expendituresData, electionsData, committees, opposition, lastRun] =
-    await Promise.all([
-      fetchAllExpenditures(),
-      fetchAllStateElections(),
-      fetchConstant<Record<string, CommitteeConstant>>("committees"),
-      fetchConstant<Record<string, OppositionConstant>>("oppositionSpending"),
-      fetchPipelineLastRun(),
-    ]);
+  const [
+    expendituresData,
+    electionsData,
+    outsideByDateData,
+    committees,
+    opposition,
+    lastRun,
+  ] = await Promise.all([
+    fetchAllExpenditures(),
+    fetchAllStateElections(),
+    fetchAllOutsideSpendingByDate(),
+    fetchConstant<Record<string, CommitteeConstant>>("committees"),
+    fetchConstant<Record<string, OppositionConstant>>("oppositionSpending"),
+    fetchPipelineLastRun(),
+  ]);
   if (isError(expendituresData)) {
     return expendituresData as ErrorType;
   }
   if (isError(electionsData)) {
     return electionsData as ErrorType;
   }
+  if (isError(outsideByDateData)) {
+    return outsideByDateData as ErrorType;
+  }
   const allExpenditures = expendituresData as Record<string, Expenditure>;
   const elections = electionsData as Record<string, ElectionsByState>;
+  const outsideByDate = outsideByDateData as Record<
+    string,
+    RaceOutsideSpendingByDate
+  >;
 
   const expenditures: FlowExpenditure[] = [];
   const committeeNames: Record<string, string> = {};
@@ -269,16 +277,6 @@ export async function fetchSpendingFlowData(
     names.add(e.candidate);
     techCandidates.set(e.raceId, names);
   }
-  const outsideRowsData = await fetchOutsideSpendingRows([
-    ...techCandidates.keys(),
-  ]);
-  if (isError(outsideRowsData)) {
-    return outsideRowsData as ErrorType;
-  }
-  const outsideRows = outsideRowsData as Record<
-    string,
-    RaceOutsideSpendingRows
-  >;
   for (const [raceId, names] of techCandidates) {
     const [state, office] = raceId.split("-");
     const special = raceId.endsWith("-special");
@@ -294,7 +292,7 @@ export async function fetchSpendingFlowData(
           : null,
       ...getRaceCandidates(
         elections,
-        outsideRows[raceId] ?? {},
+        outsideByDate[raceId] ?? {},
         raceId,
         names,
       ),

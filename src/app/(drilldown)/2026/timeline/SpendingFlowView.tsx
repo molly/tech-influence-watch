@@ -52,7 +52,7 @@ export default function SpendingFlowView({ sector }: { sector: Sector }) {
         </section>
       </div>
       <div className={sharedStyles.main}>
-        <Suspense fallback={<USMapSkeleton />}>
+        <Suspense fallback={<USMapSkeleton showLegend={false} showSpinner />}>
           <SpendingFlowContent sector={sector} />
         </Suspense>
       </div>
