@@ -644,7 +644,7 @@ async function AdsAnalysis({ sector }: { sector: Sector }) {
       </section>
 
       <section className={styles.section}>
-        <SectionTitle>Read the ads</SectionTitle>
+        <SectionTitle>See the ads</SectionTitle>
         <div className={styles.libraryCta}>
           <p className={adStyles.note}>
             Search and filter every tagged ad by network, party, committee, or

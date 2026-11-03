@@ -47,6 +47,7 @@ const COMMITTEES: Record<string, string> = {
   C00948232: "Jump PAC",
   C00949487: "Guardrails Alliance",
   C00950881: "Defend Developers PAC",
+  C00960328: "Building the Future",
   C30003628: "Alliance for a Better Future",
 };
 

@@ -6,7 +6,10 @@ import {
   fetchAllStateElections,
   fetchConstant,
 } from "@/app/actions/fetch";
-import { getContests } from "@/app/components/analysis/BattlegroundRaces";
+import {
+  ContestRow,
+  getContests,
+} from "@/app/components/analysis/BattlegroundRaces";
 import ErrorText from "@/app/components/ErrorText";
 import HorizontalBars, {
   HorizontalBarItem,
@@ -254,7 +257,7 @@ function Graphic({
 interface SectorSummary {
   sector: "crypto" | "ai";
   total: number;
-  races: number;
+  seats: number;
   byParty: ExpendituresByPartySnapshot;
 }
 
@@ -329,7 +332,7 @@ function PartyGraphic({ summaries }: { summaries: SectorSummary[] }) {
         </span>
       </div>
       <div className={styles.panels}>
-        {summaries.map(({ sector, total, races }, i) => {
+        {summaries.map(({ sector, total, seats }, i) => {
           const items = itemsBySector[i];
           return (
             <div key={sector} className={styles.panel}>
@@ -337,7 +340,7 @@ function PartyGraphic({ summaries }: { summaries: SectorSummary[] }) {
                 {humanizeSector(sector, { abbrev: true })} PACs
               </h3>
               <p className={styles.panelSubtitle}>
-                {currency(total)} across {races} races
+                {currency(total)} across {seats} seats
               </p>
               <HorizontalBars items={items} max={max} outlined={false} />
             </div>
@@ -355,6 +358,11 @@ function PartyGraphic({ summaries }: { summaries: SectorSummary[] }) {
       </figcaption>
     </figure>
   );
+}
+
+// A seat's primaries and general are separate contests, so count race IDs
+function countSeats(contests: ContestRow[]): number {
+  return new Set(contests.map((contest) => contest.raceId)).size;
 }
 
 // Many 2026 seats got close to the same amount, within 5% of this
@@ -461,13 +469,13 @@ export default async function NewsletterGraphicsPage() {
     {
       sector: "crypto",
       total: cryptoTotal as number,
-      races: cryptoContests.length,
+      seats: countSeats(cryptoContests),
       byParty: cryptoParty as ExpendituresByPartySnapshot,
     },
     {
       sector: "ai",
       total: aiTotal as number,
-      races: getContests(elections, committees, "ai").length,
+      seats: countSeats(getContests(elections, committees, "ai")),
       byParty: aiParty as ExpendituresByPartySnapshot,
     },
   ];
