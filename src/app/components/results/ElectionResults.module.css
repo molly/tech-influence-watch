@@ -156,6 +156,15 @@
   border-bottom: 1px solid var(--table-color);
 }
 
+/* Separates this election's candidates from earlier rounds' candidates, like
+   primary losers, below them */
+.earlierDivider td {
+  font-size: 0.75rem;
+  color: var(--table-header-color);
+  padding-top: 0.75rem;
+  border-bottom: 1px solid var(--table-color);
+}
+
 .candidateCell {
   width: 40%;
 }

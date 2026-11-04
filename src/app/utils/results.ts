@@ -7,12 +7,14 @@ import {
   CandidateSummary,
   ElectionGroup,
   ElectionsByState,
+  OppositionConstant,
   Race,
   RaceCandidate,
 } from "@/app/types/Elections";
 import { Sector } from "@/app/types/Sector";
 import { classifySpending } from "@/app/utils/contestRatings";
 import {
+  CandidateResult,
   getCandidateResult,
   getDeclinedElsewhereCandidateIds,
   getRaceCallStatus,
@@ -36,6 +38,9 @@ export interface ResultCandidate {
   // Super PAC money spent in this round of the race. This is what the results
   // are scored on: money spent in a primary was decided by the primary.
   current: { support: number; oppose: number };
+  // Who this round's opposition to the candidate was meant to help, if that
+  // candidate is in this round. Opposition is scored by their result.
+  opposeBeneficiary?: RaceCandidate;
   // The part of support and oppose spent in other rounds of the race (usually
   // the primary), and which rounds those were, e.g. ["primary"]
   earlier: { support: number; oppose: number; rounds: string[] };
@@ -146,6 +151,74 @@ function getSpendingByRound(
   };
 }
 
+// Candidates the sector's super PACs spent on in the seat's earlier rounds who
+// aren't in `race`, such as primary losers. Their money is all from those
+// rounds, so it's shown as `earlier` and none of it is `current`. Each one's
+// result is from the last earlier round they were in.
+function getEarlierCandidates(
+  group: ElectionGroup,
+  committees: Record<string, CommitteeConstant>,
+  sector: Sector,
+  race: Race,
+  date: string,
+  getContributions: (summary?: CandidateSummary) => number,
+): ResultCandidate[] {
+  const inThisRound = new Set(race.candidates.map((c) => c.name));
+  const earlierRaces = (group.races || [])
+    .filter(
+      (r) => r.type !== race.type && !r.canceled && r.date && r.date < date,
+    )
+    .sort((a, b) => a.date.localeCompare(b.date));
+  const byName = new Map<string, ResultCandidate>();
+  for (const earlierRace of earlierRaces) {
+    for (const candidate of earlierRace.candidates) {
+      if (inThisRound.has(candidate.name) || candidate.placeholder) {
+        continue;
+      }
+      let support = 0;
+      let oppose = 0;
+      for (const [committeeId, spending] of Object.entries(
+        group.spending || {},
+      )) {
+        if (
+          sector !== "all" &&
+          !matchesSector(committees[committeeId]?.sector, sector)
+        ) {
+          continue;
+        }
+        const amounts =
+          spending.subraces?.[earlierRace.type]?.candidates?.[candidate.name];
+        support += amounts?.support ?? 0;
+        oppose += amounts?.oppose ?? 0;
+      }
+      if (support + oppose === 0) {
+        continue;
+      }
+      const existing = byName.get(candidate.name);
+      const rounds = new Set(existing?.earlier.rounds ?? []);
+      rounds.add(earlierRace.type);
+      const summary = group.candidates?.[candidate.name];
+      byName.set(candidate.name, {
+        // Later rounds are visited last, so this is their final result
+        candidate,
+        summary,
+        support: (existing?.support ?? 0) + support,
+        oppose: (existing?.oppose ?? 0) + oppose,
+        contributions: getContributions(summary),
+        current: { support: 0, oppose: 0 },
+        earlier: {
+          support: (existing?.earlier.support ?? 0) + support,
+          oppose: (existing?.earlier.oppose ?? 0) + oppose,
+          rounds: [...rounds].sort(),
+        },
+      });
+    }
+  }
+  return [...byName.values()].sort(
+    (a, b) => b.support + b.oppose - (a.support + a.oppose),
+  );
+}
+
 // Whether the sector's super PACs spent anything in a round of the race other
 // than `type`, for any candidate
 function hasOtherRoundSpending(
@@ -185,6 +258,9 @@ export interface ResultRace {
   // Whether the sector's super PACs spent in any other round of the race, on
   // any candidate, including ones who lost a primary or withdrew
   spentEarlier: boolean;
+  // Candidates the sector's super PACs spent on in an earlier round who aren't
+  // in this one, like primary losers, most money first
+  earlierCandidates: ResultCandidate[];
   candidates: ResultCandidate[];
   // Super PAC spending and direct contributions across the candidates
   total: number;
@@ -242,6 +318,7 @@ export function getResultRaces(
   committees: Record<string, CommitteeConstant>,
   candidateAliases: Record<string, string>,
   cookRatings: CookRatings,
+  opposition: Record<string, OppositionConstant>,
   sector: Sector,
   date: string,
 ): ResultRace[] {
@@ -261,17 +338,25 @@ export function getResultRaces(
         shortRaceId,
         candidateAliases,
       );
+      const getContributions = (summary?: CandidateSummary) => {
+        const candidateId = summary?.candidate_id;
+        return candidateId && !suppressedIds.has(candidateId)
+          ? (beneficiaries[candidateId]?.total ?? 0)
+          : 0;
+      };
       for (const race of races) {
         const candidates = race.candidates.map((candidate) => {
           const summary = candidate.placeholder
             ? undefined
             : group.candidates?.[candidate.name];
-          const candidateId = summary?.candidate_id;
-          const contributions =
-            candidateId && !suppressedIds.has(candidateId)
-              ? (beneficiaries[candidateId]?.total ?? 0)
-              : 0;
+          const contributions = getContributions(summary);
+          const opposeBeneficiary = findOpposeBeneficiary(
+            opposition,
+            summary,
+            race,
+          );
           return {
+            ...(opposeBeneficiary && { opposeBeneficiary }),
             candidate,
             summary,
             support: summary ? getSectorSupportTotal(summary, sector) : 0,
@@ -320,12 +405,21 @@ export function getResultRaces(
           earlierRounds: getEarlierRounds(
             group,
             committees,
+            opposition,
             sector,
             race.type,
             date,
           ),
           spentEarlier,
           candidates,
+          earlierCandidates: getEarlierCandidates(
+            group,
+            committees,
+            sector,
+            race,
+            date,
+            getContributions,
+          ),
           total,
         });
       }
@@ -363,25 +457,62 @@ function addMoneyByResult(
   candidate: RaceCandidate,
   support: number,
   oppose: number,
+  opposeBeneficiary?: RaceCandidate,
 ) {
   if (!needsResult(candidate)) {
     return;
   }
+  const addTo = (result: CandidateResult, amount: number) => {
+    if (result === "won") {
+      money.won += amount;
+    } else if (result === "lost") {
+      money.lost += amount;
+    } else {
+      money.uncalled += amount;
+    }
+  };
   const result = getCandidateResult(candidate);
-  if (result === "won") {
-    money.won += support;
-    money.lost += oppose;
-  } else if (result === "lost") {
-    money.won += oppose;
-    money.lost += support;
+  addTo(result, support);
+  // Opposition succeeds when the candidate it was meant to help wins. With
+  // no known beneficiary, it succeeds when the opposed candidate loses, which
+  // only says as much in a two-way race.
+  if (opposeBeneficiary) {
+    addTo(getCandidateResult(opposeBeneficiary), oppose);
   } else {
-    money.uncalled += support + oppose;
+    addTo(
+      result === "won" ? "lost" : result === "lost" ? "won" : "undecided",
+      oppose,
+    );
   }
 }
 
 // This round's super PAC money for or against a candidate
 function addSuperPacMoney(money: MoneyByOutcome, c: ResultCandidate) {
-  addMoneyByResult(money, c.candidate, c.current.support, c.current.oppose);
+  addMoneyByResult(
+    money,
+    c.candidate,
+    c.current.support,
+    c.current.oppose,
+    c.opposeBeneficiary,
+  );
+}
+
+// The candidate that opposition to `summary`'s candidate was meant to help,
+// from the opposition spending constant, if they're in `race`. The constant
+// is per candidate, not per round, so a beneficiary from another round is
+// ignored. "–" means the opposition helps a party but no one candidate.
+function findOpposeBeneficiary(
+  opposition: Record<string, OppositionConstant>,
+  summary: CandidateSummary | undefined,
+  race: Race,
+): RaceCandidate | undefined {
+  const name = summary?.candidate_id
+    ? opposition[summary.candidate_id]?.benefitsCandidate
+    : undefined;
+  if (!name || name === "–") {
+    return undefined;
+  }
+  return race.candidates.find((c) => c.name === name);
 }
 
 // Whether money landed on the winning side, the losing side, or both. Null
@@ -425,6 +556,7 @@ export interface EarlierRounds {
 function getEarlierRounds(
   group: ElectionGroup,
   committees: Record<string, CommitteeConstant>,
+  opposition: Record<string, OppositionConstant>,
   sector: Sector,
   type: string,
   date: string,
@@ -456,7 +588,17 @@ function getEarlierRounds(
         continue;
       }
       rounds.add(race.type);
-      addMoneyByResult(money, candidate, support, oppose);
+      addMoneyByResult(
+        money,
+        candidate,
+        support,
+        oppose,
+        findOpposeBeneficiary(
+          opposition,
+          group.candidates?.[candidate.name],
+          race,
+        ),
+      );
     }
   }
   if (money.won + money.lost + money.uncalled === 0) {

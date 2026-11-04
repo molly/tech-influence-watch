@@ -23,7 +23,11 @@ import Skeleton from "@/app/components/skeletons/Skeleton";
 import sharedStyles from "@/app/shared.module.css";
 import { Beneficiary } from "@/app/types/Beneficiaries";
 import { CommitteeConstant } from "@/app/types/Committee";
-import { ElectionsByState, RaceType } from "@/app/types/Elections";
+import {
+  ElectionsByState,
+  OppositionConstant,
+  RaceType,
+} from "@/app/types/Elections";
 import { Sector } from "@/app/types/Sector";
 import { isError } from "@/app/utils/errors";
 import {
@@ -138,7 +142,23 @@ function Amount({
   );
 }
 
-function CandidateRow({ result }: { result: ResultCandidate }) {
+// The round a candidate who isn't in this election was last in, e.g.
+// "primary" or "primary runoff"
+function getLastRoundName(rounds: string[]) {
+  const last = rounds.includes("primary_runoff")
+    ? "primary_runoff"
+    : rounds[rounds.length - 1];
+  return getSubraceName({ type: last as RaceType });
+}
+
+function CandidateRow({
+  result,
+  round,
+}: {
+  result: ResultCandidate;
+  // For a candidate from an earlier round, which round their result is from
+  round?: string;
+}) {
   const { candidate, summary } = result;
   const outcome = getCandidateResult(candidate);
   let nameClassName;
@@ -176,6 +196,7 @@ function CandidateRow({ result }: { result: ResultCandidate }) {
             <>
               <ResultIcon won={outcome === "won"} className={styles.resultIcon} />
               {outcome === "won" ? <span className="bold">Won</span> : "Lost"}
+              {round && ` ${round}`}
             </>
           )}
         </span>
@@ -279,6 +300,18 @@ function RaceCard({ race, sector }: { race: ResultRace; sector: Sector }) {
         <tbody>
           {race.candidates.map((result) => (
             <CandidateRow key={result.candidate.name} result={result} />
+          ))}
+          {race.earlierCandidates.length > 0 && (
+            <tr className={styles.earlierDivider}>
+              <td colSpan={5}>Earlier in the cycle</td>
+            </tr>
+          )}
+          {race.earlierCandidates.map((result) => (
+            <CandidateRow
+              key={`earlier-${result.candidate.name}`}
+              result={result}
+              round={getLastRoundName(result.earlier.rounds)}
+            />
           ))}
         </tbody>
       </table>
@@ -454,12 +487,14 @@ export async function loadResults(sector: Sector): Promise<{
     committees,
     candidateAliases,
     cookRatings,
+    opposition,
   ] = await Promise.all([
     fetchAllStateElections(),
     fetchBeneficiaries(sector),
     fetchConstant<Record<string, CommitteeConstant>>("committees"),
     fetchConstant<Record<string, string>>("candidateAliases"),
     fetchCookRatings(),
+    fetchConstant<Record<string, OppositionConstant>>("oppositionSpending"),
   ]);
   // Committees are only needed to split a sector's spending by round
   if (
@@ -478,6 +513,7 @@ export async function loadResults(sector: Sector): Promise<{
         committees ?? {},
         candidateAliases ?? {},
         cookRatings,
+        opposition ?? {},
         sector,
         date,
       )

@@ -130,13 +130,13 @@ describe("getResultRaces", () => {
   };
 
   test("orders called races by most recent call, then the rest by money", () => {
-    const races = getResultRaces(elections, {}, {}, {}, {}, "all", "2026-11-03");
+    const races = getResultRaces(elections, {}, {}, {}, {}, {}, "all", "2026-11-03");
     expect(races.map((r) => r.raceId)).toEqual(["PA-H-02", "PA-H-01", "PA-H-03"]);
   });
 
   test("tallies money by which side won", () => {
     const tally = getResultsTally(
-      getResultRaces(elections, {}, {}, {}, {}, "all", "2026-11-03"),
+      getResultRaces(elections, {}, {}, {}, {}, {}, "all", "2026-11-03"),
     );
     expect(tally.called).toBe(2);
     expect(tally.races).toBe(3);
@@ -151,7 +151,7 @@ describe("getResultRaces", () => {
 
   test("marks each race's goal by which side its money landed on", () => {
     const byId = Object.fromEntries(
-      getResultRaces(elections, {}, {}, {}, {}, "all", "2026-11-03").map((r) => [
+      getResultRaces(elections, {}, {}, {}, {}, {}, "all", "2026-11-03").map((r) => [
         r.raceId,
         getRaceGoal(r),
       ]),
@@ -175,7 +175,7 @@ describe("getResultRaces", () => {
         },
       },
     };
-    const races = getResultRaces(primaryOnly, {}, {}, {}, {}, "all", "2026-11-03");
+    const races = getResultRaces(primaryOnly, {}, {}, {}, {}, {}, "all", "2026-11-03");
     expect(getRaceGoal(races[0])).toBeNull();
     const tally = getResultsTally(races);
     expect(tally.superPac).toEqual({ won: 0, lost: 0, uncalled: 0 });
@@ -206,7 +206,7 @@ describe("getResultRaces", () => {
         },
       },
     };
-    const races = getResultRaces(withPrimary, {}, {}, {}, {}, "all", "2026-11-03");
+    const races = getResultRaces(withPrimary, {}, {}, {}, {}, {}, "all", "2026-11-03");
     expect(races[0].earlierRounds).toEqual({
       rounds: ["primary"],
       superPac: { won: 100, lost: 40, uncalled: 0 },
@@ -217,6 +217,14 @@ describe("getResultRaces", () => {
     expect(tally.earlier.goals.mixed).toBe(1);
     // Only A, of this election's candidates, was backed in the primary
     expect(getCandidatesBackedEarlier(races[0]).map((c) => c.candidate.name)).toEqual(["A"]);
+    // C lost the primary, so they're listed with the earlier rounds
+    expect(races[0].earlierCandidates).toHaveLength(1);
+    expect(races[0].earlierCandidates[0]).toMatchObject({
+      candidate: { name: "C", won: false },
+      support: 40,
+      current: { support: 0, oppose: 0 },
+      earlier: { support: 40, oppose: 0, rounds: ["primary"] },
+    });
   });
 
   test("keeps a seat whose PAC money only went to primary losers", () => {
@@ -233,11 +241,57 @@ describe("getResultRaces", () => {
         },
       },
     };
-    const races = getResultRaces(primaryLosersOnly, {}, {}, {}, {}, "all", "2026-11-03");
+    const races = getResultRaces(primaryLosersOnly, {}, {}, {}, {}, {}, "all", "2026-11-03");
     expect(races).toHaveLength(1);
     const tally = getResultsTally(races);
     expect(tally.earlierOnlyRaces).toBe(1);
     expect(tally.earlier.superPac.lost).toBe(200);
+  });
+
+  test("scores opposition by whether the candidate it helps won", () => {
+    // IL-H-02: support for J and opposition to P (meant to help J) in a
+    // primary that M won
+    const crowdedPrimary: Record<string, ElectionsByState> = {
+      IL: {
+        "H-02": {
+          races: [
+            race(
+              [
+                { name: "J", won: false },
+                { name: "M", won: true },
+                { name: "P", won: false },
+              ],
+              { type: RaceType.Primary, date: "2026-03-17", party: Party.Democratic },
+            ),
+            race([{ name: "M" }, { name: "N" }]),
+          ],
+          candidates: {
+            J: summary("J", 1400, 0),
+            M: summary("M", 0, 0),
+            N: summary("N", 0, 0),
+            P: { ...summary("P", 0, 800), candidate_id: "H6IL02298" },
+          },
+          spending: spendingIn("primary", {
+            J: { support: 1400, oppose: 0 },
+            P: { support: 0, oppose: 800 },
+          }),
+          year: "2026",
+        },
+      },
+    };
+    const score = (opposition: Record<string, { benefitsCandidate?: string }>) =>
+      getResultRaces(crowdedPrimary, {}, {}, {}, {}, opposition, "all", "2026-11-03")[0]
+        .earlierRounds;
+    // Opposing P helped J, who lost
+    expect(score({ H6IL02298: { benefitsCandidate: "J" } })).toMatchObject({
+      superPac: { won: 0, lost: 2200, uncalled: 0 },
+      goal: "failed",
+    });
+    // Without a known beneficiary, P losing counts as a win
+    expect(score({ H6IL02298: { benefitsCandidate: "–" } })).toMatchObject({
+      superPac: { won: 800, lost: 1400, uncalled: 0 },
+      goal: "mixed",
+    });
   });
 
   test("finds when the PACs backed both nominees in their primaries", () => {
@@ -258,7 +312,7 @@ describe("getResultRaces", () => {
         },
       },
     };
-    const [result] = getResultRaces(bothNominees, {}, {}, {}, {}, "all", "2026-11-03");
+    const [result] = getResultRaces(bothNominees, {}, {}, {}, {}, {}, "all", "2026-11-03");
     expect(getCandidatesBackedEarlier(result).map((c) => c.candidate.name)).toEqual(["D", "R"]);
     expect(result.earlierRounds?.goal).toBe("achieved");
   });
@@ -288,7 +342,7 @@ describe("getResultRaces", () => {
         },
       },
     };
-    const [result] = getResultRaces(withPrimary, {}, {}, {}, {}, "all", "2026-11-03");
+    const [result] = getResultRaces(withPrimary, {}, {}, {}, {}, {}, "all", "2026-11-03");
     const a = result.candidates.find((c) => c.candidate.name === "A");
     expect(a?.earlier).toEqual({ support: 200, oppose: 0, rounds: ["primary"] });
   });
@@ -339,6 +393,7 @@ describe("getResultRaces", () => {
         {},
         {},
         { "MA-S": "solid-d" },
+        {},
         "all",
         "2026-11-03",
       )[0].tag;
