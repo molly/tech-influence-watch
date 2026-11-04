@@ -18,7 +18,6 @@ import {
 import barStyles from "@/app/components/home/HorizontalBars.module.css";
 import legendStyles from "@/app/components/home/TechSectorBreakdown.module.css";
 import { GoalIcon, ResultIcon } from "@/app/components/InfluencedRacesContents";
-import MoneyCard, { MoneyCardSkeleton } from "@/app/components/MoneyCard";
 import { RaceRatingChip } from "@/app/components/RaceRating";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import sharedStyles from "@/app/shared.module.css";
@@ -44,6 +43,7 @@ import {
   getRaceGoal,
   getResultRaces,
   getResultsTally,
+  getRoundName,
   Goal,
   MoneyByOutcome,
   RaceTag,
@@ -428,13 +428,10 @@ export function OutcomeBars({
 export function ElectionResultsSkeleton() {
   return (
     <>
-      <section className={sharedStyles.heroWithStat}>
-        <div>
-          <Skeleton width="90%" />
-          <Skeleton width="80%" />
-          <Skeleton width="60%" />
-        </div>
-        <MoneyCardSkeleton />
+      <section className={styles.intro}>
+        <Skeleton width="90%" />
+        <Skeleton width="80%" />
+        <Skeleton width="60%" />
       </section>
       <section className={styles.moneySection}>
         <h2 className={sharedStyles.sectionTitle}>Super PAC money</h2>
@@ -505,6 +502,9 @@ export default async function ElectionResults({ sector }: { sector: Sector }) {
     abbrev: true,
     lowercase: true,
   });
+  // e.g. "general election". The totals and graphs only count money spent in
+  // this round.
+  const roundName = getRoundName(races);
   const pacLabel = `tracked ${humanizeSector(sector, {
     hyphen: true,
     abbrev: true,
@@ -513,14 +513,14 @@ export default async function ElectionResults({ sector }: { sector: Sector }) {
 
   return (
     <>
-      <section className={sharedStyles.heroWithStat}>
+      <section className={styles.intro}>
         <div>
           <p className={sharedStyles.headerSubtitle}>
             <span className={sharedStyles.highlightFigure}>
               {tally.called} of {tally.races}
             </span>{" "}
             races on the {formatDateFromString(date)} ballot have been called.
-            In these elections, {pacLabel} spent{" "}
+            In these {roundName}s, {pacLabel} spent{" "}
             <span className={sharedStyles.highlightFigure}>
               {currency(superPacTotal)}
             </span>{" "}
@@ -533,9 +533,9 @@ export default async function ElectionResults({ sector }: { sector: Sector }) {
             added by hand as races are called, and this page updates as they
             are. A race counts as called once every candidate still running has
             a result. The totals and graphs only count super PAC money spent
-            in these elections, since money spent in a primary was settled by
-            the primary. The amounts on each race cover the whole cycle, with a
-            note on how much went to the primary.
+            in these {roundName}s, since money spent in a primary was settled
+            by the primary. The amounts on each race cover the whole cycle, with
+            a note on how much went to the primary.
             {tally.superPacRaces < tally.races && (
               <p>
                 Tracked super PACs spent in {tally.superPacRaces} of these{" "}
@@ -555,20 +555,10 @@ export default async function ElectionResults({ sector }: { sector: Sector }) {
             )}
           </div>
         </div>
-        <MoneyCard
-          topText="On the winning side"
-          amount={currency(tally.superPac.won)}
-          bottomText={
-            <span>
-              of super PAC money supported a candidate who won or opposed one
-              who lost
-            </span>
-          }
-        />
       </section>
       <section className={styles.moneySection}>
         <h2 className={sharedStyles.sectionTitle}>
-          Super PAC money
+          {sentenceCase(roundName, false)} super PAC money
           <span className={sharedStyles.sectionTitleAmount}>
             {currency(superPacTotal)}
           </span>
@@ -577,7 +567,7 @@ export default async function ElectionResults({ sector }: { sector: Sector }) {
       </section>
       <section>
         <h2 className={sharedStyles.sectionTitle}>
-          Super PAC money by what it backed
+          {sentenceCase(roundName, false)} super PAC money by what it backed
         </h2>
         <p className={sharedStyles.subtitle}>
           Competitive races are rated Toss-up or Lean. In races rated Likely or

@@ -16,6 +16,7 @@ import {
   getCandidateResult,
   getDeclinedElsewhereCandidateIds,
   getRaceCallStatus,
+  getSubraceName,
   needsResult,
   RaceCallStatus,
 } from "@/app/utils/races";
@@ -297,6 +298,16 @@ export function getResultRaces(
     }
   }
   return results.sort(compareResultRaces);
+}
+
+// What to call the round being decided, e.g. "general election", or just
+// "election" when the date mixes rounds
+export function getRoundName(races: ResultRace[]): string {
+  const types = new Set(races.map((r) => r.race.type));
+  if (types.size !== 1) {
+    return "election";
+  }
+  return getSubraceName({ type: [...types][0] });
 }
 
 export interface MoneyByOutcome {

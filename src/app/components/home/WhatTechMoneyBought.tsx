@@ -30,6 +30,7 @@ import { mentionsIndustry } from "@/app/utils/adAnalysis";
 import { getTaggedAds } from "@/app/utils/adAnalysisData";
 import { isError } from "@/app/utils/errors";
 import { humanizeRoundedCurrency } from "@/app/utils/humanize";
+import { getRoundName } from "@/app/utils/results";
 
 import styles from "./WhatTechMoneyBought.module.css";
 
@@ -376,8 +377,9 @@ async function ResultsColumn() {
       description={
         <>
           races with crypto or AI money have been called. Each bar splits one
-          kind of race&rsquo;s super PAC money by whether it ended up on the
-          winning side, the losing side, or is still waiting on a call.
+          kind of race&rsquo;s {getRoundName(results.races)} super PAC money by
+          whether it ended up on the winning side, the losing side, or is still
+          waiting on a call.
           {tally.superPacRaces < tally.races && (
             <>
               {" "}

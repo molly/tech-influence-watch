@@ -6,6 +6,10 @@
   margin: 2rem 0;
 }
 
+.intro {
+  max-width: 1000px;
+}
+
 .moneySection {
   max-width: 1000px;
   margin: 2rem 0;
