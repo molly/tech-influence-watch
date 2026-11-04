@@ -5,6 +5,7 @@ import {
   fetchAllStateElections,
   fetchBeneficiaries,
   fetchBeneficiariesWithoutExpendituresOrder,
+  fetchCookRatings,
 } from "@/app/actions/fetch";
 import Candidate from "@/app/components/Candidate";
 import ErrorText from "@/app/components/ErrorText";
@@ -12,7 +13,7 @@ import Outcome from "@/app/components/Outcome";
 import PaginatedTable from "@/app/components/PaginatedTable";
 import { RaceRatingChip, RatingHeader } from "@/app/components/RaceRating";
 import styles from "@/app/components/tables.module.css";
-import { COOK_RATINGS } from "@/app/data/cookRatings";
+import { CookRating } from "@/app/data/cookRatings";
 import { SINGLE_MEMBER_STATES, STATES_BY_ABBR } from "@/app/data/states";
 import sharedStyles from "@/app/shared.module.css";
 import { Beneficiary, CandidateBeneficiary } from "@/app/types/Beneficiaries";
@@ -123,11 +124,13 @@ function CandidateRow({
   stateElections,
   race,
   id,
+  rating,
 }: {
   beneficiary: CandidateBeneficiary;
   stateElections?: ElectionsByState;
   race: ResolvedRace;
   id: string;
+  rating?: CookRating;
 }) {
   const candidateDetails = beneficiary.candidate_details;
   const { raceId, shortRaceId, electionCandidate } = race;
@@ -165,7 +168,7 @@ function CandidateRow({
             </>
           )}
           <Link href={raceHref}>{raceName}</Link>
-          <RaceRatingChip raceId={raceId} className={styles.mobileRating} />
+          <RaceRatingChip rating={rating} className={styles.mobileRating} />
         </div>
       </td>
       <td className={`center-cell ${styles.stateCol}`}>
@@ -181,8 +184,8 @@ function CandidateRow({
         </Link>
       </td>
       <td className={`center-cell ${styles.ratingCol}`}>
-        {COOK_RATINGS[raceId] ? (
-          <RaceRatingChip raceId={raceId} />
+        {rating ? (
+          <RaceRatingChip rating={rating} />
         ) : (
           <span className={styles.nilCell}>—</span>
         )}
@@ -209,11 +212,12 @@ export default async function OtherSupportedRaces({
 }: {
   sector: Sector;
 }) {
-  const [beneficiariesData, beneficiariesOrder, electionsData] =
+  const [beneficiariesData, beneficiariesOrder, electionsData, cookRatings] =
     await Promise.all([
       fetchBeneficiaries(sector),
       fetchBeneficiariesWithoutExpendituresOrder(sector),
       fetchAllStateElections(),
+      fetchCookRatings(),
     ]);
 
   if (
@@ -266,6 +270,7 @@ export default async function OtherSupportedRaces({
           stateElections={stateElections}
           race={race}
           id={id}
+          rating={cookRatings[race.raceId]}
         />
       );
     })

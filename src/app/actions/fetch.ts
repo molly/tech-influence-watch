@@ -28,6 +28,7 @@ import { getAdDate, mergeAdVariants } from "@/app/utils/ads";
 import { ErrorType, isError } from "@/app/utils/errors";
 import { serializeFirestore } from "@/app/utils/firestore";
 
+import { CookRatings } from "../data/cookRatings";
 import { TRUMP_CANDIDATE_ID } from "../data/trump";
 import { Ad, AdGroup } from "../types/Ads";
 import { Beneficiary } from "../types/Beneficiaries";
@@ -136,6 +137,17 @@ export const fetchQpq = cache(
     return fetchConstant<Record<string, QPQ>>("qpq");
   },
 );
+
+// Cook ratings only decorate and classify races, so a missing doc shouldn't
+// take a page down. Log it and render the races unrated.
+export const fetchCookRatings = cache(async (): Promise<CookRatings> => {
+  const ratings = await fetchConstant<CookRatings>("cookRatings");
+  if (!ratings) {
+    console.error("Cook ratings not found in constants/cookRatings");
+    return {};
+  }
+  return ratings;
+});
 
 // ----------------------------------------------------------------------
 // TOTALS ---------------------------------------------------------------

@@ -813,3 +813,122 @@
   display: flex;
   gap: 0.5rem;
 }
+
+/* === Election results (results/page) === */
+
+.resultsToolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
+.resultsToolbarField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.resultsRaceCard {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+  background-color: var(--card-background);
+}
+
+.resultsRaceHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.resultsRaceTitle {
+  flex: 1;
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.resultsRaceMeta {
+  font-weight: normal;
+  font-size: 0.9rem;
+  color: var(--secondary-text);
+}
+
+.resultsRaceStatus {
+  font-size: 0.9rem;
+  color: var(--secondary-text);
+}
+
+.resultsCandidateList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.resultsCandidateRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--card-border);
+}
+
+.resultsCandidateNote {
+  margin-left: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--secondary-text);
+}
+
+.resultsButtonGroup {
+  display: inline-flex;
+  gap: 0.25rem;
+}
+
+.resultsButton {
+  padding: 0.25rem 0.75rem;
+  background-color: var(--background);
+  color: var(--main-text);
+  border: 1px solid var(--card-border);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.resultsButton:focus-visible {
+  outline: 2px solid var(--admin-primary);
+  outline-offset: 2px;
+}
+
+.resultsButton:disabled {
+  cursor: progress;
+}
+
+.resultsButtonWon {
+  background-color: var(--admin-success-bg);
+  color: var(--admin-success-text);
+  border-color: var(--admin-success);
+  font-weight: bold;
+}
+
+.resultsButtonLost {
+  background-color: var(--admin-error-bg);
+  color: var(--admin-error-text);
+  border-color: var(--admin-error);
+  font-weight: bold;
+}
+
+.resultsButtonUndecided {
+  background-color: var(--color-neutral-200);
+  color: var(--color-neutral-800);
+  border-color: var(--color-neutral-500);
+  font-weight: bold;
+}
+
+.resultsRatingRow {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--secondary-text);
+}

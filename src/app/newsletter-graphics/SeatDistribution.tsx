@@ -6,9 +6,6 @@ import styles from "./page.module.css";
 export interface SeatAmount {
   raceId: string;
   amount: number;
-  // The party the spending helped. Undefined for a seat where it helped more
-  // than one party, or where the beneficiary is unclear.
-  party?: string;
 }
 
 export interface CycleSeats {
@@ -20,29 +17,11 @@ export interface CycleSeats {
 
 // Combine each seat's contests (primary, runoff, general) into one amount
 export function bySeat(contests: SeatAmount[]): SeatAmount[] {
-  const seats = new Map<string, { amount: number; parties: Set<string> }>();
-  for (const { raceId, amount, party } of contests) {
-    const seat = seats.get(raceId) ?? { amount: 0, parties: new Set() };
-    seat.amount += amount;
-    seat.parties.add(party ?? "U");
-    seats.set(raceId, seat);
+  const seats = new Map<string, number>();
+  for (const { raceId, amount } of contests) {
+    seats.set(raceId, (seats.get(raceId) ?? 0) + amount);
   }
-  return [...seats].map(([raceId, { amount, parties }]) => ({
-    raceId,
-    amount,
-    party: parties.size === 1 ? [...parties][0] : undefined,
-  }));
-}
-
-// Global party fill classes from globals.css
-export function partyClass(party?: string) {
-  if (party === "R") {
-    return "rep";
-  }
-  if (party === "D") {
-    return "dem";
-  }
-  return "unk";
+  return [...seats].map(([raceId, amount]) => ({ raceId, amount }));
 }
 
 // SVG coordinates. The viewBox scales with the frame, so these are only
@@ -93,10 +72,8 @@ function median(values: number[]) {
 // Beeswarm: place each dot as close to the center line as it can go without
 // overlapping a dot already placed
 function swarm(seats: SeatAmount[]) {
-  const placed: { x: number; y: number; party?: string }[] = [];
-  for (const { amount, party } of [...seats].sort(
-    (a, b) => a.amount - b.amount,
-  )) {
+  const placed: { x: number; y: number }[] = [];
+  for (const { amount } of [...seats].sort((a, b) => a.amount - b.amount)) {
     const cx = x(amount);
     const neighbors = placed.filter((p) => Math.abs(p.x - cx) < 2 * RADIUS);
     let y = 0;
@@ -109,7 +86,7 @@ function swarm(seats: SeatAmount[]) {
         break;
       }
     }
-    placed.push({ x: cx, y, party });
+    placed.push({ x: cx, y });
   }
   return placed;
 }
@@ -137,8 +114,7 @@ function Strip({ year, seats, cluster }: CycleSeats) {
     <div className={styles.strip}>
       <h3 className={styles.panelTitle}>{year}</h3>
       <p className={styles.panelSubtitle}>
-        {currency(total)} across {seats.length} seats, median{" "}
-        {currency(mid)}
+        {currency(total)} across {seats.length} seats, median {currency(mid)}
       </p>
       <svg
         className={styles.stripSvg}
@@ -159,7 +135,7 @@ function Strip({ year, seats, cluster }: CycleSeats) {
         {dots.map((dot, i) => (
           <circle
             key={i}
-            className={`${styles.stripDot} ${partyClass(dot.party)}`}
+            className={styles.stripDot}
             cx={dot.x}
             cy={dot.y}
             r={RADIUS}
@@ -172,11 +148,7 @@ function Strip({ year, seats, cluster }: CycleSeats) {
           y1={-extent}
           y2={extent}
         />
-        <text
-          className={styles.stripLabel}
-          x={x(mid) + 4}
-          y={-extent + 12}
-        >
+        <text className={styles.stripLabel} x={x(mid) + 4} y={-extent + 12}>
           Median
         </text>
         <line
@@ -222,11 +194,7 @@ function Strip({ year, seats, cluster }: CycleSeats) {
   );
 }
 
-export default function SeatDistribution({
-  cycles,
-}: {
-  cycles: CycleSeats[];
-}) {
+export default function SeatDistribution({ cycles }: { cycles: CycleSeats[] }) {
   return (
     <>
       {cycles.map((cycle) => (

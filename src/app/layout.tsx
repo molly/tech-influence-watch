@@ -26,7 +26,6 @@ const displayFont = Big_Shoulders({
 const robotoFont = Roboto({
   subsets: ["latin"],
   variable: "--font-roboto",
-  weight: ["400", "700"],
 });
 const serifFont = Source_Serif_4({
   subsets: ["latin"],

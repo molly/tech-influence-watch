@@ -1,8 +1,9 @@
+import { fetchCookRatings } from "@/app/actions/fetch";
 import {
   COOK_RATING_LABELS,
   COOK_RATING_SCALE,
-  COOK_RATINGS,
   COOK_RATINGS_AS_OF,
+  CookRating,
 } from "@/app/data/cookRatings";
 import { formatDateFromString } from "@/app/utils/utils";
 
@@ -11,13 +12,15 @@ import styles from "./RaceRating.module.css";
 
 // Compact chip for tables, e.g. "Lean R", shaded like its step on the scale
 export function RaceRatingChip({
-  raceId,
+  rating,
   className,
+  prefix,
 }: {
-  raceId: string;
+  rating?: CookRating;
   className?: string;
+  // Text before the rating, e.g. "Projected"
+  prefix?: string;
 }) {
-  const rating = COOK_RATINGS[raceId];
   if (!rating) {
     return null;
   }
@@ -26,6 +29,7 @@ export function RaceRatingChip({
       className={`${styles.chip} ${styles[rating]}${className ? ` ${className}` : ""}`}
       title="Cook Political Report rating"
     >
+      {prefix && `${prefix} `}
       {COOK_RATING_LABELS[rating].short}
     </span>
   );
@@ -57,8 +61,8 @@ export function RatingHeader({
   );
 }
 
-export default function RaceRating({ raceId }: { raceId: string }) {
-  const rating = COOK_RATINGS[raceId];
+export default async function RaceRating({ raceId }: { raceId: string }) {
+  const rating = (await fetchCookRatings())[raceId];
   if (!rating) {
     return null;
   }

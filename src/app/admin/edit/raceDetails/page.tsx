@@ -6,7 +6,13 @@ import React, { useState } from "react";
 import { STATES_BY_ABBR } from "@/app/data/states";
 import { db } from "@/app/lib/db";
 import { Party, RaceType } from "@/app/types/Elections";
-import { getShardDocName } from "@/app/utils/races";
+import {
+  applyCandidateResult,
+  CandidateResult,
+  getCandidateResult,
+  getShardDocName,
+  withCalledAt,
+} from "@/app/utils/races";
 
 import styles from "../../admin.module.css";
 import { markRaceSummariesStale } from "./invalidatePipeline";
@@ -93,39 +99,11 @@ export default function RaceDetailsEditor() {
     });
   };
 
-  // Set a candidate's result: won (won: true), lost (won: false), or undecided
-  // (won field removed). A race can have multiple winners (top-two primaries,
-  // races that advance to a runoff), and those winners may be called at
-  // different times. So marking a candidate as won does not force every other
-  // candidate to lost — it only defaults the candidates who are still undecided
-  // to lost. Candidates already set to won or lost are left untouched, which
-  // lets you mark one called winner while leaving an as-yet-uncalled co-winner
-  // undecided (set them back to undecided after marking the first winner).
-  const setCandidateResult = (
-    index: number,
-    result: "won" | "lost" | "undecided",
-  ) => {
-    const wonValue =
-      result === "won" ? true : result === "lost" ? false : undefined;
-    let updated = raceForm.candidates.map((c, i) => {
-      if (i !== index) {
-        return c;
-      }
-      if (wonValue === undefined) {
-        const { won: _won, ...rest } = c;
-        return rest as CandidateFormData;
-      }
-      return { ...c, won: wonValue };
+  const setCandidateResult = (index: number, result: CandidateResult) => {
+    setRaceForm({
+      ...raceForm,
+      candidates: applyCandidateResult(raceForm.candidates, index, result),
     });
-    if (wonValue === true) {
-      updated = updated.map((c, i) => {
-        if (i === index || c.won !== undefined) {
-          return c;
-        }
-        return { ...c, won: false };
-      });
-    }
-    setRaceForm({ ...raceForm, candidates: updated });
   };
 
   const fetchExistingRaces = async (state: string) => {
@@ -328,14 +306,21 @@ export default function RaceDetailsEditor() {
         raceGroup.manualRaces = [];
       }
 
+      // The form doesn't hold the call time, so carry it over from the entry
+      // being replaced (or stamp it, if this save completes the call)
+      const now = Date.now(); // eslint-disable-line react-hooks/purity
       if (editingIndex !== null) {
         // Update existing manual race
-        raceGroup.manualRaces[editingIndex] = race;
+        raceGroup.manualRaces[editingIndex] = withCalledAt(
+          raceGroup.manualRaces[editingIndex],
+          race,
+          now,
+        );
       } else {
         // Add new manual race
-        raceGroup.manualRaces.push(race);
+        raceGroup.manualRaces.push(withCalledAt(undefined, race, now));
       }
-      raceGroup.manualRacesUpdated = Date.now(); // eslint-disable-line react-hooks/purity
+      raceGroup.manualRacesUpdated = now;
 
       // Note: we deliberately do not touch raceGroup.candidates here. The
       // candidate "won" flags saved above are the source of truth; the backend
@@ -720,12 +705,7 @@ export default function RaceDetailsEditor() {
                   <label htmlFor={`candidate-result-${index}-undecided`}>Result</label>
                   <div className={styles.resultOptions}>
                     {(["undecided", "won", "lost"] as const).map((result) => {
-                      const current =
-                        candidate.won === true
-                          ? "won"
-                          : candidate.won === false
-                            ? "lost"
-                            : "undecided";
+                      const current = getCandidateResult(candidate);
                       const labelClass =
                         result === "won"
                           ? styles.colorGreen

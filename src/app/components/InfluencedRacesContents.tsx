@@ -9,6 +9,7 @@ import {
   fetchAllStateElections,
   fetchBeneficiaries,
   fetchCandidateExpenditures,
+  fetchCookRatings,
 } from "@/app/actions/fetch";
 import styles from "@/app/components/tables.module.css";
 import sharedStyles from "@/app/shared.module.css";
@@ -24,9 +25,10 @@ import {
   getUpcomingRaceForCandidate,
 } from "@/app/utils/races";
 import { range } from "@/app/utils/range";
+import { type Goal } from "@/app/utils/results";
 import { formatCurrency } from "@/app/utils/utils";
 
-import { COOK_RATINGS } from "../data/cookRatings";
+import { CookRating } from "../data/cookRatings";
 import { STATES_BY_ABBR } from "../data/states";
 import { Beneficiary } from "../types/Beneficiaries";
 import { Sector } from "../types/Sector";
@@ -65,7 +67,89 @@ export function InfluencedRacesContentsSkeleton({
   ));
 }
 
-function GoalOutcome({
+const CHECK_PATH =
+  "M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z";
+const X_PATH =
+  "M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z";
+
+const GOAL_TITLES: Record<Goal, string> = {
+  achieved: "Goal achieved",
+  failed: "Goal failed",
+  mixed: "Mixed results",
+};
+
+export function GoalIcon({
+  goal,
+  inline = false,
+  title = GOAL_TITLES[goal],
+}: {
+  goal: Goal;
+  inline?: boolean;
+  title?: string;
+}) {
+  const inlineClass = inline ? sharedStyles.goalInline : "";
+  if (goal === "achieved") {
+    return (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 448 512"
+        className={`${sharedStyles.goalAccomplished} ${inlineClass}`}
+        role="image"
+      >
+        <path d={CHECK_PATH} />
+        <title>{title}</title>
+      </svg>
+    );
+  }
+  if (goal === "failed") {
+    return (
+      <svg
+        className={`${sharedStyles.goalFailed} ${inlineClass}`}
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 384 512"
+      >
+        <path d={X_PATH} />
+        <title>{title}</title>
+      </svg>
+    );
+  }
+  return (
+    <svg
+      className={`${sharedStyles.goalMixed} ${inlineClass}`}
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 448 512"
+    >
+      <title>{title}</title>
+      <path d="M32 288c-17.7 0-32 14.3-32 32s14.3 32 32 32l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L32" />
+    </svg>
+  );
+}
+
+// A check for a candidate who won and an x for one who lost, in the text color
+// so it isn't read as whether the money's goal was met
+export function ResultIcon({
+  won,
+  className,
+}: {
+  won: boolean;
+  className?: string;
+}) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox={won ? "0 0 448 512" : "0 0 384 512"}
+      className={className}
+    >
+      <title>{won ? "Won" : "Lost"}</title>
+      <path d={won ? CHECK_PATH : X_PATH} />
+    </svg>
+  );
+}
+
+const MIXED_CANDIDATE_TITLE =
+  "Mixed results (this candidate received both support and opposition from industry PACs)";
+
+export function GoalOutcome({
   candidate,
   races,
   sector,
@@ -87,7 +171,7 @@ function GoalOutcome({
     : getMostRecentRaceResult(races, candidate);
   const lost = result === false;
   const won = result === true;
-  let icon = null;
+  let goal: Goal | null = null;
   let text = null;
 
   if (lost || candidate.withdrew || candidate.died) {
@@ -99,90 +183,36 @@ function GoalOutcome({
         : "withdrew from their race";
     if (wasOpposed) {
       if (wasSupported) {
-        icon = (
-          <svg
-            className={`${sharedStyles.goalMixed} ${explanatoryText ? sharedStyles.goalInline : ""}`}
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 448 512"
-          >
-            <title>
-              Mixed results (this candidate received both support and opposition
-              from industry PACs)
-            </title>
-            <path d="M32 288c-17.7 0-32 14.3-32 32s14.3 32 32 32l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L32" />
-          </svg>
-        );
+        goal = "mixed";
         text = `Candidate both supported and opposed by industry PACs ${outcomePhrase}`;
       } else {
-        icon = (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 448 512"
-            className={`${sharedStyles.goalAccomplished} ${explanatoryText ? sharedStyles.goalInline : ""}`}
-            role="image"
-          >
-            <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
-            <title>Goal achieved</title>
-          </svg>
-        );
+        goal = "achieved";
         text = `Candidate opposed by industry PACs ${outcomePhrase}`;
       }
     } else {
-      icon = (
-        <svg
-          className={`${sharedStyles.goalFailed} ${explanatoryText ? sharedStyles.goalInline : ""}`}
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 384 512"
-        >
-          <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
-          <title>Goal failed</title>
-        </svg>
-      );
+      goal = "failed";
       text = `Candidate supported by industry PACs ${outcomePhrase}`;
     }
   } else if (won) {
     if (wasSupported && wasOpposed) {
-      icon = (
-        <svg
-          className={`${sharedStyles.goalMixed} ${explanatoryText ? sharedStyles.goalInline : ""}`}
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 448 512"
-        >
-          <title>
-            Mixed results (this candidate received both support and opposition
-            from industry PACs)
-          </title>
-          <path d="M32 288c-17.7 0-32 14.3-32 32s14.3 32 32 32l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32L32" />
-        </svg>
-      );
+      goal = "mixed";
       text = `Candidate both supported and opposed by industry PACs won their race`;
     } else if (wasSupported) {
-      icon = (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 448 512"
-          className={`${sharedStyles.goalAccomplished} ${explanatoryText ? sharedStyles.goalInline : ""}`}
-          role="image"
-        >
-          <path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
-          <title>Goal achieved</title>
-        </svg>
-      );
+      goal = "achieved";
       text = `Candidate supported by industry PACs won their race`;
     } else if (wasOpposed) {
-      icon = (
-        <svg
-          className={`${sharedStyles.goalFailed} ${explanatoryText ? sharedStyles.goalInline : ""}`}
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 384 512"
-        >
-          <path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z" />
-          <title>Goal failed</title>
-        </svg>
-      );
-      text = `Candidate supported by industry PACs lost their race`;
+      goal = "failed";
+      text = `Candidate opposed by industry PACs won their race`;
     }
   }
+
+  const icon = goal && (
+    <GoalIcon
+      goal={goal}
+      inline={explanatoryText}
+      title={goal === "mixed" ? MIXED_CANDIDATE_TITLE : undefined}
+    />
+  );
 
   if (!icon) {
     return null;
@@ -206,6 +236,7 @@ function CandidateRow({
   beneficiary,
   sector,
   showRating,
+  rating,
 }: {
   candidate: ExpenditureCandidateSummary;
   race: ElectionGroup;
@@ -213,6 +244,7 @@ function CandidateRow({
   sector: Sector;
   // Ratings are shown on the full elections list, not the homepage preview
   showRating: boolean;
+  rating?: CookRating;
 }) {
   const supportTotal = getSectorSupportTotal(candidate, sector);
   const opposeTotal = getSectorOpposeTotal(candidate, sector);
@@ -236,7 +268,7 @@ function CandidateRow({
           {" · "}
           <Link href={raceHref}>{raceName}</Link>
           {showRating && (
-            <RaceRatingChip raceId={raceId} className={styles.mobileRating} />
+            <RaceRatingChip rating={rating} className={styles.mobileRating} />
           )}
         </div>
       </td>
@@ -252,8 +284,8 @@ function CandidateRow({
       </td>
       {showRating && (
         <td className={`center-cell ${styles.ratingCol}`}>
-          {COOK_RATINGS[raceId] ? (
-            <RaceRatingChip raceId={raceId} />
+          {rating ? (
+            <RaceRatingChip rating={rating} />
           ) : (
             <span className={styles.nilCell}>—</span>
           )}
@@ -323,10 +355,12 @@ export default async function InfluencedRacesContents({
   sector?: Sector;
 }) {
   const fetchLimit = sector === "all" && !fullPage ? 5 : undefined;
-  const [expenditureData, raceData, beneficiariesData] = await Promise.all([
+  const [expenditureData, raceData, beneficiariesData, cookRatings] =
+    await Promise.all([
     fetchCandidateExpenditures(fetchLimit),
     fetchAllStateElections(),
     fetchBeneficiaries(sector),
+    fetchCookRatings(),
   ]);
 
   if (isError(expenditureData) || isError(raceData)) {
@@ -374,6 +408,7 @@ export default async function InfluencedRacesContents({
         beneficiary={beneficiary}
         sector={sector}
         showRating={fullPage}
+        rating={cookRatings[`${candidate.state}-${candidate.race}`]}
       />
     );
   });

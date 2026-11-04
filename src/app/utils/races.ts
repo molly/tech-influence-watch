@@ -131,16 +131,22 @@ export function getDeclinedElsewhereCandidateIds(
 }
 
 // Senate race first, then house races ordered by district
+// (an at-large seat like "AK-H" has no district), with a special election after
+// the regular race for the same seat
 export const sortRaces = (a: string, b: string) => {
-  const raceA = a.split("-");
-  const raceB = b.split("-");
-  if (raceA[1] === "S") {
-    return -1;
-  } else if (raceB[1] === "S") {
-    return 1;
-  } else {
-    return raceA[2].localeCompare(raceB[2]);
+  const [, officeA, districtA] = a.split("-");
+  const [, officeB, districtB] = b.split("-");
+  if (officeA !== officeB) {
+    return officeA === "S" ? -1 : officeB === "S" ? 1 : officeA.localeCompare(officeB);
   }
+  const numberA = parseInt(districtA, 10) || 0;
+  const numberB = parseInt(districtB, 10) || 0;
+  if (numberA !== numberB) {
+    return numberA - numberB;
+  }
+  const specialA = a.toUpperCase().endsWith("-SPECIAL");
+  const specialB = b.toUpperCase().endsWith("-SPECIAL");
+  return Number(specialA) - Number(specialB);
 };
 
 export const getRaceName = (
@@ -419,6 +425,102 @@ export const getMostRecentRaceResult = (
     (c) => c.name === candidate.common_name,
   );
   return entry?.won;
+};
+
+export type CandidateResult = "won" | "lost" | "undecided";
+
+export const getCandidateResult = (candidate: { won?: boolean }): CandidateResult => {
+  if (candidate.won === true) {
+    return "won";
+  }
+  if (candidate.won === false) {
+    return "lost";
+  }
+  return "undecided";
+};
+
+// Set one candidate's result: won (won: true), lost (won: false), or undecided
+// (won field removed). A race can have multiple winners (top-two primaries,
+// races that advance to a runoff), and those winners may be called at
+// different times. So marking a candidate as won does not force every other
+// candidate to lost — it only defaults the candidates who are still undecided
+// to lost. Candidates already set to won or lost are left untouched, which
+// lets you mark one called winner while leaving an as-yet-uncalled co-winner
+// undecided (set them back to undecided after marking the first winner).
+// Placeholders are slots, not people, so they never get a result.
+export const applyCandidateResult = <T extends RaceCandidate>(
+  candidates: T[],
+  index: number,
+  result: CandidateResult,
+): T[] => {
+  const wonValue =
+    result === "won" ? true : result === "lost" ? false : undefined;
+  let updated = candidates.map((c, i) => {
+    if (i !== index) {
+      return c;
+    }
+    if (wonValue === undefined) {
+      const { won: _won, ...rest } = c;
+      return rest as T;
+    }
+    return { ...c, won: wonValue };
+  });
+  if (wonValue === true) {
+    updated = updated.map((c, i) => {
+      if (i === index || c.won !== undefined || c.placeholder) {
+        return c;
+      }
+      return { ...c, won: false };
+    });
+  }
+  return updated;
+};
+
+// Placeholders are slots, not people, and candidates who left the race before
+// it was held don't need a call for the race to be finished.
+export const needsResult = (candidate: RaceCandidate) =>
+  !candidate.placeholder && !hasLeftRace(candidate);
+
+export type RaceCallStatus = "called" | "partial" | "uncalled";
+
+export const getRaceCallStatus = (race: Race): RaceCallStatus => {
+  const eligible = race.candidates.filter(needsResult);
+  const decided = eligible.filter((c) => c.won !== undefined);
+  if (decided.length === 0) {
+    return "uncalled";
+  }
+  if (decided.length === eligible.length && eligible.some((c) => c.won)) {
+    return "called";
+  }
+  return "partial";
+};
+
+const getWinnerNames = (race: Race) =>
+  race.candidates
+    .filter((c) => c.won)
+    .map((c) => c.name)
+    .sort()
+    .join("|");
+
+// Stamp `next` with when it was called. A race that was already called for the
+// same winners keeps its original time, so fixing an unrelated field doesn't
+// move it to the top of the results page. A race that isn't fully called has
+// no time. Firestore rejects undefined values, so the field is removed rather
+// than set to undefined.
+export const withCalledAt = <T extends Race>(
+  previous: Race | undefined,
+  next: T,
+  now: number,
+): T => {
+  const { calledAt: _calledAt, ...rest } = next;
+  if (getRaceCallStatus(next) !== "called") {
+    return rest as T;
+  }
+  const keepPrevious =
+    previous?.calledAt !== undefined &&
+    getRaceCallStatus(previous) === "called" &&
+    getWinnerNames(previous) === getWinnerNames(next);
+  return { ...rest, calledAt: keepPrevious ? previous.calledAt : now } as T;
 };
 
 // Whether the candidate lost their race, derived from the recorded race result

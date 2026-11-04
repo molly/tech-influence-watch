@@ -1,7 +1,11 @@
 import Link from "next/link";
 import { Fragment } from "react";
 
-import { fetchAllStateElections, fetchConstant } from "@/app/actions/fetch";
+import {
+  fetchAllStateElections,
+  fetchConstant,
+  fetchCookRatings,
+} from "@/app/actions/fetch";
 import { CommitteeLink } from "@/app/components/CommitteeLink";
 import ErrorText from "@/app/components/ErrorText";
 import barStyles from "@/app/components/home/HorizontalBars.module.css";
@@ -11,13 +15,17 @@ import MoneyCard, { MoneyCardSkeleton } from "@/app/components/MoneyCard";
 import { RaceRatingChip, RatingHeader } from "@/app/components/RaceRating";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import tableStyles from "@/app/components/tables.module.css";
-import { COOK_RATINGS, COOK_RATINGS_AS_OF } from "@/app/data/cookRatings";
-import competitiveness from "@/app/data/raceCompetitiveness.json";
+import { COOK_RATINGS_AS_OF, CookRatings } from "@/app/data/cookRatings";
 import { STATES_BY_ABBR } from "@/app/data/states";
 import sharedStyles from "@/app/shared.module.css";
 import { CommitteeConstant } from "@/app/types/Committee";
 import { ElectionGroup, ElectionsByState, Party } from "@/app/types/Elections";
 import { Sector } from "@/app/types/Sector";
+import {
+  Category,
+  classifySpending,
+  REVIEWED_CONTESTS,
+} from "@/app/utils/contestRatings";
 import { isError } from "@/app/utils/errors";
 import { humanizeList, humanizeRoundedCurrency } from "@/app/utils/humanize";
 import { getFullPartyName } from "@/app/utils/party";
@@ -27,11 +35,6 @@ import { sentenceCase } from "@/app/utils/titlecase";
 import { formatDateFromString } from "@/app/utils/utils";
 
 import styles from "./BattlegroundRaces.module.css";
-
-// Where a dollar went: into a genuinely competitive contest, behind a clear
-// but not certain favorite (a Likely seat), behind the candidate who was the
-// safe bet, behind the underdog, or into a contest that hasn't been reviewed
-type Category = "competitive" | "likely" | "safe" | "underdog" | "unclassified";
 
 const CATEGORIES: {
   key: Category;
@@ -72,35 +75,6 @@ const CATEGORIES: {
   },
 ];
 
-// Hand-marked contests that Cook's general election ratings can't classify:
-// primaries, and generals between two candidates of the same party. Generated
-// and marked by the backend's commands/race_competitiveness.py, which exports
-// the marks from its (uncommitted) review file to raceCompetitiveness.json.
-interface ReviewedContest {
-  key: string;
-  race_id: string;
-  type: string;
-  party: string;
-  // true, "likely" (a clear favorite, but a real contest), false (a safe bet),
-  // or null if not reviewed yet
-  competitive: boolean | "likely" | null;
-  // Who the safe bet was, for a contest without results yet
-  favorite: string;
-  candidates: { name: string; won: boolean | null }[];
-}
-
-// Index the reviewed contests by race, round, and candidate, since that's how
-// spending is keyed
-const REVIEWED_CONTESTS = new Map<string, ReviewedContest>();
-for (const contest of competitiveness.contests as ReviewedContest[]) {
-  for (const candidate of contest.candidates) {
-    REVIEWED_CONTESTS.set(
-      `${contest.race_id}|${contest.type}|${candidate.name}`,
-      contest,
-    );
-  }
-}
-
 // One tracked-PAC amount for or against one candidate in one contest
 interface Piece {
   contestKey: string;
@@ -126,6 +100,7 @@ interface Piece {
 // party Cook rates as favored. Nonpartisan primaries have no single side to
 // credit.
 function getBeneficiaryParty(
+  cookRatings: CookRatings,
   raceId: string,
   group: ElectionGroup,
   type: string,
@@ -153,7 +128,7 @@ function getBeneficiaryParty(
   if (opponentParties.size === 1) {
     return [...opponentParties][0];
   }
-  const rating = COOK_RATINGS[raceId];
+  const rating = cookRatings[raceId];
   const favoredParty = rating?.endsWith("-d")
     ? Party.Democratic
     : rating?.endsWith("-r")
@@ -169,61 +144,10 @@ function getBeneficiaryParty(
   return undefined;
 }
 
-// Cook's rating settles general elections between the parties: Toss-up and
-// Lean are competitive, and money helping the favored party backs a likely
-// winner in a Likely seat and the safe bet in a Solid one.
-function classifyGeneral(
-  raceId: string,
-  candidateParty: string | undefined,
-  kind: "support" | "oppose",
-): Category {
-  const rating = COOK_RATINGS[raceId];
-  if (!rating) {
-    return "unclassified";
-  }
-  if (rating === "tossup" || rating.startsWith("lean")) {
-    return "competitive";
-  }
-  const favoredParty = rating.endsWith("-d") ? "D" : "R";
-  const helpsFavorite =
-    kind === "support"
-      ? candidateParty === favoredParty
-      : candidateParty !== favoredParty;
-  if (!helpsFavorite) {
-    return "underdog";
-  }
-  return rating.startsWith("likely") ? "likely" : "safe";
-}
-
-// For a reviewed contest marked "likely" or not competitive, the winner (or
-// the hand-marked favorite, before there are results) is the favorite
-function classifyReviewed(
-  contest: ReviewedContest,
-  candidate: string,
-  kind: "support" | "oppose",
-): Category {
-  if (contest.competitive === null) {
-    return "unclassified";
-  }
-  if (contest.competitive === true) {
-    return "competitive";
-  }
-  const favorites = contest.favorite
-    ? [contest.favorite]
-    : contest.candidates.filter((c) => c.won === true).map((c) => c.name);
-  if (!favorites.length) {
-    return "unclassified";
-  }
-  const isFavorite = favorites.includes(candidate);
-  if ((kind === "support") !== isFavorite) {
-    return "underdog";
-  }
-  return contest.competitive === "likely" ? "likely" : "safe";
-}
-
 function getPieces(
   elections: Record<string, ElectionsByState>,
   committees: Record<string, CommitteeConstant>,
+  cookRatings: CookRatings,
   sector: Sector,
 ): Piece[] {
   const pieces: Piece[] = [];
@@ -263,15 +187,14 @@ function getPieces(
               if (!amounts[kind]) {
                 continue;
               }
-              let category: Category;
-              if (reviewed) {
-                category = classifyReviewed(reviewed, candidate, kind);
-              } else if (type === "general") {
-                category = classifyGeneral(raceId, candidateParty, kind);
-              } else {
-                // Primary spending the review file doesn't have yet
-                category = "unclassified";
-              }
+              const category = classifySpending(
+                cookRatings,
+                raceId,
+                type,
+                candidate,
+                candidateParty,
+                kind,
+              );
               pieces.push({
                 contestKey: reviewed?.key ?? `${raceId}|${type}`,
                 raceId,
@@ -282,6 +205,7 @@ function getPieces(
                 incumbent,
                 candidateParty,
                 beneficiaryParty: getBeneficiaryParty(
+                  cookRatings,
                   raceId,
                   group,
                   type,
@@ -309,9 +233,10 @@ function getPieces(
 export function getContests(
   elections: Record<string, ElectionsByState>,
   committees: Record<string, CommitteeConstant>,
+  cookRatings: CookRatings,
   sector: Sector,
 ): ContestRow[] {
-  return groupByContest(getPieces(elections, committees, sector));
+  return groupByContest(getPieces(elections, committees, cookRatings, sector));
 }
 
 function sum(pieces: Piece[]) {
@@ -460,9 +385,11 @@ function dominantParty(pieces: Piece[]) {
 function ContestTable({
   rows,
   general,
+  cookRatings,
 }: {
   rows: ContestRow[];
   general: boolean;
+  cookRatings: CookRatings;
 }) {
   return (
     <table className={tableStyles.superPacTable}>
@@ -489,8 +416,8 @@ function ContestTable({
             </td>
             {general && (
               <td className="center-cell">
-                {COOK_RATINGS[row.raceId] ? (
-                  <RaceRatingChip raceId={row.raceId} />
+                {cookRatings[row.raceId] ? (
+                  <RaceRatingChip rating={cookRatings[row.raceId]} />
                 ) : (
                   <span className={tableStyles.nilCell}>—</span>
                 )}
@@ -656,9 +583,10 @@ function splitByCategory(pieces: Piece[]): CategorySplit[] {
 export function getCategorySplit(
   elections: Record<string, ElectionsByState>,
   committees: Record<string, CommitteeConstant>,
+  cookRatings: CookRatings,
   sector: Sector,
 ): CategorySplit[] {
-  return splitByCategory(getPieces(elections, committees, sector));
+  return splitByCategory(getPieces(elections, committees, cookRatings, sector));
 }
 
 interface SplitSegment {
@@ -806,10 +734,12 @@ function SectorContent({
   sector,
   pieces,
   strategyPieces,
+  cookRatings,
 }: {
   sector: Sector;
   pieces: Piece[];
   strategyPieces: Record<"crypto" | "ai", Piece[]>;
+  cookRatings: CookRatings;
 }) {
   const piecesIn = (category: Category) =>
     pieces.filter((p) => p.category === category);
@@ -1020,7 +950,11 @@ function SectorContent({
                       {roundRows.length === 1 ? "contest" : "contests"}
                     </span>
                   </h3>
-                  <ContestTable rows={roundRows} general={round.general} />
+                  <ContestTable
+                    rows={roundRows}
+                    general={round.general}
+                    cookRatings={cookRatings}
+                  />
                 </div>
               );
             })}
@@ -1065,27 +999,29 @@ export default async function BattlegroundRaces({
 }: {
   sector: Sector;
 }) {
-  const [data, committeesData] = await Promise.all([
+  const [data, committeesData, cookRatings] = await Promise.all([
     fetchAllStateElections(),
     fetchConstant<Record<string, CommitteeConstant>>("committees"),
+    fetchCookRatings(),
   ]);
   if (isError(data) || !committeesData) {
     return <ErrorText subject="race data" />;
   }
   const elections = data as Record<string, ElectionsByState>;
   const strategyPieces = {
-    crypto: getPieces(elections, committeesData, "crypto"),
-    ai: getPieces(elections, committeesData, "ai"),
+    crypto: getPieces(elections, committeesData, cookRatings, "crypto"),
+    ai: getPieces(elections, committeesData, cookRatings, "ai"),
   };
   return (
     <SectorContent
       sector={sector}
       pieces={
         sector === "all"
-          ? getPieces(elections, committeesData, "all")
+          ? getPieces(elections, committeesData, cookRatings, "all")
           : strategyPieces[sector]
       }
       strategyPieces={strategyPieces}
+      cookRatings={cookRatings}
     />
   );
 }

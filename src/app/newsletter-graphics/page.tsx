@@ -5,6 +5,7 @@ import {
   fetchAllExpenditureTotalsByParty,
   fetchAllStateElections,
   fetchConstant,
+  fetchCookRatings,
 } from "@/app/actions/fetch";
 import {
   ContestRow,
@@ -17,7 +18,7 @@ import HorizontalBars, {
 import barStyles from "@/app/components/home/HorizontalBars.module.css";
 import { RaceRatingChip } from "@/app/components/RaceRating";
 import tableStyles from "@/app/components/tables.module.css";
-import { COOK_RATINGS, COOK_RATINGS_AS_OF } from "@/app/data/cookRatings";
+import { COOK_RATINGS_AS_OF, CookRatings } from "@/app/data/cookRatings";
 import contests2024 from "@/app/data/cryptoContests2024.json";
 import { STATES_BY_ABBR } from "@/app/data/states";
 import { CommitteeConstant } from "@/app/types/Committee";
@@ -51,7 +52,7 @@ export const metadata: Metadata = {
 
 const ELECTION_DAY = "2026-11-03";
 const ROW_LIMIT = 10;
-const FEC_FILINGS_AS_OF = "2026-11-02";
+const FEC_FILINGS_AS_OF = "2026-11-03";
 
 interface Target {
   name: string;
@@ -177,9 +178,11 @@ function RatingsDate() {
 function Graphic({
   sector,
   rows,
+  cookRatings,
 }: {
   sector: "crypto" | "ai";
   rows: RaceRow[];
+  cookRatings: CookRatings;
 }) {
   const shown = rows.slice(0, ROW_LIMIT);
   const max = shown[0]?.total ?? 0;
@@ -213,8 +216,8 @@ function Graphic({
                   {getRaceHeadline(row.raceId)}
                 </td>
                 <td className="center-cell">
-                  {COOK_RATINGS[row.raceId] ? (
-                    <RaceRatingChip raceId={row.raceId} />
+                  {cookRatings[row.raceId] ? (
+                    <RaceRatingChip rating={cookRatings[row.raceId]} />
                   ) : (
                     <span className={tableStyles.nilCell}>—</span>
                   )}
@@ -394,33 +397,8 @@ function DistributionGraphic({
       <p className={styles.subtitle}>
         Each dot is one House or Senate seat where crypto-focused super PACs
         made independent expenditures, by total spent across its primary and
-        general elections and the party the spending helped.
+        general elections.
       </p>
-      <div className={styles.legend}>
-        <span className={barStyles.legendItem}>
-          <span
-            className={`${barStyles.legendSwatch} ${barStyles.colorRepublican}`}
-            aria-hidden={true}
-          />
-          Helps Republicans
-        </span>
-        <span className={barStyles.legendItem}>
-          <span
-            className={`${barStyles.legendSwatch} ${barStyles.colorDemocrat}`}
-            aria-hidden={true}
-          />
-          Helps Democrats
-        </span>
-        {cycles.some((cycle) => cycle.seats.some((seat) => !seat.party)) && (
-          <span className={barStyles.legendItem}>
-            <span
-              className={`${barStyles.legendSwatch} ${barStyles.colorUnknownParty}`}
-              aria-hidden={true}
-            />
-            Both parties or unclear
-          </span>
-        )}
-      </div>
       <SeatDistribution cycles={cycles} />
       <figcaption className={styles.source}>
         Dollar amounts are on a logarithmic scale. 2026 leaves out{" "}
@@ -444,14 +422,22 @@ function DistributionGraphic({
 }
 
 export default async function NewsletterGraphicsPage() {
-  const [data, committees, cryptoParty, aiParty, cryptoTotal, aiTotal] =
-    await Promise.all([
+  const [
+    data,
+    committees,
+    cryptoParty,
+    aiParty,
+    cryptoTotal,
+    aiTotal,
+    cookRatings,
+  ] = await Promise.all([
       fetchAllStateElections(),
       fetchConstant<Record<string, CommitteeConstant>>("committees"),
       fetchAllExpenditureTotalsByParty("crypto"),
       fetchAllExpenditureTotalsByParty("ai"),
       fetchAllCommitteeTotalExpenditures("crypto"),
       fetchAllCommitteeTotalExpenditures("ai"),
+      fetchCookRatings(),
     ]);
   if (
     isError(data) ||
@@ -464,7 +450,7 @@ export default async function NewsletterGraphicsPage() {
     return <ErrorText subject="race data" />;
   }
   const elections = data as Record<string, ElectionsByState>;
-  const cryptoContests = getContests(elections, committees, "crypto");
+  const cryptoContests = getContests(elections, committees, cookRatings, "crypto");
   const summaries: SectorSummary[] = [
     {
       sector: "crypto",
@@ -475,18 +461,14 @@ export default async function NewsletterGraphicsPage() {
     {
       sector: "ai",
       total: aiTotal as number,
-      seats: countSeats(getContests(elections, committees, "ai")),
+      seats: countSeats(getContests(elections, committees, cookRatings, "ai")),
       byParty: aiParty as ExpendituresByPartySnapshot,
     },
   ];
-  // One amount per contest and party helped
-  const cryptoAmounts: SeatAmount[] = cryptoContests.flatMap((contest) =>
-    contest.pieces.map((piece) => ({
-      raceId: contest.raceId,
-      amount: piece.amount,
-      party: piece.beneficiaryParty,
-    })),
-  );
+  const cryptoAmounts: SeatAmount[] = cryptoContests.map((contest) => ({
+    raceId: contest.raceId,
+    amount: contest.amount,
+  }));
   const seats2026 = bySeat(
     cryptoAmounts.filter((c) => hasElectionIn2026(elections, c.raceId)),
   );
@@ -503,7 +485,6 @@ export default async function NewsletterGraphicsPage() {
         contests2024.map((c) => ({
           raceId: c.race_id,
           amount: c.amount,
-          party: c.party,
         })),
       ),
     },
@@ -528,6 +509,7 @@ export default async function NewsletterGraphicsPage() {
           key={sector}
           sector={sector}
           rows={getRows(elections, committees, sector)}
+          cookRatings={cookRatings}
         />
       ))}
     </main>

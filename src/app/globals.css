@@ -61,6 +61,12 @@
   --party-independent: #ddddbb;
   --party-unknown: #8a8a87;
 
+  /* Whether money ended up on the winning or losing side of a race. Muted to
+     match the party colors, with the same lightness and saturation so
+     neither side looks heavier. */
+  --outcome-won: #7ab58a;
+  --outcome-lost: #b57a7a;
+
   --background: var(--color-white);
   --card-background: #fafaf7;
   --card-background-rgb: 254, 254, 254;

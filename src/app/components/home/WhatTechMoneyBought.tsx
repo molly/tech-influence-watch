@@ -12,11 +12,16 @@ import {
   fetchAllExpenditures,
   fetchAllStateElections,
   fetchConstant,
+  fetchCookRatings,
 } from "@/app/actions/fetch";
 import { getCategorySplit } from "@/app/components/analysis/BattlegroundRaces";
 import ErrorText from "@/app/components/ErrorText";
 import barStyles from "@/app/components/home/HorizontalBars.module.css";
 import legendStyles from "@/app/components/home/TechSectorBreakdown.module.css";
+import {
+  loadResults,
+  TagRecordBars,
+} from "@/app/components/results/ElectionResults";
 import Skeleton from "@/app/components/skeletons/Skeleton";
 import { CommitteeConstant } from "@/app/types/Committee";
 import { ElectionsByState, RaceType } from "@/app/types/Elections";
@@ -253,9 +258,10 @@ async function SpendingColumn() {
 }
 
 async function BattlegroundsColumn() {
-  const [elections, committees] = await Promise.all([
+  const [elections, committees, cookRatings] = await Promise.all([
     fetchAllStateElections(),
     fetchConstant<Record<string, CommitteeConstant>>("committees"),
+    fetchCookRatings(),
   ]);
   if (isError(elections) || !committees) {
     return (
@@ -267,6 +273,7 @@ async function BattlegroundsColumn() {
   const split = getCategorySplit(
     elections as Record<string, ElectionsByState>,
     committees,
+    cookRatings,
     "all",
   );
   const total = split.reduce((t, s) => t + s.amount, 0);
@@ -343,6 +350,47 @@ async function BattlegroundsColumn() {
       }
       href="/2026/analysis/battlegrounds"
       linkText="See where the money went"
+    />
+  );
+}
+
+async function ResultsColumn() {
+  const results = await loadResults("all");
+  if (!results || !results.date) {
+    return (
+      <div className={styles.column}>
+        <ErrorText subject="election results" />
+      </div>
+    );
+  }
+  const { tally } = results;
+  return (
+    <Column
+      title="Election results"
+      figure={
+        <div className={styles.figure}>
+          {tally.called}
+          <span className={styles.figureOf}> of {tally.races}</span>
+        </div>
+      }
+      description={
+        <>
+          races with crypto or AI money have been called. Each bar splits one
+          kind of race&rsquo;s super PAC money by whether it ended up on the
+          winning side, the losing side, or is still waiting on a call.
+          {tally.superPacRaces < tally.races && (
+            <>
+              {" "}
+              Super PACs spent in {tally.superPacRaces} of these elections. The
+              rest only had primary spending or direct contributions from
+              industry donors.
+            </>
+          )}
+        </>
+      }
+      chart={<TagRecordBars tally={tally} />}
+      href="/2026/results"
+      linkText="Follow the results"
     />
   );
 }
@@ -426,9 +474,14 @@ export default function WhatTechMoneyBought() {
           <span className={styles.newBadge}>New</span>
           <h2 className={styles.title}>What tech money bought</h2>
         </div>
-        <span className={styles.date}>Three new analyses · Nov 3, 2026</span>
+        <span className={styles.date}>
+          Live results and three new analyses · Nov 3, 2026
+        </span>
       </div>
       <div className={styles.columns}>
+        <Suspense fallback={<ColumnSkeleton title="Election results" />}>
+          <ResultsColumn />
+        </Suspense>
         <Suspense fallback={<ColumnSkeleton title="Spending over time" />}>
           <SpendingColumn />
         </Suspense>

@@ -129,8 +129,8 @@
   stroke-width: 1;
 }
 
-/* Filled by the global party classes */
 .stripDot {
+  fill: var(--accent);
   stroke: var(--background);
   stroke-width: 1;
 }

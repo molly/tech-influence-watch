@@ -112,6 +112,9 @@ export interface Race {
   party?: Party;
   date: string;
   canceled?: boolean;
+  // When every candidate who needs a result got one (ms since epoch). Set by
+  // the admin editors, and cleared if the race goes back to being uncalled.
+  calledAt?: number;
 }
 
 type SubraceSpending = {
