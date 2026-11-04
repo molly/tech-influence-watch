@@ -84,6 +84,16 @@ const GOAL_CLASSES: Record<Goal, string> = {
   mixed: styles.raceGoalMixed,
 };
 
+// Two columns on the results page: competitive races beside the safe bets,
+// underdogs beside the likely winners
+const TAG_GRID_ORDER: RaceTag[] = [
+  "competitive",
+  "safe",
+  "underdog",
+  "likely",
+  "mixed",
+];
+
 function currency(amount: number) {
   return humanizeRoundedCurrency(amount, true, 1);
 }
@@ -319,10 +329,11 @@ function RaceCard({ race, sector }: { race: ResultRace; sector: Sector }) {
   );
 }
 
-// The tags with races, plus the races that couldn't be tagged, so the rows add
-// up to the total
-function getTagRows(tally: ResultsTally) {
-  const rows = TAGS.filter((t) => tally.byTag[t.key].races > 0).map((t) => ({
+// The tags with races, in `order`, plus the races that couldn't be tagged, so
+// the rows add up to the total
+function getTagRows(tally: ResultsTally, order: RaceTag[] = TAGS.map((t) => t.key)) {
+  const tags = order.flatMap((key) => TAGS.filter((t) => t.key === key));
+  const rows = tags.filter((t) => tally.byTag[t.key].races > 0).map((t) => ({
     key: t.key as string,
     title: t.title,
     tally: tally.byTag[t.key],
@@ -601,7 +612,7 @@ export default async function ElectionResults({ sector }: { sector: Sector }) {
         </h2>
         <OutcomeBars money={tally.superPac} />
       </section>
-      <section>
+      <section className={styles.moneySection}>
         <h2 className={sharedStyles.sectionTitle}>
           {sentenceCase(roundName, false)} super PAC money by what it backed
         </h2>
@@ -618,7 +629,7 @@ export default async function ElectionResults({ sector }: { sector: Sector }) {
           .
         </p>
         <div className={styles.outcomeColumns}>
-          {getTagRows(tally).map((t) => {
+          {getTagRows(tally, TAG_GRID_ORDER).map((t) => {
             const tagTally = t.tally;
             return (
               <section key={t.key}>

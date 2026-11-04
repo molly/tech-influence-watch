@@ -1,7 +1,7 @@
-/* Per-rating bar charts side by side */
+/* Per-tag bar charts, two to a row */
 .outcomeColumns {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 2rem;
   margin: 2rem 0;
 }
@@ -222,6 +222,10 @@
 /* Each candidate becomes a block: name across the top, then the result and
    amounts as labeled lines */
 @media (max-width: 575px) {
+  .outcomeColumns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .candidateTableHeader {
     display: none;
   }

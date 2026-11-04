@@ -873,7 +873,7 @@ function SectorContent({
             </a>
             ). Competitive contests are those rated &ldquo;Toss-up&rdquo; or
             &ldquo;Lean&rdquo;. Likely contests are those rated
-            &ldquo;Likely&rdquo; or &ldquo;Solid&rdquo;.
+            &ldquo;Likely&rdquo;; safe bets are those rated &ldquo;Solid&rdquo;.
             <p>
               Cook doesn&rsquo;t rate primaries, generals between two members of
               the same party, so these were rated based on poll data.
