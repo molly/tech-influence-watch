@@ -108,6 +108,20 @@
   margin-bottom: 0.5rem;
 }
 
+/* Pushed to the bottom with the link, which sits right under it */
+.note {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--secondary-text);
+  margin: auto 0 0.75rem 0;
+}
+
+.note + .link {
+  margin-top: 0;
+}
+
 .link {
   margin-top: auto;
   font-weight: 700;

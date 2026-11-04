@@ -31,6 +31,7 @@ import { getTaggedAds } from "@/app/utils/adAnalysisData";
 import { isError } from "@/app/utils/errors";
 import { humanizeRoundedCurrency } from "@/app/utils/humanize";
 import { getRoundName } from "@/app/utils/results";
+import { formatDateFromString } from "@/app/utils/utils";
 
 import styles from "./WhatTechMoneyBought.module.css";
 
@@ -67,6 +68,7 @@ function Column({
   figure,
   description,
   chart,
+  note,
   href,
   linkText,
 }: {
@@ -74,6 +76,8 @@ function Column({
   figure: React.ReactNode;
   description: React.ReactNode;
   chart: React.ReactNode;
+  // Smaller fine print at the bottom of the card, above the link
+  note?: React.ReactNode;
   href: string;
   linkText: string;
 }) {
@@ -83,10 +87,22 @@ function Column({
       {figure}
       <p className={styles.description}>{description}</p>
       <div className={styles.chart}>{chart}</div>
+      {note && <p className={styles.note}>{note}</p>}
       <Link href={href} className={styles.link}>
         &raquo; {linkText}
       </Link>
     </div>
+  );
+}
+
+// Every race a tracked PAC has spent in this cycle, as counted by the spending
+// column
+function getSpentRaceIds(expenditures: Record<string, Expenditure>) {
+  return new Set(
+    Object.values(expenditures)
+      .filter((e) => e.expenditure_amount)
+      .map((e) => e.race_id)
+      .filter((raceId): raceId is string => !!raceId),
   );
 }
 
@@ -210,12 +226,14 @@ function WeeklySpending({
 }
 
 async function SpendingColumn() {
-  const [data, elections, totalData, expendituresData] = await Promise.all([
-    fetchSpendingFlowData("all"),
-    fetchAllStateElections(),
-    fetchAllCommitteeTotalExpenditures("all"),
-    fetchAllExpenditures(),
-  ]);
+  const [data, elections, totalData, expendituresData, results] =
+    await Promise.all([
+      fetchSpendingFlowData("all"),
+      fetchAllStateElections(),
+      fetchAllCommitteeTotalExpenditures("all"),
+      fetchAllExpenditures(),
+      loadResults("all"),
+    ]);
   if (isError(data) || isError(totalData) || isError(expendituresData)) {
     return (
       <div className={styles.column}>
@@ -227,11 +245,18 @@ async function SpendingColumn() {
   // The whole cycle, matching the PAC spending card above, though the
   // timeline itself starts in 2026
   const total = totalData as number;
-  const races = new Set(
-    Object.values(expendituresData as Record<string, Expenditure>)
-      .filter((e) => e.expenditure_amount && e.race_id)
-      .map((e) => e.race_id),
-  ).size;
+  const spentRaceIds = getSpentRaceIds(
+    expendituresData as Record<string, Expenditure>,
+  );
+  const races = spentRaceIds.size;
+  // Races already decided before the latest election date, like special
+  // elections held earlier, which the results card next door doesn't count
+  const ballotRaceIds = new Set(results?.races.map((r) => r.raceId));
+  const decidedEarlier =
+    results?.date && ballotRaceIds.size > 0
+      ? [...spentRaceIds].filter((raceId) => !ballotRaceIds.has(raceId))
+          .length
+      : 0;
   return (
     <Column
       title="Spending over time"
@@ -251,6 +276,16 @@ async function SpendingColumn() {
               : getPrimaryRange(elections as Record<string, ElectionsByState>)
           }
         />
+      }
+      note={
+        decidedEarlier > 0 &&
+        results?.date && (
+          <>
+            Includes {decidedEarlier}{" "}
+            {decidedEarlier === 1 ? "race" : "races"} decided before the{" "}
+            {formatDateFromString(results.date)} election.
+          </>
+        )
       }
       href="/2026/timeline"
       linkText="Watch the timeline"
@@ -365,32 +400,37 @@ async function ResultsColumn() {
     );
   }
   const { tally } = results;
+  const roundName = getRoundName(results.races);
+  // The rest of the results page's races: super PAC money only in the
+  // primary, or only direct contributions
+  const otherRaces = tally.races - tally.superPacRaces;
   return (
     <Column
       title="Election results"
       figure={
         <div className={styles.figure}>
-          {tally.called}
-          <span className={styles.figureOf}> of {tally.races}</span>
+          {tally.superPacCalled}
+          <span className={styles.figureOf}> of {tally.superPacRaces}</span>
         </div>
       }
       description={
         <>
-          races with crypto or AI money have been called. Each bar splits one
-          kind of race&rsquo;s {getRoundName(results.races)} super PAC money by
-          whether it ended up on the winning side, the losing side, or is still
-          waiting on a call.
-          {tally.superPacRaces < tally.races && (
-            <>
-              {" "}
-              Super PACs spent in {tally.superPacRaces} of these elections. The
-              rest only had primary spending or direct contributions from
-              industry donors.
-            </>
-          )}
+          {roundName}s with crypto or AI super PAC money have been called. Each
+          bar splits one kind of race&rsquo;s super PAC money by whether it
+          ended up on the winning side, the losing side, or is still waiting
+          on a call.
         </>
       }
       chart={<TagRecordBars tally={tally} />}
+      note={
+        otherRaces > 0 && (
+          <>
+            The results page also covers {otherRaces} more races where super
+            PACs only spent in the primary or industry companies and
+            executives only gave directly to candidates.
+          </>
+        )
+      }
       href="/2026/results"
       linkText="Follow the results"
     />

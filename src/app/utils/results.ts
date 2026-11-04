@@ -146,6 +146,28 @@ function getSpendingByRound(
   };
 }
 
+// Whether the sector's super PACs spent anything in a round of the race other
+// than `type`, for any candidate
+function hasOtherRoundSpending(
+  group: ElectionGroup,
+  committees: Record<string, CommitteeConstant>,
+  sector: Sector,
+  type: string,
+): boolean {
+  return Object.entries(group.spending || {}).some(
+    ([committeeId, spending]) =>
+      (sector === "all" ||
+        matchesSector(committees[committeeId]?.sector, sector)) &&
+      Object.entries(spending.subraces || {}).some(
+        ([round, subrace]) =>
+          round !== type &&
+          Object.values(subrace.candidates || {}).some(
+            (amounts) => amounts.support > 0 || amounts.oppose > 0,
+          ),
+      ),
+  );
+}
+
 // One subrace held on the election date, e.g. the PA-H-07 general
 export interface ResultRace {
   key: string;
@@ -160,6 +182,9 @@ export interface ResultRace {
   // The seat's earlier rounds this cycle, like the primary, scored against
   // their own results. Null if the sector's super PACs didn't spend in them.
   earlierRounds: EarlierRounds | null;
+  // Whether the sector's super PACs spent in any other round of the race, on
+  // any candidate, including ones who lost a primary or withdrew
+  spentEarlier: boolean;
   candidates: ResultCandidate[];
   // Super PAC spending and direct contributions across the candidates
   total: number;
@@ -265,7 +290,15 @@ export function getResultRaces(
           (sum, c) => sum + c.support + c.oppose + c.contributions,
           0,
         );
-        if (total === 0) {
+        // A seat where the PACs only spent on candidates who aren't in this
+        // round, like primary losers, still belongs on the page
+        const spentEarlier = hasOtherRoundSpending(
+          group,
+          committees,
+          sector,
+          race.type,
+        );
+        if (total === 0 && !spentEarlier) {
           continue;
         }
         results.push({
@@ -291,6 +324,7 @@ export function getResultRaces(
             race.type,
             date,
           ),
+          spentEarlier,
           candidates,
           total,
         });
@@ -434,8 +468,7 @@ function getEarlierRounds(
 const hasCurrentSpending = (race: ResultRace) =>
   race.candidates.some((c) => c.current.support + c.current.oppose > 0);
 
-const hasEarlierSpending = (race: ResultRace) =>
-  race.candidates.some((c) => c.earlier.support + c.earlier.oppose > 0);
+const hasEarlierSpending = (race: ResultRace) => race.spentEarlier;
 
 // Whether the race's super PAC money landed on the winning side, the losing
 // side, or both. Null until some of the money has a result.
@@ -459,6 +492,8 @@ export interface ResultsTally {
   // Races where tracked super PACs spent in this round. Only their money is
   // scored.
   superPacRaces: number;
+  // How many of those have been called
+  superPacCalled: number;
   // Races where the super PACs only spent in an earlier round, like the
   // primary. The rest are only on the page for direct contributions.
   earlierOnlyRaces: number;
@@ -491,6 +526,9 @@ export function getResultsTally(races: ResultRace[]): ResultsTally {
     races: races.length,
     called: races.filter((r) => r.status === "called").length,
     superPacRaces: races.filter(hasCurrentSpending).length,
+    superPacCalled: races.filter(
+      (r) => hasCurrentSpending(r) && r.status === "called",
+    ).length,
     earlierOnlyRaces: races.filter(
       (r) => !hasCurrentSpending(r) && hasEarlierSpending(r),
     ).length,

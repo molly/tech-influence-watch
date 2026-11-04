@@ -140,6 +140,8 @@ describe("getResultRaces", () => {
     );
     expect(tally.called).toBe(2);
     expect(tally.races).toBe(3);
+    expect(tally.superPacRaces).toBe(3);
+    expect(tally.superPacCalled).toBe(2);
     // Supporting A (won) and opposing B (lost)
     expect(tally.superPac.won).toBe(150);
     // Supporting D (lost)
@@ -215,6 +217,27 @@ describe("getResultRaces", () => {
     expect(tally.earlier.goals.mixed).toBe(1);
     // Only A, of this election's candidates, was backed in the primary
     expect(getCandidatesBackedEarlier(races[0]).map((c) => c.candidate.name)).toEqual(["A"]);
+  });
+
+  test("keeps a seat whose PAC money only went to primary losers", () => {
+    const primaryLosersOnly: Record<string, ElectionsByState> = {
+      NV: {
+        "H-03": {
+          races: [
+            race([{ name: "L", won: false }, { name: "W", won: true }], { type: RaceType.Primary, date: "2026-06-09", party: Party.Democratic }),
+            race([{ name: "W" }, { name: "X" }]),
+          ],
+          candidates: { L: summary("L", 200, 0), W: summary("W", 0, 0), X: summary("X", 0, 0) },
+          spending: spendingIn("primary", { L: { support: 200, oppose: 0 } }),
+          year: "2026",
+        },
+      },
+    };
+    const races = getResultRaces(primaryLosersOnly, {}, {}, {}, {}, "all", "2026-11-03");
+    expect(races).toHaveLength(1);
+    const tally = getResultsTally(races);
+    expect(tally.earlierOnlyRaces).toBe(1);
+    expect(tally.earlier.superPac.lost).toBe(200);
   });
 
   test("finds when the PACs backed both nominees in their primaries", () => {
