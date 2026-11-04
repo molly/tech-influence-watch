@@ -52,7 +52,8 @@ export interface ResultCandidate {
 export type RaceTag = "competitive" | "likely" | "safe" | "underdog" | "mixed";
 
 // Both sides count as significant once the smaller one has this share of the
-// money backing the favorite or the underdog
+// money: backing the favorite vs. the underdog for tags, or on the winning vs.
+// losing side for goals
 const MIXED_THRESHOLD = 0.2;
 
 // Classify the contest's money the way the battlegrounds analysis does, one
@@ -515,19 +516,18 @@ function findOpposeBeneficiary(
   return race.candidates.find((c) => c.name === name);
 }
 
-// Whether money landed on the winning side, the losing side, or both. Null
-// until some of it has a result.
+// Whether money landed on the winning side, the losing side, or both. A small
+// share on one side, like one PAC working against the rest, doesn't make the
+// result mixed. Null until some of it has a result.
 function getGoal(money: MoneyByOutcome): Goal | null {
-  if (money.won > 0 && money.lost > 0) {
+  const decided = money.won + money.lost;
+  if (decided === 0) {
+    return null;
+  }
+  if (Math.min(money.won, money.lost) / decided >= MIXED_THRESHOLD) {
     return "mixed";
   }
-  if (money.won > 0) {
-    return "achieved";
-  }
-  if (money.lost > 0) {
-    return "failed";
-  }
-  return null;
+  return money.won > money.lost ? "achieved" : "failed";
 }
 
 // Candidates in this round whose campaigns the sector's super PACs supported
@@ -605,6 +605,39 @@ function getEarlierRounds(
     return null;
   }
   return { rounds: [...rounds].sort(), superPac: money, goal: getGoal(money) };
+}
+
+// Whether super PAC money for and against candidates in one round of a race
+// (`type`) landed on the winning side, scored against each candidate's result
+// in that round. A round with both parties' primaries finds each candidate in
+// their own. Null until some of the money has a result.
+export function getRoundGoal(
+  group: ElectionGroup,
+  opposition: Record<string, OppositionConstant>,
+  type: string,
+  amounts: { candidate: string; support: number; oppose: number }[],
+): Goal | null {
+  const money = emptyMoney();
+  const races = (group.races || []).filter(
+    (r) => r.type === type && !r.canceled,
+  );
+  for (const { candidate, support, oppose } of amounts) {
+    const race = races.find((r) =>
+      r.candidates.some((c) => c.name === candidate),
+    );
+    const raceCandidate = race?.candidates.find((c) => c.name === candidate);
+    if (!race || !raceCandidate) {
+      continue;
+    }
+    addMoneyByResult(
+      money,
+      raceCandidate,
+      support,
+      oppose,
+      findOpposeBeneficiary(opposition, group.candidates?.[candidate], race),
+    );
+  }
+  return getGoal(money);
 }
 
 const hasCurrentSpending = (race: ResultRace) =>

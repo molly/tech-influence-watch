@@ -164,6 +164,22 @@ describe("getResultRaces", () => {
     expect(byId["PA-H-03"]).toBeNull();
   });
 
+  test("doesn't call a goal mixed over a small share on the other side", () => {
+    // OH-S-special: most PAC money backed the loser, one PAC opposed them
+    const oneSidedMostly: Record<string, ElectionsByState> = {
+      OH: {
+        "S-special": {
+          races: [race([{ name: "B", won: true }, { name: "H", won: false }])],
+          candidates: { B: summary("B", 0, 0), H: summary("H", 1000, 10) },
+          spending: spendingIn("general", { H: { support: 1000, oppose: 10 } }),
+          year: "2026",
+        },
+      },
+    };
+    const races = getResultRaces(oneSidedMostly, {}, {}, {}, {}, {}, "all", "2026-11-03");
+    expect(getRaceGoal(races[0])).toBe("failed");
+  });
+
   test("doesn't score money spent in the primary", () => {
     const primaryOnly: Record<string, ElectionsByState> = {
       AK: {

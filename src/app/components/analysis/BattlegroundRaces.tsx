@@ -11,6 +11,8 @@ import ErrorText from "@/app/components/ErrorText";
 import barStyles from "@/app/components/home/HorizontalBars.module.css";
 import patternStyles from "@/app/components/home/NotablePatterns.module.css";
 import legendStyles from "@/app/components/home/TechSectorBreakdown.module.css";
+import { GoalIcon } from "@/app/components/InfluencedRacesContents";
+import InformationalTooltip from "@/app/components/InformationalTooltip";
 import MoneyCard, { MoneyCardSkeleton } from "@/app/components/MoneyCard";
 import { RaceRatingChip, RatingHeader } from "@/app/components/RaceRating";
 import Skeleton from "@/app/components/skeletons/Skeleton";
@@ -19,7 +21,12 @@ import { COOK_RATINGS_AS_OF, CookRatings } from "@/app/data/cookRatings";
 import { STATES_BY_ABBR } from "@/app/data/states";
 import sharedStyles from "@/app/shared.module.css";
 import { CommitteeConstant } from "@/app/types/Committee";
-import { ElectionGroup, ElectionsByState, Party } from "@/app/types/Elections";
+import {
+  ElectionGroup,
+  ElectionsByState,
+  OppositionConstant,
+  Party,
+} from "@/app/types/Elections";
 import { Sector } from "@/app/types/Sector";
 import {
   Category,
@@ -30,6 +37,7 @@ import { isError } from "@/app/utils/errors";
 import { humanizeList, humanizeRoundedCurrency } from "@/app/utils/humanize";
 import { getFullPartyName } from "@/app/utils/party";
 import { getRaceName, isIncumbent } from "@/app/utils/races";
+import { getRoundGoal } from "@/app/utils/results";
 import { humanizeSector, matchesSector } from "@/app/utils/sector";
 import { sentenceCase } from "@/app/utils/titlecase";
 import { formatDateFromString } from "@/app/utils/utils";
@@ -79,6 +87,7 @@ const CATEGORIES: {
 interface Piece {
   contestKey: string;
   raceId: string;
+  group: ElectionGroup;
   type: string;
   party?: string;
   category: Category;
@@ -198,6 +207,7 @@ function getPieces(
               pieces.push({
                 contestKey: reviewed?.key ?? `${raceId}|${type}`,
                 raceId,
+                group,
                 type,
                 party: reviewed?.party,
                 category,
@@ -382,14 +392,39 @@ function dominantParty(pieces: Piece[]) {
   return Object.entries(totals).sort(([, a], [, b]) => b - a)[0]?.[0];
 }
 
+// Whether the row's money landed on the winning side of its contest
+function getContestGoal(
+  row: ContestRow,
+  opposition: Record<string, OppositionConstant>,
+) {
+  const amounts = new Map<
+    string,
+    { candidate: string; support: number; oppose: number }
+  >();
+  for (const piece of row.pieces) {
+    const amount = amounts.get(piece.candidate) ?? {
+      candidate: piece.candidate,
+      support: 0,
+      oppose: 0,
+    };
+    amount[piece.kind] += piece.amount;
+    amounts.set(piece.candidate, amount);
+  }
+  return getRoundGoal(row.pieces[0].group, opposition, row.type, [
+    ...amounts.values(),
+  ]);
+}
+
 function ContestTable({
   rows,
   general,
   cookRatings,
+  opposition,
 }: {
   rows: ContestRow[];
   general: boolean;
   cookRatings: CookRatings;
+  opposition: Record<string, OppositionConstant>;
 }) {
   return (
     <table className={tableStyles.superPacTable}>
@@ -397,35 +432,56 @@ function ContestTable({
         <tr className={tableStyles.superPacTableHeader}>
           <th className="text-cell">Race</th>
           {general && <RatingHeader />}
+          <th className="small-cell center-cell">
+            Goal{" "}
+            <span className="no-wrap">
+              achieved?
+              <InformationalTooltip>
+                <span>
+                  The PACs&rsquo; goal is considered to have been achieved if a
+                  candidate they supported won the contest, or if a candidate
+                  they opposed lost. If at least a fifth of the money landed on
+                  each side, the result is mixed.
+                </span>
+              </InformationalTooltip>
+            </span>
+          </th>
           <th className="number-cell">Spent</th>
         </tr>
       </thead>
       <tbody>
-        {rows.map((row) => (
-          <tr key={row.key} className={tableStyles.superPacRow}>
-            <td
-              className={`text-cell ${styles.directionCell} ${PARTY_BAR_CLASSES[dominantParty(row.pieces) ?? ""] ?? styles.unknownParty}`}
-            >
-              <Link href={`/2026/elections/${row.raceId}`}>
-                {raceName(row.raceId)}
-              </Link>
-              <div className={styles.contestMeta}>
-                {contestLabel(row.type, row.party)}
-              </div>
-              <TargetLines pieces={row.pieces} />
-            </td>
-            {general && (
-              <td className="center-cell">
-                {cookRatings[row.raceId] ? (
-                  <RaceRatingChip rating={cookRatings[row.raceId]} />
-                ) : (
-                  <span className={tableStyles.nilCell}>—</span>
-                )}
+        {rows.map((row) => {
+          const goal = getContestGoal(row, opposition);
+          return (
+            <tr key={row.key} className={tableStyles.superPacRow}>
+              <td
+                className={`text-cell ${styles.directionCell} ${PARTY_BAR_CLASSES[dominantParty(row.pieces) ?? ""] ?? styles.unknownParty}`}
+              >
+                <Link href={`/2026/elections/${row.raceId}`}>
+                  {raceName(row.raceId)}
+                </Link>
+                <div className={styles.contestMeta}>
+                  {contestLabel(row.type, row.party)}
+                </div>
+                <TargetLines pieces={row.pieces} />
               </td>
-            )}
-            <td className="number-cell">{currency(row.amount)}</td>
-          </tr>
-        ))}
+              {general && (
+                <td className="center-cell">
+                  {cookRatings[row.raceId] ? (
+                    <RaceRatingChip rating={cookRatings[row.raceId]} />
+                  ) : (
+                    <span className={tableStyles.nilCell}>—</span>
+                  )}
+                </td>
+              )}
+              {/* Left blank until called, as in the influenced races table */}
+              <td className="center-cell">
+                {goal && <GoalIcon goal={goal} />}
+              </td>
+              <td className="number-cell">{currency(row.amount)}</td>
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );
@@ -735,11 +791,13 @@ function SectorContent({
   pieces,
   strategyPieces,
   cookRatings,
+  opposition,
 }: {
   sector: Sector;
   pieces: Piece[];
   strategyPieces: Record<"crypto" | "ai", Piece[]>;
   cookRatings: CookRatings;
+  opposition: Record<string, OppositionConstant>;
 }) {
   const piecesIn = (category: Category) =>
     pieces.filter((p) => p.category === category);
@@ -954,6 +1012,7 @@ function SectorContent({
                     rows={roundRows}
                     general={round.general}
                     cookRatings={cookRatings}
+                    opposition={opposition}
                   />
                 </div>
               );
@@ -999,11 +1058,14 @@ export default async function BattlegroundRaces({
 }: {
   sector: Sector;
 }) {
-  const [data, committeesData, cookRatings] = await Promise.all([
-    fetchAllStateElections(),
-    fetchConstant<Record<string, CommitteeConstant>>("committees"),
-    fetchCookRatings(),
-  ]);
+  const [data, committeesData, cookRatings, oppositionData] = await Promise.all(
+    [
+      fetchAllStateElections(),
+      fetchConstant<Record<string, CommitteeConstant>>("committees"),
+      fetchCookRatings(),
+      fetchConstant<Record<string, OppositionConstant>>("oppositionSpending"),
+    ],
+  );
   if (isError(data) || !committeesData) {
     return <ErrorText subject="race data" />;
   }
@@ -1022,6 +1084,7 @@ export default async function BattlegroundRaces({
       }
       strategyPieces={strategyPieces}
       cookRatings={cookRatings}
+      opposition={oppositionData ?? {}}
     />
   );
 }
